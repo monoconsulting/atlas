@@ -1,0 +1,11 @@
+services:
+  taskmasterweb:
+    build: .
+    container_name: taskmasterweb
+    env_file:
+      - .env
+    ports:
+      - "${HOST_PORT:-8099}:8000"
+    volumes:
+      - "${PROJECT_ROOT}:/workspace"
+    restart: unless-stopped

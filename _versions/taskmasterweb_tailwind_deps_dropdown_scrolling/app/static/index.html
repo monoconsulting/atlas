@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Master AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Chips scroll if many */
+      .chips-row { display:flex; flex-wrap:wrap; gap:.5rem; }
+      .chip { display:inline-flex; align-items:center; gap:.35rem; padding:.1rem .5rem; border-radius:9999px; border-width:1px; font-size:.75rem; }
+    </style>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <!-- Header box with small line -->
+    <header class="border-b border-slate-800 bg-slate-950/60 backdrop-blur sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 py-4">
+        <h1 id="hdrTitle" class="text-xl md:text-2xl font-semibold">Task Master AI</h1>
+        <p class="text-xs text-slate-400 mt-1">
+          Works with <code class="font-mono text-blue-300">/workspace/.taskmaster</code>
+          <span class="text-slate-500">(fallback: <code class="font-mono text-blue-300">/workspace/taskmaster</code>)</span>.
+          Uses <code class="font-mono text-blue-300">state.json.currentTag</code> unless you specify a tag explicitly.
+          <span id="hdrProject" class="ml-2 px-2 py-0.5 rounded-full border border-slate-700"></span>
+        </p>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left column -->
+        <section class="lg:col-span-2 space-y-6">
+          <!-- Storage info -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-lg font-semibold">Storage info</h2>
+              <button id="refreshBtn" class="text-xs px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Refresh</button>
+            </div>
+            <pre id="infoPre" class="bg-slate-900 rounded-xl p-4 overflow-auto text-xs border border-slate-800">loading…</pre>
+          </div>
+
+          <!-- Add Task (left, dropdown deps) -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Add Task</h2>
+            <form id="taskForm" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="title">Title</label>
+                  <input id="title" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" required maxlength="200">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="due_date">Due date</label>
+                  <input id="due_date" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="priority">Priority</label>
+                  <select id="priority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="low">low</option>
+                    <option value="medium" selected>medium</option>
+                    <option value="high">high</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="status">Status</label>
+                  <select id="status" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="todo" selected>todo</option>
+                    <option value="in-progress">in-progress</option>
+                    <option value="done">done</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="tag">Tag (optional)</label>
+                  <input id="tag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Leave blank to use currentTag">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="assigned_to">Assigned to</label>
+                  <input id="assigned_to" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="@name">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="estimate">Estimate</label>
+                  <input id="estimate" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 6h">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="labels">Labels (comma)</label>
+                  <input id="labels" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="ux,backend">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm text-slate-400 mb-1">Dependencies</label>
+                <div class="flex items-center gap-2">
+                  <select id="depSelect" class="rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-w-[240px]"></select>
+                  <button id="depAddBtn" type="button" class="px-3 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-sm">Add</button>
+                </div>
+                <div id="depChips" class="chips-row mt-2"></div>
+              </div>
+
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="description">Description</label>
+                <textarea id="description" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[120px]" required></textarea>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Add task</button>
+                <div id="addTaskResult" class="text-sm self-center"></div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Add Subtask (under Add Task) -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Add Subtask</h2>
+            <form id="subtaskForm" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="parent_id">Parent task ID</label>
+                  <input id="parent_id" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 12" required pattern="\d+">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm text-slate-400 mb-1" for="stitle">Title</label>
+                  <input id="stitle" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" required maxlength="200">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="spriority">Priority</label>
+                  <select id="spriority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="low">low</option>
+                    <option value="medium" selected>medium</option>
+                    <option value="high">high</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sstatus">Status</label>
+                  <select id="sstatus" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="todo" selected>todo</option>
+                    <option value="in-progress">in-progress</option>
+                    <option value="done">done</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sdue">Due date</label>
+                  <input id="sdue" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sassigned">Assigned to</label>
+                  <input id="sassigned" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="@name">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sestimate">Estimate</label>
+                  <input id="sestimate" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 4h">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="slabels">Labels (comma)</label>
+                  <input id="slabels" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="frontend,bug">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1">Dependencies</label>
+                  <div class="flex items-center gap-2">
+                    <select id="sdepSelect" class="rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-w-[240px]"></select>
+                    <button id="sdepAddBtn" type="button" class="px-3 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-sm">Add</button>
+                  </div>
+                  <div id="sdepChips" class="chips-row mt-2"></div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="stag">Tag (optional)</label>
+                  <input id="stag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Leave blank to use currentTag">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sdesc">Description</label>
+                  <input id="sdesc" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Subtask details">
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Add subtask</button>
+                <div id="addSubResult" class="text-sm self-center"></div>
+              </div>
+            </form>
+
+            <!-- Left-side subtasks list for the chosen Parent ID -->
+            <div id="leftSubsWrap" class="mt-5 hidden">
+              <h3 class="text-md font-semibold mb-2">Subtasks for task #<span id="leftSubsPid"></span></h3>
+              <div id="leftSubsList" class="space-y-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right column -->
+        <aside class="lg:col-span-1 space-y-6">
+          <!-- Filters -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Tasks</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltStatus">Status</label>
+                <select id="fltStatus" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                  <option value="">All</option>
+                  <option value="todo" selected>todo</option>
+                  <option value="in-progress">in-progress</option>
+                  <option value="done">done</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltPriority">Priority</label>
+                <select id="fltPriority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                  <option value="" selected>All</option>
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="high">high</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltTag">Tag</label>
+                <input id="fltTag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="(blank = currentTag)">
+              </div>
+            </div>
+            <div class="flex gap-3 mt-3">
+              <button id="btnApplyFilters" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Apply</button>
+              <button id="btnResetFilters" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Reset</button>
+            </div>
+          </div>
+
+          <!-- Cards -->
+          <div id="cardsList" class="space-y-3"></div>
+        </aside>
+      </div>
+
+      <div id="globalMsg" class="mt-6 text-sm text-slate-400"></div>
+    </main>
+
+    <!-- Edit Task Modal -->
+    <div id="editTaskModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-20">
+      <div id="editContainer" class="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-4xl mx-4 p-6 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <h2 class="text-lg font-semibold">Edit Task</h2>
+            <span id="prioPill" class="chip border-slate-700"></span>
+          </div>
+          <button id="btnCloseEditTask" class="text-sm px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Close</button>
+        </div>
+
+        <form id="editTaskForm" class="space-y-4 mt-4">
+          <input type="hidden" id="e_id">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_title">Title</label>
+              <input id="e_title" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" required>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_due">Due date</label>
+              <input id="e_due" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_priority">Priority</label>
+              <select id="e_priority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                <option value="low">low</option>
+                <option value="medium">medium</option>
+                <option value="high">high</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_status">Status</label>
+              <select id="e_status" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                <option value="todo">todo</option>
+                <option value="in-progress">in-progress</option>
+                <option value="done">done</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_assigned">Assigned to</label>
+              <input id="e_assigned" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="@name">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_estimate">Estimate</label>
+              <input id="e_estimate" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 6h">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_labels">Labels (comma)</label>
+              <input id="e_labels" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="ux,backend">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1">Dependencies</label>
+              <div class="flex items-center gap-2">
+                <select id="e_depSelect" class="rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-w-[240px]"></select>
+                <button id="e_depAddBtn" type="button" class="px-3 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-sm">Add</button>
+              </div>
+              <div id="e_depChips" class="chips-row mt-2"></div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm text-slate-400 mb-1" for="e_desc">Description</label>
+            <textarea id="e_desc" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[120px]" required></textarea>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Save changes</button>
+            <div id="editTaskResult" class="text-sm self-center"></div>
+          </div>
+        </form>
+
+        <!-- Recently added subtasks (appears between edit form and add-subtask form) -->
+        <div class="mt-6" id="recentAddedWrap" hidden>
+          <h3 class="text-md font-semibold mb-2">Recently added subtasks</h3>
+          <div id="recentAddedList" class="space-y-2"></div>
+        </div>
+
+        <!-- Add Subtask in modal -->
+        <div class="mt-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-md font-semibold">Add Subtask</h3>
+          </div>
+          <form id="editAddSubForm" class="space-y-3 mt-2">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-2">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1" id="e_stitle" placeholder="Title" required>
+              <select class="rounded bg-slate-950 border border-slate-800 px-2 py-1" id="e_spriority">
+                <option value="low">low</option>
+                <option value="medium" selected>medium</option>
+                <option value="high">high</option>
+              </select>
+              <select class="rounded bg-slate-950 border border-slate-800 px-2 py-1" id="e_sstatus">
+                <option value="todo" selected>todo</option>
+                <option value="in-progress">in-progress</option>
+                <option value="done">done</option>
+              </select>
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1" id="e_sdue" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1" id="e_sassigned" placeholder="@assigned">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1" id="e_sestimate" placeholder="estimate e.g. 3h">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1" id="e_slabels" placeholder="labels comma">
+              <div>
+                <div class="flex items-center gap-2">
+                  <select class="rounded bg-slate-950 border border-slate-800 px-2 py-1 min-w-[200px]" id="e_sdepSelect"></select>
+                  <button id="e_sdepAddBtn" type="button" class="px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs">Add</button>
+                </div>
+                <div id="e_sdepChips" class="chips-row mt-2"></div>
+              </div>
+            </div>
+            <textarea class="w-full rounded bg-slate-950 border border-slate-800 px-2 py-1 min-h-[60px]" id="e_sdesc" placeholder="Description"></textarea>
+            <button type="submit" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Add subtask</button>
+          </form>
+        </div>
+
+        <div class="mt-6">
+          <h3 class="text-md font-semibold mb-2">Subtasks</h3>
+          <div id="subtasksList" class="space-y-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ----- State -----
+      let cachedTasks = [];
+      let depsTask = [];    // Add Task deps
+      let depsSub = [];     // Add Subtask deps
+      let depsEditTask = []; // Edit Task deps
+      let depsAddInModal = []; // Edit modal, subtask add deps
+      let editRecentAdded = []; // recent subtasks
+
+      function statusOrder(s) {
+        const map = { 'todo': 0, 'in-progress': 1, 'done': 2 };
+        return map[s] ?? 99;
+      }
+      function prioPillClasses(p) {
+        if (p === 'high') return 'border-red-600 text-red-300';
+        if (p === 'medium') return 'border-orange-600 text-orange-300';
+        return 'border-slate-600 text-slate-300';
+      }
+
+      // ----- Fetchers -----
+      async function fetchInfo() {
+        const res = await fetch('/info');
+        const js = await res.json();
+        document.getElementById('infoPre').textContent = JSON.stringify(js.data, null, 2);
+        document.getElementById('hdrTitle').textContent = `Task Master AI — ${js.data?.project_name || 'workspace'}`;
+        document.getElementById('hdrProject').textContent = js.data?.project_name ? `project: ${js.data.project_name}` : '';
+        return js.data;
+      }
+      async function fetchTasks(tag) {
+        const url = tag ? `/tasks?tag=${encodeURIComponent(tag)}` : '/tasks';
+        const res = await fetch(url);
+        const js = await res.json();
+        return js.data || [];
+      }
+      async function patchTask(id, payload) {
+        const res = await fetch(`/task/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        return await res.json();
+      }
+      async function patchSubtask(taskId, subId, payload) {
+        const res = await fetch(`/task/${taskId}/subtask/${subId}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        return await res.json();
+      }
+
+      // ----- Dependencies UI helpers -----
+      function setSelectOptions(sel, tasks) {
+        sel.innerHTML = tasks.map(t => `<option value="${t.id}">#${t.id} — ${(t.title||'').replace(/</g,'&lt;')}</option>`).join('');
+      }
+      function renderChips(container, arr, tasks) {
+        container.innerHTML = arr.map(id => {
+          const t = tasks.find(x => x.id === id);
+          const txt = t ? `#${id} — ${t.title.replace(/</g,'&lt;')}` : `#${id}`;
+          return `<span class="chip border border-slate-700">${txt}<button type="button" class="text-slate-400 hover:text-slate-200" data-chip-remove="${id}">×</button></span>`;
+        }).join('');
+        for (const btn of container.querySelectorAll('[data-chip-remove]')) {
+          btn.addEventListener('click', () => {
+            const id = parseInt(btn.getAttribute('data-chip-remove'), 10);
+            const idx = arr.indexOf(id);
+            if (idx >= 0) { arr.splice(idx,1); renderChips(container, arr, tasks); }
+          });
+        }
+      }
+
+      // ----- Cards -----
+      function renderCards(tasks) {
+        const list = document.getElementById('cardsList');
+        if (!tasks.length) {
+          list.innerHTML = '<div class="rounded-xl border border-slate-800 bg-slate-950 p-4 text-sm text-slate-400">No tasks.</div>';
+          return;
+        }
+        const html = tasks.map(t => {
+          const deps = Array.isArray(t.dependencies) ? t.dependencies : (Array.isArray(t.relations) ? t.relations : []);
+          const depsTxt = deps.length ? `deps: ${deps.join(',')}` : 'deps: -';
+          const assignedTxt = t.assigned_to ? '@'+t.assigned_to : 'assign: -';
+          return `
+            <div class="rounded-2xl border border-slate-800 p-4 hover:border-slate-600 transition cursor-pointer bg-slate-950" data-open-edit="${t.id}">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="text-sm text-slate-400">#${t.id}</div>
+                  <h3 class="text-lg font-semibold truncate">${(t.title||'').replace(/</g,'&lt;')}</h3>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${t.status}</span>
+                  <span class="px-2 py-1 rounded-full border ${prioPillClasses(t.priority)} text-xs">${t.priority}</span>
+                  ${t.due_date ? `<span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${t.due_date}</span>` : ''}
+                </div>
+              </div>
+              <p class="mt-2 text-sm text-slate-300 line-clamp-3">${(t.description||'').replace(/</g,'&lt;')}</p>
+              <div class="mt-3 text-xs text-slate-400 flex items-center justify-end gap-4">
+                <span>${assignedTxt}</span>
+                <span>${depsTxt}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        list.innerHTML = html;
+        for (const card of list.querySelectorAll('[data-open-edit]')) {
+          card.addEventListener('click', async () => {
+            const id = parseInt(card.getAttribute('data-open-edit'), 10);
+            await openEditModal(id);
+          });
+        }
+      }
+
+      async function loadAndRenderTasks() {
+        const tag = document.getElementById('fltTag').value.trim() || null;
+        const statusF = document.getElementById('fltStatus').value;
+        const prioF = document.getElementById('fltPriority').value;
+
+        let tasks = await fetchTasks(tag);
+        tasks = tasks.filter(t => (!statusF || t.status === statusF) && (!prioF || t.priority === prioF));
+        tasks.sort((a,b) => (statusOrder(a.status) - statusOrder(b.status)) || (b.id - a.id));
+        cachedTasks = tasks;
+        renderCards(tasks);
+
+        // refresh dependencies selects
+        setSelectOptions(document.getElementById('depSelect'), tasks);
+        setSelectOptions(document.getElementById('sdepSelect'), tasks);
+      }
+
+      // ----- Left: Add Task with dropdown deps -----
+      document.getElementById('depAddBtn').addEventListener('click', () => {
+        const sel = document.getElementById('depSelect');
+        const id = parseInt(sel.value, 10);
+        if (!isNaN(id) && !depsTask.includes(id)) {
+          depsTask.push(id);
+          renderChips(document.getElementById('depChips'), depsTask, cachedTasks);
+        }
+      });
+
+      document.getElementById('taskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          description: document.getElementById('description').value.trim(),
+          priority: document.getElementById('priority').value,
+          status: document.getElementById('status').value,
+          due_date: document.getElementById('due_date').value.trim() || null,
+          tag: document.getElementById('tag').value.trim() || null,
+          assigned_to: document.getElementById('assigned_to').value.trim() || null,
+          estimate: document.getElementById('estimate').value.trim() || null,
+          labels: (document.getElementById('labels').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+          dependencies: depsTask.slice(),
+        };
+        const res = await fetch('/task', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        const js = await res.json();
+        const out = document.getElementById('addTaskResult');
+        if (js.ok) {
+          out.textContent = `Saved task #${js.data.id}`;
+          (document.getElementById('taskForm')).reset();
+          depsTask = [];
+          renderChips(document.getElementById('depChips'), depsTask, cachedTasks);
+          // Clear subtask form and its list completely per requirement
+          (document.getElementById('subtaskForm')).reset();
+          depsSub = [];
+          renderChips(document.getElementById('sdepChips'), depsSub, cachedTasks);
+          document.getElementById('leftSubsWrap').classList.add('hidden');
+          document.getElementById('leftSubsList').innerHTML = '';
+          document.getElementById('leftSubsPid').textContent = '';
+          await loadAndRenderTasks();
+        } else {
+          out.textContent = js.message || 'Error';
+        }
+      });
+
+      // ----- Left: Add Subtask with dropdown deps + priority -----
+      document.getElementById('sdepAddBtn').addEventListener('click', () => {
+        const sel = document.getElementById('sdepSelect');
+        const id = parseInt(sel.value, 10);
+        if (!isNaN(id) && !depsSub.includes(id)) {
+          depsSub.push(id);
+          renderChips(document.getElementById('sdepChips'), depsSub, cachedTasks);
+        }
+      });
+
+      async function renderLeftSubtasks(pid) {
+        const outWrap = document.getElementById('leftSubsWrap');
+        const outPid = document.getElementById('leftSubsPid');
+        const outList = document.getElementById('leftSubsList');
+        if (!pid) { outWrap.classList.add('hidden'); outList.innerHTML = ''; return; }
+        const r = await fetch(`/task/${pid}`);
+        const js = await r.json();
+        if (!js.ok) { outWrap.classList.add('hidden'); outList.innerHTML=''; return; }
+        const t = js.data;
+        const subs = Array.isArray(t.subtasks) ? t.subtasks.slice() : [];
+        outPid.textContent = pid;
+        if (!subs.length) {
+          outList.innerHTML = '<div class="text-xs text-slate-400">No subtasks yet.</div>';
+          outWrap.classList.remove('hidden');
+          return;
+        }
+        const html = subs.map((st, i) => {
+          const badge = st.priority || 'medium';
+          const badgeCls = badge==='high' ? 'border-red-600 text-red-300' : (badge==='medium' ? 'border-orange-600 text-orange-300' : 'border-slate-600 text-slate-300');
+          const checked = st.status==='done' ? 'checked' : '';
+          return `
+            <div class="rounded-xl border border-slate-800 bg-slate-900 p-3 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-xs text-slate-400 w-5 text-right">${i+1}.</span>
+                <span class="font-medium">${(st.title||'').replace(/</g,'&lt;')}</span>
+                <span class="chip ${badgeCls}">${badge}</span>
+              </div>
+              <label class="text-xs flex items-center gap-2">
+                <input type="checkbox" data-left-done data-sid="${st.id}" ${checked}>
+                done
+              </label>
+            </div>`;
+        }).join('');
+        outList.innerHTML = html;
+        outWrap.classList.remove('hidden');
+
+        for (const cb of outList.querySelectorAll('[data-left-done]')) {
+          cb.addEventListener('change', async () => {
+            const sid = parseInt(cb.getAttribute('data-sid'), 10);
+            const newStatus = cb.checked ? 'done' : 'todo';
+            await patchSubtask(pid, sid, { status: newStatus });
+            await loadAndRenderTasks();
+          });
+        }
+      }
+
+      document.getElementById('parent_id').addEventListener('change', async () => {
+        const pid = parseInt(document.getElementById('parent_id').value, 10);
+        if (!isNaN(pid)) await renderLeftSubtasks(pid);
+      });
+
+      document.getElementById('subtaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const pid = parseInt(document.getElementById('parent_id').value, 10);
+        const payload = {
+          parent_id: pid,
+          title: document.getElementById('stitle').value.trim(),
+          description: document.getElementById('sdesc').value.trim(),
+          status: document.getElementById('sstatus').value,
+          priority: document.getElementById('spriority').value,
+          due_date: document.getElementById('sdue').value.trim() || null,
+          assigned_to: document.getElementById('sassigned').value.trim() || null,
+          estimate: document.getElementById('sestimate').value.trim() || null,
+          labels: (document.getElementById('slabels').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+          dependencies: depsSub.slice(),
+          tag: document.getElementById('stag').value.trim() || null,
+        };
+        const res = await fetch(`/task/${pid}/subtask`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        const js = await res.json();
+        const out = document.getElementById('addSubResult');
+        if (js.ok) {
+          out.textContent = `Saved subtask #${js.data.id} under task #${pid}`;
+          (document.getElementById('subtaskForm')).reset();
+          depsSub = [];
+          renderChips(document.getElementById('sdepChips'), depsSub, cachedTasks);
+          await renderLeftSubtasks(pid);
+          await loadAndRenderTasks();
+        } else {
+          out.textContent = js.message || 'Error';
+        }
+      });
+
+      // ----- Edit Modal -----
+      function show(el) { el.classList.remove('hidden'); el.classList.add('flex'); document.body.classList.add('overflow-hidden'); }
+      function hide(el) { el.classList.add('hidden'); el.classList.remove('flex'); document.body.classList.remove('overflow-hidden'); }
+
+      async function openEditModal(taskId) {
+        const res = await fetch(`/task/${taskId}`);
+        const js = await res.json();
+        if (!js.ok) return;
+        const t = js.data;
+        document.getElementById('e_id').value = t.id;
+        document.getElementById('e_title').value = t.title || '';
+        document.getElementById('e_due').value = t.due_date || '';
+        document.getElementById('e_priority').value = t.priority || 'medium';
+        document.getElementById('e_status').value = t.status || 'todo';
+        document.getElementById('e_assigned').value = t.assigned_to || '';
+        document.getElementById('e_estimate').value = t.estimate || '';
+        document.getElementById('e_labels').value = (t.labels||[]).join(',');
+        document.getElementById('e_desc').value = t.description || '';
+        // deps
+        setSelectOptions(document.getElementById('e_depSelect'), cachedTasks);
+        depsEditTask = Array.isArray(t.dependencies) ? t.dependencies.slice() : (t.relations||[]).slice();
+        renderChips(document.getElementById('e_depChips'), depsEditTask, cachedTasks);
+        // subtask add deps
+        setSelectOptions(document.getElementById('e_sdepSelect'), cachedTasks);
+        depsAddInModal = [];
+        renderChips(document.getElementById('e_sdepChips'), depsAddInModal, cachedTasks);
+        // prio pill
+        const pill = document.getElementById('prioPill');
+        pill.textContent = t.priority;
+        pill.className = `chip ${prioPillClasses(t.priority)}`;
+
+        // clear recent list
+        editRecentAdded = [];
+        document.getElementById('recentAddedList').innerHTML = '';
+        document.getElementById('recentAddedWrap').hidden = true;
+
+        renderSubtasks(t);
+        show(document.getElementById('editTaskModal'));
+      }
+      window.openEditModal = openEditModal;
+
+      // Close modal on button / outside click
+      document.getElementById('btnCloseEditTask').addEventListener('click', () => hide(document.getElementById('editTaskModal')));
+      document.getElementById('editTaskModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('editTaskModal')) {
+          hide(document.getElementById('editTaskModal'));
+        }
+      });
+
+      // Edit task deps add
+      document.getElementById('e_depAddBtn').addEventListener('click', () => {
+        const sel = document.getElementById('e_depSelect');
+        const id = parseInt(sel.value, 10);
+        if (!isNaN(id) && !depsEditTask.includes(id)) {
+          depsEditTask.push(id);
+          renderChips(document.getElementById('e_depChips'), depsEditTask, cachedTasks);
+        }
+      });
+
+      document.getElementById('e_priority').addEventListener('change', (e) => {
+        const pill = document.getElementById('prioPill');
+        pill.textContent = e.target.value;
+        pill.className = `chip ${prioPillClasses(e.target.value)}`;
+      });
+
+      document.getElementById('editTaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('e_id').value, 10);
+        const payload = {
+          title: document.getElementById('e_title').value.trim(),
+          description: document.getElementById('e_desc').value.trim(),
+          priority: document.getElementById('e_priority').value,
+          status: document.getElementById('e_status').value,
+          due_date: document.getElementById('e_due').value.trim() || null,
+          assigned_to: document.getElementById('e_assigned').value.trim() || null,
+          estimate: document.getElementById('e_estimate').value.trim() || null,
+          labels: (document.getElementById('e_labels').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+          dependencies: depsEditTask.slice(),
+        };
+        const js = await patchTask(id, payload);
+        const out = document.getElementById('editTaskResult');
+        if (js.ok) {
+          out.textContent = 'Saved';
+          await loadAndRenderTasks();
+        } else {
+          out.textContent = js.message || 'Failed';
+        }
+      });
+
+      // Render subtasks inside modal (with numbering, prio badge, done checkbox, deps dropdown chips)
+      function renderSubtasks(t) {
+        const wrap = document.getElementById('subtasksList');
+        const subs = Array.isArray(t.subtasks) ? t.subtasks.slice() : [];
+        subs.sort((a,b) => (statusOrder(a.status) - statusOrder(b.status)) || (a.id - b.id));
+        if (!subs.length) {
+          wrap.innerHTML = '<div class="text-sm text-slate-300">No subtasks yet.</div>';
+          return;
+        }
+        wrap.innerHTML = subs.map((st, i) => {
+          const badge = st.priority || 'medium';
+          const badgeCls = badge==='high' ? 'border-red-600 text-red-300' : (badge==='medium' ? 'border-orange-600 text-orange-300' : 'border-slate-600 text-slate-300');
+          const checked = st.status==='done' ? 'checked' : '';
+          const titleSafe = (st.title||'').replace(/</g,'&lt;');
+          return `
+            <div class="rounded-xl border border-slate-800 bg-slate-900 p-3 space-y-2" data-sid="${st.id}">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-xs text-slate-400 w-5 text-right">${i+1}.</span>
+                  <span class="font-medium">${titleSafe}</span>
+                  <span class="chip ${badgeCls}">${badge}</span>
+                </div>
+                <label class="text-xs flex items-center gap-2">
+                  <input type="checkbox" data-se="done-${st.id}" ${checked}> done
+                </label>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="@assigned" data-se="ass-${st.id}" value="${st.assigned_to||''}">
+                <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="estimate" data-se="est-${st.id}" value="${st.estimate||''}">
+                <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="YYYY-MM-DD" data-se="due-${st.id}" value="${st.due_date||''}">
+                <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="labels comma" data-se="lab-${st.id}" value="${(st.labels||[]).join(',')}">
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <textarea class="w-full rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs min-h-[60px]" data-se="desc-${st.id}" placeholder="Description">${(st.description||'').replace(/</g,'&lt;')}</textarea>
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1">Dependencies</label>
+                  <div class="flex items-center gap-2">
+                    <select class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs min-w-[180px]" data-se="depSelect-${st.id}"></select>
+                    <button class="px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs" data-se="depAdd-${st.id}">Add</button>
+                  </div>
+                  <div class="chips-row mt-2" data-se="depChips-${st.id}"></div>
+                </div>
+              </div>
+              <div class="mt-2">
+                <button class="px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs" data-se="save-${st.id}">Save subtask</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Prepare per-subtask deps arrays and wire events
+        for (const st of subs) {
+          const base = st.id;
+          const sel = wrap.querySelector(`[data-se="depSelect-${base}"]`);
+          const btn = wrap.querySelector(`[data-se="depAdd-${base}"]`);
+          const chipsDiv = wrap.querySelector(`[data-se="depChips-${base}"]`);
+          const doneCb = wrap.querySelector(`[data-se="done-${base}"]`);
+
+          setSelectOptions(sel, cachedTasks);
+          st._deps = Array.isArray(st.dependencies) ? st.dependencies.slice() : [];
+          renderChips(chipsDiv, st._deps, cachedTasks);
+
+          btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const id = parseInt(sel.value, 10);
+            if (!isNaN(id) && !st._deps.includes(id)) {
+              st._deps.push(id);
+              renderChips(chipsDiv, st._deps, cachedTasks);
+            }
+          });
+
+          doneCb.addEventListener('change', async () => {
+            const tid = parseInt(document.getElementById('e_id').value, 10);
+            const newStatus = doneCb.checked ? 'done' : 'todo';
+            await patchSubtask(tid, base, { status: newStatus });
+            await loadAndRenderTasks();
+          });
+
+          const saveBtn = wrap.querySelector(`[data-se="save-${base}"]`);
+          saveBtn.addEventListener('click', async () => {
+            const tid = parseInt(document.getElementById('e_id').value, 10);
+            const payload = {
+              assigned_to: wrap.querySelector(`[data-se="ass-${base}"]`).value.trim() || null,
+              estimate: wrap.querySelector(`[data-se="est-${base}"]`).value.trim() || null,
+              due_date: wrap.querySelector(`[data-se="due-${base}"]`).value.trim() || null,
+              labels: (wrap.querySelector(`[data-se="lab-${base}"]`).value || '').split(',').map(s=>s.trim()).filter(Boolean),
+              description: wrap.querySelector(`[data-se="desc-${base}"]`).value.trim(),
+              dependencies: st._deps.slice(),
+            };
+            const js = await patchSubtask(tid, base, payload);
+            if (js.ok) {
+              document.getElementById('globalMsg').textContent = `Saved subtask #${base}`;
+              const fres = await fetch(`/task/${tid}`); const updated = (await fres.json()).data;
+              renderSubtasks(updated);
+              await loadAndRenderTasks();
+            }
+          });
+        }
+      }
+
+      // Edit modal: add-subtask deps add
+      document.getElementById('e_sdepAddBtn').addEventListener('click', () => {
+        const sel = document.getElementById('e_sdepSelect');
+        const id = parseInt(sel.value, 10);
+        if (!isNaN(id) && !depsAddInModal.includes(id)) {
+          depsAddInModal.push(id);
+          renderChips(document.getElementById('e_sdepChips'), depsAddInModal, cachedTasks);
+        }
+      });
+
+      document.getElementById('editAddSubForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const tid = parseInt(document.getElementById('e_id').value, 10);
+        const payload = {
+          parent_id: tid,
+          title: document.getElementById('e_stitle').value.trim(),
+          status: document.getElementById('e_sstatus').value,
+          priority: document.getElementById('e_spriority').value,
+          due_date: document.getElementById('e_sdue').value.trim() || null,
+          assigned_to: document.getElementById('e_sassigned').value.trim() || null,
+          estimate: document.getElementById('e_sestimate').value.trim() || null,
+          labels: (document.getElementById('e_slabels').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+          dependencies: depsAddInModal.slice(),
+          description: document.getElementById('e_sdesc').value.trim(),
+        };
+        const res = await fetch(`/task/${tid}/subtask`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        const js = await res.json();
+        if (js.ok) {
+          // Add to recent list
+          const wrap = document.getElementById('recentAddedWrap');
+          const list = document.getElementById('recentAddedList');
+          wrap.hidden = false;
+          const el = document.createElement('div');
+          el.className = 'rounded-xl border border-slate-800 bg-slate-900 p-3 text-sm';
+          el.textContent = `#${js.data.id} — ${payload.title}`;
+          list.prepend(el);
+          // reset form
+          (document.getElementById('editAddSubForm')).reset();
+          depsAddInModal = [];
+          renderChips(document.getElementById('e_sdepChips'), depsAddInModal, cachedTasks);
+          // refresh subtasks and cards
+          const fres = await fetch(`/task/${tid}`); const updated = (await fres.json()).data;
+          renderSubtasks(updated);
+          await loadAndRenderTasks();
+        }
+      });
+
+      // Filters and refresh
+      document.getElementById('btnApplyFilters').addEventListener('click', loadAndRenderTasks);
+      document.getElementById('btnResetFilters').addEventListener('click', () => {
+        document.getElementById('fltStatus').value = 'todo';
+        document.getElementById('fltPriority').value = '';
+        document.getElementById('fltTag').value = '';
+        loadAndRenderTasks();
+      });
+      document.getElementById('refreshBtn').addEventListener('click', async () => {
+        await fetchInfo(); await loadAndRenderTasks();
+      });
+
+      // Close modal on outside click already implemented above
+
+      // Initial boot
+      (async () => {
+        await fetchInfo();
+        await loadAndRenderTasks();
+      })();
+    </script>
+  </body>
+</html>

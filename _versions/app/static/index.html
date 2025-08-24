@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>taskmasterweb – Add Task</title>
+    <style>
+      :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; }
+      body { margin: 0; padding: 0; background: #0b0f14; color: #e5e7eb; }
+      .container { max-width: 900px; margin: 40px auto; padding: 24px; background: #111827; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+      h1 { margin-top: 0; font-size: 24px; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      label { display: block; font-size: 13px; color: #9ca3af; margin-bottom: 6px; }
+      input, select, textarea {
+        width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #374151;
+        background: #0b1220; color: #e5e7eb; outline: none;
+      }
+      textarea { min-height: 120px; resize: vertical; }
+      .actions { display: flex; gap: 12px; margin-top: 16px; }
+      button {
+        padding: 10px 16px; border-radius: 10px; border: 1px solid #374151; background: #1f2937; color: #e5e7eb;
+        cursor: pointer;
+      }
+      .pill { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 999px; background: #0b1220; border: 1px solid #243145; }
+      .muted { color: #9ca3af; }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; color: #93c5fd; }
+      .card { padding: 12px; border: 1px solid #243145; border-radius: 12px; background: #0b1220; }
+      .footer { margin-top: 24px; font-size: 12px; color: #9ca3af; }
+      a { color: #9cc6ff; }
+      .ok { color: #86efac; }
+      .err { color: #fca5a5; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>taskmasterweb <span class="pill">Add Task</span></h1>
+      <p class="muted">Adds a task into <span class="kbd">.taskmaster/tasks/tasks.json</span> in your mounted project.
+        Uses <span class="kbd">state.json</span> to select the current <em>tag</em>. Override by specifying a tag below.</p>
+
+      <div class="card" id="infoCard">
+        <div class="muted">Storage info</div>
+        <pre id="infoPre" class="kbd">loading...</pre>
+      </div>
+
+      <form id="taskForm">
+        <div class="row">
+          <div>
+            <label for="title">Title</label>
+            <input id="title" name="title" placeholder="Short summary" required maxlength="200">
+          </div>
+          <div>
+            <label for="due_date">Due date (YYYY-MM-DD)</label>
+            <input id="due_date" name="due_date" placeholder="2025-09-30" pattern="\d{4}-\d{2}-\d{2}">
+          </div>
+        </div>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="What should be done and why?" required></textarea>
+
+        <div class="row">
+          <div>
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+              <option value="low">low</option>
+              <option value="medium" selected>medium</option>
+              <option value="high">high</option>
+            </select>
+          </div>
+          <div>
+            <label for="status">Status</label>
+            <select id="status" name="status">
+              <option value="todo" selected>todo</option>
+              <option value="in-progress">in-progress</option>
+              <option value="done">done</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="tag">Tag (optional)</label>
+            <input id="tag" name="tag" placeholder="Leave blank to use currentTag">
+          </div>
+          <div></div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Add task</button>
+          <button type="button" id="refreshBtn">Refresh info</button>
+        </div>
+      </form>
+
+      <div id="result" class="footer"></div>
+    </div>
+
+    <script>
+      async function refreshInfo() {
+        const pre = document.getElementById('infoPre');
+        pre.textContent = 'loading...';
+        try {
+          const res = await fetch('/info');
+          const js = await res.json();
+          pre.textContent = JSON.stringify(js.data, null, 2);
+        } catch (e) {
+          pre.textContent = 'error loading info: ' + e.message;
+        }
+      }
+      refreshInfo();
+      document.getElementById('refreshBtn').addEventListener('click', refreshInfo);
+
+      document.getElementById('taskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const result = document.getElementById('result');
+        result.textContent = '';
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          description: document.getElementById('description').value.trim(),
+          priority: document.getElementById('priority').value,
+          status: document.getElementById('status').value,
+          due_date: document.getElementById('due_date').value.trim() || null,
+          tag: document.getElementById('tag').value.trim() || null,
+        };
+        try {
+          const res = await fetch('/task', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+          const js = await res.json();
+          if (js.ok) {
+            result.innerHTML = '<span class="ok">Saved task #' + js.data.id + ' in tag "' + js.data.tag + '"</span>';
+            (document.getElementById('taskForm')).reset();
+            refreshInfo();
+          } else {
+            result.innerHTML = '<span class="err">' + (js.message || 'Unknown error') + '</span>';
+          }
+        } catch (err) {
+          result.innerHTML = '<span class="err">' + err.message + '</span>';
+        }
+      });
+    </script>
+  </body>
+</html>

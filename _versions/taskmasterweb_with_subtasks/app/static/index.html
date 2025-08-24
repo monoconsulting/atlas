@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>taskmasterweb – Tasks & Subtasks</title>
+    <style>
+      :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; }
+      body { margin: 0; padding: 0; background: #0b0f14; color: #e5e7eb; }
+      .container { max-width: 1100px; margin: 40px auto; padding: 24px; background: #111827; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+      h1 { margin-top: 0; font-size: 24px; }
+      h2 { font-size: 18px; margin-top: 28px; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      label { display: block; font-size: 13px; color: #9ca3af; margin-bottom: 6px; }
+      input, select, textarea {
+        width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #374151;
+        background: #0b1220; color: #e5e7eb; outline: none;
+      }
+      textarea { min-height: 120px; resize: vertical; }
+      .actions { display: flex; gap: 12px; margin-top: 16px; }
+      button {
+        padding: 10px 16px; border-radius: 10px; border: 1px solid #374151; background: #1f2937; color: #e5e7eb;
+        cursor: pointer;
+      }
+      .pill { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 999px; background: #0b1220; border: 1px solid #243145; }
+      .muted { color: #9ca3af; }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; color: #93c5fd; }
+      .card { padding: 12px; border: 1px solid #243145; border-radius: 12px; background: #0b1220; }
+      .footer { margin-top: 24px; font-size: 12px; color: #9ca3af; }
+      a { color: #9cc6ff; }
+      .ok { color: #86efac; }
+      .err { color: #fca5a5; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid #243145; padding: 8px; text-align: left; }
+      th { background: #0e1628; }
+      tr:hover { background: #0e1520; }
+      .click { cursor: pointer; text-decoration: underline; color: #9cc6ff; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>taskmasterweb <span class="pill">Tasks & Subtasks</span></h1>
+      <p class="muted">Works with <span class="kbd">/workspace/.taskmaster</span> (fallback: <span class="kbd">/workspace/taskmaster</span>).
+        Uses <span class="kbd">state.json.currentTag</span> unless you specify a tag explicitly.</p>
+
+      <div class="card" id="infoCard">
+        <div class="muted">Storage info</div>
+        <pre id="infoPre" class="kbd">loading...</pre>
+      </div>
+
+      <h2>Add Task</h2>
+      <form id="taskForm">
+        <div class="row">
+          <div>
+            <label for="title">Title</label>
+            <input id="title" name="title" placeholder="Short summary" required maxlength="200">
+          </div>
+          <div>
+            <label for="due_date">Due date (YYYY-MM-DD)</label>
+            <input id="due_date" name="due_date" placeholder="2025-09-30" pattern="\d{4}-\d{2}-\d{2}">
+          </div>
+        </div>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="What should be done and why?" required></textarea>
+
+        <div class="row">
+          <div>
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+              <option value="low">low</option>
+              <option value="medium" selected>medium</option>
+              <option value="high">high</option>
+            </select>
+          </div>
+          <div>
+            <label for="status">Status</label>
+            <select id="status" name="status">
+              <option value="todo" selected>todo</option>
+              <option value="in-progress">in-progress</option>
+              <option value="done">done</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="tag">Tag (optional)</label>
+            <input id="tag" name="tag" placeholder="Leave blank to use currentTag">
+          </div>
+          <div></div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Add task</button>
+          <button type="button" id="refreshBtn">Refresh info</button>
+        </div>
+      </form>
+
+      <h2>Tasks in current tag</h2>
+      <div class="card">
+        <div class="muted">Click a row to pre-fill the subtask parent.</div>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Title</th><th>Status</th><th>Priority</th><th>#Subtasks</th></tr>
+          </thead>
+          <tbody id="tasksTbody">
+            <tr><td colspan="5" class="muted">loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Add Subtask</h2>
+      <form id="subtaskForm">
+        <div class="row">
+          <div>
+            <label for="parent_id">Parent task ID</label>
+            <input id="parent_id" name="parent_id" placeholder="e.g. 12" required pattern="\d+">
+          </div>
+          <div>
+            <label for="sdue_date">Due date (YYYY-MM-DD)</label>
+            <input id="sdue_date" name="sdue_date" placeholder="2025-09-30" pattern="\d{4}-\d{2}-\d{2}">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="stitle">Title</label>
+            <input id="stitle" name="stitle" placeholder="Short subtask title" required maxlength="200">
+          </div>
+          <div>
+            <label for="sstatus">Status</label>
+            <select id="sstatus" name="sstatus">
+              <option value="todo" selected>todo</option>
+              <option value="in-progress">in-progress</option>
+              <option value="done">done</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="sdesc">Description</label>
+        <textarea id="sdesc" name="sdesc" placeholder="What exactly is the subtask?"></textarea>
+
+        <div class="row">
+          <div>
+            <label for="stag">Tag (optional)</label>
+            <input id="stag" name="stag" placeholder="Leave blank to use currentTag">
+          </div>
+          <div></div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Add subtask</button>
+        </div>
+      </form>
+
+      <div id="result" class="footer"></div>
+    </div>
+
+    <script>
+      async function refreshInfo() {
+        const pre = document.getElementById('infoPre');
+        pre.textContent = 'loading...';
+        try {
+          const res = await fetch('/info');
+          const js = await res.json();
+          pre.textContent = JSON.stringify(js.data, null, 2);
+        } catch (e) {
+          pre.textContent = 'error loading info: ' + e.message;
+        }
+      }
+
+      async function loadTasks() {
+        const tbody = document.getElementById('tasksTbody');
+        tbody.innerHTML = '<tr><td colspan="5" class="muted">loading…</td></tr>';
+        try {
+          const res = await fetch('/tasks');
+          const js = await res.json();
+          const rows = [];
+          for (const t of (js.data || [])) {
+            const id = t.id;
+            const title = t.title || '';
+            const status = t.status || '';
+            const prio = t.priority || '';
+            const subs = Array.isArray(t.subtasks) ? t.subtasks.length : 0;
+            rows.push(`<tr data-id="${id}" class="click"><td>${id}</td><td>${title}</td><td>${status}</td><td>${prio}</td><td>${subs}</td></tr>`);
+          }
+          if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="5" class="muted">No tasks found in current tag.</td></tr>';
+          } else {
+            tbody.innerHTML = rows.join('');
+            for (const tr of tbody.querySelectorAll('tr')) {
+              tr.addEventListener('click', () => {
+                const id = tr.getAttribute('data-id');
+                document.getElementById('parent_id').value = id;
+                document.getElementById('result').textContent = 'Prefilled parent id ' + id;
+              });
+            }
+          }
+        } catch (e) {
+          tbody.innerHTML = '<tr><td colspan="5" class="err">Error loading tasks: ' + e.message + '</td></tr>';
+        }
+      }
+
+      // Initial load
+      refreshInfo();
+      loadTasks();
+      document.getElementById('refreshBtn').addEventListener('click', () => { refreshInfo(); loadTasks(); });
+
+      // Add task handler
+      document.getElementById('taskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const result = document.getElementById('result');
+        result.textContent = '';
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          description: document.getElementById('description').value.trim(),
+          priority: document.getElementById('priority').value,
+          status: document.getElementById('status').value,
+          due_date: document.getElementById('due_date').value.trim() || null,
+          tag: document.getElementById('tag').value.trim() || null,
+        };
+        try {
+          const res = await fetch('/task', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+          const js = await res.json();
+          if (js.ok) {
+            result.innerHTML = '<span class="ok">Saved task #' + js.data.id + ' in tag "' + js.data.tag + '"</span>';
+            (document.getElementById('taskForm')).reset();
+            refreshInfo();
+            loadTasks();
+          } else {
+            result.innerHTML = '<span class="err">' + (js.message || 'Unknown error') + '</span>';
+          }
+        } catch (err) {
+          result.innerHTML = '<span class="err">' + err.message + '</span>';
+        }
+      });
+
+      // Add subtask handler
+      document.getElementById('subtaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const result = document.getElementById('result');
+        result.textContent = '';
+        const parent_id = parseInt(document.getElementById('parent_id').value, 10);
+        const payload = {
+          parent_id,
+          title: document.getElementById('stitle').value.trim(),
+          description: document.getElementById('sdesc').value.trim(),
+          status: document.getElementById('sstatus').value,
+          due_date: document.getElementById('sdue_date').value.trim() || null,
+          tag: document.getElementById('stag').value.trim() || null,
+        };
+        try {
+          const res = await fetch('/task/' + parent_id + '/subtask', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+          const js = await res.json();
+          if (js.ok) {
+            result.innerHTML = '<span class="ok">Saved subtask #' + js.data.id + ' under parent #' + parent_id + '</span>';
+            (document.getElementById('subtaskForm')).reset();
+            loadTasks();
+          } else {
+            result.innerHTML = '<span class="err">' + (js.message || 'Unknown error') + '</span>';
+          }
+        } catch (err) {
+          result.innerHTML = '<span class="err">' + err.message + '</span>';
+        }
+      });
+    </script>
+  </body>
+</html>

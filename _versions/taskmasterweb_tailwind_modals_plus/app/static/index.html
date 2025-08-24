@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Master AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <!-- Header -->
+    <header class="w-full border-b border-slate-800 bg-slate-950/60 backdrop-blur sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <h1 id="hdrTitle" class="text-xl md:text-2xl font-semibold">Task Master AI</h1>
+        <div class="flex items-center gap-3">
+          <button id="btnOpenAddTask" class="text-sm px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Add Task</button>
+          <span id="projectName" class="text-sm text-slate-400 px-3 py-1 rounded-full border border-slate-800">loading project…</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left column -->
+        <section class="lg:col-span-2 space-y-6">
+          <!-- Box 1: Storage info -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">
+              Works with <code class="font-mono text-blue-300">/workspace/.taskmaster</code>
+              <span class="text-slate-400">(fallback: <code class="font-mono text-blue-300">/workspace/taskmaster</code>)</span>.
+              Uses <code class="font-mono text-blue-300">state.json.currentTag</code> unless you specify a tag explicitly.
+            </h2>
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm text-slate-400">Storage info</h3>
+                <button id="refreshBtn" class="text-xs px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Refresh</button>
+              </div>
+              <pre id="infoPre" class="bg-slate-900 rounded-xl p-4 overflow-auto text-xs border border-slate-800">loading…</pre>
+            </div>
+          </div>
+
+          <!-- Box 2: Quick Add Subtask by Parent ID (still available) -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Add Subtasks for an existing task</h2>
+            <form id="subtaskForm" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="parent_id">Parent task ID</label>
+                  <input id="parent_id" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 12" required pattern="\d+">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="stitle">Title</label>
+                  <input id="stitle" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Short subtask title" required maxlength="200">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sstatus">Status</label>
+                  <select id="sstatus" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="todo" selected>todo</option>
+                    <option value="in-progress">in-progress</option>
+                    <option value="done">done</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sdue_date">Due date</label>
+                  <input id="sdue_date" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sassigned">Assigned to</label>
+                  <input id="sassigned" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="name or @handle">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sestimate">Estimate</label>
+                  <input id="sestimate" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 4h">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="slabels">Labels (comma)</label>
+                  <input id="slabels" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="frontend,bug">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="stag">Tag (optional)</label>
+                  <input id="stag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Leave blank to use currentTag">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sdesc">Description</label>
+                  <input id="sdesc" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Subtask details">
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Add subtask</button>
+                <div id="addSubResult" class="text-sm self-center"></div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Right column -->
+        <aside class="lg:col-span-1 space-y-6">
+          <!-- Filters -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Tasks</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltStatus">Status</label>
+                <select id="fltStatus" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                  <option value="">All</option>
+                  <option value="todo" selected>todo</option>
+                  <option value="in-progress">in-progress</option>
+                  <option value="done">done</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltPriority">Priority</label>
+                <select id="fltPriority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                  <option value="" selected>All</option>
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="high">high</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltTag">Tag</label>
+                <input id="fltTag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="(blank = currentTag)">
+              </div>
+            </div>
+            <div class="flex gap-3 mt-3">
+              <button id="btnApplyFilters" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Apply</button>
+              <button id="btnResetFilters" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Reset</button>
+            </div>
+          </div>
+
+          <!-- Cards list -->
+          <div id="cardsList" class="space-y-3"></div>
+        </aside>
+      </div>
+
+      <div id="globalMsg" class="mt-6 text-sm text-slate-400"></div>
+    </main>
+
+    <!-- Add Task Modal -->
+    <div id="addTaskModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-20">
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-3xl mx-4 p-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Add Task</h2>
+          <button id="btnCloseAddTask" class="text-sm px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Close</button>
+        </div>
+
+        <form id="modalTaskForm" class="space-y-4 mt-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_title">Title</label>
+              <input id="m_title" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" required maxlength="200">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_due">Due date</label>
+              <input id="m_due" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_priority">Priority</label>
+              <select id="m_priority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                <option value="low">low</option>
+                <option value="medium" selected>medium</option>
+                <option value="high">high</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_status">Status</label>
+              <select id="m_status" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                <option value="todo" selected>todo</option>
+                <option value="in-progress">in-progress</option>
+                <option value="done">done</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_tag">Tag (optional)</label>
+              <input id="m_tag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Leave blank to use currentTag">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_assigned">Assigned to</label>
+              <input id="m_assigned" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="@name">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_estimate">Estimate</label>
+              <input id="m_estimate" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 6h">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_labels">Labels (comma)</label>
+              <input id="m_labels" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="frontend,ui">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="m_rel">Relations (IDs comma)</label>
+              <input id="m_rel" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="12,7,44">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm text-slate-400 mb-1" for="m_desc">Description</label>
+            <textarea id="m_desc" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[120px]" required></textarea>
+          </div>
+
+          <!-- Subtasks composer -->
+          <div class="mt-2">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold">Subtasks</h3>
+              <button id="btnAddSubToNew" type="button" class="text-xs px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Add new subtask</button>
+            </div>
+            <div id="newSubsList" class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+          </div>
+
+          <div class="flex gap-3 mt-4">
+            <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Create task (+ subtasks)</button>
+            <div id="modalAddTaskResult" class="text-sm self-center"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="editTaskModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-20">
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-4xl mx-4 p-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Edit Task</h2>
+          <button id="btnCloseEditTask" class="text-sm px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Close</button>
+        </div>
+
+        <form id="editTaskForm" class="space-y-4 mt-4">
+          <input type="hidden" id="e_id">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_title">Title</label>
+              <input id="e_title" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" required>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_due">Due date</label>
+              <input id="e_due" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_priority">Priority</label>
+              <select id="e_priority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                <option value="low">low</option>
+                <option value="medium">medium</option>
+                <option value="high">high</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_status">Status</label>
+              <select id="e_status" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                <option value="todo">todo</option>
+                <option value="in-progress">in-progress</option>
+                <option value="done">done</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_assigned">Assigned to</label>
+              <input id="e_assigned" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="@name">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_estimate">Estimate</label>
+              <input id="e_estimate" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 6h">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_labels">Labels (comma)</label>
+              <input id="e_labels" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="ux,backend">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1" for="e_rel">Relations (IDs comma)</label>
+              <input id="e_rel" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="12,7">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm text-slate-400 mb-1" for="e_desc">Description</label>
+            <textarea id="e_desc" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[120px]" required></textarea>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Save changes</button>
+            <div id="editTaskResult" class="text-sm self-center"></div>
+          </div>
+        </form>
+
+        <div class="mt-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-md font-semibold">Subtasks</h3>
+            <button id="btnAddSubInEdit" class="text-xs px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Add subtask</button>
+          </div>
+          <div id="subtasksList" class="space-y-2 mt-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ----- State -----
+      let cachedTasks = [];
+      let newSubtasksBuffer = []; // for Add Task modal
+
+      function statusOrder(s) {
+        const map = { 'todo': 0, 'in-progress': 1, 'done': 2 };
+        return map[s] ?? 99;
+      }
+
+      function cardPriorityClasses(p) {
+        if (p === 'high') return 'bg-red-900/30 border-red-600';
+        if (p === 'medium') return 'bg-orange-900/20 border-orange-600';
+        return 'bg-slate-950 border-slate-800';
+      }
+
+      // ----- Fetchers -----
+      async function fetchInfo() {
+        const res = await fetch('/info');
+        const js = await res.json();
+        document.getElementById('infoPre').textContent = JSON.stringify(js.data, null, 2);
+        document.getElementById('projectName').textContent = js.data?.project_name || 'workspace';
+        document.getElementById('hdrTitle').textContent = `Task Master AI — ${js.data?.project_name || 'workspace'}`;
+        return js.data;
+      }
+
+      async function fetchTasks(tag) {
+        const url = tag ? `/tasks?tag=${encodeURIComponent(tag)}` : '/tasks';
+        const res = await fetch(url);
+        const js = await res.json();
+        return js.data || [];
+      }
+
+      async function patchTask(id, payload) {
+        const res = await fetch(`/task/${id}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        return await res.json();
+      }
+
+      async function patchSubtask(taskId, subId, payload) {
+        const res = await fetch(`/task/${taskId}/subtask/${subId}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        return await res.json();
+      }
+
+      // ----- Rendering -----
+      function renderCards(tasks) {
+        const list = document.getElementById('cardsList');
+        if (!tasks.length) {
+          list.innerHTML = '<div class="rounded-xl border border-slate-800 bg-slate-950 p-4 text-sm text-slate-400">No tasks.</div>';
+          return;
+        }
+        const html = tasks.map(t => {
+          const subs = Array.isArray(t.subtasks) ? t.subtasks.length : 0;
+          const prioCls = cardPriorityClasses(t.priority);
+          const labels = Array.isArray(t.labels) ? t.labels : [];
+          const rels = Array.isArray(t.relations) ? t.relations : [];
+          return `
+            <div class="rounded-2xl border ${prioCls} p-4 hover:border-slate-600 transition" data-id="${t.id}">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="text-sm text-slate-400">#${t.id}</div>
+                  <h3 class="text-lg font-semibold truncate">${(t.title||'').replace(/</g,'&lt;')}</h3>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <div class="relative">
+                    <button class="px-2 py-1 rounded-full border border-slate-700 text-xs hover:bg-slate-800" data-action="status" data-id="${t.id}">${t.status}</button>
+                    <div class="absolute right-0 mt-1 hidden bg-slate-900 border border-slate-700 rounded-lg text-xs" data-menu="status-${t.id}">
+                      <button class="block px-3 py-1 hover:bg-slate-800" data-set-status="todo" data-id="${t.id}">todo</button>
+                      <button class="block px-3 py-1 hover:bg-slate-800" data-set-status="in-progress" data-id="${t.id}">in-progress</button>
+                      <button class="block px-3 py-1 hover:bg-slate-800" data-set-status="done" data-id="${t.id}">done</button>
+                    </div>
+                  </div>
+                  <div class="relative">
+                    <button class="px-2 py-1 rounded-full border border-slate-700 text-xs hover:bg-slate-800" data-action="priority" data-id="${t.id}">${t.priority}</button>
+                    <div class="absolute right-0 mt-1 hidden bg-slate-900 border border-slate-700 rounded-lg text-xs" data-menu="priority-${t.id}">
+                      <button class="block px-3 py-1 hover:bg-slate-800" data-set-priority="low" data-id="${t.id}">low</button>
+                      <button class="block px-3 py-1 hover:bg-slate-800" data-set-priority="medium" data-id="${t.id}">medium</button>
+                      <button class="block px-3 py-1 hover:bg-slate-800" data-set-priority="high" data-id="${t.id}">high</button>
+                    </div>
+                  </div>
+                  ${t.due_date ? `<span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${t.due_date}</span>` : ''}
+                  <div class="relative">
+                    <button class="px-2 py-1 rounded-full border border-slate-700 text-xs hover:bg-slate-800" data-action="assigned" data-id="${t.id}">${t.assigned_to ? ('@'+t.assigned_to) : 'assign'}</button>
+                    <div class="absolute right-0 mt-1 hidden bg-slate-900 border border-slate-700 rounded-lg text-xs p-2" data-menu="assigned-${t.id}">
+                      <input class="w-40 rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="@name" id="ass-input-${t.id}" value="${t.assigned_to||''}">
+                      <button class="mt-2 w-full px-2 py-1 rounded border border-slate-700 hover:bg-slate-800" data-save-assigned="${t.id}">Save</button>
+                    </div>
+                  </div>
+                  <div class="relative">
+                    <button class="px-2 py-1 rounded-full border border-slate-700 text-xs hover:bg-slate-800" data-action="estimate" data-id="${t.id}">${t.estimate || 'est'}</button>
+                    <div class="absolute right-0 mt-1 hidden bg-slate-900 border border-slate-700 rounded-lg text-xs p-2" data-menu="estimate-${t.id}">
+                      <input class="w-28 rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="e.g. 4h" id="est-input-${t.id}" value="${t.estimate||''}">
+                      <button class="mt-2 w-full px-2 py-1 rounded border border-slate-700 hover:bg-slate-800" data-save-estimate="${t.id}">Save</button>
+                    </div>
+                  </div>
+                  ${labels.length ? labels.map(l => `<span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${l}</span>`).join('') : ''}
+                  ${rels.length ? `<span class="px-2 py-1 rounded-full border border-slate-700 text-xs">rel:${rels.join(',')}</span>` : ''}
+                  <button class="px-2 py-1 rounded-full border border-slate-700 text-xs hover:bg-slate-800" data-open-edit="${t.id}">Edit</button>
+                </div>
+              </div>
+              <p class="mt-2 text-sm text-slate-300 line-clamp-3">${(t.description||'').replace(/</g,'&lt;')}</p>
+              <div class="mt-3 text-xs text-slate-400">${subs} subtasks</div>
+            </div>
+          `;
+        }).join('');
+        list.innerHTML = html;
+
+        // Wire menus and actions
+        function toggleMenu(menu) { menu.classList.toggle('hidden'); }
+        document.addEventListener('click', (e) => {
+          // Close all menus if clicking outside
+          if (!e.target.closest('[data-action]') && !e.target.closest('[data-menu]')) {
+            for (const m of document.querySelectorAll('[data-menu]')) m.classList.add('hidden');
+          }
+        });
+
+        for (const btn of list.querySelectorAll('[data-action="status"]')) {
+          btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const id = btn.getAttribute('data-id');
+            const menu = list.querySelector(`[data-menu="status-${id}"]`);
+            toggleMenu(menu);
+          });
+        }
+        for (const opt of list.querySelectorAll('[data-set-status]')) {
+          opt.addEventListener('click', async () => {
+            const id = parseInt(opt.getAttribute('data-id'), 10);
+            const val = opt.getAttribute('data-set-status');
+            const js = await patchTask(id, { status: val });
+            if (js.ok) { await loadAndRenderTasks(); }
+          });
+        }
+        for (const btn of list.querySelectorAll('[data-action="priority"]')) {
+          btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const id = btn.getAttribute('data-id');
+            const menu = list.querySelector(`[data-menu="priority-${id}"]`);
+            toggleMenu(menu);
+          });
+        }
+        for (const opt of list.querySelectorAll('[data-set-priority]')) {
+          opt.addEventListener('click', async () => {
+            const id = parseInt(opt.getAttribute('data-id'), 10);
+            const val = opt.getAttribute('data-set-priority');
+            const js = await patchTask(id, { priority: val });
+            if (js.ok) { await loadAndRenderTasks(); }
+          });
+        }
+        for (const btn of list.querySelectorAll('[data-action="assigned"]')) {
+          btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const id = btn.getAttribute('data-id');
+            const menu = list.querySelector(`[data-menu="assigned-${id}"]`);
+            toggleMenu(menu);
+            const input = document.getElementById(`ass-input-${id}`);
+            setTimeout(() => input && input.focus(), 0);
+          });
+        }
+        for (const btn of list.querySelectorAll('[data-save-assigned]')) {
+          btn.addEventListener('click', async () => {
+            const id = parseInt(btn.getAttribute('data-save-assigned'), 10);
+            const val = document.getElementById(`ass-input-${id}`).value.trim() || null;
+            const js = await patchTask(id, { assigned_to: val });
+            if (js.ok) { await loadAndRenderTasks(); }
+          });
+        }
+        for (const btn of list.querySelectorAll('[data-action="estimate"]')) {
+          btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const id = btn.getAttribute('data-id');
+            const menu = list.querySelector(`[data-menu="estimate-${id}"]`);
+            toggleMenu(menu);
+            const input = document.getElementById(`est-input-${id}`);
+            setTimeout(() => input && input.focus(), 0);
+          });
+        }
+        for (const btn of list.querySelectorAll('[data-save-estimate]')) {
+          btn.addEventListener('click', async () => {
+            const id = parseInt(btn.getAttribute('data-save-estimate'), 10);
+            const val = document.getElementById(`est-input-${id}`).value.trim() || null;
+            const js = await patchTask(id, { estimate: val });
+            if (js.ok) { await loadAndRenderTasks(); }
+          });
+        }
+        for (const btn of list.querySelectorAll('[data-open-edit]')) {
+          btn.addEventListener('click', async () => {
+            const id = parseInt(btn.getAttribute('data-open-edit'), 10);
+            await openEditModal(id);
+          });
+        }
+      }
+
+      async function loadAndRenderTasks() {
+        const tag = document.getElementById('fltTag').value.trim() || null;
+        const statusF = document.getElementById('fltStatus').value;
+        const prioF = document.getElementById('fltPriority').value;
+
+        let tasks = await fetchTasks(tag);
+        tasks = tasks.filter(t => (!statusF || t.status === statusF) && (!prioF || t.priority === prioF));
+        tasks.sort((a,b) => (statusOrder(a.status) - statusOrder(b.status)) || (b.id - a.id));
+        cachedTasks = tasks;
+        renderCards(tasks);
+      }
+
+      // ----- Modals helpers -----
+      function show(el) { el.classList.remove('hidden'); el.classList.add('flex'); }
+      function hide(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+
+      // Add Task modal logic
+      document.getElementById('btnOpenAddTask').addEventListener('click', () => {
+        newSubtasksBuffer = [];
+        document.getElementById('newSubsList').innerHTML = '';
+        document.getElementById('modalTaskForm').reset();
+        show(document.getElementById('addTaskModal'));
+      });
+      document.getElementById('btnCloseAddTask').addEventListener('click', () => hide(document.getElementById('addTaskModal')));
+
+      document.getElementById('btnAddSubToNew').addEventListener('click', () => {
+        const idx = newSubtasksBuffer.length + 1;
+        // Add a blank subtask box editor
+        const box = document.createElement('div');
+        box.className = 'rounded-xl border border-slate-800 bg-slate-900 p-3 space-y-2';
+        box.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-sm" placeholder="Title" data-ns="title">
+            <select class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-sm" data-ns="status">
+              <option value="todo" selected>todo</option>
+              <option value="in-progress">in-progress</option>
+              <option value="done">done</option>
+            </select>
+            <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-sm" placeholder="YYYY-MM-DD" data-ns="due">
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-sm" placeholder="@assigned" data-ns="assigned">
+            <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-sm" placeholder="estimate e.g. 3h" data-ns="estimate">
+            <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-sm" placeholder="labels comma" data-ns="labels">
+          </div>
+          <textarea class="w-full rounded bg-slate-950 border border-slate-800 px-2 py-1 text-sm min-h-[60px]" placeholder="Description" data-ns="desc"></textarea>
+        `;
+        document.getElementById('newSubsList').appendChild(box);
+        newSubtasksBuffer.push(box); // store node refs
+      });
+
+      document.getElementById('modalTaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          title: document.getElementById('m_title').value.trim(),
+          description: document.getElementById('m_desc').value.trim(),
+          priority: document.getElementById('m_priority').value,
+          status: document.getElementById('m_status').value,
+          due_date: document.getElementById('m_due').value.trim() || null,
+          tag: document.getElementById('m_tag').value.trim() || null,
+          assigned_to: document.getElementById('m_assigned').value.trim() || null,
+          estimate: document.getElementById('m_estimate').value.trim() || null,
+          labels: (document.getElementById('m_labels').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+          relations: (document.getElementById('m_rel').value || '').split(',').map(s=>parseInt(s.trim(),10)).filter(n=>!isNaN(n)),
+        };
+        const res = await fetch('/task', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        const js = await res.json();
+        const out = document.getElementById('modalAddTaskResult');
+        if (!js.ok) { out.textContent = js.message || 'Error'; return; }
+
+        const newId = js.data.id;
+        // Post buffered subtasks
+        for (const box of newSubtasksBuffer) {
+          const get = sel => (box.querySelector(`[data-ns="${sel}"]`)?.value || '').trim();
+          const sPayload = {
+            parent_id: newId,
+            title: get('title'),
+            description: get('desc'),
+            status: box.querySelector('[data-ns="status"]').value,
+            due_date: get('due') || null,
+            assigned_to: get('assigned') || null,
+            estimate: get('estimate') || null,
+            labels: (get('labels') || '').split(',').map(s=>s.trim()).filter(Boolean),
+          };
+          await fetch(`/task/${newId}/subtask`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(sPayload)});
+        }
+        out.textContent = `Created task #${newId} with ${newSubtasksBuffer.length} subtasks`;
+        await loadAndRenderTasks();
+        // Prefill quick add parent id too
+        document.getElementById('parent_id').value = newId;
+      });
+
+      // Edit Task modal logic
+      async function openEditModal(taskId) {
+        const res = await fetch(`/task/${taskId}`);
+        const js = await res.json();
+        if (!js.ok) return;
+        const t = js.data;
+        document.getElementById('e_id').value = t.id;
+        document.getElementById('e_title').value = t.title || '';
+        document.getElementById('e_due').value = t.due_date || '';
+        document.getElementById('e_priority').value = t.priority || 'medium';
+        document.getElementById('e_status').value = t.status || 'todo';
+        document.getElementById('e_assigned').value = t.assigned_to || '';
+        document.getElementById('e_estimate').value = t.estimate || '';
+        document.getElementById('e_labels').value = (t.labels||[]).join(',');
+        document.getElementById('e_rel').value = (t.relations||[]).join(',');
+        document.getElementById('e_desc').value = t.description || '';
+        renderSubtasks(t);
+        show(document.getElementById('editTaskModal'));
+      }
+      window.openEditModal = openEditModal;
+      document.getElementById('btnCloseEditTask').addEventListener('click', () => hide(document.getElementById('editTaskModal')));
+
+      document.getElementById('editTaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('e_id').value, 10);
+        const payload = {
+          title: document.getElementById('e_title').value.trim(),
+          description: document.getElementById('e_desc').value.trim(),
+          priority: document.getElementById('e_priority').value,
+          status: document.getElementById('e_status').value,
+          due_date: document.getElementById('e_due').value.trim() || null,
+          assigned_to: document.getElementById('e_assigned').value.trim() || null,
+          estimate: document.getElementById('e_estimate').value.trim() || null,
+          labels: (document.getElementById('e_labels').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+          relations: (document.getElementById('e_rel').value || '').split(',').map(s=>parseInt(s.trim(),10)).filter(n=>!isNaN(n)),
+        };
+        const js = await patchTask(id, payload);
+        const out = document.getElementById('editTaskResult');
+        if (js.ok) {
+          out.textContent = 'Saved';
+          await loadAndRenderTasks();
+        } else {
+          out.textContent = js.message || 'Failed';
+        }
+      });
+
+      function renderSubtasks(t) {
+        const wrap = document.getElementById('subtasksList');
+        const subs = Array.isArray(t.subtasks) ? t.subtasks.slice() : [];
+        subs.sort((a,b) => (statusOrder(a.status) - statusOrder(b.status)) || (a.id - b.id));
+        if (!subs.length) {
+          wrap.innerHTML = '<div class="text-sm text-slate-400">No subtasks yet.</div>';
+          return;
+        }
+        wrap.innerHTML = subs.map(st => `
+          <div class="rounded-xl border border-slate-800 bg-slate-900 p-3" data-sid="${st.id}">
+            <div class="flex items-center justify-between gap-2">
+              <div class="font-medium">#${st.id} – ${(st.title||'').replace(/</g,'&lt;')}</div>
+              <div class="flex gap-2">
+                <select class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" data-se="status-${st.id}">
+                  <option value="todo"${st.status==='todo'?' selected':''}>todo</option>
+                  <option value="in-progress"${st.status==='in-progress'?' selected':''}>in-progress</option>
+                  <option value="done"${st.status==='done'?' selected':''}>done</option>
+                </select>
+                <button class="px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs" data-se="save-${st.id}">Save</button>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mt-2">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="@assigned" data-se="ass-${st.id}" value="${st.assigned_to||''}">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="estimate" data-se="est-${st.id}" value="${st.estimate||''}">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="YYYY-MM-DD" data-se="due-${st.id}" value="${st.due_date||''}">
+              <input class="rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs" placeholder="labels comma" data-se="lab-${st.id}" value="${(st.labels||[]).join(',')}">
+            </div>
+            <textarea class="w-full rounded bg-slate-950 border border-slate-800 px-2 py-1 text-xs min-h-[60px] mt-2" data-se="desc-${st.id}" placeholder="Description">${(st.description||'').replace(/</g,'&lt;')}</textarea>
+          </div>
+        `).join('');
+
+        for (const btn of wrap.querySelectorAll('[data-se^="save-"]')) {
+          btn.addEventListener('click', async () => {
+            const sid = parseInt(btn.getAttribute('data-se').split('-')[1], 10);
+            const tid = parseInt(document.getElementById('e_id').value, 10);
+            const payload = {
+              status: wrap.querySelector(`[data-se="status-${sid}"]`).value,
+              assigned_to: wrap.querySelector(`[data-se="ass-${sid}"]`).value.trim() || null,
+              estimate: wrap.querySelector(`[data-se="est-${sid}"]`).value.trim() || null,
+              due_date: wrap.querySelector(`[data-se="due-${sid}"]`).value.trim() || null,
+              labels: (wrap.querySelector(`[data-se="lab-${sid}"]`).value || '').split(',').map(s=>s.trim()).filter(Boolean),
+              description: wrap.querySelector(`[data-se="desc-${sid}"]`).value.trim(),
+              title: t.subtasks.find(x => x.id===sid)?.title || undefined,
+            };
+            const js = await patchSubtask(tid, sid, payload);
+            if (js.ok) {
+              document.getElementById('globalMsg').textContent = `Saved subtask #${sid}`;
+              const res = await fetch(`/task/${tid}`); const updated = (await res.json()).data;
+              renderSubtasks(updated);
+              await loadAndRenderTasks();
+            } else {
+              document.getElementById('globalMsg').textContent = js.message || 'Failed to save subtask';
+            }
+          });
+        }
+      }
+
+      document.getElementById('btnAddSubInEdit').addEventListener('click', async () => {
+        const tid = parseInt(document.getElementById('e_id').value, 10);
+        const payload = {
+          parent_id: tid, title: 'New subtask', description: '', status: 'todo',
+        };
+        const res = await fetch(`/task/${tid}/subtask`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        const js = await res.json();
+        if (js.ok) {
+          const fres = await fetch(`/task/${tid}`); const updated = (await fres.json()).data;
+          renderSubtasks(updated);
+          await loadAndRenderTasks();
+        }
+      });
+
+      // Filters and refresh
+      document.getElementById('btnApplyFilters').addEventListener('click', loadAndRenderTasks);
+      document.getElementById('btnResetFilters').addEventListener('click', () => {
+        document.getElementById('fltStatus').value = 'todo';
+        document.getElementById('fltPriority').value = '';
+        document.getElementById('fltTag').value = '';
+        loadAndRenderTasks();
+      });
+      document.getElementById('refreshBtn').addEventListener('click', async () => {
+        await fetchInfo(); await loadAndRenderTasks();
+      });
+
+      // Quick Add Subtask form (left column)
+      document.getElementById('subtaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          parent_id: parseInt(document.getElementById('parent_id').value, 10),
+          title: document.getElementById('stitle').value.trim(),
+          description: document.getElementById('sdesc').value.trim(),
+          status: document.getElementById('sstatus').value,
+          due_date: document.getElementById('sdue_date').value.trim() || null,
+          assigned_to: document.getElementById('sassigned').value.trim() || null,
+          estimate: document.getElementById('sestimate').value.trim() || null,
+          labels: (document.getElementById('slabels').value || '').split(',').map(s=>s.trim()).filter(Boolean),
+          tag: document.getElementById('stag').value.trim() || null,
+        };
+        const res = await fetch(`/task/${payload.parent_id}/subtask`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        const js = await res.json();
+        const out = document.getElementById('addSubResult');
+        if (js.ok) {
+          out.textContent = `Saved subtask #${js.data.id} under task #${payload.parent_id}`;
+          (document.getElementById('subtaskForm')).reset();
+          await loadAndRenderTasks();
+        } else {
+          out.textContent = js.message || 'Error';
+        }
+      });
+
+      // Initial boot
+      (async () => {
+        await fetchInfo();
+        await loadAndRenderTasks();
+      })();
+    </script>
+  </body>
+</html>

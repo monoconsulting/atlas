@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  taskmasterweb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskmasterweb
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT:-8099}:8000"
+    environment:
+      # Optional overrides; defaults match the Dockerfile
+      TASKMASTER_DIR: "${TASKMASTER_DIR:-/workspace/.taskmaster}"
+      TASKS_FILE: "${TASKS_FILE:-/workspace/.taskmaster/tasks/tasks.json}"
+      STATE_FILE: "${STATE_FILE:-/workspace/.taskmaster/state.json}"
+      CONFIG_FILE: "${CONFIG_FILE:-/workspace/.taskmaster/config.json}"
+    volumes:
+      # Mount the chosen project root to /workspace (EDIT the left side path per project)
+      - "${PROJECT_ROOT}:/workspace"

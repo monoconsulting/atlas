@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Master AI</title>
+    <!-- Tailwind via CDN for simplicity; can be compiled locally later -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <!-- Header -->
+    <header class="w-full border-b border-slate-800 bg-slate-950/60 backdrop-blur sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <h1 id="hdrTitle" class="text-xl md:text-2xl font-semibold">Task Master AI</h1>
+        <span id="projectName" class="text-sm text-slate-400 px-3 py-1 rounded-full border border-slate-800">loading project…</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left column (two thirds on lg due to spec: left column houses three boxes) -->
+        <section class="lg:col-span-2 space-y-6">
+          <!-- Box 1: Storage info -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Works with <code class="font-mono text-blue-300">/workspace/.taskmaster</code> <span class="text-slate-400">(fallback: <code class="font-mono text-blue-300">/workspace/taskmaster</code>)</span>. Uses <code class="font-mono text-blue-300">state.json.currentTag</code> unless you specify a tag explicitly.</h2>
+            <div>
+              <h3 class="text-sm text-slate-400 mb-2">Storage info</h3>
+              <pre id="infoPre" class="bg-slate-900 rounded-xl p-4 overflow-auto text-xs border border-slate-800">loading…</pre>
+            </div>
+          </div>
+
+          <!-- Box 2: Add Task -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-lg font-semibold">Add Task</h2>
+              <button id="refreshBtn" class="text-sm px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Refresh info</button>
+            </div>
+            <form id="taskForm" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="title">Title</label>
+                  <input id="title" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Short summary" maxlength="200" required>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="due_date">Due date (YYYY-MM-DD)</label>
+                  <input id="due_date" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="2025-09-30" pattern="\d{4}-\d{2}-\d{2}">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="description">Description</label>
+                <textarea id="description" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[120px]" placeholder="What should be done and why?" required></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="priority">Priority</label>
+                  <select id="priority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="low">low</option>
+                    <option value="medium" selected>medium</option>
+                    <option value="high">high</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="status">Status</label>
+                  <select id="status" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="todo" selected>todo</option>
+                    <option value="in-progress">in-progress</option>
+                    <option value="done">done</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="tag">Tag (optional)</label>
+                  <input id="tag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Leave blank to use currentTag">
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Add task</button>
+                <div id="addTaskResult" class="text-sm self-center"></div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Box 3: Add subtasks for the newly created task -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Add Subtasks for the newly created task</h2>
+            <form id="subtaskForm" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="parent_id">Parent task ID</label>
+                  <input id="parent_id" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="e.g. 12" required pattern="\d+">
+                  <p class="text-xs text-slate-400 mt-1">Prefilled after "Add task".</p>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sdue_date">Due date (YYYY-MM-DD)</label>
+                  <input id="sdue_date" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="2025-09-30" pattern="\d{4}-\d{2}-\d{2}">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="sstatus">Status</label>
+                  <select id="sstatus" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="todo" selected>todo</option>
+                    <option value="in-progress">in-progress</option>
+                    <option value="done">done</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="stitle">Title</label>
+                  <input id="stitle" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Short subtask title" required maxlength="200">
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="stag">Tag (optional)</label>
+                  <input id="stag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="Leave blank to use currentTag">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="sdesc">Description</label>
+                <textarea id="sdesc" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[100px]" placeholder="What exactly is the subtask?"></textarea>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Add subtask</button>
+                <div id="addSubResult" class="text-sm self-center"></div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Right column: task list & edit panel -->
+        <aside class="lg:col-span-1 space-y-6">
+          <!-- Filters -->
+          <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <h2 class="text-lg font-semibold mb-3">Tasks</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltStatus">Status</label>
+                <select id="fltStatus" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                  <option value="">All</option>
+                  <option value="todo" selected>todo</option>
+                  <option value="in-progress">in-progress</option>
+                  <option value="done">done</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltPriority">Priority</label>
+                <select id="fltPriority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                  <option value="" selected>All</option>
+                  <option value="low">low</option>
+                  <option value="medium">medium</option>
+                  <option value="high">high</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="fltTag">Tag</label>
+                <input id="fltTag" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="(blank = currentTag)">
+              </div>
+            </div>
+            <div class="flex gap-3 mt-3">
+              <button id="btnApplyFilters" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Apply</button>
+              <button id="btnResetFilters" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Reset</button>
+            </div>
+          </div>
+
+          <!-- Cards list -->
+          <div id="cardsList" class="space-y-3"></div>
+
+          <!-- Edit panel -->
+          <div id="editPanel" class="hidden rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-lg font-semibold">Edit Task</h2>
+              <button id="btnCloseEdit" class="text-sm px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Close</button>
+            </div>
+
+            <form id="editTaskForm" class="space-y-4">
+              <input type="hidden" id="edit_task_id">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="edit_title">Title</label>
+                  <input id="edit_title" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" required>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="edit_due_date">Due date (YYYY-MM-DD)</label>
+                  <input id="edit_due_date" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" pattern="\d{4}-\d{2}-\d{2}">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm text-slate-400 mb-1" for="edit_description">Description</label>
+                <textarea id="edit_description" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[120px]" required></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="edit_priority">Priority</label>
+                  <select id="edit_priority" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="low">low</option>
+                    <option value="medium">medium</option>
+                    <option value="high">high</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="edit_status">Status</label>
+                  <select id="edit_status" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                    <option value="todo">todo</option>
+                    <option value="in-progress">in-progress</option>
+                    <option value="done">done</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <button type="submit" class="px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700">Save changes</button>
+                <div id="editTaskResult" class="text-sm self-center"></div>
+              </div>
+            </form>
+
+            <div class="mt-6">
+              <h3 class="text-md font-semibold mb-2">Subtasks</h3>
+              <div id="subtasksList" class="space-y-2"></div>
+              <form id="editAddSubForm" class="space-y-3 mt-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label class="block text-sm text-slate-400 mb-1" for="e_stitle">Title</label>
+                    <input id="e_stitle" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" required>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-slate-400 mb-1" for="e_sstatus">Status</label>
+                    <select id="e_sstatus" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                      <option value="todo" selected>todo</option>
+                      <option value="in-progress">in-progress</option>
+                      <option value="done">done</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm text-slate-400 mb-1" for="e_sdue">Due date</label>
+                    <input id="e_sdue" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm text-slate-400 mb-1" for="e_sdesc">Description</label>
+                  <textarea id="e_sdesc" class="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-2 min-h-[80px]"></textarea>
+                </div>
+                <button type="submit" class="px-3 py-1 rounded-lg border border-slate-700 hover:bg-slate-800">Add subtask</button>
+              </form>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div id="globalMsg" class="mt-6 text-sm text-slate-400"></div>
+    </main>
+
+    <script>
+      let lastCreatedTaskId = null;
+      let cachedTasks = [];
+
+      function statusOrder(s) {
+        const map = { 'todo': 0, 'in-progress': 1, 'done': 2 };
+        return map[s] ?? 99;
+      }
+
+      async function fetchInfo() {
+        const res = await fetch('/info');
+        const js = await res.json();
+        document.getElementById('infoPre').textContent = JSON.stringify(js.data, null, 2);
+        document.getElementById('projectName').textContent = js.data?.project_name || 'workspace';
+        const title = document.getElementById('hdrTitle');
+        title.textContent = `Task Master AI — ${js.data?.project_name || 'workspace'}`;
+        return js.data;
+      }
+
+      async function fetchTasks(tag) {
+        const url = tag ? `/tasks?tag=${encodeURIComponent(tag)}` : '/tasks';
+        const res = await fetch(url);
+        const js = await res.json();
+        return js.data || [];
+      }
+
+      function renderCards(tasks) {
+        const list = document.getElementById('cardsList');
+        if (!tasks.length) {
+          list.innerHTML = '<div class="rounded-xl border border-slate-800 bg-slate-950 p-4 text-sm text-slate-400">No tasks.</div>';
+          return;
+        }
+        const html = tasks.map(t => {
+          const subs = Array.isArray(t.subtasks) ? t.subtasks.length : 0;
+          return `
+            <div class="rounded-2xl border border-slate-800 bg-slate-950 p-4 hover:border-slate-600 transition cursor-pointer" data-id="${t.id}">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm text-slate-400">#${t.id}</div>
+                  <h3 class="text-lg font-semibold">${(t.title||'').replace(/</g,'&lt;')}</h3>
+                </div>
+                <div class="flex gap-2">
+                  <span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${t.status}</span>
+                  <span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${t.priority}</span>
+                  ${t.due_date ? `<span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${t.due_date}</span>` : ''}
+                </div>
+              </div>
+              <p class="mt-2 text-sm text-slate-300 line-clamp-3">${(t.description||'').replace(/</g,'&lt;')}</p>
+              <div class="mt-3 text-xs text-slate-400">${subs} subtasks</div>
+            </div>
+          `;
+        }).join('');
+        list.innerHTML = html;
+        for (const card of list.querySelectorAll('[data-id]')) {
+          card.addEventListener('click', () => openEditPanel(parseInt(card.getAttribute('data-id'), 10)));
+        }
+      }
+
+      async function loadAndRenderTasks() {
+        const tag = document.getElementById('fltTag').value.trim() || null;
+        const statusF = document.getElementById('fltStatus').value;
+        const prioF = document.getElementById('fltPriority').value;
+
+        let tasks = await fetchTasks(tag);
+        // Filter
+        tasks = tasks.filter(t => {
+          const okStatus = !statusF || t.status === statusF;
+          const okPrio = !prioF || t.priority === prioF;
+          return okStatus && okPrio;
+        });
+        // Sort by status order then id desc
+        tasks.sort((a,b) => (statusOrder(a.status) - statusOrder(b.status)) || (b.id - a.id));
+        cachedTasks = tasks;
+        renderCards(tasks);
+      }
+
+      function setEditForm(t) {
+        document.getElementById('edit_task_id').value = t.id;
+        document.getElementById('edit_title').value = t.title || '';
+        document.getElementById('edit_due_date').value = t.due_date || '';
+        document.getElementById('edit_description').value = t.description || '';
+        document.getElementById('edit_priority').value = t.priority || 'medium';
+        document.getElementById('edit_status').value = t.status || 'todo';
+      }
+
+      function renderSubtasks(t) {
+        const wrap = document.getElementById('subtasksList');
+        const subs = Array.isArray(t.subtasks) ? t.subtasks.slice() : [];
+        // Sort subtasks by status order then id
+        subs.sort((a,b) => (statusOrder(a.status) - statusOrder(b.status)) || (a.id - b.id));
+        if (!subs.length) {
+          wrap.innerHTML = '<div class="text-sm text-slate-400">No subtasks yet.</div>';
+          return;
+        }
+        wrap.innerHTML = subs.map(st => `
+          <div class="rounded-xl border border-slate-800 bg-slate-900 p-3" data-sid="${st.id}">
+            <div class="flex items-center justify-between">
+              <div class="font-medium">#${st.id} – ${(st.title||'').replace(/</g,'&lt;')}</div>
+              <span class="px-2 py-1 rounded-full border border-slate-700 text-xs">${st.status}</span>
+            </div>
+            <div class="text-sm text-slate-300 mt-1">${(st.description||'').replace(/</g,'&lt;')}</div>
+            <div class="text-xs text-slate-400 mt-1">${st.due_date ? 'Due ' + st.due_date : ''}</div>
+            <div class="mt-2 flex gap-2">
+              <button class="px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs" data-edit-sub="${st.id}">Edit</button>
+            </div>
+            <div class="hidden mt-3 space-y-2" id="subedit-${st.id}">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <input class="rounded-lg bg-slate-950 border border-slate-800 px-2 py-1" id="se_title_${st.id}" placeholder="Title" value="${(st.title||'').replace(/"/g,'&quot;')}">
+                <select class="rounded-lg bg-slate-950 border border-slate-800 px-2 py-1" id="se_status_${st.id}">
+                  <option value="todo"${st.status==='todo'?' selected':''}>todo</option>
+                  <option value="in-progress"${st.status==='in-progress'?' selected':''}>in-progress</option>
+                  <option value="done"${st.status==='done'?' selected':''}>done</option>
+                </select>
+                <input class="rounded-lg bg-slate-950 border border-slate-800 px-2 py-1" id="se_due_${st.id}" placeholder="YYYY-MM-DD" value="${st.due_date||''}">
+              </div>
+              <textarea class="w-full rounded-lg bg-slate-950 border border-slate-800 px-2 py-1 min-h-[60px]" id="se_desc_${st.id}" placeholder="Description">${(st.description||'').replace(/</g,'&lt;')}</textarea>
+              <button class="px-2 py-1 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs" data-save-sub="${st.id}">Save subtask</button>
+            </div>
+          </div>
+        `).join('');
+
+        // Wire Edit / Save buttons
+        for (const btn of wrap.querySelectorAll('[data-edit-sub]')) {
+          btn.addEventListener('click', () => {
+            const sid = btn.getAttribute('data-edit-sub');
+            const panel = document.getElementById(`subedit-${sid}`);
+            panel.classList.toggle('hidden');
+          });
+        }
+        for (const btn of wrap.querySelectorAll('[data-save-sub]')) {
+          btn.addEventListener('click', async () => {
+            const sid = parseInt(btn.getAttribute('data-save-sub'), 10);
+            const taskId = parseInt(document.getElementById('edit_task_id').value, 10);
+            const payload = {
+              title: document.getElementById(`se_title_${sid}`).value.trim(),
+              status: document.getElementById(`se_status_${sid}`).value,
+              due_date: document.getElementById(`se_due_${sid}`).value.trim() || null,
+              description: document.getElementById(`se_desc_${sid}`).value.trim(),
+            };
+            const res = await fetch(`/task/${taskId}/subtask/${sid}`, { method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)});
+            const js = await res.json();
+            if (js.ok) {
+              document.getElementById('globalMsg').textContent = `Saved subtask #${sid}`;
+              await openEditPanel(taskId); // reload detail
+              await loadAndRenderTasks();   // refresh cards
+            } else {
+              document.getElementById('globalMsg').textContent = (js.message || 'Failed to save subtask');
+            }
+          });
+        }
+      }
+
+      async function openEditPanel(taskId) {
+        const res = await fetch(`/task/${taskId}`);
+        const js = await res.json();
+        if (!js.ok) return;
+        const t = js.data;
+        setEditForm(t);
+        renderSubtasks(t);
+        document.getElementById('editPanel').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Events
+      document.getElementById('btnCloseEdit').addEventListener('click', () => {
+        document.getElementById('editPanel').classList.add('hidden');
+      });
+
+      document.getElementById('editTaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit_task_id').value, 10);
+        const payload = {
+          title: document.getElementById('edit_title').value.trim(),
+          description: document.getElementById('edit_description').value.trim(),
+          priority: document.getElementById('edit_priority').value,
+          status: document.getElementById('edit_status').value,
+          due_date: document.getElementById('edit_due_date').value.trim() || null,
+        };
+        const res = await fetch(`/task/${id}`, { method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)});
+        const js = await res.json();
+        if (js.ok) {
+          document.getElementById('editTaskResult').textContent = 'Saved';
+          await loadAndRenderTasks();
+        } else {
+          document.getElementById('editTaskResult').textContent = js.message || 'Failed';
+        }
+      });
+
+      document.getElementById('btnApplyFilters').addEventListener('click', loadAndRenderTasks);
+      document.getElementById('btnResetFilters').addEventListener('click', () => {
+        document.getElementById('fltStatus').value = 'todo';
+        document.getElementById('fltPriority').value = '';
+        document.getElementById('fltTag').value = '';
+        loadAndRenderTasks();
+      });
+
+      document.getElementById('refreshBtn').addEventListener('click', async () => {
+        await fetchInfo();
+        await loadAndRenderTasks();
+      });
+
+      document.getElementById('taskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const out = document.getElementById('addTaskResult');
+        out.textContent = '';
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          description: document.getElementById('description').value.trim(),
+          priority: document.getElementById('priority').value,
+          status: document.getElementById('status').value,
+          due_date: document.getElementById('due_date').value.trim() || null,
+          tag: document.getElementById('tag').value.trim() || null,
+        };
+        const res = await fetch('/task', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        const js = await res.json();
+        if (js.ok) {
+          lastCreatedTaskId = js.data.id;
+          document.getElementById('parent_id').value = lastCreatedTaskId;
+          out.textContent = `Saved task #${lastCreatedTaskId} in tag "${js.data.tag}"`;
+          (document.getElementById('taskForm')).reset();
+          await fetchInfo();
+          await loadAndRenderTasks();
+        } else {
+          out.textContent = js.message || 'Error';
+        }
+      });
+
+      document.getElementById('subtaskForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const out = document.getElementById('addSubResult');
+        out.textContent = '';
+        const parentId = parseInt(document.getElementById('parent_id').value, 10);
+        const payload = {
+          parent_id: parentId,
+          title: document.getElementById('stitle').value.trim(),
+          description: document.getElementById('sdesc').value.trim(),
+          status: document.getElementById('sstatus').value,
+          due_date: document.getElementById('sdue_date').value.trim() || null,
+          tag: document.getElementById('stag').value.trim() || null,
+        };
+        const res = await fetch(`/task/${parentId}/subtask`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        const js = await res.json();
+        if (js.ok) {
+          out.textContent = `Saved subtask #${js.data.id} under task #${parentId}`;
+          (document.getElementById('subtaskForm')).reset();
+          if (document.getElementById('editPanel').classList.contains('hidden') === false &&
+              parseInt(document.getElementById('edit_task_id').value, 10) === parentId) {
+            await openEditPanel(parentId);
+          }
+          await loadAndRenderTasks();
+        } else {
+          out.textContent = js.message || 'Error';
+        }
+      });
+
+      // Initial boot
+      (async () => {
+        await fetchInfo();
+        await loadAndRenderTasks();
+      })();
+    </script>
+  </body>
+</html>
