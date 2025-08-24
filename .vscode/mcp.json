@@ -1,9 +1,0 @@
-{
-  "servers": {
-    "taskmaster-mcp-server": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["dist/server.js"]
-    }
-  }
-}
