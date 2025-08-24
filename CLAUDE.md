@@ -101,6 +101,14 @@ The `task_master_ai/` directory contains a Python package for AI-assisted utilit
 - Inline subtask editing and creation within modal
 - Priority badge in modal header
 
+### Task Management Features
+- **Soft Delete**: Tasks can be deleted via dustbin button (bottom-right of cards)
+- **Delete Confirmation**: User confirmation required before deletion
+- **Data Preservation**: Deleted tasks marked as `deleted: true` in JSON but preserved for recovery
+- **Visual Feedback**: Deleted tasks automatically hidden from Kanban board
+- **Quick Filters**: Enhanced filtering with sorting options (ID ASC/DESC, Priority)
+- **Advanced Filters**: Multi-criteria filtering with status, priority, and search capabilities
+
 ## Key Implementation Details
 
 - **Validation**: Pydantic models enforce field constraints (regex patterns for status/priority, date formats)
@@ -120,11 +128,55 @@ The `task_master_ai/` directory contains a Python package for AI-assisted utilit
 
 ## Testing & Development
 
+### Development Web Hub
+
+A comprehensive development hub is available at `http://localhost:9652` when running the web server:
+
+```bash
+# Start development hub server
+cd web
+python server.py
+```
+
+**Hub Features:**
+- **Main Application Link**: Direct access to TaskMasterWeb on port 8199
+- **Test Results Dashboard**: Comprehensive test reports and analytics
+- **Project Documentation**: Architecture overview and feature descriptions
+
+### Test Infrastructure
+
+**Comprehensive Playwright Testing:**
+- **Test Execution**: Automated workflow testing with video recording and screenshots
+- **Test Reports**: Multi-format reports including HTML, JSON, videos, and debug traces
+- **Test Coverage**: Full workflow testing from task creation to deletion
+- **Issue Detection**: Identifies UI problems, broken workflows, and performance issues
+
+**Test Report Locations:**
+- **Development Hub**: `http://localhost:9652/test-results.html` (main test dashboard)
+- **Playwright Reports**: `/web/test-reports/index.html` (detailed test execution)
+- **Summary Reports**: `/web/test-reports/test-results.html` (comprehensive analysis)
+- **Video Evidence**: Individual test execution recordings with failure analysis
+- **Debug Traces**: Playwright traces for detailed debugging
+
+### Running Tests
+
+```bash
+# Run comprehensive workflow tests
+npx playwright test tests/comprehensive.spec.js --config playwright-simple.config.js
+
+# View test results
+# Navigate to: http://localhost:9652/test-results.html
+```
+
 ### Installing Development Dependencies
 
 ```bash
 # Install development tools
 pip install -r requirements-dev.txt
+
+# Install Playwright for testing
+npm install @playwright/test
+npx playwright install
 ```
 
 ### Code Quality Commands
@@ -151,6 +203,9 @@ Before committing code, run:
 black app/ task_master_ai/
 flake8 app/ task_master_ai/
 mypy app/ task_master_ai/
+
+# Run comprehensive tests
+npx playwright test tests/comprehensive.spec.js --config playwright-simple.config.js
 ```
 
 ## Task Master AI Instructions

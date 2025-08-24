@@ -6,7 +6,7 @@ from datetime import datetime
 
 @dataclass
 class SubTask:
-    \"\"\"Represents a subtask belonging to a parent task.
+    """Represents a subtask belonging to a parent task.
 
     Attributes:
         id: Unique integer identifier within the parent task scope.
@@ -22,7 +22,7 @@ class SubTask:
         created_at: ISO timestamp when created.
         updated_at: ISO timestamp when last updated.
         extra: Optional bag for future keys.
-    \"\"\"
+    """
     id: int
     title: str
     description: str = ""
@@ -38,16 +38,16 @@ class SubTask:
     extra: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        \"\"\"Return a dict representation of this subtask.\"\"\"
+        """Return a dict representation of this subtask."""
         return asdict(self)
 
 @dataclass
 class Task:
-    \"\"\"Represents a task entry stored in tasks.json.
+    """Represents a task entry stored in tasks.json.
 
     Attributes mirror the Taskmaster structure and add a "relations"
     mirror for backward compatibility.
-    \"\"\"
+    """
     id: int
     title: str
     description: str
@@ -62,17 +62,18 @@ class Task:
     updated_at: str = field(default_factory=lambda: datetime.utcnow().isoformat() + "Z")
     tag: str = "master"
     subtasks: List[Dict[str, Any]] = field(default_factory=list)
+    deleted: bool = False
     extra: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        \"\"\"Return a dict representation of this task.\"\"\"
+        """Return a dict representation of this task."""
         d = asdict(self)
         d["relations"] = list(d.get("dependencies", []) or [])
         return d
 
 @dataclass
 class AddTaskRequest:
-    \"\"\"Request body for creating a task.\"\"\"
+    """Request body for creating a task."""
     title: str
     description: str
     priority: str = "medium"
@@ -86,7 +87,7 @@ class AddTaskRequest:
 
 @dataclass
 class AddSubTaskRequest:
-    \"\"\"Request body for creating a subtask.\"\"\"
+    """Request body for creating a subtask."""
     parent_id: int
     title: str
     description: str = ""
@@ -101,7 +102,7 @@ class AddSubTaskRequest:
 
 @dataclass
 class UpdateTaskRequest:
-    \"\"\"Request body for updating an existing task.\"\"\"
+    """Request body for updating an existing task."""
     title: Optional[str] = None
     description: Optional[str] = None
     priority: Optional[str] = None
@@ -111,10 +112,11 @@ class UpdateTaskRequest:
     estimate: Optional[str] = None
     labels: Optional[List[str]] = None
     dependencies: Optional[List[int]] = None
+    deleted: Optional[bool] = None
 
 @dataclass
 class UpdateSubTaskRequest:
-    \"\"\"Request body for updating an existing subtask.\"\"\"
+    """Request body for updating an existing subtask."""
     title: Optional[str] = None
     description: Optional[str] = None
     status: Optional[str] = None

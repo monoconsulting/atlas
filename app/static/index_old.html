@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Master AI</title>
+    <link href="/static/tailwind.css" rel="stylesheet">
+    <style>
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgb(30 41 59); /* slate-800 */
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgb(71 85 105); /* slate-600 */
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgb(100 116 139); /* slate-500 */
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+    <!-- Header -->
+    <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <h1 class="text-2xl font-semibold text-slate-100">
+                Task Master AI — <span id="projectName" class="text-blue-300">Loading...</span>
+            </h1>
+            <p class="text-sm text-slate-400 mt-1">
+                Works with <code class="bg-slate-800 px-2 py-0.5 rounded text-xs text-blue-300">/workspace/.taskmaster</code>
+                (fallback: <code class="bg-slate-800 px-2 py-0.5 rounded text-xs text-blue-300">/workspace/taskmaster</code>)
+            </p>
+        </div>
+    </header>
+
+    <!-- Create Task Button -->
+    <div class="max-w-7xl mx-auto px-4 py-4 border-b border-slate-800">
+        <button 
+            id="createTaskBtn" 
+            class="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+        >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Create New Task
+        </button>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="max-w-7xl mx-auto px-4 py-4 space-y-4">
+        <!-- Quick Filters (Legacy Support) -->
+        <div class="bg-slate-900 rounded-lg border border-slate-700 p-4">
+            <h2 class="text-sm font-medium text-slate-200 mb-3">🔧 Quick Filters</h2>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Status</label>
+                    <select id="filterStatus" class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm">
+                        <option value="">All Status</option>
+                        <option value="todo">Todo</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Priority</label>
+                    <select id="filterPriority" class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm">
+                        <option value="">All Priority</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Tag</label>
+                    <input type="text" id="filterTag" placeholder="Filter by tag..." 
+                        class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm placeholder-slate-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Filters -->
+        <div class="bg-slate-950 rounded-lg border border-slate-800 p-4">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-medium text-slate-100">🎯 Advanced Filters</h2>
+                <div class="flex gap-2">
+                    <button 
+                        id="clearAllFilters"
+                        class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded transition-colors"
+                    >
+                        Clear All
+                    </button>
+                    <button 
+                        id="selectAllFilters"
+                        class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors"
+                    >
+                        Select All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Filter Presets -->
+            <div class="mb-4">
+                <div class="flex flex-wrap gap-2">
+                    <button id="presetUrgent" class="filter-preset px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700 transition-colors"
+                        data-preset="urgent">
+                        🔥 Urgent (High Priority Todo)
+                    </button>
+                    <button id="presetActive" class="filter-preset px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700 transition-colors"
+                        data-preset="in-progress">
+                        ⚡ Active Work
+                    </button>
+                    <button id="presetCompleted" class="filter-preset px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700 transition-colors"
+                        data-preset="completed">
+                        ✅ Completed
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Status Filters -->
+                <div>
+                    <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        Status
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" id="filter-status-todo" value="todo" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">📋 Todo</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" id="filter-status-in-progress" value="in-progress" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">🚀 In Progress</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" id="filter-status-done" value="done" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">✅ Done</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" id="filter-status-pending" value="pending" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">⏳ Pending</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Priority Filters -->
+                <div>
+                    <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                        Priority
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="priorityFilter" id="filter-priority-high" value="high" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-orange-600 focus:ring-orange-500">
+                            <span class="text-sm text-slate-300">🔴 High</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="priorityFilter" id="filter-priority-medium" value="medium" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-orange-600 focus:ring-orange-500">
+                            <span class="text-sm text-slate-300">🟡 Medium</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="priorityFilter" id="filter-priority-low" value="low" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-orange-600 focus:ring-orange-500">
+                            <span class="text-sm text-slate-300">🟢 Low</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Additional Filters -->
+                <div>
+                    <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Additional
+                    </h3>
+                    <div class="space-y-1">
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="additionalFilter" id="filter-has-subtasks" value="hasSubtasks"
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                            <span class="text-sm text-slate-300">📂 Has Subtasks</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="additionalFilter" id="filter-has-dependencies" value="hasDependencies"
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                            <span class="text-sm text-slate-300">🔗 Has Dependencies</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="additionalFilter" id="filter-assigned" value="assigned"
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                            <span class="text-sm text-slate-300">👤 Assigned</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="additionalFilter" id="filter-overdue" value="overdue"
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                            <span class="text-sm text-slate-300">⚠️ Overdue</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Text Search -->
+                <div>
+                    <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                        Search
+                    </h3>
+                    <input 
+                        type="text" 
+                        id="searchTasks" 
+                        placeholder="Search tasks..."
+                        class="w-full px-2 py-1 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    >
+                </div>
+            </div>
+
+            <!-- Filter Summary -->
+            <div id="filterSummary" class="mt-4 pt-4 border-t border-slate-800 hidden">
+                <div class="mb-2">
+                    <div id="activeFilters" class="flex flex-wrap gap-1 text-xs"></div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">
+                        Showing: <span id="filteredTaskCount" class="text-green-400 font-semibold">0/0</span> tasks
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kanban Board -->
+    <main class="max-w-7xl mx-auto px-4 pb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Todo Column -->
+            <div class="bg-slate-950 rounded-lg border border-slate-800">
+                <div class="p-4 border-b border-slate-800 bg-slate-900/50 rounded-t-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-medium text-slate-100 flex items-center gap-2">
+                            <span class="w-3 h-3 bg-slate-500 rounded-full"></span>
+                            📋 Todo
+                        </h2>
+                        <span id="todoCount" class="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">0</span>
+                    </div>
+                </div>
+                <div id="todoColumn" class="p-4 min-h-[400px] space-y-3">
+                    <div class="text-center text-slate-400 py-8">Loading...</div>
+                </div>
+            </div>
+
+            <!-- In Progress Column -->
+            <div class="bg-slate-950 rounded-lg border border-slate-800">
+                <div class="p-4 border-b border-slate-800 bg-blue-900/20 rounded-t-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-medium text-slate-100 flex items-center gap-2">
+                            <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                            🚀 In Progress
+                        </h2>
+                        <span id="inProgressCount" class="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">0</span>
+                    </div>
+                </div>
+                <div id="inProgressColumn" class="p-4 min-h-[400px] space-y-3">
+                    <div class="text-center text-slate-400 py-8">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Done Column -->
+            <div class="bg-slate-950 rounded-lg border border-slate-800">
+                <div class="p-4 border-b border-slate-800 bg-green-900/20 rounded-t-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-medium text-slate-100 flex items-center gap-2">
+                            <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                            ✅ Done
+                        </h2>
+                        <span id="doneCount" class="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded">0</span>
+                    </div>
+                </div>
+                <div id="doneColumn" class="p-4 min-h-[400px] space-y-3">
+                    <div class="text-center text-slate-400 py-8">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Storage Info (collapsed by default) -->
+        <div class="mt-6">
+            <button id="toggleStorageInfo" class="w-full text-left px-4 py-2 bg-slate-900 hover:bg-slate-800 rounded-lg border border-slate-700 transition-colors">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-slate-200">Storage Info</span>
+                    <svg class="w-4 h-4 text-slate-400 transform transition-transform" id="storageInfoIcon">
+                        <path stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6" fill="none"/>
+                    </svg>
+                </div>
+            </button>
+            <div id="storageInfoPanel" class="hidden mt-2 bg-slate-950 rounded-lg border border-slate-800 p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-slate-300">Storage Details</span>
+                    <button 
+                        id="refreshBtn" 
+                        class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs rounded transition-colors"
+                    >
+                        Refresh
+                    </button>
+                </div>
+                <pre 
+                    id="storageInfo" 
+                    class="bg-slate-900 text-slate-300 p-3 rounded border border-slate-800 text-xs overflow-auto max-h-48"
+                >Loading...</pre>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Task Modal -->
+    <div id="createTaskModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-2xl">
+                <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between rounded-t-lg">
+                    <h2 class="text-xl font-semibold text-slate-100">Create New Task</h2>
+                    <button id="closeCreateModal" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <form id="addTaskForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input 
+                                    type="text" 
+                                    id="taskTitle" 
+                                    required 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Enter task title"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select 
+                                    id="taskPriority" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                            <textarea 
+                                id="taskDescription" 
+                                rows="3" 
+                                class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                placeholder="Enter task description"
+                            ></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Due Date</label>
+                                <input 
+                                    type="date" 
+                                    id="taskDueDate" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Assigned To</label>
+                                <input 
+                                    type="text" 
+                                    id="taskAssignedTo" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Assignee name"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-800">
+                            <button 
+                                type="button" 
+                                id="cancelCreate"
+                                class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                            >
+                                Create Task
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+                <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-slate-100">Edit Task</h2>
+                    <button id="closeModal" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <form id="editTaskForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input 
+                                    type="text" 
+                                    id="editTaskTitle" 
+                                    required 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Enter task title"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select 
+                                    id="editTaskPriority" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                            <textarea 
+                                id="editTaskDescription" 
+                                rows="3" 
+                                class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                placeholder="Enter task description"
+                            ></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Status</label>
+                                <select 
+                                    id="editTaskStatus" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="todo">Todo</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="done">Done</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Due Date</label>
+                                <input 
+                                    type="date" 
+                                    id="editTaskDueDate" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Assigned To</label>
+                                <input 
+                                    type="text" 
+                                    id="editTaskAssignedTo" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Assignee name"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-800">
+                            <button 
+                                type="button" 
+                                id="cancelEdit"
+                                class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                type="button" 
+                                id="saveTask"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Status</label>
+                            <select id="filterStatus" class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm">
+                                <option value="">All Status</option>
+                                <option value="todo">Todo</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="done">Done</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Priority</label>
+                            <select id="filterPriority" class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm">
+                                <option value="">All Priority</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Tag</label>
+                            <input type="text" id="filterTag" placeholder="Filter by tag..." 
+                                class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm placeholder-slate-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-medium text-slate-100">🎯 Advanced Filters</h2>
+                        <div class="flex gap-2">
+                            <button 
+                                id="clearAllFilters"
+                                class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded transition-colors"
+                            >
+                                Clear All
+                            </button>
+                            <button 
+                                id="selectAllFilters"
+                                class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors"
+                            >
+                                Select All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filter Presets -->
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2">
+                            <button id="presetUrgent" class="filter-preset px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700 transition-colors"
+                                data-preset="urgent">
+                                🔥 Urgent (High Priority Todo)
+                            </button>
+                            <button id="presetActive" class="filter-preset px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700 transition-colors"
+                                data-preset="in-progress">
+                                ⚡ Active Work
+                            </button>
+                            <button id="presetCompleted" class="filter-preset px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded border border-slate-700 transition-colors"
+                                data-preset="completed">
+                                ✅ Completed
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Status Filters -->
+                        <div>
+                            <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                Status
+                            </h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="statusFilter" id="filter-status-todo" value="todo" 
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-slate-300">📋 Todo</span>
+                                    <span class="status-count text-xs text-slate-500 ml-auto"></span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="statusFilter" id="filter-status-in-progress" value="in-progress" 
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-slate-300">🚀 In Progress</span>
+                                    <span class="status-count text-xs text-slate-500 ml-auto"></span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="statusFilter" id="filter-status-done" value="done" 
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-slate-300">✅ Done</span>
+                                    <span class="status-count text-xs text-slate-500 ml-auto"></span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="statusFilter" id="filter-status-pending" value="pending" 
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                                    <span class="text-sm text-slate-300">⏳ Pending</span>
+                                    <span class="status-count text-xs text-slate-500 ml-auto"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Priority Filters -->
+                        <div>
+                            <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                                Priority
+                            </h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="priorityFilter" id="filter-priority-high" value="high" 
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-orange-600 focus:ring-orange-500">
+                                    <span class="text-sm text-slate-300">🔴 High</span>
+                                    <span class="priority-count text-xs text-slate-500 ml-auto"></span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="priorityFilter" id="filter-priority-medium" value="medium" 
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-orange-600 focus:ring-orange-500">
+                                    <span class="text-sm text-slate-300">🟡 Medium</span>
+                                    <span class="priority-count text-xs text-slate-500 ml-auto"></span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="priorityFilter" id="filter-priority-low" value="low" 
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-orange-600 focus:ring-orange-500">
+                                    <span class="text-sm text-slate-300">🟢 Low</span>
+                                    <span class="priority-count text-xs text-slate-500 ml-auto"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Additional Filters -->
+                        <div>
+                            <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                Additional
+                            </h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="additionalFilter" id="filter-has-subtasks" value="hasSubtasks"
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                                    <span class="text-sm text-slate-300">📂 Has Subtasks</span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="additionalFilter" id="filter-has-dependencies" value="hasDependencies"
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                                    <span class="text-sm text-slate-300">🔗 Has Dependencies</span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="additionalFilter" id="filter-assigned" value="assigned"
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                                    <span class="text-sm text-slate-300">👤 Assigned</span>
+                                </label>
+                                <label class="flex items-center gap-2 hover:bg-slate-800 p-2 rounded cursor-pointer transition-colors">
+                                    <input type="checkbox" name="additionalFilter" id="filter-overdue" value="overdue"
+                                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                                    <span class="text-sm text-slate-300">⚠️ Overdue</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Search -->
+                    <div class="mt-4 pt-4 border-t border-slate-800">
+                        <label class="block text-sm font-medium text-slate-300 mb-2">🔍 Search</label>
+                        <input 
+                            type="text" 
+                            id="searchTasks" 
+                            placeholder="Search in title or description..."
+                            class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                    </div>
+
+                    <!-- Filter Summary -->
+                    <div id="filterSummary" class="mt-4 pt-4 border-t border-slate-800 hidden">
+                        <div class="mb-2">
+                            <div id="activeFilters" class="flex flex-wrap gap-1 text-xs"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-slate-400">
+                                Showing: <span id="filteredTaskCount" class="text-green-400 font-semibold">0/0</span> tasks
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task List - Super Long Block -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-medium text-slate-100">All Tasks</h2>
+                        <div id="taskCount" class="text-sm text-slate-400">Loading...</div>
+                    </div>
+                    <div id="taskList" class="space-y-3 custom-scrollbar overflow-y-auto" style="max-height: calc(100vh - 200px);">
+                        <div class="text-center text-slate-400 py-8">Loading tasks...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Input Forms -->
+            <div class="space-y-6">
+                <!-- Panel 1: Storage Info -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-medium text-slate-100">Storage Info</h2>
+                        <button 
+                            id="refreshBtn" 
+                            class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm rounded border border-slate-700 transition-colors"
+                        >
+                            Refresh
+                        </button>
+                    </div>
+                    <pre 
+                        id="storageInfo" 
+                        class="bg-slate-900 text-slate-300 p-4 rounded border border-slate-800 text-xs overflow-auto custom-scrollbar max-h-48"
+                    >Loading...</pre>
+                </div>
+
+                <!-- Panel 2: Add Task -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <h2 class="text-lg font-medium text-slate-100 mb-4">Add Task</h2>
+                    <form id="addTaskForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input 
+                                    type="text" 
+                                    id="taskTitle" 
+                                    required 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Enter task title"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select 
+                                    id="taskPriority" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                            <textarea 
+                                id="taskDescription" 
+                                rows="3"
+                                class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Describe the task"
+                            ></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Due Date</label>
+                                <input 
+                                    type="date" 
+                                    id="taskDueDate" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Assigned To</label>
+                                <input 
+                                    type="text" 
+                                    id="taskAssignedTo" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Assignee name"
+                                >
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Dependencies</label>
+                            <div class="flex gap-2">
+                                <select 
+                                    id="dependencySelect" 
+                                    class="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="">Select a task...</option>
+                                </select>
+                                <button 
+                                    type="button" 
+                                    id="addDependencyBtn"
+                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                                >
+                                    Add
+                                </button>
+                            </div>
+                            <div id="taskDependencies" class="flex flex-wrap gap-2 mt-2"></div>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded font-medium transition-colors"
+                        >
+                            Create Task
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Panel 3: Add Subtask -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <h2 class="text-lg font-medium text-slate-100 mb-4">Add Subtask</h2>
+                    <form id="addSubtaskForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Parent Task ID *</label>
+                            <input 
+                                type="number" 
+                                id="subtaskParentId" 
+                                required 
+                                class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Enter parent task ID"
+                            >
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input 
+                                    type="text" 
+                                    id="subtaskTitle" 
+                                    required 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Enter subtask title"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select 
+                                    id="subtaskPriority" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors"
+                        >
+                            Create Subtask
+                        </button>
+                    </form>
+
+                    <!-- Existing Subtasks List -->
+                    <div id="existingSubtasks" class="mt-6">
+                        <h3 class="text-sm font-medium text-slate-300 mb-3">Existing Subtasks</h3>
+                        <div id="subtasksList" class="space-y-2 text-sm text-slate-400">
+                            Select a parent task to view subtasks
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Edit Task Modal -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+                <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-slate-100">Edit Task</h2>
+                    <button id="closeModal" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <form id="editTaskForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input 
+                                    type="text" 
+                                    id="editTaskTitle" 
+                                    required 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Enter task title"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select 
+                                    id="editTaskPriority" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                            <textarea 
+                                id="editTaskDescription" 
+                                rows="3" 
+                                class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                placeholder="Enter task description"
+                            ></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Status</label>
+                                <select 
+                                    id="editTaskStatus" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="todo">Todo</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="done">Done</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Due Date</label>
+                                <input 
+                                    type="date" 
+                                    id="editTaskDueDate" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Assigned To</label>
+                                <input 
+                                    type="text" 
+                                    id="editTaskAssignedTo" 
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Assignee name"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-800">
+                            <button 
+                                type="button" 
+                                id="cancelEdit"
+                                class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                type="button" 
+                                id="saveTask"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        let tasks = [];
+        let dependencies = {};
+        
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStorageInfo();
+            loadTasks();
+        });
+
+        // Storage info functions
+        async function loadStorageInfo() {
+            try {
+                const response = await fetch('/info');
+                const data = await response.json();
+                if (data.ok) {
+                    document.getElementById('storageInfo').textContent = JSON.stringify(data.data, null, 2);
+                    document.getElementById('projectName').textContent = data.data.project_name || 'Unknown';
+                } else {
+                    document.getElementById('storageInfo').textContent = 'Error loading storage info';
+                }
+            } catch (error) {
+                document.getElementById('storageInfo').textContent = 'Failed to load storage info: ' + error.message;
+            }
+        }
+
+        // Tasks loading and display
+        async function loadTasks() {
+            try {
+                const response = await fetch('/tasks');
+                const data = await response.json();
+                if (data.ok) {
+                    tasks = data.data;
+                    window.allTasks = data.data; // Store for advanced filtering
+                    updateDependencyOptions();
+                    
+                    // Check if any advanced filters are active
+                    const hasAdvancedFilters = document.querySelectorAll('input[type="checkbox"]:checked').length > 0 ||
+                                             document.getElementById('searchTasks').value.trim() !== '';
+                    
+                    if (hasAdvancedFilters) {
+                        applyAdvancedFilters();
+                    } else {
+                        renderTasks();
+                    }
+                    
+                    updateTaskCount();
+                } else {
+                    console.error('Failed to load tasks:', data);
+                }
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+            }
+        }
+
+        function renderTasks() {
+            // This function now acts as a fallback when no advanced filters are active
+            if (!window.allTasks) return;
+            
+            // Just render all tasks without filtering (advanced filters take precedence)
+            renderFilteredTasks(window.allTasks);
+        }
+
+        function createTaskCard(task) {
+            const priorityClass = {
+                'high': 'border-red-500 bg-red-950/20',
+                'medium': 'border-orange-500 bg-orange-950/20', 
+                'low': 'border-slate-600 bg-slate-900/50'
+            }[task.priority] || 'border-slate-600 bg-slate-900/50';
+
+            const statusBadge = {
+                'todo': '<span class="px-2 py-1 bg-slate-700 text-slate-300 text-xs rounded">Todo</span>',
+                'in-progress': '<span class="px-2 py-1 bg-blue-700 text-blue-200 text-xs rounded">In Progress</span>',
+                'done': '<span class="px-2 py-1 bg-green-700 text-green-200 text-xs rounded">Done</span>'
+            }[task.status] || '';
+
+            return `
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors ${priorityClass}" 
+                     onclick="openEditModal(${task.id})">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#${task.id}</span>
+                            ${statusBadge}
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">${task.priority}</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">${task.title}</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">${task.description || 'No description'}</p>
+                    ${task.assigned_to ? `<div class="text-xs text-slate-500 mt-2">Assigned: ${task.assigned_to}</div>` : ''}
+                    ${task.dependencies && task.dependencies.length > 0 ? 
+                        `<div class="text-xs text-slate-500 mt-1">Depends on: ${task.dependencies.join(', ')}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function updateTaskCount() {
+            document.getElementById('taskCount').textContent = `${tasks.length} tasks`;
+        }
+
+        function updateDependencyOptions() {
+            const select = document.getElementById('dependencySelect');
+            select.innerHTML = '<option value="">Select a task...</option>';
+            tasks.forEach(task => {
+                select.innerHTML += `<option value="${task.id}">#${task.id} - ${task.title}</option>`;
+            });
+        }
+
+        // Task creation
+        async function createTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            const description = document.getElementById('taskDescription').value.trim();
+            const priority = document.getElementById('taskPriority').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const assignedTo = document.getElementById('taskAssignedTo').value.trim();
+
+            if (!title) {
+                alert('Task title is required');
+                return;
+            }
+
+            const taskData = {
+                title: title,
+                description: description,
+                priority: priority,
+                status: 'todo',
+                due_date: dueDate || null,
+                assigned_to: assignedTo || null,
+                dependencies: []
+            };
+
+            try {
+                const response = await fetch('/task', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskData)
+                });
+
+                const result = await response.json();
+                if (result.ok) {
+                    console.log('Task created successfully:', result.data);
+                    // Clear form
+                    document.getElementById('addTaskForm').reset();
+                    // Reload tasks
+                    await loadTasks();
+                } else {
+                    console.error('Failed to create task:', result);
+                    alert('Failed to create task: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error creating task:', error);
+                alert('Error creating task: ' + error.message);
+            }
+        }
+
+        // Subtask creation
+        async function createSubtask() {
+            const parentId = parseInt(document.getElementById('subtaskParentId').value);
+            const title = document.getElementById('subtaskTitle').value.trim();
+            const priority = document.getElementById('subtaskPriority').value;
+
+            if (!parentId || !title) {
+                alert('Parent Task ID and Subtask title are required');
+                return;
+            }
+
+            const subtaskData = {
+                parent_id: parentId,
+                title: title,
+                description: '',
+                priority: priority,
+                status: 'todo'
+            };
+
+            try {
+                const response = await fetch(`/task/${parentId}/subtask`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(subtaskData)
+                });
+
+                const result = await response.json();
+                if (result.ok) {
+                    console.log('Subtask created successfully:', result.data);
+                    // Clear form
+                    document.getElementById('addSubtaskForm').reset();
+                    // Reload tasks
+                    await loadTasks();
+                    alert('Subtask created successfully!');
+                } else {
+                    console.error('Failed to create subtask:', result);
+                    alert('Failed to create subtask: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error creating subtask:', error);
+                alert('Error creating subtask: ' + error.message);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('refreshBtn').addEventListener('click', loadStorageInfo);
+        
+        // Form submissions
+        document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            createTask();
+        });
+
+        document.getElementById('addSubtaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            createSubtask();
+        });
+        
+        // Advanced filter event listeners
+        setupAdvancedFilters();
+
+        // Advanced filtering system
+        function setupAdvancedFilters() {
+            // Legacy quick filters
+            document.getElementById('filterStatus').addEventListener('change', applyLegacyFilters);
+            document.getElementById('filterPriority').addEventListener('change', applyLegacyFilters);
+            document.getElementById('filterTag').addEventListener('input', applyLegacyFilters);
+            
+            // Status checkboxes
+            document.querySelectorAll('input[name="statusFilter"]').forEach(checkbox => {
+                checkbox.addEventListener('change', applyAdvancedFilters);
+            });
+            
+            // Priority checkboxes
+            document.querySelectorAll('input[name="priorityFilter"]').forEach(checkbox => {
+                checkbox.addEventListener('change', applyAdvancedFilters);
+            });
+            
+            // Additional filters
+            document.querySelectorAll('input[name="additionalFilter"]').forEach(checkbox => {
+                checkbox.addEventListener('change', applyAdvancedFilters);
+            });
+            
+            // Search input
+            document.getElementById('searchTasks').addEventListener('input', applyAdvancedFilters);
+            
+            // Quick presets
+            document.getElementById('presetUrgent').addEventListener('click', () => {
+                clearAllFilters();
+                document.querySelector('input[name="priorityFilter"][value="high"]').checked = true;
+                document.querySelector('input[name="statusFilter"][value="todo"]').checked = true;
+                document.querySelector('input[name="statusFilter"][value="in-progress"]').checked = true;
+                applyAdvancedFilters();
+            });
+            
+            document.getElementById('presetActive').addEventListener('click', () => {
+                clearAllFilters();
+                document.querySelector('input[name="statusFilter"][value="in-progress"]').checked = true;
+                applyAdvancedFilters();
+            });
+            
+            document.getElementById('presetCompleted').addEventListener('click', () => {
+                clearAllFilters();
+                document.querySelector('input[name="statusFilter"][value="done"]').checked = true;
+                applyAdvancedFilters();
+            });
+            
+            // Clear and Select All buttons
+            document.getElementById('clearAllFilters').addEventListener('click', () => {
+                clearAllFilters();
+                applyAdvancedFilters();
+            });
+            
+            document.getElementById('selectAllFilters').addEventListener('click', () => {
+                selectAllFilters();
+                applyAdvancedFilters();
+            });
+        }
+        
+        function clearAllFilters() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('searchTasks').value = '';
+        }
+        
+        function selectAllFilters() {
+            // Select all status and priority filters
+            document.querySelectorAll('input[name="statusFilter"]').forEach(cb => cb.checked = true);
+            document.querySelectorAll('input[name="priorityFilter"]').forEach(cb => cb.checked = true);
+        }
+        
+        function applyLegacyFilters() {
+            if (!window.allTasks) return;
+            
+            const statusFilter = document.getElementById('filterStatus').value;
+            const priorityFilter = document.getElementById('filterPriority').value;
+            const tagFilter = document.getElementById('filterTag').value.toLowerCase();
+            
+            // Clear all advanced filters when using legacy filters
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => cb.checked = false);
+            document.getElementById('searchTasks').value = '';
+            
+            // Apply legacy filtering
+            let filteredTasks = window.allTasks.filter(task => {
+                if (statusFilter && task.status !== statusFilter) return false;
+                if (priorityFilter && task.priority !== priorityFilter) return false;
+                if (tagFilter) {
+                    const searchableText = (task.title + ' ' + task.description + ' ' + (task.assigned_to || '')).toLowerCase();
+                    if (!searchableText.includes(tagFilter)) return false;
+                }
+                return true;
+            });
+            
+            // Hide advanced filter summary
+            document.getElementById('filterSummary').classList.add('hidden');
+            
+            renderFilteredTasks(filteredTasks);
+        }
+        
+        function applyAdvancedFilters() {
+            if (!window.allTasks) return;
+            
+            // Clear legacy filters when using advanced filters
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPriority').value = '';
+            document.getElementById('filterTag').value = '';
+            
+            // Get selected filters
+            const selectedStatus = Array.from(document.querySelectorAll('input[name="statusFilter"]:checked'))
+                .map(cb => cb.value);
+            const selectedPriority = Array.from(document.querySelectorAll('input[name="priorityFilter"]:checked'))
+                .map(cb => cb.value);
+            const selectedAdditional = Array.from(document.querySelectorAll('input[name="additionalFilter"]:checked'))
+                .map(cb => cb.value);
+            const searchText = document.getElementById('searchTasks').value.toLowerCase();
+            
+            // Filter tasks
+            let filteredTasks = window.allTasks.filter(task => {
+                // Status filter
+                if (selectedStatus.length > 0 && !selectedStatus.includes(task.status)) {
+                    return false;
+                }
+                
+                // Priority filter
+                if (selectedPriority.length > 0 && !selectedPriority.includes(task.priority)) {
+                    return false;
+                }
+                
+                // Additional filters
+                for (const filter of selectedAdditional) {
+                    switch (filter) {
+                        case 'hasSubtasks':
+                            if (!task.subtasks || task.subtasks.length === 0) return false;
+                            break;
+                        case 'hasDependencies':
+                            if (!task.dependencies || task.dependencies.length === 0) return false;
+                            break;
+                        case 'assigned':
+                            if (!task.assigned_to || task.assigned_to.trim() === '') return false;
+                            break;
+                        case 'overdue':
+                            if (!task.due_date || new Date(task.due_date) >= new Date()) return false;
+                            break;
+                    }
+                }
+                
+                // Search filter
+                if (searchText) {
+                    const searchableText = (task.title + ' ' + task.description + ' ' + (task.assigned_to || '')).toLowerCase();
+                    if (!searchableText.includes(searchText)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+            
+            // Update filter summary
+            updateFilterSummary(filteredTasks.length, window.allTasks.length, {
+                status: selectedStatus,
+                priority: selectedPriority,
+                additional: selectedAdditional,
+                search: searchText
+            });
+            
+            // Render filtered tasks
+            renderFilteredTasks(filteredTasks);
+        }
+        
+        function updateFilterSummary(visibleCount, totalCount, activeFilters) {
+            const summaryDiv = document.getElementById('filterSummary');
+            const activeFiltersList = document.getElementById('activeFilters');
+            const taskCountSpan = document.getElementById('filteredTaskCount');
+            
+            // Update task count
+            taskCountSpan.textContent = `${visibleCount}/${totalCount}`;
+            
+            // Build active filters list
+            let activeFilterTexts = [];
+            
+            if (activeFilters.status.length > 0) {
+                activeFilterTexts.push(`Status: ${activeFilters.status.join(', ')}`);
+            }
+            if (activeFilters.priority.length > 0) {
+                activeFilterTexts.push(`Priority: ${activeFilters.priority.join(', ')}`);
+            }
+            if (activeFilters.additional.length > 0) {
+                activeFilterTexts.push(`Filters: ${activeFilters.additional.join(', ')}`);
+            }
+            if (activeFilters.search) {
+                activeFilterTexts.push(`Search: "${activeFilters.search}"`);
+            }
+            
+            if (activeFilterTexts.length > 0) {
+                activeFiltersList.innerHTML = activeFilterTexts.map(text => 
+                    `<span class="inline-block bg-blue-600 text-blue-100 px-2 py-1 rounded text-xs">${text}</span>`
+                ).join(' ');
+                summaryDiv.classList.remove('hidden');
+            } else {
+                summaryDiv.classList.add('hidden');
+            }
+        }
+        
+        function renderFilteredTasks(filteredTasks) {
+            const taskList = document.getElementById('taskList');
+            if (filteredTasks.length === 0) {
+                taskList.innerHTML = '<div class="text-slate-400 text-center py-8">No tasks match the selected filters</div>';
+                return;
+            }
+            
+            // Group tasks by status for better organization
+            const groupedTasks = {
+                'todo': [],
+                'in-progress': [],
+                'done': [],
+                'pending': []
+            };
+            
+            filteredTasks.forEach(task => {
+                if (groupedTasks[task.status]) {
+                    groupedTasks[task.status].push(task);
+                } else {
+                    groupedTasks['todo'].push(task); // Default fallback
+                }
+            });
+            
+            let html = '';
+            Object.entries(groupedTasks).forEach(([status, tasks]) => {
+                if (tasks.length === 0) return;
+                
+                const statusLabels = {
+                    'todo': 'To Do',
+                    'in-progress': 'In Progress', 
+                    'done': 'Done',
+                    'pending': 'Pending'
+                };
+                
+                html += `<div class="mb-4">
+                    <h3 class="text-sm font-medium text-slate-400 mb-2 uppercase tracking-wide">${statusLabels[status]} (${tasks.length})</h3>`;
+                
+                tasks.forEach(task => {
+                    const priorityClass = task.priority === 'high' ? 'border-red-600' : 
+                                        task.priority === 'medium' ? 'border-orange-600' : 'border-slate-600';
+                    
+                    html += `<div class="task-card bg-slate-900 border ${priorityClass} rounded-lg p-4 mb-3 cursor-pointer hover:bg-slate-800" onclick="openEditModal(${task.id})">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-lg font-medium text-slate-100">${task.title} #${task.id}</h3>
+                            <span class="px-2 py-1 text-xs rounded ${task.priority === 'high' ? 'bg-red-600 text-red-100' : 
+                                task.priority === 'medium' ? 'bg-orange-600 text-orange-100' : 'bg-slate-600 text-slate-100'}">${task.priority}</span>
+                        </div>
+                        <p class="text-slate-300 text-sm mb-2">${task.description}</p>
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span>Status: ${task.status}</span>
+                            ${task.assigned_to ? `<span>Assigned: ${task.assigned_to}</span>` : ''}
+                            ${task.due_date ? `<span>Due: ${task.due_date}</span>` : ''}
+                        </div>
+                        ${task.subtasks && task.subtasks.length > 0 ? 
+                            `<div class="mt-2 text-xs text-blue-400">${task.subtasks.length} subtask${task.subtasks.length !== 1 ? 's' : ''}</div>` : ''}
+                    </div>`;
+                });
+                
+                html += `</div>`;
+            });
+            
+            taskList.innerHTML = html;
+        }
+
+        // Modal functions
+        async function openEditModal(taskId) {
+            console.log('Opening edit modal for task:', taskId);
+            
+            // Find the task data
+            const task = window.allTasks.find(t => t.id === taskId);
+            if (!task) {
+                alert('Task not found');
+                return;
+            }
+            
+            // Populate modal fields
+            document.getElementById('editTaskTitle').value = task.title || '';
+            document.getElementById('editTaskDescription').value = task.description || '';
+            document.getElementById('editTaskPriority').value = task.priority || 'medium';
+            document.getElementById('editTaskStatus').value = task.status || 'todo';
+            document.getElementById('editTaskDueDate').value = task.due_date || '';
+            document.getElementById('editTaskAssignedTo').value = task.assigned_to || '';
+            
+            // Store task ID for saving
+            document.getElementById('editModal').dataset.taskId = taskId;
+            
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+        
+        async function saveTask() {
+            const taskId = parseInt(document.getElementById('editModal').dataset.taskId);
+            
+            const taskData = {
+                title: document.getElementById('editTaskTitle').value.trim(),
+                description: document.getElementById('editTaskDescription').value.trim(),
+                priority: document.getElementById('editTaskPriority').value,
+                status: document.getElementById('editTaskStatus').value,
+                due_date: document.getElementById('editTaskDueDate').value || null,
+                assigned_to: document.getElementById('editTaskAssignedTo').value.trim() || null
+            };
+            
+            if (!taskData.title) {
+                alert('Task title is required');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/task/${taskId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskData)
+                });
+                
+                const result = await response.json();
+                if (result.ok) {
+                    console.log('Task updated successfully:', result.data);
+                    document.getElementById('editModal').classList.add('hidden');
+                    await loadTasks(); // Refresh the task list
+                } else {
+                    console.error('Failed to update task:', result);
+                    alert('Failed to update task: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error updating task:', error);
+                alert('Error updating task: ' + error.message);
+            }
+        }
+
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('editModal').classList.add('hidden');
+        });
+        
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            document.getElementById('editModal').classList.add('hidden');
+        });
+        
+        document.getElementById('saveTask').addEventListener('click', saveTask);
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            // Close modal if clicking on the backdrop (the modal itself or the centering div)
+            if (e.target === this || e.target.classList.contains('flex')) {
+                document.getElementById('editModal').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

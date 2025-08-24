@@ -71,6 +71,7 @@ class UpdateTaskModel(BaseModel):
     estimate: Optional[str] = None
     labels: Optional[List[str]] = None
     dependencies: Optional[List[int]] = None
+    deleted: Optional[bool] = None
 
 
 class UpdateSubTaskModel(BaseModel):

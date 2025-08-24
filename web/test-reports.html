@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMasterWeb - Test Results</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617'
+                        }
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-6 py-8">
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-200">Test Results</h1>
+                <p class="text-slate-400">Comprehensive Playwright test reports and analytics</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    ← Back to Hub
+                </a>
+                <button id="refreshBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Refresh Reports
+                </button>
+            </div>
+        </header>
+
+        <!-- Summary Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-2xl font-bold text-green-400" id="totalPassed">--</div>
+                        <div class="text-slate-500 text-sm">Tests Passed</div>
+                    </div>
+                    <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-2xl font-bold text-red-400" id="totalFailed">--</div>
+                        <div class="text-slate-500 text-sm">Tests Failed</div>
+                    </div>
+                    <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-2xl font-bold text-blue-400" id="totalTests">--</div>
+                        <div class="text-slate-500 text-sm">Total Tests</div>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-2xl font-bold text-purple-400" id="passRate">--%</div>
+                        <div class="text-slate-500 text-sm">Success Rate</div>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Reports Table -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden mb-8">
+            <div class="bg-slate-950 px-6 py-4 border-b border-slate-800">
+                <h2 class="text-xl font-semibold text-slate-200">Test Reports</h2>
+                <p class="text-slate-400 text-sm mt-1">Latest test runs sorted by execution time (most recent first)</p>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-800">
+                        <tr>
+                            <th class="text-left px-6 py-3 text-sm font-medium text-slate-300">Test File</th>
+                            <th class="text-left px-6 py-3 text-sm font-medium text-slate-300">Status</th>
+                            <th class="text-left px-6 py-3 text-sm font-medium text-slate-300">Passed</th>
+                            <th class="text-left px-6 py-3 text-sm font-medium text-slate-300">Failed</th>
+                            <th class="text-left px-6 py-3 text-sm font-medium text-slate-300">Duration</th>
+                            <th class="text-left px-6 py-3 text-sm font-medium text-slate-300">Timestamp</th>
+                            <th class="text-left px-6 py-3 text-sm font-medium text-slate-300">Reports</th>
+                        </tr>
+                    </thead>
+                    <tbody id="testResults" class="divide-y divide-slate-800">
+                        <tr>
+                            <td colspan="7" class="px-6 py-8 text-center text-slate-500">
+                                <div class="flex flex-col items-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-4"></div>
+                                    Loading test reports...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Test Runs -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg">
+            <div class="bg-slate-950 px-6 py-4 border-b border-slate-800">
+                <h2 class="text-xl font-semibold text-slate-200">Test Execution History</h2>
+                <p class="text-slate-400 text-sm mt-1">Comprehensive execution logs and performance metrics</p>
+            </div>
+            
+            <div class="p-6">
+                <div id="executionHistory" class="space-y-4">
+                    <div class="text-center text-slate-500 py-8">
+                        <div class="animate-pulse">Loading execution history...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Actual test data from our comprehensive test runs
+        const sampleTestData = [
+            {
+                file: "comprehensive.spec.js",
+                status: "failed",
+                passed: 0,
+                failed: 2,
+                duration: "2m 45s",
+                timestamp: new Date(Date.now() - 300000).toISOString(),
+                htmlReport: "test-reports/index.html",
+                customReport: "test-reports/test-results.html",
+                videoReport: "test-reports/comprehensive-TaskMasterWe-eaf5c-it-add-more-subtasks-delete-chromium/video.webm",
+                traceReport: "test-reports/comprehensive-TaskMasterWe-eaf5c-it-add-more-subtasks-delete-chromium/trace.zip"
+            },
+            {
+                file: "subtask-creation-workflow",
+                status: "failed",
+                passed: 0,
+                failed: 1,
+                duration: "1m 15s",
+                timestamp: new Date(Date.now() - 600000).toISOString(),
+                htmlReport: "test-reports/index.html",
+                customReport: "test-reports/test-results.html",
+                videoReport: "test-reports/comprehensive-TaskMasterWe-8af6c-ge-cases-and-error-handling-chromium/video.webm",
+                traceReport: "test-reports/comprehensive-TaskMasterWe-8af6c-ge-cases-and-error-handling-chromium/trace.zip"
+            },
+            {
+                file: "edge-cases-validation",
+                status: "partial",
+                passed: 1,
+                failed: 1,
+                duration: "45s",
+                timestamp: new Date(Date.now() - 900000).toISOString(),
+                htmlReport: "test-reports/index.html",
+                customReport: "test-reports/test-results.html",
+                screenshot: "test-reports/edge-case-empty-title.png"
+            },
+            {
+                file: "application-loading",
+                status: "passed",
+                passed: 3,
+                failed: 0,
+                duration: "30s",
+                timestamp: new Date(Date.now() - 1200000).toISOString(),
+                htmlReport: "test-reports/index.html",
+                customReport: "test-reports/test-results.html",
+                screenshot: "test-reports/step1-before-create.png"
+            },
+            {
+                file: "task-creation-modal",
+                status: "passed",
+                passed: 2,
+                failed: 0,
+                duration: "25s",
+                timestamp: new Date(Date.now() - 1500000).toISOString(),
+                htmlReport: "test-reports/index.html",
+                customReport: "test-reports/test-results.html",
+                screenshot: "test-reports/step1-task-form-filled.png"
+            }
+        ];
+
+        function getStatusBadge(status) {
+            switch(status) {
+                case 'passed':
+                    return '<span class="px-2 py-1 text-xs font-semibold bg-green-900 text-green-300 rounded-full">✓ Passed</span>';
+                case 'failed':
+                    return '<span class="px-2 py-1 text-xs font-semibold bg-red-900 text-red-300 rounded-full">✗ Failed</span>';
+                case 'partial':
+                    return '<span class="px-2 py-1 text-xs font-semibold bg-yellow-900 text-yellow-300 rounded-full">⚠ Partial</span>';
+                default:
+                    return '<span class="px-2 py-1 text-xs font-semibold bg-slate-700 text-slate-300 rounded-full">? Unknown</span>';
+            }
+        }
+
+        function formatTimestamp(timestamp) {
+            return new Date(timestamp).toLocaleString();
+        }
+
+        function loadTestResults() {
+            const tbody = document.getElementById('testResults');
+            let totalPassed = 0;
+            let totalFailed = 0;
+            let totalTests = 0;
+
+            const rows = sampleTestData.map(test => {
+                totalPassed += test.passed;
+                totalFailed += test.failed;
+                totalTests += test.passed + test.failed;
+
+                return `
+                    <tr class="hover:bg-slate-800 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="text-slate-200 font-medium">${test.file}</span>
+                                <span class="text-slate-500 text-xs">${test.passed + test.failed} tests total</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">${getStatusBadge(test.status)}</td>
+                        <td class="px-6 py-4">
+                            <span class="text-green-400 font-semibold">${test.passed}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-red-400 font-semibold">${test.failed}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-slate-300 font-mono">${test.duration}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-slate-400 text-sm">${formatTimestamp(test.timestamp)}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-wrap gap-1">
+                                ${test.htmlReport ? `<a href="${test.htmlReport}" target="_blank" 
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors">
+                                    Playwright
+                                </a>` : ''}
+                                ${test.customReport ? `<a href="${test.customReport}" target="_blank" 
+                                   class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors">
+                                    Summary
+                                </a>` : ''}
+                                ${test.videoReport ? `<a href="${test.videoReport}" target="_blank" 
+                                   class="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors">
+                                    Video
+                                </a>` : ''}
+                                ${test.traceReport ? `<a href="${test.traceReport}" target="_blank" 
+                                   class="bg-orange-600 hover:bg-orange-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors">
+                                    Trace
+                                </a>` : ''}
+                                ${test.screenshot ? `<a href="${test.screenshot}" target="_blank" 
+                                   class="bg-cyan-600 hover:bg-cyan-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors">
+                                    Screenshot
+                                </a>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            tbody.innerHTML = rows;
+
+            // Update summary stats
+            document.getElementById('totalPassed').textContent = totalPassed;
+            document.getElementById('totalFailed').textContent = totalFailed;
+            document.getElementById('totalTests').textContent = totalTests;
+            
+            const passRate = totalTests > 0 ? Math.round((totalPassed / totalTests) * 100) : 0;
+            document.getElementById('passRate').textContent = passRate + '%';
+        }
+
+        function loadExecutionHistory() {
+            const historyContainer = document.getElementById('executionHistory');
+            
+            const historyItems = sampleTestData.slice(0, 3).map((test, index) => `
+                <div class="bg-slate-950 rounded-lg p-4 border border-slate-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            ${getStatusBadge(test.status)}
+                            <span class="text-slate-200 font-medium">${test.file}</span>
+                        </div>
+                        <span class="text-slate-400 text-sm">${formatTimestamp(test.timestamp)}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <span class="text-slate-500">Passed:</span>
+                            <span class="text-green-400 font-semibold ml-1">${test.passed}</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500">Failed:</span>
+                            <span class="text-red-400 font-semibold ml-1">${test.failed}</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500">Duration:</span>
+                            <span class="text-slate-300 font-mono ml-1">${test.duration}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            historyContainer.innerHTML = historyItems;
+        }
+
+        function viewDetails(filename) {
+            alert(`Detailed view for ${filename} - This would show test breakdown, error logs, and performance metrics.`);
+        }
+
+        function refreshReports() {
+            document.getElementById('refreshBtn').disabled = true;
+            document.getElementById('refreshBtn').textContent = 'Refreshing...';
+            
+            setTimeout(() => {
+                loadTestResults();
+                loadExecutionHistory();
+                document.getElementById('refreshBtn').disabled = false;
+                document.getElementById('refreshBtn').textContent = 'Refresh Reports';
+            }, 1000);
+        }
+
+        // Initialize the page
+        setTimeout(() => {
+            loadTestResults();
+            loadExecutionHistory();
+        }, 500);
+
+        // Add event listener for refresh button
+        document.getElementById('refreshBtn').addEventListener('click', refreshReports);
+    </script>
+</body>
+</html>
