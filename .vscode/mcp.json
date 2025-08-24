@@ -1,0 +1,18 @@
+{
+  "servers": {
+    "taskmaster-ai-server": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["taskmaster-ai/server.py"]
+    }
+  }
+}
+{
+  "servers": {
+    "taskmaster-mcp-server": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["dist/server.js"]
+    }
+  }
+}
