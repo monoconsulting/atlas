@@ -1,0 +1,635 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 11,
+        "title": "Enhance Task Storage File Discovery Logic",
+        "description": "Improve the existing file discovery mechanism to ensure robust detection of .taskmaster and taskmaster directories",
+        "details": "Update TaskStorage.__init__ to implement the exact discovery logic specified in PRD: primary path /workspace/.taskmaster/, fallback path /workspace/taskmaster/, and auto-creation of .taskmaster/ on first task creation if neither exists. Add proper error handling and logging for directory discovery failures.",
+        "testStrategy": "Unit tests for different directory scenarios: existing .taskmaster, existing taskmaster only, neither exists, both exist (should prefer .taskmaster). Integration tests with Docker volume mounts.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Add GET /health Endpoint Validation",
+        "description": "Ensure the existing health check endpoint meets API specification requirements",
+        "details": "Verify that the existing GET /health endpoint returns the correct JSON format: {ok: true, message: 'taskmasterweb is alive'}. Add proper response typing and ensure it's documented in the API.",
+        "testStrategy": "API endpoint test to verify response structure and HTTP status codes. Test with different application states.",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Enhance GET /info Endpoint Response Format",
+        "description": "Standardize the /info endpoint to return consistent JSON structure matching API specification",
+        "details": "Ensure the /info endpoint returns: base_dir, tasks_file, state_file, config_file, current_tag, and project_name. Update existing info() method in TaskStorage to match exact PRD specification. Add proper error handling for missing environment variables.",
+        "testStrategy": "API endpoint tests with different environment configurations. Validate JSON response schema and field presence.",
+        "priority": "medium",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Comprehensive Task Data Model Validation",
+        "description": "Enhance existing Pydantic models to enforce all field constraints specified in PRD",
+        "details": "Update Task and SubTask models in models.py to include all required fields: id, title, description, status (enum: 'todo', 'in-progress', 'done'), priority (enum: 'low', 'medium', 'high'), due_date (YYYY-MM-DD format), assigned_to, estimate, labels, dependencies. Add regex patterns, length constraints, and proper validation decorators.",
+        "testStrategy": "Comprehensive unit tests for model validation including edge cases: invalid status values, malformed dates, field length limits, and null handling.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Add Automatic Timestamp Management",
+        "description": "Implement created_at and updated_at ISO timestamp fields with UTC timezone handling",
+        "details": "Extend Task and SubTask models to include created_at and updated_at fields. Update TaskStorage methods to automatically set created_at on creation and updated_at on modifications. Use datetime.utcnow().isoformat() + 'Z' format for consistency.",
+        "testStrategy": "Unit tests for timestamp creation and updates. Verify ISO format and UTC timezone. Test timestamp preservation during partial updates.",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Enhance GET /tasks Endpoint with Tag Support",
+        "description": "Improve the existing /tasks endpoint to properly handle tag parameter and currentTag fallback",
+        "details": "Verify that GET /tasks correctly accepts optional ?tag= query parameter and defaults to currentTag from state.json. Ensure proper error handling when tag doesn't exist. Return tasks sorted by status (todo -> in-progress -> done) then by ID.",
+        "testStrategy": "API endpoint tests with different tag scenarios: no tag parameter, existing tag, non-existing tag, empty tag. Verify sorting behavior and response format.",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Implement Robust GET /task/{task_id} Endpoint",
+        "description": "Enhance the existing single task retrieval endpoint with proper error handling",
+        "details": "Ensure GET /task/{task_id} returns proper 404 status with detailed error message when task not found. Add support for optional tag parameter. Include all task fields including subtasks in response.",
+        "testStrategy": "API endpoint tests for existing task retrieval, non-existing task (404 response), invalid task ID formats, and different tag scenarios.",
+        "priority": "medium",
+        "dependencies": [
+          16
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Improve POST /task Endpoint with Auto-ID Assignment",
+        "description": "Enhance task creation endpoint to ensure proper ID generation and validation",
+        "details": "Verify that POST /task correctly assigns new ID as max(existing_ids) + 1, validates all input fields through Pydantic models, sets created_at timestamp, and handles duplicate dependencies. Return complete task object in response.",
+        "testStrategy": "API endpoint tests for task creation with various field combinations, validation failures, ID assignment uniqueness, and concurrent creation scenarios.",
+        "priority": "high",
+        "dependencies": [
+          14,
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Enhance PATCH /task/{task_id} for Partial Updates",
+        "description": "Improve task update endpoint to handle partial updates and validation properly",
+        "details": "Ensure PATCH /task/{task_id} supports partial updates, updates only provided fields, sets updated_at timestamp, validates modified fields through Pydantic, and returns updated task object. Handle 404 for non-existing tasks.",
+        "testStrategy": "API endpoint tests for partial updates, field validation, timestamp updates, non-existing task handling, and concurrent modification scenarios.",
+        "priority": "medium",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Implement POST /task/{task_id}/subtask Endpoint",
+        "description": "Enhance subtask creation endpoint with proper parent task validation",
+        "details": "Verify POST /task/{task_id}/subtask validates parent task exists, assigns unique subtask ID within parent scope, validates all subtask fields, and returns complete subtask object. Handle parent_id parameter consistency.",
+        "testStrategy": "API endpoint tests for subtask creation, parent task validation, subtask ID assignment, field validation, and parent-child relationship integrity.",
+        "priority": "high",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Implement PATCH /task/{task_id}/subtask/{sub_id} Endpoint",
+        "description": "Create subtask update endpoint with proper validation and error handling",
+        "details": "Implement PATCH /task/{task_id}/subtask/{sub_id} to support partial subtask updates, validate parent task and subtask exist, update only provided fields, set updated_at timestamp, and return updated subtask object.",
+        "testStrategy": "API endpoint tests for subtask updates, parent/child validation, partial updates, timestamp handling, and error scenarios (non-existing parent or subtask).",
+        "priority": "medium",
+        "dependencies": [
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Implement Atomic File Operations with Temp Files",
+        "description": "Enhance existing file write operations to use atomic writes for data safety",
+        "details": "Improve _write_json method in TaskStorage to use temporary files and atomic rename operations to prevent data corruption during writes. Add proper error handling and cleanup for failed operations. Ensure existing atomic write logic is robust.",
+        "testStrategy": "Unit tests for concurrent write scenarios, write failures, disk space issues, and data corruption prevention. Integration tests with file system stress scenarios.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Enhance JSON Parsing Error Recovery",
+        "description": "Improve existing JSON parsing fallback mechanism for corrupted files",
+        "details": "Enhance _read_json method to handle various JSON corruption scenarios: partial writes, encoding issues, malformed structure. Implement robust fallback parsing that attempts to recover valid JSON from corrupted files while maintaining data integrity.",
+        "testStrategy": "Unit tests with various corrupted JSON scenarios: truncated files, invalid characters, partial objects, mixed encodings. Verify graceful degradation and data recovery.",
+        "priority": "medium",
+        "dependencies": [
+          22
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Create Responsive Two-Column Layout Structure",
+        "description": "Implement the main UI layout framework with responsive design",
+        "details": "Update index.html to implement responsive two-column layout using Tailwind CSS grid system. Left column for input panels, right column for display panels. Ensure proper adaptation to different screen sizes (mobile, tablet, desktop) with appropriate breakpoints.",
+        "testStrategy": "Visual testing across different screen sizes, responsive behavior validation, CSS layout tests, and accessibility compliance checks.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Design Application Header with Project Information",
+        "description": "Create header section with title and project context information",
+        "details": "Implement header with main title 'Task Master AI — {Project Name}' and descriptive subtitle showing working directory. Add project name badge that updates dynamically based on /info endpoint response. Style with backdrop blur and sticky positioning.",
+        "testStrategy": "Visual testing for header appearance, dynamic project name updates, responsive behavior, and sticky positioning functionality.",
+        "priority": "medium",
+        "dependencies": [
+          24
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Create Storage Info Panel with Refresh Functionality",
+        "description": "Implement the first left column panel for displaying storage configuration",
+        "details": "Create storage info panel that displays formatted JSON from /info endpoint in a pre block. Add refresh button with loading state. Implement auto-refresh on page load and manual refresh capability. Style with consistent panel design.",
+        "testStrategy": "Integration tests for API data fetching, refresh functionality, error handling for API failures, and loading state management.",
+        "priority": "medium",
+        "dependencies": [
+          25,
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Build Add Task Form with Comprehensive Field Support",
+        "description": "Create the main task creation form with all required fields",
+        "details": "Implement comprehensive task creation form with fields: title, description, status dropdown, priority dropdown, due_date (with date picker), assigned_to, estimate, labels (text input), and dependencies (chip-based selector). Add form validation and submission handling.",
+        "testStrategy": "Form validation tests, field input testing, dropdown functionality, date picker validation, form submission tests, and error handling scenarios.",
+        "priority": "high",
+        "dependencies": [
+          26
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Implement Chip-Based Dependencies Selector",
+        "description": "Create the dependencies selection UI using chip-based interface",
+        "details": "Implement compact dropdown list of existing tasks for dependency selection. Users can select tasks and add them as removable chips/tags. Include search/filter functionality in dropdown. Style chips with colored badges and remove buttons. Prevent duplicate dependencies.",
+        "testStrategy": "UI interaction tests for dropdown functionality, chip creation/removal, search filtering, duplicate prevention, and accessibility compliance.",
+        "priority": "high",
+        "dependencies": [
+          27
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "Create Add Task Form Success Handling",
+        "description": "Implement task creation success feedback and form reset functionality",
+        "details": "Add success message display after task creation, clear form fields, auto-populate Parent ID in Add Subtask form with new task ID, and refresh task list display. Include error handling for creation failures.",
+        "testStrategy": "Integration tests for successful task creation flow, form reset behavior, auto-population functionality, and error scenario handling.",
+        "priority": "medium",
+        "dependencies": [
+          28,
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Build Add Subtask Form with Parent Task Selection",
+        "description": "Create subtask creation form with parent task relationship",
+        "details": "Implement subtask creation form with required Parent task ID field, all subtask properties (same as task except no subtasks), and chip-based dependency selector. Add validation for parent task existence and form submission handling.",
+        "testStrategy": "Form validation tests, parent task validation, subtask creation integration tests, and parent-child relationship verification.",
+        "priority": "high",
+        "dependencies": [
+          29
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Create Existing Subtasks Display List",
+        "description": "Implement dynamic list showing existing subtasks for selected parent",
+        "details": "Below Add Subtask form, display list of existing subtasks for selected Parent ID. Show subtask number, priority (colored badge), title, and status toggle checkbox (todo/done). Auto-update when parent ID changes. Include loading states.",
+        "testStrategy": "Dynamic list update tests, checkbox toggle functionality, colored badge display, and parent ID change reactivity tests.",
+        "priority": "medium",
+        "dependencies": [
+          30
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Implement Task Filtering Controls Panel",
+        "description": "Create filtering interface for task list display",
+        "details": "Implement filter panel in right column with controls for Status (dropdown with todo/in-progress/done options), Priority (low/medium/high), and Tag (text input defaulting to currentTag). Add filter reset functionality and real-time filtering.",
+        "testStrategy": "Filter functionality tests, real-time filtering behavior, filter combination scenarios, and filter reset functionality tests.",
+        "priority": "medium",
+        "dependencies": [
+          24
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Build Task List Display with Card Layout",
+        "description": "Create main task display area with card-based layout",
+        "details": "Implement task list display with individual task cards. Each card shows ID, title, status, priority, description snippet, assigned user, and dependencies. Cards are sorted by status (todo -> in-progress -> done) then by ID. Style cards with priority-based visual cues.",
+        "testStrategy": "Task card rendering tests, sorting functionality verification, visual styling tests for different priorities, and responsive layout testing.",
+        "priority": "high",
+        "dependencies": [
+          32,
+          16
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 34,
+        "title": "Add Priority-Based Visual Styling for Task Cards",
+        "description": "Implement priority-based color coding and visual indicators",
+        "details": "Apply priority-based visual styling: High priority tasks with red accent/border, Medium priority with orange accent, Low priority with neutral styling. Add priority badges and consistent visual hierarchy. Ensure accessibility with sufficient contrast.",
+        "testStrategy": "Visual styling tests for all priority levels, accessibility compliance checks, color contrast validation, and consistent styling across different themes.",
+        "priority": "medium",
+        "dependencies": [
+          33
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 35,
+        "title": "Implement Task Card Click Interaction",
+        "description": "Make entire task cards clickable to open edit modal",
+        "details": "Make complete task cards clickable elements that open Edit Task modal. Add hover states, proper cursor styling, and keyboard accessibility (Enter key support). Include loading states during modal preparation.",
+        "testStrategy": "Click interaction tests, keyboard accessibility tests, hover state verification, and modal opening integration tests.",
+        "priority": "high",
+        "dependencies": [
+          34
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 36,
+        "title": "Create Edit Task Modal Foundation",
+        "description": "Build modal dialog structure for task editing",
+        "details": "Create modal dialog with proper structure: backdrop, modal content area, header with title and priority badge, scrollable content area, and footer with action buttons. Implement modal open/close functionality with backdrop clicking and ESC key support.",
+        "testStrategy": "Modal functionality tests, backdrop interaction tests, keyboard navigation tests, and scroll behavior verification.",
+        "priority": "high",
+        "dependencies": [
+          35
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 37,
+        "title": "Implement Modal Backdrop and Scroll Prevention",
+        "description": "Add proper modal behavior for backdrop interaction and scroll management",
+        "details": "Implement modal backdrop that closes modal when clicked outside content area. Prevent background page scrolling when modal is open. Handle modal content scrolling when content exceeds viewport height. Add proper z-index management.",
+        "testStrategy": "Modal backdrop tests, scroll prevention verification, modal content scrolling tests, and z-index layering validation.",
+        "priority": "medium",
+        "dependencies": [
+          36
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 38,
+        "title": "Build Edit Task Form with Pre-populated Fields",
+        "description": "Create task editing form with current task data pre-filled",
+        "details": "Implement edit task form identical to Add Task form but pre-populated with current task data. Include all fields: title, description, status, priority, due_date, assigned_to, estimate, labels, dependencies. Add form validation and update submission handling.",
+        "testStrategy": "Form pre-population tests, field validation tests, form submission tests, and data binding verification between task data and form fields.",
+        "priority": "high",
+        "dependencies": [
+          37,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 39,
+        "title": "Add Edit Modal Chip-Based Dependencies Management",
+        "description": "Implement dependencies editing within the modal using chip interface",
+        "details": "Integrate chip-based dependency selector within edit modal. Show current dependencies as chips, allow adding new dependencies via dropdown, and enable removing existing dependencies. Prevent circular dependencies and self-references.",
+        "testStrategy": "Dependencies management tests, circular dependency prevention tests, chip interaction tests, and dependency validation scenarios.",
+        "priority": "medium",
+        "dependencies": [
+          38,
+          28
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 40,
+        "title": "Create Inline Subtask Editing Within Modal",
+        "description": "Implement subtask editing interface within the task edit modal",
+        "details": "Add dedicated section in edit modal for managing subtasks. Display existing subtasks in editable list format with inline editing capabilities. Allow status updates, priority changes, and title/description editing without separate modal. Include visual indicators for modified subtasks.",
+        "testStrategy": "Inline editing tests, subtask modification tests, visual feedback tests, and data persistence verification for subtask changes.",
+        "priority": "high",
+        "dependencies": [
+          39
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 41,
+        "title": "Add New Subtask Creation Within Modal",
+        "description": "Implement subtask creation form within the task edit modal",
+        "details": "Include compact subtask creation form within edit modal. Allow adding new subtasks without closing modal. Auto-populate parent task ID, validate subtask data, and immediately display new subtasks in the subtasks list. Handle creation errors gracefully.",
+        "testStrategy": "Subtask creation tests, form validation tests, immediate UI updates tests, and error handling verification.",
+        "priority": "medium",
+        "dependencies": [
+          40
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 42,
+        "title": "Implement Client-Side Task Filtering",
+        "description": "Add real-time task filtering functionality for responsive UI",
+        "details": "Implement client-side filtering logic for instant response. Filter tasks by status, priority, and tag criteria. Update display immediately when filter criteria change. Handle multiple simultaneous filters and provide filter count feedback.",
+        "testStrategy": "Real-time filtering tests, multiple filter combination tests, filter performance tests, and filter count accuracy verification.",
+        "priority": "medium",
+        "dependencies": [
+          33,
+          32
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 43,
+        "title": "Add Client-Side Task Sorting",
+        "description": "Implement client-side sorting for responsive task list management",
+        "details": "Implement client-side sorting logic: primary sort by status (todo -> in-progress -> done), secondary sort by ID ascending. Maintain sort order during filtering and updates. Add optional sorting by other criteria (priority, due date, title).",
+        "testStrategy": "Sorting functionality tests, multi-criteria sorting tests, sort stability tests, and performance tests with large datasets.",
+        "priority": "low",
+        "dependencies": [
+          42
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 44,
+        "title": "Enhance Tailwind CSS Build Process",
+        "description": "Ensure robust Tailwind CSS compilation during Docker build",
+        "details": "Verify Dockerfile correctly downloads Tailwind CSS binary, compiles tw.css to tailwind.css with proper configuration, includes all required CSS classes, and handles build failures gracefully. Ensure minification and optimization for production.",
+        "testStrategy": "Docker build tests, CSS compilation verification, build failure handling tests, and CSS optimization validation.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 45,
+        "title": "Configure Tailwind CSS for Component Classes",
+        "description": "Ensure Tailwind configuration includes all required classes for UI components",
+        "details": "Update tailwind.config.js to include all CSS classes used in the application. Configure content paths to scan HTML and JS files. Add custom utility classes for chips, badges, and modal components. Ensure purging excludes required classes.",
+        "testStrategy": "CSS class availability tests, purging configuration tests, custom component styling tests, and build optimization verification.",
+        "priority": "medium",
+        "dependencies": [
+          44
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 46,
+        "title": "Add Comprehensive Input Validation",
+        "description": "Implement client-side and server-side validation for all form inputs",
+        "details": "Add comprehensive validation for all form inputs: required field validation, format validation (dates, emails), length constraints, pattern matching, and data type validation. Provide clear error messages and prevent invalid submissions.",
+        "testStrategy": "Input validation tests for all field types, error message display tests, validation bypass prevention tests, and user experience validation.",
+        "priority": "high",
+        "dependencies": [
+          27,
+          30,
+          38
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 47,
+        "title": "Implement Error Handling and User Feedback",
+        "description": "Add comprehensive error handling with user-friendly feedback",
+        "details": "Implement global error handling for API failures, network errors, validation failures, and unexpected errors. Display user-friendly error messages, loading states, and success confirmations. Include retry mechanisms for recoverable errors.",
+        "testStrategy": "Error handling tests for various failure scenarios, user feedback display tests, retry mechanism tests, and error recovery verification.",
+        "priority": "medium",
+        "dependencies": [
+          46
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 48,
+        "title": "Add Security Measures for Path Traversal Prevention",
+        "description": "Implement security constraints for file access within workspace",
+        "details": "Add security validation to ensure all file paths remain within /workspace directory. Implement path normalization, symbolic link resolution checks, and directory traversal prevention. Add logging for security violation attempts.",
+        "testStrategy": "Security tests for path traversal attempts, symbolic link handling tests, workspace boundary enforcement tests, and security logging verification.",
+        "priority": "high",
+        "dependencies": [
+          22
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 49,
+        "title": "Create Comprehensive API Documentation",
+        "description": "Generate complete API documentation for all endpoints",
+        "details": "Create comprehensive API documentation using FastAPI's automatic documentation features. Include request/response schemas, error codes, usage examples, and authentication requirements. Ensure documentation is accessible via /docs endpoint.",
+        "testStrategy": "Documentation generation tests, schema validation tests, example accuracy verification, and documentation accessibility tests.",
+        "priority": "low",
+        "dependencies": [
+          21
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 50,
+        "title": "Implement Performance Optimization",
+        "description": "Optimize application performance for large task datasets",
+        "details": "Implement performance optimizations: client-side pagination for large task lists, lazy loading of task details, caching strategies for frequently accessed data, and efficient DOM manipulation. Add performance monitoring and metrics collection.",
+        "testStrategy": "Performance tests with large datasets, loading time measurements, memory usage tests, and user experience performance validation.",
+        "priority": "low",
+        "dependencies": [
+          43
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 51,
+        "title": "Add Task Master AI CLI Compatibility Testing",
+        "description": "Ensure full compatibility with existing task-master-ai CLI tooling",
+        "details": "Test full compatibility with task-master-ai CLI: file format compatibility, concurrent access scenarios, data integrity during CLI modifications, and state synchronization. Ensure web UI changes are properly reflected in CLI and vice versa.",
+        "testStrategy": "CLI integration tests, concurrent access tests, data synchronization tests, and cross-tool compatibility verification.",
+        "priority": "high",
+        "dependencies": [
+          22,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 52,
+        "title": "Create Deployment and Setup Documentation",
+        "description": "Create comprehensive setup and deployment documentation",
+        "details": "Create detailed README.md with setup instructions, configuration options, troubleshooting guide, and usage examples. Include Docker setup, environment configuration, and common deployment scenarios. Add example .env configurations.",
+        "testStrategy": "Documentation accuracy tests, setup procedure verification, example configuration tests, and user onboarding flow validation.",
+        "priority": "medium",
+        "dependencies": [
+          49
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 53,
+        "title": "Implement Automated Testing Suite",
+        "description": "Create comprehensive automated test suite for all components",
+        "details": "Implement comprehensive test suite: unit tests for all Python modules, integration tests for API endpoints, frontend interaction tests, Docker build tests, and end-to-end user workflow tests. Add CI/CD pipeline configuration.",
+        "testStrategy": "Test coverage verification, automated test execution, CI/CD pipeline tests, and test reliability validation.",
+        "priority": "medium",
+        "dependencies": [
+          51
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 54,
+        "title": "Create Production Deployment Package",
+        "description": "Package application for production deployment as specified in PRD",
+        "details": "Create deliverable .zip archive containing taskmasterweb directory with all necessary files: app/ directory, Dockerfile, docker-compose.yml, .env.example, requirements.txt, tailwind.config.js, and README.md. Ensure all dependencies are included and no development files are included.",
+        "testStrategy": "Package completeness tests, deployment tests from archive, dependency verification, and production environment testing.",
+        "priority": "medium",
+        "dependencies": [
+          52,
+          53
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 55,
+        "title": "Add MCP Server Integration Support",
+        "description": "Ensure compatibility with existing MCP server component",
+        "details": "Verify integration with existing mcp-server-taskmaster TypeScript component. Ensure web UI works alongside MCP server, handle concurrent access scenarios, and maintain data consistency across both interfaces. Test MCP protocol compatibility.",
+        "testStrategy": "MCP integration tests, concurrent access tests, data consistency verification, and protocol compatibility tests.",
+        "priority": "low",
+        "dependencies": [
+          54
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 56,
+        "title": "Performance Testing and Optimization",
+        "description": "Conduct comprehensive performance testing and implement optimizations",
+        "details": "Perform comprehensive performance testing with realistic datasets: large task lists, complex dependency graphs, concurrent user scenarios, and resource usage analysis. Implement identified optimizations and benchmark improvements.",
+        "testStrategy": "Load testing with various dataset sizes, concurrent user testing, resource usage monitoring, and performance regression testing.",
+        "priority": "low",
+        "dependencies": [
+          50,
+          55
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 57,
+        "title": "Final Integration Testing and Quality Assurance",
+        "description": "Conduct final end-to-end testing and quality assurance before release",
+        "details": "Perform comprehensive end-to-end testing: complete user workflows, cross-browser compatibility, mobile responsiveness, accessibility compliance, security validation, and error scenario handling. Create final test report and address all identified issues.",
+        "testStrategy": "End-to-end user workflow tests, cross-platform compatibility tests, accessibility compliance verification, security audit, and final quality assurance review.",
+        "priority": "high",
+        "dependencies": [
+          56
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 58,
+        "title": "Create Production Release",
+        "description": "Prepare and create final production release package",
+        "details": "Create final production release: version tagging, release notes, final documentation review, production deployment testing, and delivery package preparation. Ensure all PRD requirements are met and documented.",
+        "testStrategy": "Production deployment tests, final requirement verification, documentation completeness review, and release package validation.",
+        "priority": "high",
+        "dependencies": [
+          57
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-24T07:33:27.511Z",
+      "updated": "2025-08-24T07:39:22.549Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
