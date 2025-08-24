@@ -2,11 +2,28 @@
 services:
   taskmasterweb:
     build: .
-    container_name: taskmasterweb
+    container_name: ${CONTAINER_NAME:-taskmasterweb}
     env_file:
       - .env
     ports:
-      - "${HOST_PORT:-8099}:8000"
+      - "${HOST_PORT:-8199}:8000"
     volumes:
       - "${PROJECT_ROOT}:/workspace"
     restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: ${MYSQL_CONTAINER_NAME:-taskmasterweb_mysql}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-taskmaster}
+      MYSQL_USER: ${MYSQL_USER:-tmuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-tmpassword}
+    ports:
+      - "${MYSQL_HOST_PORT:-3306}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  mysql-data:

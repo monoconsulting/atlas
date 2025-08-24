@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-08-24T11:01:35.223Z",
+  "runs": 1,
+  "totalPassed": 0,
+  "totalFailed": 3,
+  "totalTime": 14,
+  "successRate": 0,
+  "runDetails": [
+    {
+      "passedTests": [],
+      "failedTests": [
+        {
+          "spec": "tests/01-ui-initialization.spec.js",
+          "error": "spawn npx ENOENT",
+          "output": ""
+        },
+        {
+          "spec": "tests/02-task-creation.spec.js",
+          "error": "spawn npx ENOENT",
+          "output": ""
+        },
+        {
+          "spec": "tests/03-task-editing.spec.js",
+          "error": "spawn npx ENOENT",
+          "output": ""
+        }
+      ],
+      "totalTime": 14
+    }
+  ]
+}

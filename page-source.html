@@ -1,0 +1,1035 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Master AI</title>
+    <link href="/static/tailwind.css" rel="stylesheet">
+    <style>
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgb(30 41 59); /* slate-800 */
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgb(71 85 105); /* slate-600 */
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgb(100 116 139); /* slate-500 */
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+    <!-- Header -->
+    <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <h1 class="text-2xl font-semibold text-slate-100">
+                Task Master AI — <span id="projectName" class="text-blue-300">TaskMasterWeb</span>
+            </h1>
+            <p class="text-sm text-slate-400 mt-1">
+                Works with <code class="bg-slate-800 px-2 py-0.5 rounded text-xs text-blue-300">/workspace/.taskmaster</code>
+                (fallback: <code class="bg-slate-800 px-2 py-0.5 rounded text-xs text-blue-300">/workspace/taskmaster</code>)
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Left Column - Task List -->
+            <div>
+                <!-- Task List - Super Long Block -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-medium text-slate-100">All Tasks</h2>
+                        <div id="taskCount" class="text-sm text-slate-400">48 tasks</div>
+                    </div>
+                    <div id="taskList" class="space-y-3 custom-scrollbar overflow-y-auto" style="max-height: calc(100vh - 200px);">
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(11)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#11</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Enhance Task Storage File Discovery Logic</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Improve the existing file discovery mechanism to ensure robust detection of .taskmaster and taskmaster directories</p>
+                    
+                    
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-slate-600 bg-slate-900/50" onclick="openEditModal(12)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#12</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">low</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add GET /health Endpoint Validation</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Ensure the existing health check endpoint meets API specification requirements</p>
+                    
+                    
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(13)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#13</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Enhance GET /info Endpoint Response Format</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Standardize the /info endpoint to return consistent JSON structure matching API specification</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 11</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(14)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#14</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Comprehensive Task Data Model Validation</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Enhance existing Pydantic models to enforce all field constraints specified in PRD</p>
+                    
+                    
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(15)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#15</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add Automatic Timestamp Management</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement created_at and updated_at ISO timestamp fields with UTC timezone handling</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 14</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(16)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#16</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Enhance GET /tasks Endpoint with Tag Support</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Improve the existing /tasks endpoint to properly handle tag parameter and currentTag fallback</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 13</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(17)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#17</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Robust GET /task/{task_id} Endpoint</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Enhance the existing single task retrieval endpoint with proper error handling</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 16</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(18)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#18</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Improve POST /task Endpoint with Auto-ID Assignment</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Enhance task creation endpoint to ensure proper ID generation and validation</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 14, 15</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(19)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#19</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Enhance PATCH /task/{task_id} for Partial Updates</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Improve task update endpoint to handle partial updates and validation properly</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 18</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(20)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#20</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement POST /task/{task_id}/subtask Endpoint</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Enhance subtask creation endpoint with proper parent task validation</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 18</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(21)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#21</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement PATCH /task/{task_id}/subtask/{sub_id} Endpoint</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create subtask update endpoint with proper validation and error handling</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 20</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(22)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#22</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Atomic File Operations with Temp Files</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Enhance existing file write operations to use atomic writes for data safety</p>
+                    
+                    
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(23)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#23</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Enhance JSON Parsing Error Recovery</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Improve existing JSON parsing fallback mechanism for corrupted files</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 22</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(24)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#24</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Responsive Two-Column Layout Structure</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement the main UI layout framework with responsive design</p>
+                    
+                    
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(25)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#25</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Design Application Header with Project Information</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create header section with title and project context information</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 24</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(26)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#26</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Storage Info Panel with Refresh Functionality</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement the first left column panel for displaying storage configuration</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 25, 13</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(27)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#27</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Build Add Task Form with Comprehensive Field Support</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create the main task creation form with all required fields</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 26</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(28)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#28</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Chip-Based Dependencies Selector</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create the dependencies selection UI using chip-based interface</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 27</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(29)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#29</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Add Task Form Success Handling</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement task creation success feedback and form reset functionality</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 28, 18</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(30)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#30</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Build Add Subtask Form with Parent Task Selection</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create subtask creation form with parent task relationship</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 29</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(31)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#31</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Existing Subtasks Display List</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement dynamic list showing existing subtasks for selected parent</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 30</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(32)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#32</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Task Filtering Controls Panel</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create filtering interface for task list display</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 24</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(33)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#33</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Build Task List Display with Card Layout</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create main task display area with card-based layout</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 32, 16</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(34)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#34</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add Priority-Based Visual Styling for Task Cards</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement priority-based color coding and visual indicators</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 33</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(35)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#35</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Task Card Click Interaction</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Make entire task cards clickable to open edit modal</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 34</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(36)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#36</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Edit Task Modal Foundation</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Build modal dialog structure for task editing</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 35</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(37)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#37</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Modal Backdrop and Scroll Prevention</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Add proper modal behavior for backdrop interaction and scroll management</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 36</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(38)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#38</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Build Edit Task Form with Pre-populated Fields</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create task editing form with current task data pre-filled</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 37, 17</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(39)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#39</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add Edit Modal Chip-Based Dependencies Management</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement dependencies editing within the modal using chip interface</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 38, 28</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(40)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#40</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Inline Subtask Editing Within Modal</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement subtask editing interface within the task edit modal</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 39</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(41)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#41</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add New Subtask Creation Within Modal</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement subtask creation form within the task edit modal</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 40</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(42)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#42</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Client-Side Task Filtering</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Add real-time task filtering functionality for responsive UI</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 33, 32</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-slate-600 bg-slate-900/50" onclick="openEditModal(43)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#43</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">low</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add Client-Side Task Sorting</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement client-side sorting for responsive task list management</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 42</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(44)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#44</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Enhance Tailwind CSS Build Process</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Ensure robust Tailwind CSS compilation during Docker build</p>
+                    
+                    
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(45)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#45</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Configure Tailwind CSS for Component Classes</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Ensure Tailwind configuration includes all required classes for UI components</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 44</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(46)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#46</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add Comprehensive Input Validation</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement client-side and server-side validation for all form inputs</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 27, 30, 38</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(47)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#47</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Error Handling and User Feedback</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Add comprehensive error handling with user-friendly feedback</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 46</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(48)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#48</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add Security Measures for Path Traversal Prevention</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Implement security constraints for file access within workspace</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 22</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-slate-600 bg-slate-900/50" onclick="openEditModal(49)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#49</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">low</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Comprehensive API Documentation</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Generate complete API documentation for all endpoints</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 21</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-slate-600 bg-slate-900/50" onclick="openEditModal(50)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#50</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">low</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Performance Optimization</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Optimize application performance for large task datasets</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 43</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(51)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#51</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add Task Master AI CLI Compatibility Testing</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Ensure full compatibility with existing task-master-ai CLI tooling</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 22, 23</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(52)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#52</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Deployment and Setup Documentation</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create comprehensive setup and deployment documentation</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 49</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(53)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#53</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Implement Automated Testing Suite</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Create comprehensive automated test suite for all components</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 51</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-orange-500 bg-orange-950/20" onclick="openEditModal(54)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#54</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">medium</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Production Deployment Package</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Package application for production deployment as specified in PRD</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 52, 53</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-slate-600 bg-slate-900/50" onclick="openEditModal(55)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#55</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">low</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Add MCP Server Integration Support</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Ensure compatibility with existing MCP server component</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 54</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-slate-600 bg-slate-900/50" onclick="openEditModal(56)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#56</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">low</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Performance Testing and Optimization</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Conduct comprehensive performance testing and implement optimizations</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 50, 55</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(57)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#57</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Final Integration Testing and Quality Assurance</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Conduct final end-to-end testing and quality assurance before release</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 56</div>
+                </div>
+            
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors border-red-500 bg-red-950/20" onclick="openEditModal(58)">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#58</span>
+                            
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">high</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">Create Production Release</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">Prepare and create final production release package</p>
+                    
+                    <div class="text-xs text-slate-500 mt-1">Depends on: 57</div>
+                </div>
+            </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Input Forms -->
+            <div class="space-y-6">
+                <!-- Panel 1: Storage Info -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-medium text-slate-100">Storage Info</h2>
+                        <button id="refreshBtn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm rounded border border-slate-700 transition-colors">
+                            Refresh
+                        </button>
+                    </div>
+                    <pre id="storageInfo" class="bg-slate-900 text-slate-300 p-4 rounded border border-slate-800 text-xs overflow-auto custom-scrollbar max-h-48">{
+  "base_dir": "/workspace/.taskmaster",
+  "tasks_file": "/workspace/.taskmaster/tasks/tasks.json",
+  "state_file": "/workspace/.taskmaster/state.json",
+  "config_file": "/workspace/.taskmaster/config.json",
+  "current_tag": "master",
+  "project_name": "TaskMasterWeb"
+}</pre>
+                </div>
+
+                <!-- Panel 2: Add Task -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <h2 class="text-lg font-medium text-slate-100 mb-4">Add Task</h2>
+                    <form id="addTaskForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input type="text" id="taskTitle" required="" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter task title" style="">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select id="taskPriority" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                            <textarea id="taskDescription" rows="3" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Describe the task" style=""></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Due Date</label>
+                                <input type="date" id="taskDueDate" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" style="">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Assigned To</label>
+                                <input type="text" id="taskAssignedTo" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Assignee name" style="">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Dependencies</label>
+                            <div class="flex gap-2">
+                                <select id="dependencySelect" class="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"><option value="">Select a task...</option><option value="11">#11 - Enhance Task Storage File Discovery Logic</option><option value="12">#12 - Add GET /health Endpoint Validation</option><option value="13">#13 - Enhance GET /info Endpoint Response Format</option><option value="14">#14 - Implement Comprehensive Task Data Model Validation</option><option value="15">#15 - Add Automatic Timestamp Management</option><option value="16">#16 - Enhance GET /tasks Endpoint with Tag Support</option><option value="17">#17 - Implement Robust GET /task/{task_id} Endpoint</option><option value="18">#18 - Improve POST /task Endpoint with Auto-ID Assignment</option><option value="19">#19 - Enhance PATCH /task/{task_id} for Partial Updates</option><option value="20">#20 - Implement POST /task/{task_id}/subtask Endpoint</option><option value="21">#21 - Implement PATCH /task/{task_id}/subtask/{sub_id} Endpoint</option><option value="22">#22 - Implement Atomic File Operations with Temp Files</option><option value="23">#23 - Enhance JSON Parsing Error Recovery</option><option value="24">#24 - Create Responsive Two-Column Layout Structure</option><option value="25">#25 - Design Application Header with Project Information</option><option value="26">#26 - Create Storage Info Panel with Refresh Functionality</option><option value="27">#27 - Build Add Task Form with Comprehensive Field Support</option><option value="28">#28 - Implement Chip-Based Dependencies Selector</option><option value="29">#29 - Create Add Task Form Success Handling</option><option value="30">#30 - Build Add Subtask Form with Parent Task Selection</option><option value="31">#31 - Create Existing Subtasks Display List</option><option value="32">#32 - Implement Task Filtering Controls Panel</option><option value="33">#33 - Build Task List Display with Card Layout</option><option value="34">#34 - Add Priority-Based Visual Styling for Task Cards</option><option value="35">#35 - Implement Task Card Click Interaction</option><option value="36">#36 - Create Edit Task Modal Foundation</option><option value="37">#37 - Implement Modal Backdrop and Scroll Prevention</option><option value="38">#38 - Build Edit Task Form with Pre-populated Fields</option><option value="39">#39 - Add Edit Modal Chip-Based Dependencies Management</option><option value="40">#40 - Create Inline Subtask Editing Within Modal</option><option value="41">#41 - Add New Subtask Creation Within Modal</option><option value="42">#42 - Implement Client-Side Task Filtering</option><option value="43">#43 - Add Client-Side Task Sorting</option><option value="44">#44 - Enhance Tailwind CSS Build Process</option><option value="45">#45 - Configure Tailwind CSS for Component Classes</option><option value="46">#46 - Add Comprehensive Input Validation</option><option value="47">#47 - Implement Error Handling and User Feedback</option><option value="48">#48 - Add Security Measures for Path Traversal Prevention</option><option value="49">#49 - Create Comprehensive API Documentation</option><option value="50">#50 - Implement Performance Optimization</option><option value="51">#51 - Add Task Master AI CLI Compatibility Testing</option><option value="52">#52 - Create Deployment and Setup Documentation</option><option value="53">#53 - Implement Automated Testing Suite</option><option value="54">#54 - Create Production Deployment Package</option><option value="55">#55 - Add MCP Server Integration Support</option><option value="56">#56 - Performance Testing and Optimization</option><option value="57">#57 - Final Integration Testing and Quality Assurance</option><option value="58">#58 - Create Production Release</option></select>
+                                <button type="button" id="addDependencyBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">
+                                    Add
+                                </button>
+                            </div>
+                            <div id="taskDependencies" class="flex flex-wrap gap-2 mt-2"></div>
+                        </div>
+
+                        <button type="submit" class="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded font-medium transition-colors">
+                            Create Task
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Panel 3: Add Subtask -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <h2 class="text-lg font-medium text-slate-100 mb-4">Add Subtask</h2>
+                    <form id="addSubtaskForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Parent Task ID *</label>
+                            <input type="number" id="subtaskParentId" required="" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter parent task ID" style="">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input type="text" id="subtaskTitle" required="" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter subtask title" style="">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select id="subtaskPriority" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors">
+                            Create Subtask
+                        </button>
+                    </form>
+
+                    <!-- Existing Subtasks List -->
+                    <div id="existingSubtasks" class="mt-6">
+                        <h3 class="text-sm font-medium text-slate-300 mb-3">Existing Subtasks</h3>
+                        <div id="subtasksList" class="space-y-2 text-sm text-slate-400">
+                            Select a parent task to view subtasks
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel 4: Filters -->
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-6">
+                    <h2 class="text-lg font-medium text-slate-100 mb-4">Filters</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Status</label>
+                            <select id="filterStatus" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Status</option>
+                                <option value="todo">Todo</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="done">Done</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                            <select id="filterPriority" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Priority</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Tag</label>
+                            <input type="text" id="filterTag" placeholder="master" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" style="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Edit Task Modal -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+                <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-slate-100">Edit Task</h2>
+                    <button id="closeModal" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <form id="editTaskForm">
+                        <!-- Edit form will be populated dynamically -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        let tasks = [];
+        let dependencies = {};
+        
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStorageInfo();
+            loadTasks();
+        });
+
+        // Storage info functions
+        async function loadStorageInfo() {
+            try {
+                const response = await fetch('/info');
+                const data = await response.json();
+                if (data.ok) {
+                    document.getElementById('storageInfo').textContent = JSON.stringify(data.data, null, 2);
+                    document.getElementById('projectName').textContent = data.data.project_name || 'Unknown';
+                } else {
+                    document.getElementById('storageInfo').textContent = 'Error loading storage info';
+                }
+            } catch (error) {
+                document.getElementById('storageInfo').textContent = 'Failed to load storage info: ' + error.message;
+            }
+        }
+
+        // Tasks loading and display
+        async function loadTasks() {
+            try {
+                const response = await fetch('/tasks');
+                const data = await response.json();
+                if (data.ok) {
+                    tasks = data.data;
+                    updateDependencyOptions();
+                    renderTasks();
+                    updateTaskCount();
+                } else {
+                    console.error('Failed to load tasks:', data);
+                }
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+            }
+        }
+
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const statusFilter = document.getElementById('filterStatus').value;
+            const priorityFilter = document.getElementById('filterPriority').value;
+            
+            let filteredTasks = tasks.filter(task => {
+                if (statusFilter && task.status !== statusFilter) return false;
+                if (priorityFilter && task.priority !== priorityFilter) return false;
+                return true;
+            });
+
+            // Sort tasks: status (todo -> in-progress -> done) then by ID
+            filteredTasks.sort((a, b) => {
+                const statusOrder = { 'todo': 0, 'in-progress': 1, 'done': 2 };
+                if (statusOrder[a.status] !== statusOrder[b.status]) {
+                    return statusOrder[a.status] - statusOrder[b.status];
+                }
+                return a.id - b.id;
+            });
+
+            if (filteredTasks.length === 0) {
+                taskList.innerHTML = '<div class="text-center text-slate-400 py-8">No tasks match the current filters</div>';
+                return;
+            }
+
+            taskList.innerHTML = filteredTasks.map(task => createTaskCard(task)).join('');
+        }
+
+        function createTaskCard(task) {
+            const priorityClass = {
+                'high': 'border-red-500 bg-red-950/20',
+                'medium': 'border-orange-500 bg-orange-950/20', 
+                'low': 'border-slate-600 bg-slate-900/50'
+            }[task.priority] || 'border-slate-600 bg-slate-900/50';
+
+            const statusBadge = {
+                'todo': '<span class="px-2 py-1 bg-slate-700 text-slate-300 text-xs rounded">Todo</span>',
+                'in-progress': '<span class="px-2 py-1 bg-blue-700 text-blue-200 text-xs rounded">In Progress</span>',
+                'done': '<span class="px-2 py-1 bg-green-700 text-green-200 text-xs rounded">Done</span>'
+            }[task.status] || '';
+
+            return `
+                <div class="task-card p-4 border rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors ${priorityClass}" 
+                     onclick="openEditModal(${task.id})">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-semibold text-slate-200">#${task.id}</span>
+                            ${statusBadge}
+                        </div>
+                        <span class="text-xs text-slate-400 capitalize">${task.priority}</span>
+                    </div>
+                    <h3 class="font-medium text-slate-100 mb-1">${task.title}</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">${task.description || 'No description'}</p>
+                    ${task.assigned_to ? `<div class="text-xs text-slate-500 mt-2">Assigned: ${task.assigned_to}</div>` : ''}
+                    ${task.dependencies && task.dependencies.length > 0 ? 
+                        `<div class="text-xs text-slate-500 mt-1">Depends on: ${task.dependencies.join(', ')}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function updateTaskCount() {
+            document.getElementById('taskCount').textContent = `${tasks.length} tasks`;
+        }
+
+        function updateDependencyOptions() {
+            const select = document.getElementById('dependencySelect');
+            select.innerHTML = '<option value="">Select a task...</option>';
+            tasks.forEach(task => {
+                select.innerHTML += `<option value="${task.id}">#${task.id} - ${task.title}</option>`;
+            });
+        }
+
+        // Event listeners
+        document.getElementById('refreshBtn').addEventListener('click', loadStorageInfo);
+        
+        document.getElementById('filterStatus').addEventListener('change', renderTasks);
+        document.getElementById('filterPriority').addEventListener('change', renderTasks);
+        document.getElementById('filterTag').addEventListener('input', renderTasks);
+
+        // Modal functions
+        function openEditModal(taskId) {
+            console.log('Opening edit modal for task:', taskId);
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('editModal').classList.add('hidden');
+        });
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                document.getElementById('editModal').classList.add('hidden');
+            }
+        });
+    </script>
+
+</body></html>

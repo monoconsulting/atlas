@@ -1,0 +1,69 @@
+{
+  "timestamp": "2025-08-24T10:08:08.576Z",
+  "summary": {
+    "total": 4,
+    "passed": 3,
+    "failed": 1,
+    "successRate": 75,
+    "executionTime": 135723
+  },
+  "testDetails": {
+    "Complete Function Coverage": 48990,
+    "Edge Cases & Error Handling": 35178,
+    "Advanced Filter System": 21575,
+    "Legacy Filter Support": 20920
+  },
+  "coverage": {
+    "Complete Function Coverage": {
+      "successRate": 93.3
+    },
+    "Edge Cases & Error Handling": {
+      "successRate": 0
+    },
+    "Advanced Filter System": {
+      "successRate": 100
+    },
+    "Legacy Filter Support": {
+      "successRate": 100
+    }
+  },
+  "errors": [],
+  "functionCategories": [
+    {
+      "name": "UI Initialization",
+      "functions": 8,
+      "description": "Header, buttons, columns, counters, loading"
+    },
+    {
+      "name": "Task Creation",
+      "functions": 6,
+      "description": "Modal opening, form validation, API calls, UI updates"
+    },
+    {
+      "name": "Task Editing",
+      "functions": 5,
+      "description": "Modal pre-population, saving, status changes"
+    },
+    {
+      "name": "Filter System",
+      "functions": 12,
+      "description": "Dropdown filters, checkboxes, search, presets, clearing"
+    },
+    {
+      "name": "Kanban Board",
+      "functions": 8,
+      "description": "Column rendering, task movement, counters, responsive layout"
+    },
+    {
+      "name": "API Integration",
+      "functions": 6,
+      "description": "CRUD operations, error handling, data persistence"
+    },
+    {
+      "name": "Edge Cases",
+      "functions": 15,
+      "description": "Form validation, network errors, UI stress, data integrity"
+    }
+  ],
+  "totalFunctionsEstimate": 60
+}
