@@ -786,18 +786,22 @@
                     console.log('Task created successfully:', result.data);
                     const createdTaskId = result.data.id;
                     
-                    // Create subtasks if any were added
-                    if (window.createSubtasks.length > 0) {
-                        for (const subtask of window.createSubtasks) {
-                            if (subtask.title.trim()) {
-                                try {
-                                    await createSubtaskFromData(createdTaskId, subtask);
-                                } catch (error) {
-                                    console.error('Failed to create subtask:', subtask, error);
+                        // If we had created a draft parent previously, use that id
+                        const finalParentId = window.createParentTaskId || createdTaskId;
+                        // Create subtasks if any were added to the buffer
+                        if (window.createSubtasks.length > 0) {
+                            for (const subtask of window.createSubtasks) {
+                                if (subtask.title && subtask.title.trim()) {
+                                    try {
+                                        await createSubtaskFromData(finalParentId, subtask);
+                                    } catch (error) {
+                                        console.error('Failed to create subtask:', subtask, error);
+                                    }
                                 }
                             }
                         }
-                    }
+                        // Clear draft state
+                        window.createParentTaskId = null;
                     
                     // Clear form and close modal
                     document.getElementById('addTaskForm').reset();
@@ -1077,9 +1081,15 @@
         }
 
         // Create modal subtask management
+        // Buffer for subtasks entered in the Create Task modal. When adding multiple
+        // subtasks we incrementally persist them to the backend. If a parent task
+        // is created temporarily it will be rolled back on modal cancel/close.
         window.createSubtasks = [];
         window.createSubtaskCounter = 1;
-        
+        // If a parent task is created while user adds subtasks, its ID is stored
+        // here so subsequent subtask saves can reference it.
+        window.createParentTaskId = null;
+
         function addSubtaskToEditForm() {
             const subtasksList = document.getElementById('subtasksList');
             const currentTaskId = document.getElementById('editModal').dataset.taskId;
@@ -1174,7 +1184,39 @@
             }
         }
         
-        function addSubtaskToCreateForm() {
+        // When adding a subtask in the Create modal we want incremental persistence:
+        // - If the parent task doesn't exist yet, create it first (draft)
+        // - If there's a previous unsaved subtask with a title, save it before
+        //   opening a new empty subtask input
+        async function addSubtaskToCreateForm() {
+            // Ensure parent task exists
+            if (!window.createParentTaskId) {
+                try {
+                    const created = await createParentTaskDraft();
+                    window.createParentTaskId = created.id;
+                    console.log('Created parent draft task id=', window.createParentTaskId);
+                } catch (err) {
+                    console.error('Failed to create parent draft task:', err);
+                    return;
+                }
+            }
+
+            // If last buffered subtask has a title, persist it before adding a new line
+            const last = window.createSubtasks[window.createSubtasks.length - 1];
+            if (last && last.title && last.title.trim()) {
+                try {
+                    // Persist the previous subtask
+                    await createSubtaskFromData(window.createParentTaskId, last);
+                    // Remove persisted subtask from the buffer
+                    window.createSubtasks.pop();
+                } catch (err) {
+                    console.error('Failed to persist subtask before adding next:', err);
+                    // Don't proceed to add another input if saving failed
+                    return;
+                }
+            }
+
+            // Append a new empty subtask input for the user to fill
             const subtaskId = window.createSubtaskCounter++;
             const subtask = {
                 id: subtaskId,
@@ -1184,7 +1226,6 @@
                 status: 'todo'
             };
             window.createSubtasks.push(subtask);
-            
             renderCreateSubtasks();
         }
         
@@ -1246,6 +1287,55 @@
             window.createSubtaskCounter = 1;
             renderCreateSubtasks();
         }
+
+        // Create a parent task draft from current create form fields. This is used
+        // when the user starts adding subtasks before pressing Save/Create.
+        async function createParentTaskDraft() {
+            const title = document.getElementById('taskTitle').value.trim() || 'Untitled task (draft)';
+            const description = document.getElementById('taskDescription').value.trim() || '-';
+            const priority = document.getElementById('taskPriority').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const assignedTo = document.getElementById('taskAssignedTo').value.trim();
+
+            const taskData = {
+                title: title,
+                description: description,
+                priority: priority,
+                status: 'todo',
+                due_date: dueDate || null,
+                assigned_to: assignedTo || null,
+                dependencies: []
+            };
+
+            const response = await fetch('/task', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskData)
+            });
+            const result = await response.json();
+            if (!result.ok) throw new Error(result.message || 'Failed to create draft task');
+            return result.data;
+        }
+
+        // If the user cancels or closes the Create modal we must rollback any
+        // partially created parent task to avoid leaving drafts on disk.
+        async function rollbackCreateSession() {
+            if (window.createParentTaskId) {
+                try {
+                    await fetch(`/task/${window.createParentTaskId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ deleted: true })
+                    });
+                    console.log('Rolled back draft task', window.createParentTaskId);
+                } catch (err) {
+                    console.error('Failed to rollback draft task:', err);
+                }
+            }
+            window.createParentTaskId = null;
+            clearCreateSubtasks();
+            document.getElementById('addTaskForm').reset();
+        }
         
         async function createSubtaskFromData(parentTaskId, subtaskData) {
             const subtaskPayload = {
@@ -1271,6 +1361,7 @@
             
             return result.data;
         }
+
 
         // Subtask editing function
         async function openEditSubtaskModal(taskId, subtaskId) {
@@ -1418,11 +1509,13 @@
         document.getElementById('closeCreateModal').addEventListener('click', function() {
             document.getElementById('createTaskModal').classList.add('hidden');
             document.body.style.overflow = ''; // Re-enable body scrolling
+            rollbackCreateSession();
         });
         
         document.getElementById('cancelCreate').addEventListener('click', function() {
             document.getElementById('createTaskModal').classList.add('hidden');
             document.body.style.overflow = ''; // Re-enable body scrolling
+            rollbackCreateSession();
         });
         
         // ESC key handling for modals
@@ -1434,6 +1527,7 @@
                 if (!createModal.classList.contains('hidden')) {
                     createModal.classList.add('hidden');
                     document.body.style.overflow = ''; // Re-enable body scrolling
+                    rollbackCreateSession();
                 }
                 if (!editModal.classList.contains('hidden')) {
                     editModal.classList.add('hidden');

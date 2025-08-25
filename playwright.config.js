@@ -16,9 +16,10 @@ module.exports = defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'playwright-results.json' }],
-    ['junit', { outputFile: 'playwright-results.xml' }],
+    // Store Playwright artifacts under web/test-reports so the app can serve them
+    ['html', { outputFolder: 'web/test-reports/playwright-report' }],
+    ['json', { outputFile: 'web/test-reports/playwright-results.json' }],
+    ['junit', { outputFile: 'web/test-reports/playwright-results.xml' }],
     ['list']
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
