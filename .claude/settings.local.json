@@ -52,7 +52,8 @@
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
-      "Read(/E:\\e\\projects/**)"
+      "Read(/E:\\e\\projects/**)",
+      "Bash(git merge:*)"
     ],
     "deny": [],
     "ask": []

@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - You must always work on a branch of dev named TMXXX-taskname
 ## Project Overview
 
-TaskMasterWeb is a self-contained, portable FastAPI-based task management web UI designed to work with the `task-master-ai` framework. It provides a visual layer for managing tasks and subtasks across multiple projects with complete project isolation and custom URL routing. The system directly manipulates `.taskmaster/tasks.json` files to ensure seamless compatibility with the Task Master AI CLI tool.
+Atlas is a self-contained, portable FastAPI-based task management web UI designed to work with the `task-master-ai` framework. It provides a visual layer for managing tasks and subtasks across multiple projects with complete project isolation and custom URL routing. The system directly manipulates `.taskmaster/tasks.json` files to ensure seamless compatibility with the Task Master AI CLI tool.
 
 ### Core Principles
 - **Self-Contained & Portable**: Runs entirely in Docker with no external dependencies or CDN requirements
@@ -103,7 +103,7 @@ Tasks stored in JSON at `{PROJECT_ROOT}/.taskmaster/tasks/tasks.json`:
 
 ### MCP Server Component
 
-Located in `mcp-server-taskmaster/`, this TypeScript component provides a minimal Model Context Protocol server for TaskMasterWeb integration.
+Located in `mcp-server-taskmaster/`, this TypeScript component provides a minimal Model Context Protocol server for Atlas integration.
 
 **Windows Configuration**: The `.mcp.json` file includes Windows-specific configuration using `cmd /c` wrapper for `npx` execution compatibility.
 
@@ -178,7 +178,7 @@ python server.py
 ```
 
 **Hub Features:**
-- **Main Application Link**: Direct access to TaskMasterWeb on port 8199
+- **Main Application Link**: Direct access to Atlas on port 8199
 - **Test Results Dashboard**: Comprehensive test reports and analytics
 - **Project Documentation**: Architecture overview and feature descriptions
 

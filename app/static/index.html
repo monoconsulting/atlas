@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Master AI - Web Interface</title>
+    <title>Atlas - Task Management Interface</title>
     <link href="/static/tailwind.css" rel="stylesheet">
     <style>
         .custom-scrollbar::-webkit-scrollbar {
@@ -26,7 +26,7 @@
     <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <h1 class="text-2xl font-semibold text-slate-100">
-                Task Master AI — <span id="projectName" class="text-blue-300">Loading...</span>
+                Atlas — <span id="projectName" class="text-blue-300">TASK-MASTER-AI Loading...</span>
             </h1>
             <p class="text-sm text-slate-400 mt-1">
                 Works with <code class="bg-slate-800 px-2 py-0.5 rounded text-xs text-blue-300">/workspace/.taskmaster</code>
@@ -577,7 +577,7 @@
                 const data = await response.json();
                 if (data.ok) {
                     document.getElementById('storageInfo').textContent = JSON.stringify(data.data, null, 2);
-                    document.getElementById('projectName').textContent = data.data.project_name || 'Unknown';
+                    document.getElementById('projectName').textContent = 'TASK-MASTER-AI ' + (data.data.project_name || 'Unknown');
                 } else {
                     document.getElementById('storageInfo').textContent = 'Error loading storage info';
                 }

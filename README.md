@@ -1,5 +1,5 @@
 
-# TaskMasterWeb - Multi-Project Task Management Platform
+# Atlas - Multi-Project Task Management Platform
 
 A self-contained, portable FastAPI-based task management web UI designed to work with the `task-master-ai` framework. Supports multiple projects with custom URL routing and project-specific task storage.
 
