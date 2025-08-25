@@ -329,9 +329,9 @@
     </main>
 
     <!-- Create Task Modal -->
-    <div id="createTaskModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
+    <div id="createTaskModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-2xl">
+            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-2xl my-8">
                 <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between rounded-t-lg">
                     <h2 class="text-xl font-semibold text-slate-100">Create New Task</h2>
                     <button id="closeCreateModal" class="text-slate-400 hover:text-slate-200">
@@ -426,6 +426,7 @@
                             </button>
                             <button 
                                 type="submit"
+                                id="createTaskSubmitBtn"
                                 class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
                             >
                                 Create Task
@@ -438,9 +439,9 @@
     </div>
 
     <!-- Edit Task Modal -->
-    <div id="editModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
+    <div id="editModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-4xl my-8">
                 <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between">
                     <h2 class="text-xl font-semibold text-slate-100">Edit Task</h2>
                     <button id="closeModal" class="text-slate-400 hover:text-slate-200">
@@ -763,7 +764,7 @@
 
             const taskData = {
                 title: title,
-                description: description,
+                description: description || '-',
                 priority: priority,
                 status: 'todo',
                 due_date: dueDate || null,
@@ -786,8 +787,8 @@
                     const createdTaskId = result.data.id;
                     
                     // Create subtasks if any were added
-                    if (createSubtasks.length > 0) {
-                        for (const subtask of createSubtasks) {
+                    if (window.createSubtasks.length > 0) {
+                        for (const subtask of window.createSubtasks) {
                             if (subtask.title.trim()) {
                                 try {
                                     await createSubtaskFromData(createdTaskId, subtask);
@@ -802,6 +803,7 @@
                     document.getElementById('addTaskForm').reset();
                     clearCreateSubtasks();
                     document.getElementById('createTaskModal').classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
                     // Reload tasks
                     await loadTasks();
                 } else {
@@ -872,11 +874,32 @@
             
             console.log('About to show modal, current class:', document.getElementById('editModal').className);
             document.getElementById('editModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent body scrolling
             console.log('Modal class after remove hidden:', document.getElementById('editModal').className);
         }
         
         async function saveTask() {
             const taskId = parseInt(document.getElementById('editModal').dataset.taskId);
+            
+            // Collect all new subtasks from the edit form
+            const newSubtasks = [];
+            const subtasksList = document.getElementById('subtasksList');
+            const newSubtaskDivs = subtasksList.querySelectorAll('.bg-slate-900.border.border-slate-800');
+            
+            newSubtaskDivs.forEach(div => {
+                const titleInput = div.querySelector('[data-field="title"]');
+                const descriptionInput = div.querySelector('[data-field="description"]');
+                const prioritySelect = div.querySelector('[data-field="priority"]');
+                
+                if (titleInput && titleInput.value.trim()) {
+                    newSubtasks.push({
+                        title: titleInput.value.trim(),
+                        description: descriptionInput ? descriptionInput.value.trim() : '',
+                        priority: prioritySelect ? prioritySelect.value : 'medium',
+                        status: 'todo'
+                    });
+                }
+            });
             
             const taskData = {
                 title: document.getElementById('editTaskTitle').value.trim(),
@@ -904,7 +927,14 @@
                 if (response.ok) {
                     const result = await response.json();
                     console.log('Task updated successfully:', result);
+                    
+                    // Now create any new subtasks
+                    for (const subtask of newSubtasks) {
+                        await createSubtaskFromData(taskId, subtask);
+                    }
+                    
                     document.getElementById('editModal').classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
                     await loadTasks(); // Refresh the task list
                 } else {
                     const errorResult = await response.json();
@@ -1047,8 +1077,8 @@
         }
 
         // Create modal subtask management
-        let createSubtasks = [];
-        let createSubtaskCounter = 1;
+        window.createSubtasks = [];
+        window.createSubtaskCounter = 1;
         
         function addSubtaskToEditForm() {
             const subtasksList = document.getElementById('subtasksList');
@@ -1087,19 +1117,11 @@
                         <option value="medium" selected>Medium</option>
                         <option value="high">High</option>
                     </select>
-                    <button type="button" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded transition-colors save-subtask-btn" data-task-id="${currentTaskId}">
-                        Save Subtask
-                    </button>
                 </div>
             `;
             
             subtasksList.appendChild(subtaskDiv);
             
-            // Add event listener to the save button
-            const saveBtn = subtaskDiv.querySelector('.save-subtask-btn');
-            saveBtn.addEventListener('click', function() {
-                createSubtaskFromForm(currentTaskId, subtaskDiv);
-            });
         }
         
         async function createSubtaskFromForm(taskId, subtaskDiv) {
@@ -1153,7 +1175,7 @@
         }
         
         function addSubtaskToCreateForm() {
-            const subtaskId = createSubtaskCounter++;
+            const subtaskId = window.createSubtaskCounter++;
             const subtask = {
                 id: subtaskId,
                 title: '',
@@ -1161,13 +1183,13 @@
                 priority: 'medium',
                 status: 'todo'
             };
-            createSubtasks.push(subtask);
+            window.createSubtasks.push(subtask);
             
             renderCreateSubtasks();
         }
         
         function removeCreateSubtask(subtaskId) {
-            createSubtasks = createSubtasks.filter(s => s.id !== subtaskId);
+            window.createSubtasks = window.createSubtasks.filter(s => s.id !== subtaskId);
             renderCreateSubtasks();
         }
         
@@ -1175,13 +1197,19 @@
             const container = document.getElementById('createSubtasksList');
             if (!container) return;
             
-            if (createSubtasks.length === 0) {
+            // Update button text based on subtasks
+            const submitBtn = document.getElementById('createTaskSubmitBtn');
+            if (submitBtn) {
+                submitBtn.textContent = window.createSubtasks.length > 0 ? 'Save Task' : 'Create Task';
+            }
+            
+            if (window.createSubtasks.length === 0) {
                 container.innerHTML = '<p class="text-sm text-slate-500 italic">No subtasks added yet</p>';
                 return;
             }
             
-            container.innerHTML = createSubtasks.map(subtask => `
-                <div class="bg-slate-900 border border-slate-700 rounded p-3" data-create-subtask-id="${subtask.id}">
+            container.innerHTML = window.createSubtasks.map(subtask => `
+                <div class="bg-slate-900 border border-slate-700 rounded p-3 mb-2" data-create-subtask-id="${subtask.id}">
                     <div class="flex items-start justify-between mb-2">
                         <span class="text-xs text-slate-400 font-mono">Subtask #${subtask.id}</span>
                         <div class="flex items-center gap-2">
@@ -1191,33 +1219,31 @@
                                 <option value="medium" ${subtask.priority === 'medium' ? 'selected' : ''}>Medium</option>
                                 <option value="high" ${subtask.priority === 'high' ? 'selected' : ''}>High</option>
                             </select>
-                            <button type="button" class="text-red-400 hover:text-red-300" onclick="removeCreateSubtask(${subtask.id})">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6m0 0l6-6m-6 6L6 6"></path>
-                                </svg>
+                            <button type="button" class="text-red-400 hover:text-red-300 text-sm" onclick="removeCreateSubtask(${subtask.id})">
+                                ✕
                             </button>
                         </div>
                     </div>
                     <input type="text" placeholder="Subtask title" value="${subtask.title}" 
-                           class="w-full mb-2 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm"
-                           onchange="updateCreateSubtask(${subtask.id}, 'title', this.value)">
-                    <textarea placeholder="Subtask description (optional)" 
-                              class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-xs"
-                              rows="2" onchange="updateCreateSubtask(${subtask.id}, 'description', this.value)">${subtask.description}</textarea>
+                           class="w-full mb-2 px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           oninput="updateCreateSubtask(${subtask.id}, 'title', this.value)">
+                    <textarea placeholder="Subtask description (optional)" rows="2" 
+                              class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-200 text-xs resize-vertical focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              oninput="updateCreateSubtask(${subtask.id}, 'description', this.value)">${subtask.description}</textarea>
                 </div>
             `).join('');
         }
         
         function updateCreateSubtask(subtaskId, field, value) {
-            const subtask = createSubtasks.find(s => s.id === subtaskId);
+            const subtask = window.createSubtasks.find(s => s.id === subtaskId);
             if (subtask) {
                 subtask[field] = value;
             }
         }
         
         function clearCreateSubtasks() {
-            createSubtasks = [];
-            createSubtaskCounter = 1;
+            window.createSubtasks = [];
+            window.createSubtaskCounter = 1;
             renderCreateSubtasks();
         }
         
@@ -1386,14 +1412,17 @@
         // Create task button and modal
         document.getElementById('createTaskBtn').addEventListener('click', function() {
             document.getElementById('createTaskModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent body scrolling
         });
         
         document.getElementById('closeCreateModal').addEventListener('click', function() {
             document.getElementById('createTaskModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
         });
         
         document.getElementById('cancelCreate').addEventListener('click', function() {
             document.getElementById('createTaskModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
         });
         
         // ESC key handling for modals
@@ -1404,9 +1433,11 @@
                 
                 if (!createModal.classList.contains('hidden')) {
                     createModal.classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
                 }
                 if (!editModal.classList.contains('hidden')) {
                     editModal.classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
                 }
             }
         });
@@ -1420,10 +1451,12 @@
         // Edit modal
         document.getElementById('closeModal').addEventListener('click', function() {
             document.getElementById('editModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
         });
         
         document.getElementById('cancelEdit').addEventListener('click', function() {
             document.getElementById('editModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
         });
         
         document.getElementById('saveTask').addEventListener('click', saveTask);
@@ -1547,16 +1580,18 @@
 
         // Close modals on backdrop click
         document.getElementById('createTaskModal').addEventListener('click', function(e) {
-            // Check if click is on backdrop (modal outer div or the centering div)
-            if (e.target === this || e.target.classList.contains('flex') && e.target.classList.contains('items-center')) {
-                document.getElementById('createTaskModal').classList.add('hidden');
+            // Check if click is on the backdrop or the centering container, but not on the modal content
+            if (e.target === this || (e.target.classList.contains('flex') && e.target.classList.contains('items-center'))) {
+                this.classList.add('hidden');
+                document.body.style.overflow = ''; // Re-enable body scrolling
             }
         });
 
         document.getElementById('editModal').addEventListener('click', function(e) {
-            // Check if click is on backdrop (modal outer div or the centering div)
-            if (e.target === this || e.target.classList.contains('flex') && e.target.classList.contains('items-center')) {
-                document.getElementById('editModal').classList.add('hidden');
+            // Check if click is on the backdrop or the centering container, but not on the modal content
+            if (e.target === this || (e.target.classList.contains('flex') && e.target.classList.contains('items-center'))) {
+                this.classList.add('hidden');
+                document.body.style.overflow = ''; // Re-enable body scrolling
             }
         });
     </script>
