@@ -4312,7 +4312,7 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T12:57:47.181453Z",
-        "updated_at": "2025-08-25T12:57:47.181471Z",
+        "updated_at": "2025-08-25T16:13:35.716378Z",
         "tag": "master",
         "subtasks": [
           {
@@ -4346,7 +4346,7 @@
             "extra": {}
           }
         ],
-        "deleted": false,
+        "deleted": true,
         "extra": {},
         "relations": []
       },
@@ -4362,7 +4362,7 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T15:13:50.655787Z",
-        "updated_at": "2025-08-25T15:13:50.655805Z",
+        "updated_at": "2025-08-25T16:13:28.754202Z",
         "tag": "master",
         "subtasks": [
           {
@@ -4396,7 +4396,7 @@
             "extra": {}
           }
         ],
-        "deleted": false,
+        "deleted": true,
         "extra": {},
         "relations": []
       },
@@ -4412,7 +4412,26 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T15:14:10.231718Z",
-        "updated_at": "2025-08-25T15:14:10.231733Z",
+        "updated_at": "2025-08-25T16:13:32.106647Z",
+        "tag": "master",
+        "subtasks": [],
+        "deleted": true,
+        "extra": {},
+        "relations": []
+      },
+      {
+        "id": 226,
+        "title": "Enter information in Edit Task",
+        "description": "In Edit Task - i want you to write - to the RIGHT of Edit Task #ID and TaskName",
+        "priority": "medium",
+        "status": "done",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-08-25T16:13:58.594132Z",
+        "updated_at": "2025-08-25T16:13:58.594145Z",
         "tag": "master",
         "subtasks": [],
         "deleted": false,
@@ -4422,7 +4441,7 @@
     ],
     "metadata": {
       "created": "2025-08-24T07:33:27.511Z",
-      "updated": "2025-08-25T15:25:24.926Z",
+      "updated": "2025-08-25T16:25:05.759Z",
       "description": "Tasks for master context"
     }
   }

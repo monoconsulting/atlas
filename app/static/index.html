@@ -435,7 +435,12 @@
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-4xl my-8">
                 <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between">
-                    <h2 class="text-xl font-semibold text-slate-100">Edit Task</h2>
+                    <div class="flex items-center space-x-4">
+                        <div id="editTaskHeader">Edit Task</div>
+                        <div id="taskInfoDisplay" class="flex items-center space-x-3 text-sm text-slate-400">
+                            <!-- Task information will be populated here -->
+                        </div>
+                    </div>
                     <button id="closeModal" class="text-slate-400 hover:text-slate-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -959,6 +964,56 @@
                 console.error('Task not found, taskId:', taskId, 'allTasks IDs:', allTasks.map(t => t.id));
                 return;
             }
+            
+            // Update modal header with task ID and title
+            const header = document.getElementById('editTaskHeader');
+            header.innerHTML = `
+                <div>
+                    <div class="text-xl font-semibold text-slate-100">Edit Task #${task.id}</div>
+                    <div class="text-sm text-slate-400 mt-1">${task.title}</div>
+                </div>
+            `;
+            
+            // Populate task information display
+            const taskInfoDisplay = document.getElementById('taskInfoDisplay');
+            const formatTimestamp = (isoString) => {
+                if (!isoString) return null;
+                const date = new Date(isoString);
+                return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            };
+            
+            const createdAt = formatTimestamp(task.created_at);
+            const updatedAt = formatTimestamp(task.updated_at);
+            const isUpdated = task.updated_at && task.created_at && new Date(task.updated_at) > new Date(task.created_at);
+            const subtaskCount = task.subtasks ? task.subtasks.length : 0;
+            
+            let priorityColor = 'text-slate-400';
+            if (task.priority === 'high') priorityColor = 'text-red-400';
+            else if (task.priority === 'medium') priorityColor = 'text-orange-400';
+            else if (task.priority === 'low') priorityColor = 'text-green-400';
+            
+            taskInfoDisplay.innerHTML = `
+                <span class="flex items-center space-x-1">
+                    <span class="text-slate-500">Status:</span>
+                    <span class="capitalize">${task.status}</span>
+                </span>
+                <span class="flex items-center space-x-1">
+                    <span class="text-slate-500">Priority:</span>
+                    <span class="${priorityColor} capitalize">${task.priority}</span>
+                </span>
+                <span class="flex items-center space-x-1">
+                    <span class="text-slate-500">Subtasks:</span>
+                    <span>${subtaskCount}</span>
+                </span>
+                ${createdAt ? `<span class="flex items-center space-x-1" title="Created: ${task.created_at}">
+                    <span class="text-slate-500">📅</span>
+                    <span>${createdAt}</span>
+                </span>` : ''}
+                ${isUpdated ? `<span class="flex items-center space-x-1 text-blue-400" title="Updated: ${task.updated_at}">
+                    <span>🔄</span>
+                    <span>${updatedAt}</span>
+                </span>` : ''}
+            `;
             
             // Populate modal fields
             document.getElementById('editTaskTitle').value = task.title || '';
