@@ -75,6 +75,8 @@ Tasks stored in JSON at `{PROJECT_ROOT}/.taskmaster/tasks/tasks.json`:
 
 Located in `mcp-server-taskmaster/`, this TypeScript component provides a minimal Model Context Protocol server for TaskMasterWeb integration.
 
+**Windows Configuration**: The `.mcp.json` file includes Windows-specific configuration using `cmd /c` wrapper for `npx` execution compatibility.
+
 ### AI Helper Package
 
 The `task_master_ai/` directory contains a Python package for AI-assisted utilities with OpenAI integration fallback.
@@ -108,6 +110,13 @@ The `task_master_ai/` directory contains a Python package for AI-assisted utilit
 - **Visual Feedback**: Deleted tasks automatically hidden from Kanban board
 - **Quick Filters**: Enhanced filtering with sorting options (ID ASC/DESC, Priority)
 - **Advanced Filters**: Multi-criteria filtering with status, priority, and search capabilities
+
+### Subtask Management (Fixed 2025-08-25)
+- **Edit Modal Integration**: Add subtasks directly in task edit modal without separate save buttons
+- **Unified Saving**: Subtasks save with main "Save Changes" button, eliminating confusion
+- **Data Persistence**: Full end-to-end persistence verified in tasks.json with correct properties
+- **Modal UX**: Backdrop click closes modals, proper scroll behavior, body scroll locking
+- **Test Coverage**: Comprehensive automated tests verify functionality and data integrity
 
 ## Key Implementation Details
 
@@ -164,6 +173,13 @@ python server.py
 # Run comprehensive workflow tests
 npx playwright test tests/comprehensive.spec.js --config playwright-simple.config.js
 
+# Run subtask functionality tests (added 2025-08-25)
+npx playwright test tests/31-persistence-verification.spec.js --config playwright-simple.config.js
+npx playwright test tests/32-backdrop-click-test.spec.js --config playwright-simple.config.js
+
+# Run all tests
+npx playwright test --config playwright-simple.config.js
+
 # View test results
 # Navigate to: http://localhost:9652/test-results.html
 ```
@@ -211,3 +227,5 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 ## Task Master AI Instructions
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
 @./.taskmaster/CLAUDE.md
+
+- always reabuild witn no cache and test before reporting done
