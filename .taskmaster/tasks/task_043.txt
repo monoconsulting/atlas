@@ -1,0 +1,11 @@
+# Task ID: 43
+# Title: Add Client-Side Task Sorting
+# Status: pending
+# Dependencies: 42
+# Priority: low
+# Description: Implement client-side sorting for responsive task list management
+# Details:
+Implement client-side sorting logic: primary sort by status (todo -> in-progress -> done), secondary sort by ID ascending. Maintain sort order during filtering and updates. Add optional sorting by other criteria (priority, due date, title).
+
+# Test Strategy:
+Sorting functionality tests, multi-criteria sorting tests, sort stability tests, and performance tests with large datasets.

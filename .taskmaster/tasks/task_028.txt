@@ -1,0 +1,11 @@
+# Task ID: 28
+# Title: Implement Chip-Based Dependencies Selector
+# Status: pending
+# Dependencies: 27
+# Priority: high
+# Description: Create the dependencies selection UI using chip-based interface
+# Details:
+Implement compact dropdown list of existing tasks for dependency selection. Users can select tasks and add them as removable chips/tags. Include search/filter functionality in dropdown. Style chips with colored badges and remove buttons. Prevent duplicate dependencies.
+
+# Test Strategy:
+UI interaction tests for dropdown functionality, chip creation/removal, search filtering, duplicate prevention, and accessibility compliance.

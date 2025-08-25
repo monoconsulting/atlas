@@ -1,0 +1,11 @@
+# Task ID: 38
+# Title: Build Edit Task Form with Pre-populated Fields
+# Status: pending
+# Dependencies: 37, 17
+# Priority: high
+# Description: Create task editing form with current task data pre-filled
+# Details:
+Implement edit task form identical to Add Task form but pre-populated with current task data. Include all fields: title, description, status, priority, due_date, assigned_to, estimate, labels, dependencies. Add form validation and update submission handling.
+
+# Test Strategy:
+Form pre-population tests, field validation tests, form submission tests, and data binding verification between task data and form fields.

@@ -1,0 +1,11 @@
+# Task ID: 18
+# Title: Improve POST /task Endpoint with Auto-ID Assignment
+# Status: pending
+# Dependencies: 14, 15
+# Priority: high
+# Description: Enhance task creation endpoint to ensure proper ID generation and validation
+# Details:
+Verify that POST /task correctly assigns new ID as max(existing_ids) + 1, validates all input fields through Pydantic models, sets created_at timestamp, and handles duplicate dependencies. Return complete task object in response.
+
+# Test Strategy:
+API endpoint tests for task creation with various field combinations, validation failures, ID assignment uniqueness, and concurrent creation scenarios.

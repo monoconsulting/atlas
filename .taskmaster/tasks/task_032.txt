@@ -1,0 +1,11 @@
+# Task ID: 32
+# Title: Implement Task Filtering Controls Panel
+# Status: pending
+# Dependencies: 24
+# Priority: medium
+# Description: Create filtering interface for task list display
+# Details:
+Implement filter panel in right column with controls for Status (dropdown with todo/in-progress/done options), Priority (low/medium/high), and Tag (text input defaulting to currentTag). Add filter reset functionality and real-time filtering.
+
+# Test Strategy:
+Filter functionality tests, real-time filtering behavior, filter combination scenarios, and filter reset functionality tests.

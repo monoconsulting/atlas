@@ -1,0 +1,11 @@
+# Task ID: 145
+# Title: This is a very long task title that should wrap properly within the task card boundaries and not overflow outside the container even with extremely long text that goes on and on and on
+# Status: todo
+# Dependencies: None
+# Priority: medium
+# Description: Test description
+# Details:
+
+
+# Test Strategy:
+

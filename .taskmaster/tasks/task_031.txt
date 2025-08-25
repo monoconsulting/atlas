@@ -1,0 +1,11 @@
+# Task ID: 31
+# Title: Create Existing Subtasks Display List
+# Status: pending
+# Dependencies: 30
+# Priority: medium
+# Description: Implement dynamic list showing existing subtasks for selected parent
+# Details:
+Below Add Subtask form, display list of existing subtasks for selected Parent ID. Show subtask number, priority (colored badge), title, and status toggle checkbox (todo/done). Auto-update when parent ID changes. Include loading states.
+
+# Test Strategy:
+Dynamic list update tests, checkbox toggle functionality, colored badge display, and parent ID change reactivity tests.

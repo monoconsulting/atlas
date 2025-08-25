@@ -411,7 +411,7 @@
                                     Add Subtask
                                 </button>
                             </div>
-                            <div id="createSubtasksList" class="space-y-2">
+                            <div id="createSubtasksList" class="space-y-2 max-h-96 overflow-y-auto">
                                 <p class="text-sm text-slate-500 italic">No subtasks added yet</p>
                             </div>
                         </div>
@@ -439,7 +439,7 @@
     </div>
 
     <!-- Edit Task Modal -->
-    <div id="editModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto">
+    <div id="editTaskModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-slate-950 border border-slate-800 rounded-lg w-full max-w-4xl my-8">
                 <div class="sticky top-0 bg-slate-950 border-b border-slate-800 p-6 flex items-center justify-between">
@@ -786,21 +786,20 @@
                     console.log('Task created successfully:', result.data);
                     const createdTaskId = result.data.id;
                     
-                        // If we had created a draft parent previously, use that id
-                        const finalParentId = window.createParentTaskId || createdTaskId;
-                        // Create subtasks if any were added to the buffer
-                        if (window.createSubtasks.length > 0) {
-                            for (const subtask of window.createSubtasks) {
-                                if (subtask.title && subtask.title.trim()) {
-                                    try {
-                                        await createSubtaskFromData(finalParentId, subtask);
-                                    } catch (error) {
-                                        console.error('Failed to create subtask:', subtask, error);
-                                    }
+                    // Create subtasks for the newly created task
+                    if (window.createSubtasks.length > 0) {
+                        for (const subtask of window.createSubtasks) {
+                            if (subtask.title && subtask.title.trim()) {
+                                try {
+                                    await createSubtaskFromData(createdTaskId, subtask);
+                                    console.log('Subtask created:', subtask.title);
+                                } catch (error) {
+                                    console.error('Failed to create subtask:', subtask, error);
                                 }
                             }
                         }
-                        // Clear draft state
+                    }
+                    // Clear draft state
                         window.createParentTaskId = null;
                     
                     // Clear form and close modal
@@ -874,16 +873,16 @@
             }
             
             // Store task ID for saving
-            document.getElementById('editModal').dataset.taskId = taskId;
+            document.getElementById('editTaskModal').dataset.taskId = taskId;
             
-            console.log('About to show modal, current class:', document.getElementById('editModal').className);
-            document.getElementById('editModal').classList.remove('hidden');
+            console.log('About to show modal, current class:', document.getElementById('editTaskModal').className);
+            document.getElementById('editTaskModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent body scrolling
-            console.log('Modal class after remove hidden:', document.getElementById('editModal').className);
+            console.log('Modal class after remove hidden:', document.getElementById('editTaskModal').className);
         }
         
         async function saveTask() {
-            const taskId = parseInt(document.getElementById('editModal').dataset.taskId);
+            const taskId = parseInt(document.getElementById('editTaskModal').dataset.taskId);
             
             // Collect all new subtasks from the edit form
             const newSubtasks = [];
@@ -937,7 +936,7 @@
                         await createSubtaskFromData(taskId, subtask);
                     }
                     
-                    document.getElementById('editModal').classList.add('hidden');
+                    document.getElementById('editTaskModal').classList.add('hidden');
                     document.body.style.overflow = ''; // Re-enable body scrolling
                     await loadTasks(); // Refresh the task list
                 } else {
@@ -1092,7 +1091,7 @@
 
         function addSubtaskToEditForm() {
             const subtasksList = document.getElementById('subtasksList');
-            const currentTaskId = document.getElementById('editModal').dataset.taskId;
+            const currentTaskId = document.getElementById('editTaskModal').dataset.taskId;
             
             const subtaskDiv = document.createElement('div');
             subtaskDiv.className = 'bg-slate-900 border border-slate-800 rounded p-4 space-y-3';
@@ -1184,39 +1183,9 @@
             }
         }
         
-        // When adding a subtask in the Create modal we want incremental persistence:
-        // - If the parent task doesn't exist yet, create it first (draft)
-        // - If there's a previous unsaved subtask with a title, save it before
-        //   opening a new empty subtask input
-        async function addSubtaskToCreateForm() {
-            // Ensure parent task exists
-            if (!window.createParentTaskId) {
-                try {
-                    const created = await createParentTaskDraft();
-                    window.createParentTaskId = created.id;
-                    console.log('Created parent draft task id=', window.createParentTaskId);
-                } catch (err) {
-                    console.error('Failed to create parent draft task:', err);
-                    return;
-                }
-            }
-
-            // If last buffered subtask has a title, persist it before adding a new line
-            const last = window.createSubtasks[window.createSubtasks.length - 1];
-            if (last && last.title && last.title.trim()) {
-                try {
-                    // Persist the previous subtask
-                    await createSubtaskFromData(window.createParentTaskId, last);
-                    // Remove persisted subtask from the buffer
-                    window.createSubtasks.pop();
-                } catch (err) {
-                    console.error('Failed to persist subtask before adding next:', err);
-                    // Don't proceed to add another input if saving failed
-                    return;
-                }
-            }
-
-            // Append a new empty subtask input for the user to fill
+        // Simplified function - just add subtasks to buffer, no incremental persistence
+        function addSubtaskToCreateForm() {
+            // Simply add a new empty subtask to the buffer
             const subtaskId = window.createSubtaskCounter++;
             const subtask = {
                 id: subtaskId,
@@ -1227,6 +1196,13 @@
             };
             window.createSubtasks.push(subtask);
             renderCreateSubtasks();
+            
+            // Make sure the container is visible
+            const container = document.getElementById('createSubtasksList');
+            if (container) {
+                container.style.display = 'block';
+                container.style.visibility = 'visible';
+            }
         }
         
         function removeCreateSubtask(subtaskId) {
@@ -1242,6 +1218,13 @@
             const submitBtn = document.getElementById('createTaskSubmitBtn');
             if (submitBtn) {
                 submitBtn.textContent = window.createSubtasks.length > 0 ? 'Save Task' : 'Create Task';
+            }
+            
+            // Make sure Add Subtask button stays visible
+            const addBtn = document.getElementById('addCreateSubtaskBtn');
+            if (addBtn) {
+                addBtn.style.display = 'flex';
+                addBtn.style.visibility = 'visible';
             }
             
             if (window.createSubtasks.length === 0) {
@@ -1273,6 +1256,10 @@
                               oninput="updateCreateSubtask(${subtask.id}, 'description', this.value)">${subtask.description}</textarea>
                 </div>
             `).join('');
+            
+            // Ensure container is visible
+            container.style.display = 'block';
+            container.style.visibility = 'visible';
         }
         
         function updateCreateSubtask(subtaskId, field, value) {
@@ -1522,7 +1509,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const createModal = document.getElementById('createTaskModal');
-                const editModal = document.getElementById('editModal');
+                const editModal = document.getElementById('editTaskModal');
                 
                 if (!createModal.classList.contains('hidden')) {
                     createModal.classList.add('hidden');
@@ -1544,12 +1531,12 @@
 
         // Edit modal
         document.getElementById('closeModal').addEventListener('click', function() {
-            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('editTaskModal').classList.add('hidden');
             document.body.style.overflow = ''; // Re-enable body scrolling
         });
         
         document.getElementById('cancelEdit').addEventListener('click', function() {
-            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('editTaskModal').classList.add('hidden');
             document.body.style.overflow = ''; // Re-enable body scrolling
         });
         
@@ -1681,7 +1668,7 @@
             }
         });
 
-        document.getElementById('editModal').addEventListener('click', function(e) {
+        document.getElementById('editTaskModal').addEventListener('click', function(e) {
             // Check if click is on the backdrop or the centering container, but not on the modal content
             if (e.target === this || (e.target.classList.contains('flex') && e.target.classList.contains('items-center'))) {
                 this.classList.add('hidden');

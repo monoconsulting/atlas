@@ -1,0 +1,11 @@
+# Task ID: 16
+# Title: Enhance GET /tasks Endpoint with Tag Support
+# Status: pending
+# Dependencies: 13
+# Priority: medium
+# Description: Improve the existing /tasks endpoint to properly handle tag parameter and currentTag fallback
+# Details:
+Verify that GET /tasks correctly accepts optional ?tag= query parameter and defaults to currentTag from state.json. Ensure proper error handling when tag doesn't exist. Return tasks sorted by status (todo -> in-progress -> done) then by ID.
+
+# Test Strategy:
+API endpoint tests with different tag scenarios: no tag parameter, existing tag, non-existing tag, empty tag. Verify sorting behavior and response format.

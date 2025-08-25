@@ -1,0 +1,11 @@
+# Task ID: 41
+# Title: Add New Subtask Creation Within Modal
+# Status: pending
+# Dependencies: 40
+# Priority: medium
+# Description: Implement subtask creation form within the task edit modal
+# Details:
+Include compact subtask creation form within edit modal. Allow adding new subtasks without closing modal. Auto-populate parent task ID, validate subtask data, and immediately display new subtasks in the subtasks list. Handle creation errors gracefully.
+
+# Test Strategy:
+Subtask creation tests, form validation tests, immediate UI updates tests, and error handling verification.

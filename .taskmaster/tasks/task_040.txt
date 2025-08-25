@@ -1,0 +1,11 @@
+# Task ID: 40
+# Title: Create Inline Subtask Editing Within Modal
+# Status: pending
+# Dependencies: 39
+# Priority: high
+# Description: Implement subtask editing interface within the task edit modal
+# Details:
+Add dedicated section in edit modal for managing subtasks. Display existing subtasks in editable list format with inline editing capabilities. Allow status updates, priority changes, and title/description editing without separate modal. Include visual indicators for modified subtasks.
+
+# Test Strategy:
+Inline editing tests, subtask modification tests, visual feedback tests, and data persistence verification for subtask changes.

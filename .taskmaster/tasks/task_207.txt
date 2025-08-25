@@ -1,0 +1,11 @@
+# Task ID: 207
+# Title: Implement Project CRUD API Endpoints
+# Status: pending
+# Dependencies: 206
+# Priority: high
+# Description: Create REST API endpoints for project management operations
+# Details:
+Add endpoints: GET /api/projects (list all), POST /api/projects (create), PATCH /api/projects/{id} (update including slug changes), DELETE /api/projects/{id} (remove). Include proper validation, error handling, and response formatting. Support for project metadata management.
+
+# Test Strategy:
+API endpoint integration tests, validation error testing, CRUD operation verification, and response format validation.

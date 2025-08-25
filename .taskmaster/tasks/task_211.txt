@@ -1,0 +1,11 @@
+# Task ID: 211
+# Title: Integrate TaskMaster UI with Project Context
+# Status: pending
+# Dependencies: 210
+# Priority: medium
+# Description: Update existing TaskMaster UI to work within project-specific URLs
+# Details:
+Modify existing TaskMaster interface to automatically detect project context from URL slug. Update all AJAX calls to use project-specific API endpoints (/{slug}/api/*). Add project name to header, maintain all existing functionality while supporting multiple projects.
+
+# Test Strategy:
+Integration testing with existing TaskMaster features, API endpoint validation, UI context switching testing, and backward compatibility verification.

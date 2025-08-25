@@ -1,0 +1,11 @@
+# Task ID: 34
+# Title: Add Priority-Based Visual Styling for Task Cards
+# Status: pending
+# Dependencies: 33
+# Priority: medium
+# Description: Implement priority-based color coding and visual indicators
+# Details:
+Apply priority-based visual styling: High priority tasks with red accent/border, Medium priority with orange accent, Low priority with neutral styling. Add priority badges and consistent visual hierarchy. Ensure accessibility with sufficient contrast.
+
+# Test Strategy:
+Visual styling tests for all priority levels, accessibility compliance checks, color contrast validation, and consistent styling across different themes.

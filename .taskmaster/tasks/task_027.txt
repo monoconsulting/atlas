@@ -1,0 +1,11 @@
+# Task ID: 27
+# Title: Build Add Task Form with Comprehensive Field Support
+# Status: pending
+# Dependencies: 26
+# Priority: high
+# Description: Create the main task creation form with all required fields
+# Details:
+Implement comprehensive task creation form with fields: title, description, status dropdown, priority dropdown, due_date (with date picker), assigned_to, estimate, labels (text input), and dependencies (chip-based selector). Add form validation and submission handling.
+
+# Test Strategy:
+Form validation tests, field input testing, dropdown functionality, date picker validation, form submission tests, and error handling scenarios.

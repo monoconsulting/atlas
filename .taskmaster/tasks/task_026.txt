@@ -1,0 +1,11 @@
+# Task ID: 26
+# Title: Create Storage Info Panel with Refresh Functionality
+# Status: pending
+# Dependencies: 25, 13
+# Priority: medium
+# Description: Implement the first left column panel for displaying storage configuration
+# Details:
+Create storage info panel that displays formatted JSON from /info endpoint in a pre block. Add refresh button with loading state. Implement auto-refresh on page load and manual refresh capability. Style with consistent panel design.
+
+# Test Strategy:
+Integration tests for API data fetching, refresh functionality, error handling for API failures, and loading state management.

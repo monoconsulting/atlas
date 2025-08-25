@@ -1,0 +1,11 @@
+# Task ID: 33
+# Title: Build Task List Display with Card Layout
+# Status: pending
+# Dependencies: 32, 16
+# Priority: high
+# Description: Create main task display area with card-based layout
+# Details:
+Implement task list display with individual task cards. Each card shows ID, title, status, priority, description snippet, assigned user, and dependencies. Cards are sorted by status (todo -> in-progress -> done) then by ID. Style cards with priority-based visual cues.
+
+# Test Strategy:
+Task card rendering tests, sorting functionality verification, visual styling tests for different priorities, and responsive layout testing.

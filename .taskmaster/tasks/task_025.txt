@@ -1,0 +1,11 @@
+# Task ID: 25
+# Title: Design Application Header with Project Information
+# Status: pending
+# Dependencies: 24
+# Priority: medium
+# Description: Create header section with title and project context information
+# Details:
+Implement header with main title 'Task Master AI — {Project Name}' and descriptive subtitle showing working directory. Add project name badge that updates dynamically based on /info endpoint response. Style with backdrop blur and sticky positioning.
+
+# Test Strategy:
+Visual testing for header appearance, dynamic project name updates, responsive behavior, and sticky positioning functionality.

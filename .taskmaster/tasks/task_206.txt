@@ -1,0 +1,11 @@
+# Task ID: 206
+# Title: Add Database Schema and SQLAlchemy Models
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Create database schema and SQLAlchemy models for multi-project support
+# Details:
+Create Project model with fields: id (auto-increment), slug (unique custom URL), name (display name), path (filesystem path), description, created_at, updated_at, active. Add database connection setup using existing MySQL service from docker-compose.yml. Create migration scripts and database initialization logic.
+
+# Test Strategy:
+Unit tests for model validation, database connection tests, migration scripts testing, and CRUD operations validation.

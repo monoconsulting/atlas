@@ -1,0 +1,11 @@
+# Task ID: 12
+# Title: Add GET /health Endpoint Validation
+# Status: pending
+# Dependencies: None
+# Priority: low
+# Description: Ensure the existing health check endpoint meets API specification requirements
+# Details:
+Verify that the existing GET /health endpoint returns the correct JSON format: {ok: true, message: 'taskmasterweb is alive'}. Add proper response typing and ensure it's documented in the API.
+
+# Test Strategy:
+API endpoint test to verify response structure and HTTP status codes. Test with different application states.
