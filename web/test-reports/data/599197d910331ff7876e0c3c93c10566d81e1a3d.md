@@ -118,31 +118,19 @@
           - generic [ref=e103]: "1"
         - generic [ref=e105] [cursor=pointer]:
           - generic [ref=e106] [cursor=pointer]:
-            - generic [ref=e107] [cursor=pointer]: "#59"
+            - generic [ref=e107] [cursor=pointer]: "#206"
             - generic [ref=e108] [cursor=pointer]: high
-          - heading "E2E Test Taskyyyy" [level=3] [ref=e109] [cursor=pointer]
-          - paragraph [ref=e110] [cursor=pointer]: This is a test task created by E2E tsdfestgsdfg
-          - generic [ref=e111] [cursor=pointer]: 👤 Playwright Test User
-          - generic [ref=e112] [cursor=pointer]: 📅 2024-12-25
-          - generic [ref=e113] [cursor=pointer]:
-            - generic [ref=e114] [cursor=pointer]: "📂 Subtasks (2):"
-            - generic [ref=e115] [cursor=pointer]:
-              - generic [ref=e116] [cursor=pointer]: "1."
-              - text: E2E Test Subtask
-              - generic [ref=e117] [cursor=pointer]: (medium)
-            - generic [ref=e118] [cursor=pointer]:
-              - generic [ref=e119] [cursor=pointer]: "2."
-              - text: E2E Test Subtask
-              - generic [ref=e120] [cursor=pointer]: (medium)
-          - button "Delete task" [ref=e121]:
-            - img [ref=e122]
+          - heading "Add Database Schema and SQLAlchemy Models" [level=3] [ref=e109] [cursor=pointer]
+          - paragraph [ref=e110] [cursor=pointer]: Create database schema and SQLAlchemy models for multi-project support
+          - button "Delete task" [ref=e111]:
+            - img [ref=e112]
+      - generic [ref=e114]:
+        - generic [ref=e116]:
+          - heading "✅ Done" [level=2] [ref=e117]: ✅ Done
+          - generic [ref=e119]: "0"
+        - generic [ref=e121]: No tasks
+    - button "Storage Info" [ref=e123]:
       - generic [ref=e124]:
-        - generic [ref=e126]:
-          - heading "✅ Done" [level=2] [ref=e127]: ✅ Done
-          - generic [ref=e129]: "0"
-        - generic [ref=e131]: No tasks
-    - button "Storage Info" [ref=e133]:
-      - generic [ref=e134]:
-        - generic [ref=e135]: Storage Info
-        - img [ref=e136]
+        - generic [ref=e125]: Storage Info
+        - img [ref=e126]
 ```

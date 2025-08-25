@@ -2,15 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Important rules
+- You must always update CLAUDE.md, and create an ADR if necessary.
+- You must always do a full test of all functions you supplied and get a 100% result. The test result must be stored in /web/test-reports, and /web/test-results.html must always be updated using the existing structure.
+- You must always work on a task in task-master. No other todo list are ok.
+- You must always work on a branch of dev named TMXXX-taskname
 ## Project Overview
 
-TaskMasterWeb is a self-contained, portable FastAPI-based task management web UI designed to work with the `task-master-ai` framework. It provides a visual layer for managing tasks and subtasks across multiple projects without complex setup. The system directly manipulates `.taskmaster/tasks.json` files to ensure seamless compatibility with the Task Master AI CLI tool.
+TaskMasterWeb is a self-contained, portable FastAPI-based task management web UI designed to work with the `task-master-ai` framework. It provides a visual layer for managing tasks and subtasks across multiple projects with complete project isolation and custom URL routing. The system directly manipulates `.taskmaster/tasks.json` files to ensure seamless compatibility with the Task Master AI CLI tool.
 
 ### Core Principles
 - **Self-Contained & Portable**: Runs entirely in Docker with no external dependencies or CDN requirements
-- **Project Agnostic**: Can be dropped into any project and mount any project's root directory
+- **Multi-Project Architecture**: Manage multiple TaskMaster projects from a single interface with isolated storage
+- **Custom URL Routing**: Access projects via custom URLs (e.g., `localhost:8199/project-slug`)
 - **Direct File Manipulation**: Reads/writes native `.taskmaster/tasks.json` files for CLI compatibility
 - **Intuitive UI**: Clean, responsive interface with modal dialogs and visual priority indicators
+- **Administrative Interface**: Full CRUD operations for project management through web interface
 
 ## Development Commands
 
@@ -20,9 +27,32 @@ TaskMasterWeb is a self-contained, portable FastAPI-based task management web UI
 # Start with Docker Compose (recommended)
 docker compose up -d --build
 
-# Access the application
-# Default: http://localhost:8099
+# Access the applications
+# Development Hub: http://localhost:9652 (auto-started)
+# Admin Panel: http://localhost:9652/admin.html
+# Main TaskMaster: http://localhost:8199
+# Project-Specific: http://localhost:8199/{project-slug}
 ```
+
+### Multi-Project Management
+
+The system now supports multiple TaskMaster projects with complete isolation:
+
+```bash
+# Project URLs follow the pattern:
+http://localhost:8199/{project-slug}
+
+# Examples:
+http://localhost:8199/project-a      # Project A TaskMaster interface
+http://localhost:8199/my-app         # My App project tasks
+http://localhost:8199/client-work    # Client Work project tasks
+```
+
+**Project Administration**: Use `http://localhost:9652/admin.html` to:
+- Add new projects with custom URL slugs
+- Configure project directory paths (must be mounted in Docker)
+- Edit project metadata and descriptions
+- Enable/disable projects
 
 ### Building Tailwind CSS
 
@@ -228,4 +258,4 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
 @./.taskmaster/CLAUDE.md
 
-- always reabuild witn no cache and test before reporting done
+- always rebuild with no cache and test before reporting done
