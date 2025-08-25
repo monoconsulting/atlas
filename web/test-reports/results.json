@@ -18,13 +18,13 @@
       [
         "html",
         {
-          "outputFolder": "playwright-report"
+          "outputFolder": "web/test-reports"
         }
       ],
       [
         "json",
         {
-          "outputFile": "test-results/results.json"
+          "outputFile": "web/test-reports/results.json"
         }
       ]
     ],
@@ -88,10 +88,10 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 20507,
+                      "duration": 20572,
                       "error": {
-                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-create-subtask-id=\"1\"]').first().locator('input[onchange*=\"title\"]')\u001b[22m\n\u001b[2m    - locator resolved to <input value=\"\" type=\"text\" placeholder=\"Subtask title\" onchange=\"updateCreateSubtask(1, 'title', this.value)\" class=\"w-full mb-2 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm\"/>\u001b[22m\n\u001b[2m    - fill(\"First Subtask\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying fill action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying fill action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    30 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying fill action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
-                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-create-subtask-id=\"1\"]').first().locator('input[onchange*=\"title\"]')\u001b[22m\n\u001b[2m    - locator resolved to <input value=\"\" type=\"text\" placeholder=\"Subtask title\" onchange=\"updateCreateSubtask(1, 'title', this.value)\" class=\"w-full mb-2 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm\"/>\u001b[22m\n\u001b[2m    - fill(\"First Subtask\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying fill action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying fill action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    30 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying fill action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:48:63",
+                        "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-create-subtask-id=\"1\"]').first().locator('input[onchange*=\"title\"]')\u001b[22m\n",
+                        "stack": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-create-subtask-id=\"1\"]').first().locator('input[onchange*=\"title\"]')\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:48:63",
                         "location": {
                           "file": "E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js",
                           "column": 63,
@@ -106,7 +106,7 @@
                             "column": 63,
                             "line": 48
                           },
-                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-create-subtask-id=\"1\"]').first().locator('input[onchange*=\"title\"]')\u001b[22m\n\u001b[2m    - locator resolved to <input value=\"\" type=\"text\" placeholder=\"Subtask title\" onchange=\"updateCreateSubtask(1, 'title', this.value)\" class=\"w-full mb-2 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm\"/>\u001b[22m\n\u001b[2m    - fill(\"First Subtask\")\u001b[22m\n\u001b[2m  - attempting fill action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying fill action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying fill action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    30 × waiting for element to be visible, enabled and editable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying fill action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  46 |     // Find the first subtask form\n  47 |     const firstSubtaskDiv = page.locator('[data-create-subtask-id=\"1\"]').first();\n> 48 |     await firstSubtaskDiv.locator('input[onchange*=\"title\"]').fill(subtask1Title);\n     |                                                               ^\n  49 |     await firstSubtaskDiv.locator('textarea[onchange*=\"description\"]').fill(subtask1Description);\n  50 |     await firstSubtaskDiv.locator('select[onchange*=\"priority\"]').selectOption('medium');\n  51 |     \n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:48:63"
+                          "message": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-create-subtask-id=\"1\"]').first().locator('input[onchange*=\"title\"]')\u001b[22m\n\n\n  46 |     // Find the first subtask form\n  47 |     const firstSubtaskDiv = page.locator('[data-create-subtask-id=\"1\"]').first();\n> 48 |     await firstSubtaskDiv.locator('input[onchange*=\"title\"]').fill(subtask1Title);\n     |                                                               ^\n  49 |     await firstSubtaskDiv.locator('textarea[onchange*=\"description\"]').fill(subtask1Description);\n  50 |     await firstSubtaskDiv.locator('select[onchange*=\"priority\"]').selectOption('medium');\n  51 |     \n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:48:63"
                         }
                       ],
                       "stdout": [
@@ -122,7 +122,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-24T16:43:32.700Z",
+                      "startTime": "2025-08-25T05:23:25.884Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -177,10 +177,10 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 21164,
+                      "duration": 21331,
                       "error": {
-                        "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#createTaskModal.hidden') to be visible\u001b[22m\n\u001b[2m    35 × locator resolved to hidden <div id=\"createTaskModal\" class=\"fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm hidden\">…</div>\u001b[22m\n",
-                        "stack": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#createTaskModal.hidden') to be visible\u001b[22m\n\u001b[2m    35 × locator resolved to hidden <div id=\"createTaskModal\" class=\"fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm hidden\">…</div>\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:233:16",
+                        "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#createTaskModal.hidden') to be visible\u001b[22m\n\u001b[2m    35 × locator resolved to hidden <div id=\"createTaskModal\" class=\"fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto hidden\">…</div>\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#createTaskModal.hidden') to be visible\u001b[22m\n\u001b[2m    35 × locator resolved to hidden <div id=\"createTaskModal\" class=\"fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto hidden\">…</div>\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:233:16",
                         "location": {
                           "file": "E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js",
                           "column": 16,
@@ -195,7 +195,7 @@
                             "column": 16,
                             "line": 233
                           },
-                          "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#createTaskModal.hidden') to be visible\u001b[22m\n\u001b[2m    35 × locator resolved to hidden <div id=\"createTaskModal\" class=\"fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm hidden\">…</div>\u001b[22m\n\n\n  231 |     // Close modal\n  232 |     await page.click('#closeCreateModal');\n> 233 |     await page.waitForSelector('#createTaskModal.hidden');\n      |                ^\n  234 |     \n  235 |     console.log('✅ Edge cases test completed!');\n  236 |   });\n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:233:16"
+                          "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#createTaskModal.hidden') to be visible\u001b[22m\n\u001b[2m    35 × locator resolved to hidden <div id=\"createTaskModal\" class=\"fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto hidden\">…</div>\u001b[22m\n\n\n  231 |     // Close modal\n  232 |     await page.click('#closeCreateModal');\n> 233 |     await page.waitForSelector('#createTaskModal.hidden');\n      |                ^\n  234 |     \n  235 |     console.log('✅ Edge cases test completed!');\n  236 |   });\n    at E:\\projects\\taskmasterweb\\tests\\comprehensive.spec.js:233:16"
                         }
                       ],
                       "stdout": [
@@ -205,7 +205,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-24T16:43:54.614Z",
+                      "startTime": "2025-08-25T05:23:47.934Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -251,8 +251,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-24T16:43:31.712Z",
-    "duration": 44632.191999999995,
+    "startTime": "2025-08-25T05:23:24.931Z",
+    "duration": 44925.854999999996,
     "expected": 0,
     "skipped": 0,
     "unexpected": 2,

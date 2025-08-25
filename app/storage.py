@@ -11,15 +11,28 @@ class TaskStorage:
     def __init__(self, base_dir: str | Path | None = None) -> None:
         env_dir = os.getenv("TASKMASTER_DIR", "/workspace/.taskmaster")
         self.base_dir = Path(base_dir or env_dir)
-        if not self.base_dir.exists():
-            fb = Path("/workspace/taskmaster")
-            if fb.exists():
-                self.base_dir = fb
-            else:
+        
+        # If a custom base_dir is provided, use project-specific paths
+        # Otherwise, use environment variables for backward compatibility
+        if base_dir:
+            # Project-specific paths - don't use environment variables
+            if not self.base_dir.exists():
                 self.base_dir.mkdir(parents=True, exist_ok=True)
-        self.tasks_file = Path(os.getenv("TASKS_FILE", str(self.base_dir / "tasks" / "tasks.json")))
-        self.state_file = Path(os.getenv("STATE_FILE", str(self.base_dir / "state.json")))
-        self.config_file = Path(os.getenv("CONFIG_FILE", str(self.base_dir / "config.json")))
+            self.tasks_file = self.base_dir / "tasks" / "tasks.json"
+            self.state_file = self.base_dir / "state.json"
+            self.config_file = self.base_dir / "config.json"
+        else:
+            # Default behavior with environment variables
+            if not self.base_dir.exists():
+                fb = Path("/workspace/taskmaster")
+                if fb.exists():
+                    self.base_dir = fb
+                else:
+                    self.base_dir.mkdir(parents=True, exist_ok=True)
+            self.tasks_file = Path(os.getenv("TASKS_FILE", str(self.base_dir / "tasks" / "tasks.json")))
+            self.state_file = Path(os.getenv("STATE_FILE", str(self.base_dir / "state.json")))
+            self.config_file = Path(os.getenv("CONFIG_FILE", str(self.base_dir / "config.json")))
+        
         self.tasks_file.parent.mkdir(parents=True, exist_ok=True)
 
     def _read_json(self, path: Path) -> Dict[str, Any]:
