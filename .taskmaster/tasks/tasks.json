@@ -3992,21 +3992,21 @@
         "title": "Add to docker-compose.yml",
         "description": "Mounts and stuff to add",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T05:33:52.540338Z",
-        "updated_at": "2025-08-25T14:50:07.223025Z",
+        "updated_at": "2025-08-25T15:18:47.486574Z",
         "tag": "master",
         "subtasks": [
           {
             "id": 1,
             "title": "Add E:\\projects a",
             "description": "Add E:\\projects as a mount to the docker-compose. all projects are here in subfolders. When starting anew project it should be possible to pick the correct folder from here",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -4021,7 +4021,7 @@
             "id": 2,
             "title": "Added Subtask 1756127553637",
             "description": "sdfg",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -4030,6 +4030,21 @@
             "dependencies": [],
             "created_at": "2025-08-25T13:12:34.010832Z",
             "updated_at": "2025-08-25T14:50:07.076410Z",
+            "extra": {}
+          },
+          {
+            "id": 3,
+            "title": "Added Subtask 1756135127227",
+            "description": "",
+            "status": "done",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-08-25T15:18:47.522933Z",
+            "updated_at": "2025-08-25T15:18:47.522946Z",
             "extra": {}
           }
         ],
@@ -4049,7 +4064,7 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T05:34:59.463567Z",
-        "updated_at": "2025-08-25T05:34:59.463577Z",
+        "updated_at": "2025-08-25T15:27:07.510086Z",
         "tag": "master",
         "subtasks": [
           {
@@ -4190,10 +4205,10 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T10:24:20.758765Z",
-        "updated_at": "2025-08-25T10:24:20.758783Z",
+        "updated_at": "2025-08-25T15:04:32.611444Z",
         "tag": "master",
         "subtasks": [],
-        "deleted": false,
+        "deleted": true,
         "extra": {},
         "relations": []
       },
@@ -4209,10 +4224,10 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T11:33:18.830544Z",
-        "updated_at": "2025-08-25T11:33:18.830564Z",
+        "updated_at": "2025-08-25T15:04:34.984141Z",
         "tag": "master",
         "subtasks": [],
-        "deleted": false,
+        "deleted": true,
         "extra": {},
         "relations": []
       },
@@ -4228,10 +4243,10 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T11:36:42.462774Z",
-        "updated_at": "2025-08-25T11:36:42.462788Z",
+        "updated_at": "2025-08-25T15:04:37.434950Z",
         "tag": "master",
         "subtasks": [],
-        "deleted": false,
+        "deleted": true,
         "extra": {},
         "relations": []
       },
@@ -4247,7 +4262,7 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-25T12:02:13.026523Z",
-        "updated_at": "2025-08-25T12:02:13.026542Z",
+        "updated_at": "2025-08-25T15:04:39.924468Z",
         "tag": "master",
         "subtasks": [
           {
@@ -4281,7 +4296,7 @@
             "extra": {}
           }
         ],
-        "deleted": false,
+        "deleted": true,
         "extra": {},
         "relations": []
       },
@@ -4334,11 +4349,80 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 224,
+        "title": "Persistence Test 1756134829308",
+        "description": "Testing complete persistence workflow",
+        "priority": "high",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-08-25T15:13:50.655787Z",
+        "updated_at": "2025-08-25T15:13:50.655805Z",
+        "tag": "master",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Subtask 1 - 1756134829308",
+            "description": "",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-08-25T15:13:50.725587Z",
+            "updated_at": "2025-08-25T15:13:50.725606Z",
+            "extra": {}
+          },
+          {
+            "id": 2,
+            "title": "Subtask 2 - 1756134829308",
+            "description": "",
+            "status": "todo",
+            "priority": "low",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-08-25T15:13:50.778093Z",
+            "updated_at": "2025-08-25T15:13:50.778107Z",
+            "extra": {}
+          }
+        ],
+        "deleted": false,
+        "extra": {},
+        "relations": []
+      },
+      {
+        "id": 225,
+        "title": "Test Task for Backdrop Click",
+        "description": "Testing backdrop functionality",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-08-25T15:14:10.231718Z",
+        "updated_at": "2025-08-25T15:14:10.231733Z",
+        "tag": "master",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ],
     "metadata": {
       "created": "2025-08-24T07:33:27.511Z",
-      "updated": "2025-08-25T12:02:52.447Z",
+      "updated": "2025-08-25T15:25:24.926Z",
       "description": "Tasks for master context"
     }
   }
