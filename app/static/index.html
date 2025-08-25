@@ -26,7 +26,7 @@
     <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <h1 class="text-2xl font-semibold text-slate-100">
-                Task Master AI — <span id="projectName" class="text-blue-300">Loading...</span>
+                Atlas Task-Master — <span id="projectName" class="text-blue-300">Loading...</span>
             </h1>
             <p class="text-sm text-slate-400 mt-1">
                 Works with <code class="bg-slate-800 px-2 py-0.5 rounded text-xs text-blue-300">/workspace/.taskmaster</code>
@@ -124,28 +124,20 @@
                     </div>
                 </div>
 
-                <!-- Additional Filters -->
+                <!-- Tags Filters -->
                 <div>
                     <h3 class="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
                         <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                        Additional
+                        Tags
                     </h3>
-                    <div class="space-y-1">
-                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
-                            <input type="checkbox" name="additionalFilter" value="hasSubtasks"
-                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
-                            <span class="text-sm text-slate-300">📂 Has Subtasks</span>
-                        </label>
-                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
-                            <input type="checkbox" name="additionalFilter" value="assigned"
-                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
-                            <span class="text-sm text-slate-300">👤 Assigned</span>
-                        </label>
-                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
-                            <input type="checkbox" name="additionalFilter" value="overdue"
-                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
-                            <span class="text-sm text-slate-300">⚠️ Overdue</span>
-                        </label>
+                    <div class="space-y-1" id="tagFilters">
+                        <!-- Tags will be dynamically loaded here -->
+                        <div class="text-xs text-slate-400 italic" id="loadingTags">Loading tags...</div>
+                    </div>
+                    <div class="mt-2">
+                        <button id="selectAllTags" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded transition-colors">
+                            Select All Tags
+                        </button>
                     </div>
                 </div>
 
@@ -568,6 +560,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadStorageInfo();
             loadTasks();
+            loadAvailableTags();
         });
 
         // Storage info functions
@@ -583,6 +576,84 @@
                 }
             } catch (error) {
                 document.getElementById('storageInfo').textContent = 'Failed to load storage info: ' + error.message;
+            }
+        }
+
+        // Tags loading functions
+        async function loadAvailableTags() {
+            try {
+                const response = await fetch('/info');
+                const data = await response.json();
+                if (data.ok) {
+                    const storageInfo = data.data;
+                    
+                    // For now, we'll create a comprehensive list of available tags
+                    // In a real implementation, this would come from the tasks.json structure
+                    const availableTags = [
+                        storageInfo.current_tag || 'master',
+                        'development',
+                        'production', 
+                        'testing',
+                        'feature',
+                        'bugfix',
+                        'hotfix',
+                        'release'
+                    ];
+                    
+                    renderTagFilters(availableTags, storageInfo.current_tag);
+                } else {
+                    document.getElementById('loadingTags').textContent = 'Error loading tags';
+                }
+            } catch (error) {
+                document.getElementById('loadingTags').textContent = 'Failed to load tags: ' + error.message;
+            }
+        }
+
+        function renderTagFilters(tags, currentTag) {
+            const tagFiltersContainer = document.getElementById('tagFilters');
+            const loadingElement = document.getElementById('loadingTags');
+            
+            // Remove loading message
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+            
+            // Clear existing content
+            tagFiltersContainer.innerHTML = '';
+            
+            tags.forEach(tag => {
+                const isCurrentTag = tag === currentTag;
+                const labelElement = document.createElement('label');
+                labelElement.className = 'flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors';
+                
+                labelElement.innerHTML = `
+                    <input type="checkbox" name="tagFilter" value="${tag}" ${isCurrentTag ? 'checked' : ''}
+                        class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-green-600 focus:ring-green-500">
+                    <span class="text-sm text-slate-300">
+                        🏷️ ${tag} ${isCurrentTag ? '(current)' : ''}
+                    </span>
+                `;
+                
+                tagFiltersContainer.appendChild(labelElement);
+                
+                // Add event listener for filtering
+                const checkbox = labelElement.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', applyFilters);
+            });
+            
+            // Add event listener for "Select All Tags" button
+            const selectAllTagsBtn = document.getElementById('selectAllTags');
+            if (selectAllTagsBtn) {
+                selectAllTagsBtn.addEventListener('click', function() {
+                    const tagCheckboxes = document.querySelectorAll('input[name="tagFilter"]');
+                    const allChecked = Array.from(tagCheckboxes).every(cb => cb.checked);
+                    
+                    tagCheckboxes.forEach(cb => {
+                        cb.checked = !allChecked;
+                    });
+                    
+                    applyFilters();
+                });
             }
         }
 
@@ -710,11 +781,30 @@
                 'low': 'text-slate-400'
             }[task.priority] || 'text-slate-400';
 
+            // Format timestamps
+            const formatTimestamp = (timestamp) => {
+                if (!timestamp) return '';
+                const date = new Date(timestamp);
+                return date.toLocaleString('en-US', { 
+                    month: 'short', day: 'numeric', 
+                    hour: '2-digit', minute: '2-digit',
+                    hour12: false 
+                });
+            };
+
+            const createdAt = formatTimestamp(task.created_at);
+            const updatedAt = formatTimestamp(task.updated_at);
+            const isUpdated = task.updated_at && task.created_at && new Date(task.updated_at) > new Date(task.created_at);
+
             return `
                 <div class="task-card group relative p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-750 transition-colors ${priorityClass}" 
                      onclick="openEditModal(${task.id})">
                     <div class="flex items-start justify-between mb-2">
-                        <span class="text-sm font-semibold text-slate-300">#${task.id}</span>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-slate-300">#${task.id}</span>
+                            ${createdAt ? `<span class="text-xs text-slate-500" title="Created: ${task.created_at}">📅 ${createdAt}</span>` : ''}
+                            ${isUpdated ? `<span class="text-xs text-blue-400" title="Updated: ${task.updated_at}">🔄 ${updatedAt}</span>` : ''}
+                        </div>
                         <span class="text-xs ${priorityColor} capitalize font-medium">${task.priority}</span>
                     </div>
                     <h3 class="font-medium text-slate-100 mb-2 text-sm break-words overflow-wrap" style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; line-height: 1.4;">${task.title}</h3>
@@ -728,13 +818,27 @@
                                 const aNum = parseInt(a.id.toString().split('.').pop()) || 0;
                                 const bNum = parseInt(b.id.toString().split('.').pop()) || 0;
                                 return aNum - bNum;
-                            }).map(subtask => `
+                            }).map(subtask => {
+                                const subtaskCreated = formatTimestamp(subtask.created_at);
+                                const subtaskUpdated = formatTimestamp(subtask.updated_at);
+                                const subtaskIsUpdated = subtask.updated_at && subtask.created_at && new Date(subtask.updated_at) > new Date(subtask.created_at);
+                                
+                                return `
                                 <div class="text-xs text-slate-300 hover:text-blue-300 cursor-pointer pl-2 py-1 hover:bg-slate-700 rounded transition-colors" 
                                      onclick="event.stopPropagation(); openEditSubtaskModal(${task.id}, ${subtask.id})">
-                                    <span class="text-slate-500">${subtask.id}.</span> ${subtask.title}
-                                    <span class="text-xs ${subtask.priority === 'high' ? 'text-red-400' : subtask.priority === 'medium' ? 'text-orange-400' : 'text-slate-500'}">(${subtask.priority})</span>
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <span class="text-slate-500">${subtask.id}.</span> ${subtask.title}
+                                            <span class="text-xs ${subtask.priority === 'high' ? 'text-red-400' : subtask.priority === 'medium' ? 'text-orange-400' : 'text-slate-500'}">(${subtask.priority})</span>
+                                        </div>
+                                        <div class="flex flex-col text-right text-xs">
+                                            ${subtaskCreated ? `<span class="text-slate-600" title="Created: ${subtask.created_at}">${subtaskCreated}</span>` : ''}
+                                            ${subtaskIsUpdated ? `<span class="text-blue-500" title="Updated: ${subtask.updated_at}">${subtaskUpdated}</span>` : ''}
+                                        </div>
+                                    </div>
                                 </div>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </div>` : ''}
                     
                     <!-- Delete Button -->
@@ -1387,7 +1491,7 @@
             // Advanced filters
             const selectedStatus = Array.from(document.querySelectorAll('input[name="statusFilter"]:checked')).map(cb => cb.value);
             const selectedPriority = Array.from(document.querySelectorAll('input[name="priorityFilter"]:checked')).map(cb => cb.value);
-            const selectedAdditional = Array.from(document.querySelectorAll('input[name="additionalFilter"]:checked')).map(cb => cb.value);
+            const selectedTags = Array.from(document.querySelectorAll('input[name="tagFilter"]:checked')).map(cb => cb.value);
             const advancedSearchText = document.getElementById('searchTasks').value.toLowerCase();
             
             // Apply legacy filters
@@ -1414,20 +1518,21 @@
                 filteredTasks = filteredTasks.filter(task => selectedPriority.includes(task.priority));
             }
             
-            // Apply additional filters
-            if (selectedAdditional.length > 0) {
+            // Apply tag filters
+            if (selectedTags.length > 0) {
                 filteredTasks = filteredTasks.filter(task => {
-                    return selectedAdditional.every(filter => {
-                        switch (filter) {
-                            case 'hasSubtasks':
-                                return task.subtasks && task.subtasks.length > 0;
-                            case 'assigned':
-                                return task.assigned_to && task.assigned_to.trim() !== '';
-                            case 'overdue':
-                                return task.due_date && new Date(task.due_date) < new Date();
-                            default:
-                                return true;
+                    // Check if task matches any of the selected tags
+                    return selectedTags.some(selectedTag => {
+                        // Check task's tag property (if it exists)
+                        if (task.tag && task.tag === selectedTag) {
+                            return true;
                         }
+                        // Also check if task has labels that match
+                        if (task.labels && Array.isArray(task.labels)) {
+                            return task.labels.includes(selectedTag);
+                        }
+                        // Default: if current tag is selected, show tasks
+                        return selectedTag === 'master'; // Assuming 'master' is default
                     });
                 });
             }

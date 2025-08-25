@@ -115,7 +115,7 @@ The `task_master_ai/` directory contains a Python package for AI-assisted utilit
 
 ### Layout Structure
 - **Responsive Design**: Two-column layout adapting to different screen sizes
-- **Header**: "Task Master AI — {Project Name}" with working directory subtitle
+- **Header**: "Atlas Task-Master — {Project Name}" with working directory subtitle (Updated 2025-08-25)
 - **Modals**: Vertically scrollable, backdrop-closable, prevent background scrolling
 
 ### Left Column (Input)
@@ -124,7 +124,11 @@ The `task_master_ai/` directory contains a Python package for AI-assisted utilit
 3. **Add Subtask Panel**: Parent ID input with existing subtasks list showing priority badges and status toggles
 
 ### Right Column (Display)
-1. **Filters Panel**: Status, Priority, and Tag filtering controls
+1. **Advanced Filters Panel**: Comprehensive filtering system with four main columns:
+   - **Status Filters**: Todo, In Progress, Done checkboxes
+   - **Priority Filters**: High, Medium, Low priority selection
+   - **Tags Filters**: Dynamic tag-based filtering with current project tags (Added 2025-08-25)
+   - **Advanced Search**: Text search with sorting controls and task creation
 2. **Task List Panel**: Cards sorted by status then ID, with visual priority indicators (red=high, orange=medium, neutral=low)
 
 ### Edit Task Modal
@@ -140,6 +144,15 @@ The `task_master_ai/` directory contains a Python package for AI-assisted utilit
 - **Visual Feedback**: Deleted tasks automatically hidden from Kanban board
 - **Quick Filters**: Enhanced filtering with sorting options (ID ASC/DESC, Priority)
 - **Advanced Filters**: Multi-criteria filtering with status, priority, and search capabilities
+
+### Tags-Based Filtering System (Added 2025-08-25)
+- **Dynamic Tag Loading**: Automatically discovers and loads available project tags from `/info` endpoint
+- **Comprehensive Tag Support**: Includes current project tag plus common development tags (development, production, testing, feature, bugfix, hotfix, release)
+- **Multi-Tag Selection**: Checkbox-based interface allowing selection of multiple tags simultaneously
+- **Current Tag Indicator**: Highlights the active project tag with "(current)" label
+- **Select All Functionality**: One-click toggle to select/deselect all available tags
+- **Integrated Filtering**: Works seamlessly with existing status, priority, and search filters
+- **Real-Time Updates**: Tag selections immediately update the task display without page reload
 
 ### Subtask Management (Fixed 2025-08-25)
 - **Edit Modal Integration**: Add subtasks directly in task edit modal without separate save buttons
@@ -259,3 +272,4 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 @./.taskmaster/CLAUDE.md
 
 - always rebuild with no cache and test before reporting done
+- YOU MUST do a rebuild no cache BEFORE you tell me you are done.
