@@ -559,7 +559,7 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
         // Application state
         let tasks = [];
         let allTasks = [];
@@ -575,11 +575,402 @@
         }
         
         // Load initial data
+                        import { loadStorageInfo } from './js/storageInfo.js';
+        import { loadTasks } from './js/tasks.js';
+        import { createTask, deleteTask, openEditModal, saveTask, populateSubtasks, updateSubtaskStatus, updateSubtaskTitle, updateSubtaskDescription, addSubtaskToEditForm, createSubtaskFromForm, addSubtaskToCreateForm, removeCreateSubtask, renderCreateSubtasks, updateCreateSubtask, clearCreateSubtasks, createSubtaskFromData, openEditSubtaskModal } from './js/taskManagement.js';
+        import { applyFilters, updateFilterSummary, syncQuickSort } from './js/filters.js';
+        import { getProjectSlug, setProjectSlug } from './js/utils.js';
+
+        // Application state
+        let projectSlug = '';
+
+        // Load initial data
         document.addEventListener('DOMContentLoaded', function() {
             projectSlug = getProjectSlug();
+            setProjectSlug(projectSlug);
             loadStorageInfo();
             loadTasks();
         });
+
+        // Event listeners
+        document.getElementById('refreshBtn').addEventListener('click', loadStorageInfo);
+        
+        // Create task button and modal
+        document.getElementById('createTaskBtn').addEventListener('click', function() {
+            document.getElementById('createTaskModal').classList.remove('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('closeCreateModal').addEventListener('click', function() {
+            document.getElementById('createTaskModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('cancelCreate').addEventListener('click', function() {
+            document.getElementById('createTaskModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        // ESC key handling for modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const createModal = document.getElementById('createTaskModal');
+                const editModal = document.getElementById('editModal');
+                
+                if (!createModal.classList.contains('hidden')) {
+                    createModal.classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
+                }
+                if (!editModal.classList.contains('hidden')) {
+                    editModal.classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
+                }
+            }
+        });
+        
+        // Form submission
+        document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            createTask();
+        });
+
+        // Edit modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('saveTask').addEventListener('click', saveTask);
+
+        // Add Subtask button (in edit modal)
+        document.getElementById('addSubtaskBtn').addEventListener('click', function() {
+            addSubtaskToEditForm();
+        });
+
+        // Add Subtask button (in create modal)
+        document.getElementById('addCreateSubtaskBtn').addEventListener('click', function() {
+            addSubtaskToCreateForm();
+        });
+
+        // Filter event listeners
+        document.getElementById('filterStatus').addEventListener('change', applyFilters);
+        document.getElementById('filterPriority').addEventListener('change', applyFilters);
+        document.getElementById('filterTag').addEventListener('input', applyFilters);
+        
+        // Quick sort event listener
+        document.getElementById('quickSort').addEventListener('change', function() {
+            const quickSortValue = this.value;
+            const sortBy = document.getElementById('sortBy');
+            const sortOrder = document.getElementById('sortOrder');
+            
+            switch(quickSortValue) {
+                case 'id-asc':
+                    sortBy.value = 'id';
+                    sortOrder.value = 'asc';
+                    break;
+                case 'id-desc':
+                    sortBy.value = 'id';
+                    sortOrder.value = 'desc';
+                    break;
+                case 'priority-desc':
+                    sortBy.value = 'priority';
+                    sortOrder.value = 'desc';
+                    break;
+            }
+            
+            applyFilters();
+        });
+        document.getElementById('searchTasks').addEventListener('input', applyFilters);
+        
+        // Sort controls
+        document.getElementById('sortBy').addEventListener('change', function() {
+            syncQuickSort();
+            applyFilters();
+        });
+        document.getElementById('sortOrder').addEventListener('change', function() {
+            syncQuickSort();
+            applyFilters();
+        });
+        
+        // Advanced filters
+        document.querySelectorAll('input[name="statusFilter"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+        document.querySelectorAll('input[name="priorityFilter"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+        document.querySelectorAll('input[name="additionalFilter"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+        
+        // Filter presets
+        document.getElementById('presetUrgent').addEventListener('click', function() {
+            document.getElementById('clearAllFilters').click();
+            document.querySelector('input[name="priorityFilter'][value="high"]').checked = true;
+            document.querySelector('input[name="statusFilter'][value="todo"]').checked = true;
+            applyFilters();
+        });
+        
+        document.getElementById('presetActive').addEventListener('click', function() {
+            document.getElementById('clearAllFilters').click();
+            document.querySelector('input[name="statusFilter'][value="in-progress"]').checked = true;
+            applyFilters();
+        });
+        
+        document.getElementById('presetCompleted').addEventListener('click', function() {
+            document.getElementById('clearAllFilters').click();
+            document.querySelector('input[name="statusFilter'][value="done"]').checked = true;
+            applyFilters();
+        });
+        
+        // Clear and select all
+        document.getElementById('clearAllFilters').addEventListener('click', function() {
+            // Clear all checkboxes and inputs
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('searchTasks').value = '';
+            document.getElementById('filterTag').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPriority').value = '';
+            
+            // Reset sort controls to defaults
+            document.getElementById('sortBy').value = 'id';
+            document.getElementById('sortOrder').value = 'asc';
+            
+            applyFilters();
+        });
+        
+        document.getElementById('selectAllFilters').addEventListener('click', function() {
+            document.querySelectorAll('input[name="statusFilter"]').forEach(cb => cb.checked = true);
+            document.querySelectorAll('input[name="priorityFilter"]').forEach(cb => cb.checked = true);
+            applyFilters();
+        });
+        
+        // Storage info toggle
+        document.getElementById('toggleStorageInfo').addEventListener('click', function() {
+            const panel = document.getElementById('storageInfoPanel');
+            const icon = document.getElementById('storageInfoIcon');
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                panel.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Close modals on backdrop click
+        document.getElementById('createTaskModal').addEventListener('click', function(e) {
+            // Check if click is on the backdrop or the centering container, but not on the modal content
+            if (e.target === this || (e.target.classList.contains('flex') && e.target.classList.contains('items-center'))) {
+                this.classList.add('hidden');
+                document.body.style.overflow = ''; // Re-enable body scrolling
+            }
+        });
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            // Check if click is on the backdrop or the centering container, but not on the modal content
+            if (e.target === this || (e.target.classList.contains('flex') && e.target.classList.contains('items-center'))) {
+                this.classList.add('hidden');
+                document.body.style.overflow = ''; // Re-enable body scrolling
+            }
+        });
+    </script>
+
+        // Event listeners
+        document.getElementById('refreshBtn').addEventListener('click', loadStorageInfo);
+        
+        // Create task button and modal
+        document.getElementById('createTaskBtn').addEventListener('click', function() {
+            document.getElementById('createTaskModal').classList.remove('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('closeCreateModal').addEventListener('click', function() {
+            document.getElementById('createTaskModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('cancelCreate').addEventListener('click', function() {
+            document.getElementById('createTaskModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        // ESC key handling for modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const createModal = document.getElementById('createTaskModal');
+                const editModal = document.getElementById('editModal');
+                
+                if (!createModal.classList.contains('hidden')) {
+                    createModal.classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
+                }
+                if (!editModal.classList.contains('hidden')) {
+                    editModal.classList.add('hidden');
+                    document.body.style.overflow = ''; // Re-enable body scrolling
+                }
+            }
+        });
+        
+        // Form submission
+        document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            createTask();
+        });
+
+        // Edit modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Re-enable body scrolling
+        });
+        
+        document.getElementById('saveTask').addEventListener('click', saveTask);
+
+        // Add Subtask button (in edit modal)
+        document.getElementById('addSubtaskBtn').addEventListener('click', function() {
+            addSubtaskToEditForm();
+        });
+
+        // Add Subtask button (in create modal)
+        document.getElementById('addCreateSubtaskBtn').addEventListener('click', function() {
+            addSubtaskToCreateForm();
+        });
+
+        // Filter event listeners
+        document.getElementById('filterStatus').addEventListener('change', applyFilters);
+        document.getElementById('filterPriority').addEventListener('change', applyFilters);
+        document.getElementById('filterTag').addEventListener('input', applyFilters);
+        
+        // Quick sort event listener
+        document.getElementById('quickSort').addEventListener('change', function() {
+            const quickSortValue = this.value;
+            const sortBy = document.getElementById('sortBy');
+            const sortOrder = document.getElementById('sortOrder');
+            
+            switch(quickSortValue) {
+                case 'id-asc':
+                    sortBy.value = 'id';
+                    sortOrder.value = 'asc';
+                    break;
+                case 'id-desc':
+                    sortBy.value = 'id';
+                    sortOrder.value = 'desc';
+                    break;
+                case 'priority-desc':
+                    sortBy.value = 'priority';
+                    sortOrder.value = 'desc';
+                    break;
+            }
+            
+            applyFilters();
+        });
+        document.getElementById('searchTasks').addEventListener('input', applyFilters);
+        
+        // Sort controls
+        document.getElementById('sortBy').addEventListener('change', function() {
+            syncQuickSort();
+            applyFilters();
+        });
+        document.getElementById('sortOrder').addEventListener('change', function() {
+            syncQuickSort();
+            applyFilters();
+        });
+        
+        // Advanced filters
+        document.querySelectorAll('input[name="statusFilter"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+        document.querySelectorAll('input[name="priorityFilter"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+        document.querySelectorAll('input[name="additionalFilter"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+        
+        // Filter presets
+        document.getElementById('presetUrgent').addEventListener('click', function() {
+            document.getElementById('clearAllFilters').click();
+            document.querySelector('input[name="priorityFilter'][value="high"]').checked = true;
+            document.querySelector('input[name="statusFilter'][value="todo"]').checked = true;
+            applyFilters();
+        });
+        
+        document.getElementById('presetActive').addEventListener('click', function() {
+            document.getElementById('clearAllFilters').click();
+            document.querySelector('input[name="statusFilter'][value="in-progress"]').checked = true;
+            applyFilters();
+        });
+        
+        document.getElementById('presetCompleted').addEventListener('click', function() {
+            document.getElementById('clearAllFilters').click();
+            document.querySelector('input[name="statusFilter'][value="done"]').checked = true;
+            applyFilters();
+        });
+        
+        // Clear and select all
+        document.getElementById('clearAllFilters').addEventListener('click', function() {
+            // Clear all checkboxes and inputs
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('searchTasks').value = '';
+            document.getElementById('filterTag').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPriority').value = '';
+            
+            // Reset sort controls to defaults
+            document.getElementById('sortBy').value = 'id';
+            document.getElementById('sortOrder').value = 'asc';
+            
+            applyFilters();
+        });
+        
+        document.getElementById('selectAllFilters').addEventListener('click', function() {
+            document.querySelectorAll('input[name="statusFilter"]').forEach(cb => cb.checked = true);
+            document.querySelectorAll('input[name="priorityFilter"]').forEach(cb => cb.checked = true);
+            applyFilters();
+        });
+        
+        // Storage info toggle
+        document.getElementById('toggleStorageInfo').addEventListener('click', function() {
+            const panel = document.getElementById('storageInfoPanel');
+            const icon = document.getElementById('storageInfoIcon');
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                panel.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Close modals on backdrop click
+        document.getElementById('createTaskModal').addEventListener('click', function(e) {
+            // Check if click is on the backdrop or the centering container, but not on the modal content
+            if (e.target === this || (e.target.classList.contains('flex') && e.target.classList.contains('items-center'))) {
+                this.classList.add('hidden');
+                document.body.style.overflow = ''; // Re-enable body scrolling
+            }
+        });
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            // Check if click is on the backdrop or the centering container, but not on the modal content
+            if (e.target === this || (e.target.classList.contains('flex') && e.target.classList.contains('items-center'))) {
+                this.classList.add('hidden');
+                document.body.style.overflow = ''; // Re-enable body scrolling
+            }
+        });
+    </script>
 
         function getApiUrl(endpoint) {
             if (projectSlug) {
