@@ -563,17 +563,35 @@
         // Application state
         let tasks = [];
         let allTasks = [];
+        let projectSlug = '';
+
+        function getProjectSlug() {
+            const path = window.location.pathname;
+            const parts = path.split('/');
+            if (parts.length > 1 && parts[1] !== '') {
+                return parts[1];
+            }
+            return null;
+        }
         
         // Load initial data
         document.addEventListener('DOMContentLoaded', function() {
+            projectSlug = getProjectSlug();
             loadStorageInfo();
             loadTasks();
         });
 
+        function getApiUrl(endpoint) {
+            if (projectSlug) {
+                return `/${projectSlug}${endpoint}`;
+            }
+            return endpoint;
+        }
+
         // Storage info functions
         async function loadStorageInfo() {
             try {
-                const response = await fetch('/info');
+                const response = await fetch(getApiUrl('/info'));
                 const data = await response.json();
                 if (data.ok) {
                     document.getElementById('storageInfo').textContent = JSON.stringify(data.data, null, 2);
@@ -589,7 +607,7 @@
         // Tasks loading and display
         async function loadTasks() {
             try {
-                const response = await fetch('/tasks');
+                const response = await fetch(getApiUrl('/tasks'));
                 const data = await response.json();
                 if (data.ok) {
                     tasks = data.data;
@@ -773,7 +791,7 @@
             };
 
             try {
-                const response = await fetch('/task', {
+                const response = await fetch(getApiUrl('/task'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -821,7 +839,7 @@
             }
             
             try {
-                const response = await fetch(`/task/${taskId}`, {
+                const response = await fetch(getApiUrl(`/task/${taskId}`), {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -916,7 +934,7 @@
             }
             
             try {
-                const response = await fetch(`/task/${taskId}`, {
+                const response = await fetch(getApiUrl(`/task/${taskId}`), {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1016,7 +1034,7 @@
         async function updateSubtaskStatus(taskId, subtaskId, newStatus) {
             console.log('Update subtask status:', subtaskId, newStatus);
             try {
-                const response = await fetch(`/task/${taskId}/subtask/${subtaskId}`, {
+                const response = await fetch(getApiUrl(`/task/${taskId}/subtask/${subtaskId}`), {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1037,7 +1055,7 @@
         async function updateSubtaskTitle(taskId, subtaskId, newTitle) {
             console.log('Update subtask title:', subtaskId, newTitle);
             try {
-                const response = await fetch(`/task/${taskId}/subtask/${subtaskId}`, {
+                const response = await fetch(getApiUrl(`/task/${taskId}/subtask/${subtaskId}`), {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1058,7 +1076,7 @@
         async function updateSubtaskDescription(taskId, subtaskId, newDescription) {
             console.log('Update subtask description:', subtaskId, newDescription);
             try {
-                const response = await fetch(`/task/${taskId}/subtask/${subtaskId}`, {
+                const response = await fetch(getApiUrl(`/task/${taskId}/subtask/${subtaskId}`), {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1256,7 +1274,7 @@
                 status: subtaskData.status
             };
             
-            const response = await fetch(`/task/${parentTaskId}/subtask`, {
+            const response = await fetch(getApiUrl(`/task/${parentTaskId}/subtask`), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
