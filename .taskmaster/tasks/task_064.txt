@@ -1,0 +1,37 @@
+# Task ID: 64
+# Title: Edited Task 0 - 1756033655280
+# Status: in-progress
+# Dependencies: None
+# Priority: high
+# Description: This task tests all creation functionality
+# Details:
+
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. Final Test Subtask [todo]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 2. Final Test Subtask [todo]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 3. Final Test Subtask [todo]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 4. Final Test Subtask [todo]
+### Dependencies: None
+### Description: 
+### Details:
+
+

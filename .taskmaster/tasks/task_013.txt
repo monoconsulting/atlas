@@ -1,0 +1,11 @@
+# Task ID: 13
+# Title: Enhance GET /info Endpoint Response Format
+# Status: pending
+# Dependencies: 11
+# Priority: medium
+# Description: Standardize the /info endpoint to return consistent JSON structure matching API specification
+# Details:
+Ensure the /info endpoint returns: base_dir, tasks_file, state_file, config_file, current_tag, and project_name. Update existing info() method in TaskStorage to match exact PRD specification. Add proper error handling for missing environment variables.
+
+# Test Strategy:
+API endpoint tests with different environment configurations. Validate JSON response schema and field presence.

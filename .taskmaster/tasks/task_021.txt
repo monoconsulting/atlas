@@ -1,0 +1,11 @@
+# Task ID: 21
+# Title: Implement PATCH /task/{task_id}/subtask/{sub_id} Endpoint
+# Status: pending
+# Dependencies: 20
+# Priority: medium
+# Description: Create subtask update endpoint with proper validation and error handling
+# Details:
+Implement PATCH /task/{task_id}/subtask/{sub_id} to support partial subtask updates, validate parent task and subtask exist, update only provided fields, set updated_at timestamp, and return updated subtask object.
+
+# Test Strategy:
+API endpoint tests for subtask updates, parent/child validation, partial updates, timestamp handling, and error scenarios (non-existing parent or subtask).

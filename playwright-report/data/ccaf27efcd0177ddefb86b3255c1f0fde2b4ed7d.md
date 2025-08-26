@@ -1,0 +1,1461 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Task Master AI — workspace" [level=1] [ref=e4]:
+        - text: Task Master AI —
+        - generic [ref=e5]: workspace
+      - paragraph [ref=e6]:
+        - text: Works with
+        - code [ref=e7]: /workspace/.taskmaster
+        - text: "(fallback:"
+        - code [ref=e8]: /workspace/taskmaster
+        - text: )
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "🎯 Advanced Filters" [level=2] [ref=e12]
+        - generic [ref=e13]:
+          - button "Clear All" [ref=e14]
+          - button "Select All" [ref=e15]
+      - generic [ref=e17]:
+        - button "🔥 Urgent (High Priority Todo)" [ref=e18]
+        - button "⚡ Active Work" [ref=e19]
+        - button "✅ Completed" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - heading "Status" [level=3] [ref=e23]: Status
+          - generic [ref=e24]:
+            - generic [ref=e25]:
+              - checkbox "📋 Todo" [ref=e26]
+              - generic [ref=e27]: 📋 Todo
+            - generic [ref=e28]:
+              - checkbox "🚀 In Progress" [ref=e29]
+              - generic [ref=e30]: 🚀 In Progress
+            - generic [ref=e31]:
+              - checkbox "✅ Done" [ref=e32]
+              - generic [ref=e33]: ✅ Done
+        - generic [ref=e34]:
+          - heading "Priority" [level=3] [ref=e35]: Priority
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - checkbox "🔴 High" [ref=e38]
+              - generic [ref=e39]: 🔴 High
+            - generic [ref=e40]:
+              - checkbox "🟡 Medium" [ref=e41]
+              - generic [ref=e42]: 🟡 Medium
+            - generic [ref=e43]:
+              - checkbox "🟢 Low" [ref=e44]
+              - generic [ref=e45]: 🟢 Low
+        - generic [ref=e46]:
+          - heading "Additional" [level=3] [ref=e47]: Additional
+          - generic [ref=e48]:
+            - generic [ref=e49]:
+              - checkbox "📂 Has Subtasks" [ref=e50]
+              - generic [ref=e51]: 📂 Has Subtasks
+            - generic [ref=e52]:
+              - checkbox "👤 Assigned" [ref=e53]
+              - generic [ref=e54]: 👤 Assigned
+            - generic [ref=e55]:
+              - checkbox "⚠️ Overdue" [ref=e56]
+              - generic [ref=e57]: ⚠️ Overdue
+        - generic [ref=e58]:
+          - heading "Advanced Search" [level=3] [ref=e59]: Advanced Search
+          - textbox "Advanced search..." [ref=e60]
+          - generic [ref=e62]:
+            - combobox [ref=e63]:
+              - option "Sort by ID" [selected]
+              - option "Sort by Priority"
+              - option "Sort by Title"
+              - option "Sort by Status"
+              - option "Sort by Due Date"
+              - option "Sort by Assignee"
+              - option "Sort by Created"
+            - combobox [ref=e64]:
+              - option "ASC ↑" [selected]
+              - option "DESC ↓"
+          - button "Create New Task" [ref=e66]:
+            - img [ref=e67]
+            - text: Create New Task
+      - generic [ref=e71]:
+        - text: "Showing:"
+        - generic [ref=e72]: 0/0
+        - text: tasks
+    - generic [ref=e73]:
+      - heading "🔧 Quick Filters" [level=2] [ref=e74]
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]: Status
+          - combobox [ref=e78]:
+            - option "All Status" [selected]
+            - option "Todo"
+            - option "In Progress"
+            - option "Done"
+        - generic [ref=e79]:
+          - generic [ref=e80]: Priority
+          - combobox [ref=e81]:
+            - option "All Priority" [selected]
+            - option "High"
+            - option "Medium"
+            - option "Low"
+        - generic [ref=e82]:
+          - generic [ref=e83]: Sorting
+          - combobox [ref=e84]:
+            - option "By ID ASC" [selected]
+            - option "By ID DESC"
+            - option "By Priority"
+        - generic [ref=e85]:
+          - generic [ref=e86]: Search
+          - textbox "Search tasks..." [ref=e87]
+  - main [ref=e88]:
+    - generic [ref=e89]:
+      - generic [ref=e90]:
+        - generic [ref=e92]:
+          - heading "📋 Todo" [level=2] [ref=e93]: 📋 Todo
+          - generic [ref=e94]: "98"
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e98]: "#19"
+              - generic [ref=e99]: medium
+            - heading "Persistent Changes Test" [level=3] [ref=e100]
+            - paragraph [ref=e101]: "-"
+            - button "Delete task" [ref=e102]:
+              - img
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - generic [ref=e105]: "#20"
+              - generic [ref=e106]: medium
+            - heading "Stress Test Task" [level=3] [ref=e107]
+            - paragraph [ref=e108]: "-"
+            - button "Delete task" [ref=e109]:
+              - img
+          - generic [ref=e110]:
+            - generic [ref=e111]:
+              - generic [ref=e112]: "#21"
+              - generic [ref=e113]: high
+            - heading "Performance Test Task 0" [level=3] [ref=e114]
+            - paragraph [ref=e115]: Testing performance with task number 0
+            - button "Delete task" [ref=e116]:
+              - img
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]: "#24"
+              - generic [ref=e120]: high
+            - heading "Performance Test Task 3" [level=3] [ref=e121]
+            - paragraph [ref=e122]: Testing performance with task number 3
+            - button "Delete task" [ref=e123]:
+              - img
+          - generic [ref=e124]:
+            - generic [ref=e125]:
+              - generic [ref=e126]: "#27"
+              - generic [ref=e127]: high
+            - heading "Performance Test Task 6" [level=3] [ref=e128]
+            - paragraph [ref=e129]: Testing performance with task number 6
+            - button "Delete task" [ref=e130]:
+              - img
+          - generic [ref=e131]:
+            - generic [ref=e132]:
+              - generic [ref=e133]: "#30"
+              - generic [ref=e134]: high
+            - heading "Performance Test Task 9" [level=3] [ref=e135]
+            - paragraph [ref=e136]: Testing performance with task number 9
+            - button "Delete task" [ref=e137]:
+              - img
+          - generic [ref=e138]:
+            - generic [ref=e139]:
+              - generic [ref=e140]: "#33"
+              - generic [ref=e141]: high
+            - heading "Performance Test Task 12" [level=3] [ref=e142]
+            - paragraph [ref=e143]: Testing performance with task number 12
+            - button "Delete task" [ref=e144]:
+              - img
+          - generic [ref=e145]:
+            - generic [ref=e146]:
+              - generic [ref=e147]: "#36"
+              - generic [ref=e148]: high
+            - heading "Performance Test Task 15" [level=3] [ref=e149]
+            - paragraph [ref=e150]: Testing performance with task number 15
+            - button "Delete task" [ref=e151]:
+              - img
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - generic [ref=e154]: "#39"
+              - generic [ref=e155]: high
+            - heading "Performance Test Task 18" [level=3] [ref=e156]
+            - paragraph [ref=e157]: Testing performance with task number 18
+            - button "Delete task" [ref=e158]:
+              - img
+          - generic [ref=e159]:
+            - generic [ref=e160]:
+              - generic [ref=e161]: "#41"
+              - generic [ref=e162]: medium
+            - heading "Rapid Task 0" [level=3] [ref=e163]
+            - paragraph [ref=e164]: "-"
+            - button "Delete task" [ref=e165]:
+              - img
+          - generic [ref=e166]:
+            - generic [ref=e167]:
+              - generic [ref=e168]: "#42"
+              - generic [ref=e169]: medium
+            - heading "Rapid Task 1" [level=3] [ref=e170]
+            - paragraph [ref=e171]: "-"
+            - button "Delete task" [ref=e172]:
+              - img
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - generic [ref=e175]: "#43"
+              - generic [ref=e176]: medium
+            - heading "Rapid Task 2" [level=3] [ref=e177]
+            - paragraph [ref=e178]: "-"
+            - button "Delete task" [ref=e179]:
+              - img
+          - generic [ref=e180]:
+            - generic [ref=e181]:
+              - generic [ref=e182]: "#44"
+              - generic [ref=e183]: medium
+            - heading "Rapid Task 3" [level=3] [ref=e184]
+            - paragraph [ref=e185]: "-"
+            - button "Delete task" [ref=e186]:
+              - img
+          - generic [ref=e187]:
+            - generic [ref=e188]:
+              - generic [ref=e189]: "#45"
+              - generic [ref=e190]: medium
+            - heading "Rapid Task 4" [level=3] [ref=e191]
+            - paragraph [ref=e192]: "-"
+            - button "Delete task" [ref=e193]:
+              - img
+          - generic [ref=e194]:
+            - generic [ref=e195]:
+              - generic [ref=e196]: "#46"
+              - generic [ref=e197]: medium
+            - heading "Test No Alerts" [level=3] [ref=e198]
+            - paragraph [ref=e199]: Testing that no alerts appear
+            - button "Delete task" [ref=e200]:
+              - img
+          - generic [ref=e201]:
+            - generic [ref=e202]:
+              - generic [ref=e203]: "#47"
+              - generic [ref=e204]: medium
+            - heading "Test Long Description" [level=3] [ref=e205]
+            - paragraph [ref=e206]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+            - button "Delete task" [ref=e207]:
+              - img
+          - generic [ref=e208]:
+            - generic [ref=e209]:
+              - generic [ref=e210]: "#48"
+              - generic [ref=e211]: medium
+            - heading "Test Task" [level=3] [ref=e212]
+            - paragraph [ref=e213]: "-"
+            - button "Delete task" [ref=e214]:
+              - img
+          - generic [ref=e215]:
+            - generic [ref=e216]:
+              - generic [ref=e217]: "#49"
+              - generic [ref=e218]: medium
+            - heading "Untitled task (draft)" [level=3] [ref=e219]
+            - paragraph [ref=e220]: "-"
+            - button "Delete task" [ref=e221]:
+              - img
+          - generic [ref=e222]:
+            - generic [ref=e223]:
+              - generic [ref=e224]: "#50"
+              - generic [ref=e225]: medium
+            - heading "This is a very long task title that should wrap properly within the task card boundaries and not overflow outside the container even with extremely long text that goes on and on and on" [level=3] [ref=e226]
+            - paragraph [ref=e227]: Test description
+            - button "Delete task" [ref=e228]:
+              - img
+          - generic [ref=e229]:
+            - generic [ref=e230]:
+              - generic [ref=e231]: "#51"
+              - generic [ref=e232]: medium
+            - heading "Test Task with Subtasks" [level=3] [ref=e233]
+            - paragraph [ref=e234]: Testing subtask creation
+            - generic [ref=e235]:
+              - generic [ref=e236]: "📂 Subtasks (2):"
+              - generic [ref=e237]:
+                - generic [ref=e238]: "1."
+                - text: Test Subtask 1
+                - generic [ref=e239]: (high)
+              - generic [ref=e240]:
+                - generic [ref=e241]: "2."
+                - text: Test Subtask 2
+                - generic [ref=e242]: (medium)
+            - button "Delete task" [ref=e243]:
+              - img
+          - generic [ref=e244]:
+            - generic [ref=e245]:
+              - generic [ref=e246]: "#52"
+              - generic [ref=e247]: medium
+            - heading "Overflow Test Task" [level=3] [ref=e248]
+            - paragraph [ref=e249]: This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries.
+            - button "Delete task" [ref=e250]:
+              - img
+          - generic [ref=e251]:
+            - generic [ref=e252]:
+              - generic [ref=e253]: "#53"
+              - generic [ref=e254]: medium
+            - heading "Test Task with Subtasks" [level=3] [ref=e255]
+            - paragraph [ref=e256]: Testing subtask creation
+            - button "Delete task" [ref=e257]:
+              - img
+          - generic [ref=e258]:
+            - generic [ref=e259]:
+              - generic [ref=e260]: "#54"
+              - generic [ref=e261]: low
+            - heading "low Priority Task" [level=3] [ref=e262]
+            - paragraph [ref=e263]: "-"
+            - button "Delete task" [ref=e264]:
+              - img
+          - generic [ref=e265]:
+            - generic [ref=e266]:
+              - generic [ref=e267]: "#55"
+              - generic [ref=e268]: medium
+            - heading "medium Priority Task" [level=3] [ref=e269]
+            - paragraph [ref=e270]: "-"
+            - button "Delete task" [ref=e271]:
+              - img
+          - generic [ref=e272]:
+            - generic [ref=e273]:
+              - generic [ref=e274]: "#56"
+              - generic [ref=e275]: high
+            - heading "high Priority Task" [level=3] [ref=e276]
+            - paragraph [ref=e277]: "-"
+            - button "Delete task" [ref=e278]:
+              - img
+          - generic [ref=e279]:
+            - generic [ref=e280]:
+              - generic [ref=e281]: "#57"
+              - generic [ref=e282]: medium
+            - 'heading "Task with special chars: !@#$%^&*()" [level=3] [ref=e283]'
+            - paragraph [ref=e284]: "Description with émojis 🚀 and unicode: 中文 àáâäæãåā"
+            - generic [ref=e285]: 👤 User with spaces & symbols
+            - button "Delete task" [ref=e286]:
+              - img
+          - generic [ref=e287]:
+            - generic [ref=e288]:
+              - generic [ref=e289]: "#58"
+              - generic [ref=e290]: low
+            - heading "Get Task Test" [level=3] [ref=e291]
+            - paragraph [ref=e292]: Testing get task by ID
+            - button "Delete task" [ref=e293]:
+              - img
+          - generic [ref=e294]:
+            - generic [ref=e295]:
+              - generic [ref=e296]: "#59"
+              - generic [ref=e297]: medium
+            - heading "Concurrent Task 0" [level=3] [ref=e298]
+            - paragraph [ref=e299]: Testing concurrent creation 0
+            - button "Delete task" [ref=e300]:
+              - img
+          - generic [ref=e301]:
+            - generic [ref=e302]:
+              - generic [ref=e303]: "#60"
+              - generic [ref=e304]: medium
+            - heading "Concurrent Task 2" [level=3] [ref=e305]
+            - paragraph [ref=e306]: Testing concurrent creation 2
+            - button "Delete task" [ref=e307]:
+              - img
+          - generic [ref=e308]:
+            - generic [ref=e309]:
+              - generic [ref=e310]: "#61"
+              - generic [ref=e311]: medium
+            - heading "API Test Task" [level=3] [ref=e312]
+            - paragraph [ref=e313]: Testing task creation via API
+            - generic [ref=e314]: 👤 API Tester
+            - button "Delete task" [ref=e315]:
+              - img
+          - generic [ref=e316]:
+            - generic [ref=e317]:
+              - generic [ref=e318]: "#62"
+              - generic [ref=e319]: medium
+            - heading "Consistency Test Task" [level=3] [ref=e320]
+            - paragraph [ref=e321]: Testing data consistency
+            - button "Delete task" [ref=e322]:
+              - img
+          - generic [ref=e323]:
+            - generic [ref=e324]:
+              - generic [ref=e325]: "#64"
+              - generic [ref=e326]: medium
+            - heading [level=3]
+            - heading "Malicious" [level=1] [ref=e327]
+            - paragraph [ref=e328]:
+              - img [ref=e329]
+            - button "Delete task" [ref=e330]:
+              - img
+          - generic [ref=e331]:
+            - generic [ref=e332]:
+              - generic [ref=e333]: "#65"
+              - generic [ref=e334]: medium
+            - 'heading "测试任务 🚀 Special chars: !@#$%^&*()" [level=3] [ref=e335]'
+            - paragraph [ref=e336]: "Description with émojis 💻 and symbols: àáâäæãåā čçćđ"
+            - generic [ref=e337]: 👤 User名前 & Symbols
+            - button "Delete task" [ref=e338]:
+              - img
+          - generic [ref=e339]:
+            - generic [ref=e340]:
+              - generic [ref=e341]: "#66"
+              - generic [ref=e342]: medium
+            - heading "Stress Test Task" [level=3] [ref=e343]
+            - paragraph [ref=e344]: "-"
+            - button "Delete task" [ref=e345]:
+              - img
+          - generic [ref=e346]:
+            - generic [ref=e347]:
+              - generic [ref=e348]: "#67"
+              - generic [ref=e349]: low
+            - heading "low Priority Task" [level=3] [ref=e350]
+            - paragraph [ref=e351]: "-"
+            - button "Delete task" [ref=e352]:
+              - img
+          - generic [ref=e353]:
+            - generic [ref=e354]:
+              - generic [ref=e355]: "#68"
+              - generic [ref=e356]: medium
+            - 'heading "Task with special chars: !@#$%^&*()" [level=3] [ref=e357]'
+            - paragraph [ref=e358]: "Description with émojis 🚀 and unicode: 中文 àáâäæãåā"
+            - generic [ref=e359]: 👤 User with spaces & symbols
+            - button "Delete task" [ref=e360]:
+              - img
+          - generic [ref=e361]:
+            - generic [ref=e362]:
+              - generic [ref=e363]: "#69"
+              - generic [ref=e364]: medium
+            - heading "Test Form Reset" [level=3] [ref=e365]
+            - paragraph [ref=e366]: Testing form reset
+            - button "Delete task" [ref=e367]:
+              - img
+          - generic [ref=e368]:
+            - generic [ref=e369]:
+              - generic [ref=e370]: "#70"
+              - generic [ref=e371]: high
+            - heading "Playwright Test Task" [level=3] [ref=e372]
+            - paragraph [ref=e373]: This task was created by Playwright testing
+            - generic [ref=e374]: 👤 Playwright Tester
+            - generic [ref=e375]: 📅 2024-12-31
+            - button "Delete task" [ref=e376]:
+              - img
+          - generic [ref=e377]:
+            - generic [ref=e378]:
+              - generic [ref=e379]: "#71"
+              - generic [ref=e380]: medium
+            - heading "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" [level=3] [ref=e381]
+            - paragraph [ref=e382]: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+            - button "Delete task" [ref=e383]:
+              - img
+          - generic [ref=e384]:
+            - generic [ref=e385]:
+              - generic [ref=e386]: "#72"
+              - generic [ref=e387]: medium
+            - heading "medium Priority Task" [level=3] [ref=e388]
+            - paragraph [ref=e389]: "-"
+            - button "Delete task" [ref=e390]:
+              - img
+          - generic [ref=e391]:
+            - generic [ref=e392]:
+              - generic [ref=e393]: "#73"
+              - generic [ref=e394]: high
+            - heading "high Priority Task" [level=3] [ref=e395]
+            - paragraph [ref=e396]: "-"
+            - button "Delete task" [ref=e397]:
+              - img
+          - generic [ref=e398]:
+            - generic [ref=e399]:
+              - generic [ref=e400]: "#74"
+              - generic [ref=e401]: medium
+            - heading "Filter State Test" [level=3] [ref=e402]
+            - paragraph [ref=e403]: "-"
+            - button "Delete task" [ref=e404]:
+              - img
+          - generic [ref=e405]:
+            - generic [ref=e406]:
+              - generic [ref=e407]: "#75"
+              - generic [ref=e408]: medium
+            - heading "API Test Task" [level=3] [ref=e409]
+            - paragraph [ref=e410]: Testing task creation via API
+            - generic [ref=e411]: 👤 API Tester
+            - button "Delete task" [ref=e412]:
+              - img
+          - generic [ref=e413]:
+            - generic [ref=e414]:
+              - generic [ref=e415]: "#76"
+              - generic [ref=e416]: low
+            - heading "Get Task Test" [level=3] [ref=e417]
+            - paragraph [ref=e418]: Testing get task by ID
+            - button "Delete task" [ref=e419]:
+              - img
+          - generic [ref=e420]:
+            - generic [ref=e421]:
+              - generic [ref=e422]: "#77"
+              - generic [ref=e423]: medium
+            - heading "Concurrent Task 1" [level=3] [ref=e424]
+            - paragraph [ref=e425]: Testing concurrent creation 1
+            - button "Delete task" [ref=e426]:
+              - img
+          - generic [ref=e427]:
+            - generic [ref=e428]:
+              - generic [ref=e429]: "#78"
+              - generic [ref=e430]: medium
+            - heading "Consistency Test Task" [level=3] [ref=e431]
+            - paragraph [ref=e432]: Testing data consistency
+            - button "Delete task" [ref=e433]:
+              - img
+          - generic [ref=e434]:
+            - generic [ref=e435]:
+              - generic [ref=e436]: "#79"
+              - generic [ref=e437]: medium
+            - heading [level=3]
+            - heading "Malicious" [level=1] [ref=e438]
+            - paragraph [ref=e439]:
+              - img [ref=e440]
+            - button "Delete task" [ref=e441]:
+              - img
+          - generic [ref=e442]:
+            - generic [ref=e443]:
+              - generic [ref=e444]: "#80"
+              - generic [ref=e445]: medium
+            - 'heading "测试任务 🚀 Special chars: !@#$%^&*()" [level=3] [ref=e446]'
+            - paragraph [ref=e447]: "Description with émojis 💻 and symbols: àáâäæãåā čçćđ"
+            - generic [ref=e448]: 👤 User名前 & Symbols
+            - button "Delete task" [ref=e449]:
+              - img
+          - generic [ref=e450]:
+            - generic [ref=e451]:
+              - generic [ref=e452]: "#81"
+              - generic [ref=e453]: medium
+            - heading "Stress Test Task" [level=3] [ref=e454]
+            - paragraph [ref=e455]: "-"
+            - button "Delete task" [ref=e456]:
+              - img
+          - generic [ref=e457]:
+            - generic [ref=e458]:
+              - generic [ref=e459]: "#82"
+              - generic [ref=e460]: high
+            - heading "Performance Test Task 0" [level=3] [ref=e461]
+            - paragraph [ref=e462]: Testing performance with task number 0
+            - button "Delete task" [ref=e463]:
+              - img
+          - generic [ref=e464]:
+            - generic [ref=e465]:
+              - generic [ref=e466]: "#85"
+              - generic [ref=e467]: high
+            - heading "Performance Test Task 3" [level=3] [ref=e468]
+            - paragraph [ref=e469]: Testing performance with task number 3
+            - button "Delete task" [ref=e470]:
+              - img
+          - generic [ref=e471]:
+            - generic [ref=e472]:
+              - generic [ref=e473]: "#88"
+              - generic [ref=e474]: high
+            - heading "Performance Test Task 6" [level=3] [ref=e475]
+            - paragraph [ref=e476]: Testing performance with task number 6
+            - button "Delete task" [ref=e477]:
+              - img
+          - generic [ref=e478]:
+            - generic [ref=e479]:
+              - generic [ref=e480]: "#91"
+              - generic [ref=e481]: high
+            - heading "Performance Test Task 9" [level=3] [ref=e482]
+            - paragraph [ref=e483]: Testing performance with task number 9
+            - button "Delete task" [ref=e484]:
+              - img
+          - generic [ref=e485]:
+            - generic [ref=e486]:
+              - generic [ref=e487]: "#94"
+              - generic [ref=e488]: high
+            - heading "Performance Test Task 12" [level=3] [ref=e489]
+            - paragraph [ref=e490]: Testing performance with task number 12
+            - button "Delete task" [ref=e491]:
+              - img
+          - generic [ref=e492]:
+            - generic [ref=e493]:
+              - generic [ref=e494]: "#97"
+              - generic [ref=e495]: high
+            - heading "Performance Test Task 15" [level=3] [ref=e496]
+            - paragraph [ref=e497]: Testing performance with task number 15
+            - button "Delete task" [ref=e498]:
+              - img
+          - generic [ref=e499]:
+            - generic [ref=e500]:
+              - generic [ref=e501]: "#100"
+              - generic [ref=e502]: high
+            - heading "Performance Test Task 18" [level=3] [ref=e503]
+            - paragraph [ref=e504]: Testing performance with task number 18
+            - button "Delete task" [ref=e505]:
+              - img
+          - generic [ref=e506]:
+            - generic [ref=e507]:
+              - generic [ref=e508]: "#102"
+              - generic [ref=e509]: medium
+            - heading "Rapid Task 0" [level=3] [ref=e510]
+            - paragraph [ref=e511]: "-"
+            - button "Delete task" [ref=e512]:
+              - img
+          - generic [ref=e513]:
+            - generic [ref=e514]:
+              - generic [ref=e515]: "#103"
+              - generic [ref=e516]: medium
+            - heading "Unique Test 1" [level=3] [ref=e517]
+            - paragraph [ref=e518]: "-"
+            - button "Delete task" [ref=e519]:
+              - img
+          - generic [ref=e520]:
+            - generic [ref=e521]:
+              - generic [ref=e522]: "#104"
+              - generic [ref=e523]: medium
+            - heading "Rapid Task 1" [level=3] [ref=e524]
+            - paragraph [ref=e525]: "-"
+            - button "Delete task" [ref=e526]:
+              - img
+          - generic [ref=e527]:
+            - generic [ref=e528]:
+              - generic [ref=e529]: "#105"
+              - generic [ref=e530]: medium
+            - heading "Rapid Task 2" [level=3] [ref=e531]
+            - paragraph [ref=e532]: "-"
+            - button "Delete task" [ref=e533]:
+              - img
+          - generic [ref=e534]:
+            - generic [ref=e535]:
+              - generic [ref=e536]: "#106"
+              - generic [ref=e537]: medium
+            - heading "Unique Test 2" [level=3] [ref=e538]
+            - paragraph [ref=e539]: "-"
+            - button "Delete task" [ref=e540]:
+              - img
+          - generic [ref=e541]:
+            - generic [ref=e542]:
+              - generic [ref=e543]: "#107"
+              - generic [ref=e544]: medium
+            - heading "Rapid Task 3" [level=3] [ref=e545]
+            - paragraph [ref=e546]: "-"
+            - button "Delete task" [ref=e547]:
+              - img
+          - generic [ref=e548]:
+            - generic [ref=e549]:
+              - generic [ref=e550]: "#108"
+              - generic [ref=e551]: medium
+            - heading "Rapid Task 4" [level=3] [ref=e552]
+            - paragraph [ref=e553]: "-"
+            - button "Delete task" [ref=e554]:
+              - img
+          - generic [ref=e555]:
+            - generic [ref=e556]:
+              - generic [ref=e557]: "#109"
+              - generic [ref=e558]: medium
+            - heading "Unique Test 3" [level=3] [ref=e559]
+            - paragraph [ref=e560]: "-"
+            - button "Delete task" [ref=e561]:
+              - img
+          - generic [ref=e562]:
+            - generic [ref=e563]:
+              - generic [ref=e564]: "#110"
+              - generic [ref=e565]: medium
+            - heading "Test Long Description" [level=3] [ref=e566]
+            - paragraph [ref=e567]: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+            - button "Delete task" [ref=e568]:
+              - img
+          - generic [ref=e569]:
+            - generic [ref=e570]:
+              - generic [ref=e571]: "#111"
+              - generic [ref=e572]: medium
+            - heading "Test No Alerts" [level=3] [ref=e573]
+            - paragraph [ref=e574]: Testing that no alerts appear
+            - button "Delete task" [ref=e575]:
+              - img
+          - generic [ref=e576]:
+            - generic [ref=e577]:
+              - generic [ref=e578]: "#112"
+              - generic [ref=e579]: medium
+            - heading "Overflow Test Task" [level=3] [ref=e580]
+            - paragraph [ref=e581]: This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries. This is a very long description that should be properly handled without overflowing the container boundaries.
+            - button "Delete task" [ref=e582]:
+              - img
+          - generic [ref=e583]:
+            - generic [ref=e584]:
+              - generic [ref=e585]: "#113"
+              - generic [ref=e586]: medium
+            - heading "Test Task" [level=3] [ref=e587]
+            - paragraph [ref=e588]: "-"
+            - button "Delete task" [ref=e589]:
+              - img
+          - generic [ref=e590]:
+            - generic [ref=e591]:
+              - generic [ref=e592]: "#114"
+              - generic [ref=e593]: medium
+            - heading "Untitled task (draft)" [level=3] [ref=e594]
+            - paragraph [ref=e595]: "-"
+            - button "Delete task" [ref=e596]:
+              - img
+          - generic [ref=e597]:
+            - generic [ref=e598]:
+              - generic [ref=e599]: "#115"
+              - generic [ref=e600]: medium
+            - heading "Test Task with Subtasks" [level=3] [ref=e601]
+            - paragraph [ref=e602]: Testing subtask creation
+            - generic [ref=e603]:
+              - generic [ref=e604]: "📂 Subtasks (2):"
+              - generic [ref=e605]:
+                - generic [ref=e606]: "1."
+                - text: Test Subtask 1
+                - generic [ref=e607]: (high)
+              - generic [ref=e608]:
+                - generic [ref=e609]: "2."
+                - text: Test Subtask 2
+                - generic [ref=e610]: (medium)
+            - button "Delete task" [ref=e611]:
+              - img
+          - generic [ref=e612]:
+            - generic [ref=e613]:
+              - generic [ref=e614]: "#116"
+              - generic [ref=e615]: medium
+            - heading "This is a very long task title that should wrap properly within the task card boundaries and not overflow outside the container even with extremely long text that goes on and on and on" [level=3] [ref=e616]
+            - paragraph [ref=e617]: Test description
+            - button "Delete task" [ref=e618]:
+              - img
+          - generic [ref=e619]:
+            - generic [ref=e620]:
+              - generic [ref=e621]: "#117"
+              - generic [ref=e622]: medium
+            - heading "Test Task with Subtasks" [level=3] [ref=e623]
+            - paragraph [ref=e624]: Testing subtask creation
+            - button "Delete task" [ref=e625]:
+              - img
+          - generic [ref=e626]:
+            - generic [ref=e627]:
+              - generic [ref=e628]: "#118"
+              - generic [ref=e629]: medium
+            - heading "Task to Edit" [level=3] [ref=e630]
+            - paragraph [ref=e631]: "-"
+            - button "Delete task" [ref=e632]:
+              - img
+          - generic [ref=e633]:
+            - generic [ref=e634]:
+              - generic [ref=e635]: "#119"
+              - generic [ref=e636]: medium
+            - heading "Test Task with Subtasks" [level=3] [ref=e637]
+            - paragraph [ref=e638]: "-"
+            - button "Delete task" [ref=e639]:
+              - img
+          - generic [ref=e640]:
+            - generic [ref=e641]:
+              - generic [ref=e642]: "#120"
+              - generic [ref=e643]: medium
+            - heading "Test Task" [level=3] [ref=e644]
+            - paragraph [ref=e645]: "-"
+            - generic [ref=e646]:
+              - generic [ref=e647]: "📂 Subtasks (1):"
+              - generic [ref=e648]:
+                - generic [ref=e649]: "1."
+                - text: My Subtask
+                - generic [ref=e650]: (medium)
+            - button "Delete task" [ref=e651]:
+              - img
+          - generic [ref=e652]:
+            - generic [ref=e653]:
+              - generic [ref=e654]: "#121"
+              - generic [ref=e655]: medium
+            - heading "Test Task for Edit Modal" [level=3] [ref=e656]
+            - paragraph [ref=e657]: Created via API for testing
+            - button "Delete task" [ref=e658]:
+              - img
+          - generic [ref=e659]:
+            - generic [ref=e660]:
+              - generic [ref=e661]: "#122"
+              - generic [ref=e662]: medium
+            - heading "Test Task" [level=3] [ref=e663]
+            - paragraph [ref=e664]: "-"
+            - button "Delete task" [ref=e665]:
+              - img
+          - generic [ref=e666]:
+            - generic [ref=e667]:
+              - generic [ref=e668]: "#123"
+              - generic [ref=e669]: medium
+            - heading "Test Task for Editing" [level=3] [ref=e670]
+            - paragraph [ref=e671]: "-"
+            - button "Delete task" [ref=e672]:
+              - img
+          - generic [ref=e673]:
+            - generic [ref=e674]:
+              - generic [ref=e675]: "#124"
+              - generic [ref=e676]: medium
+            - heading "Test Task with Working Subtasks" [level=3] [ref=e677]
+            - paragraph [ref=e678]: "-"
+            - generic [ref=e679]:
+              - generic [ref=e680]: "📂 Subtasks (1):"
+              - generic [ref=e681]:
+                - generic [ref=e682]: "1."
+                - text: My Working Subtask
+                - generic [ref=e683]: (high)
+            - button "Delete task" [ref=e684]:
+              - img
+          - generic [ref=e685]:
+            - generic [ref=e686]:
+              - generic [ref=e687]: "#125"
+              - generic [ref=e688]: medium
+            - heading "Task with Subtask Save Test" [level=3] [ref=e689]
+            - paragraph [ref=e690]: "-"
+            - generic [ref=e691]:
+              - generic [ref=e692]: "📂 Subtasks (2):"
+              - generic [ref=e693]:
+                - generic [ref=e694]: "1."
+                - text: My First Subtask
+                - generic [ref=e695]: (high)
+              - generic [ref=e696]:
+                - generic [ref=e697]: "2."
+                - text: My Test Subtask
+                - generic [ref=e698]: (high)
+            - button "Delete task" [ref=e699]:
+              - img
+          - generic [ref=e700]:
+            - generic [ref=e701]:
+              - generic [ref=e702]: "#126"
+              - generic [ref=e703]: medium
+            - heading "Task with Subtask Save Test" [level=3] [ref=e704]
+            - paragraph [ref=e705]: "-"
+            - button "Delete task" [ref=e706]:
+              - img
+          - generic [ref=e707]:
+            - generic [ref=e708]:
+              - generic [ref=e709]: "#127"
+              - generic [ref=e710]: medium
+            - heading "JS Test Task" [level=3] [ref=e711]
+            - paragraph [ref=e712]: "-"
+            - button "Delete task" [ref=e713]:
+              - img
+          - generic [ref=e714]:
+            - generic [ref=e715]:
+              - generic [ref=e716]: "#128"
+              - generic [ref=e717]: medium
+            - heading "Debug Count Task" [level=3] [ref=e718]
+            - paragraph [ref=e719]: "-"
+            - generic [ref=e720]:
+              - generic [ref=e721]: "📂 Subtasks (1):"
+              - generic [ref=e722]:
+                - generic [ref=e723]: "1."
+                - text: First Subtask Title
+                - generic [ref=e724]: (medium)
+            - button "Delete task" [ref=e725]:
+              - img
+          - generic [ref=e726]:
+            - generic [ref=e727]:
+              - generic [ref=e728]: "#129"
+              - generic [ref=e729]: medium
+            - heading "Debug Test Task" [level=3] [ref=e730]
+            - paragraph [ref=e731]: "-"
+            - generic [ref=e732]:
+              - generic [ref=e733]: "📂 Subtasks (1):"
+              - generic [ref=e734]:
+                - generic [ref=e735]: "1."
+                - text: Debug Subtask
+                - generic [ref=e736]: (medium)
+            - button "Delete task" [ref=e737]:
+              - img
+          - generic [ref=e738]:
+            - generic [ref=e739]:
+              - generic [ref=e740]: "#130"
+              - generic [ref=e741]: medium
+            - heading "Simple Test Task" [level=3] [ref=e742]
+            - paragraph [ref=e743]: "-"
+            - button "Delete task" [ref=e744]:
+              - img
+          - generic [ref=e745]:
+            - generic [ref=e746]:
+              - generic [ref=e747]: "#131"
+              - generic [ref=e748]: medium
+            - heading "Debug Test Task" [level=3] [ref=e749]
+            - paragraph [ref=e750]: "-"
+            - button "Delete task" [ref=e751]:
+              - img
+          - generic [ref=e752]:
+            - generic [ref=e753]:
+              - generic [ref=e754]: "#132"
+              - generic [ref=e755]: medium
+            - heading "Input Event Test" [level=3] [ref=e756]
+            - paragraph [ref=e757]: "-"
+            - button "Delete task" [ref=e758]:
+              - img
+          - generic [ref=e759]:
+            - generic [ref=e760]:
+              - generic [ref=e761]: "#133"
+              - generic [ref=e762]: high
+            - heading "Workflow Test Task" [level=3] [ref=e763]
+            - paragraph [ref=e764]: This task tests the complete workflow
+            - generic [ref=e765]:
+              - generic [ref=e766]: "📂 Subtasks (1):"
+              - generic [ref=e767]:
+                - generic [ref=e768]: "1."
+                - text: First Subtask
+                - generic [ref=e769]: (medium)
+            - button "Delete task" [ref=e770]:
+              - img
+          - generic [ref=e771]:
+            - generic [ref=e772]:
+              - generic [ref=e773]: "#134"
+              - generic [ref=e774]: medium
+            - heading "Simple Input Test" [level=3] [ref=e775]
+            - paragraph [ref=e776]: "-"
+            - button "Delete task" [ref=e777]:
+              - img
+          - generic [ref=e778]:
+            - generic [ref=e779]:
+              - generic [ref=e780]: "#135"
+              - generic [ref=e781]: medium
+            - heading "Final Verification 1756117791986" [level=3] [ref=e782]
+            - paragraph [ref=e783]: Final end-to-end test
+            - generic [ref=e784]:
+              - generic [ref=e785]: "📂 Subtasks (2):"
+              - generic [ref=e786]:
+                - generic [ref=e787]: "1."
+                - text: First Final Subtask
+                - generic [ref=e788]: (high)
+              - generic [ref=e789]:
+                - generic [ref=e790]: "2."
+                - text: Second Final Subtask
+                - generic [ref=e791]: (low)
+            - button "Delete task" [ref=e792]:
+              - img
+          - generic [ref=e793]:
+            - generic [ref=e794]:
+              - generic [ref=e795]: "#136"
+              - generic [ref=e796]: medium
+            - heading "Manual API Test" [level=3] [ref=e797]
+            - paragraph [ref=e798]: Testing via API
+            - button "Delete task" [ref=e799]:
+              - img
+          - generic [ref=e800]:
+            - generic [ref=e801]:
+              - generic [ref=e802]: "#137"
+              - generic [ref=e803]: medium
+            - heading "Final Verification 1756117791986" [level=3] [ref=e804]
+            - paragraph [ref=e805]: Final end-to-end test
+            - button "Delete task" [ref=e806]:
+              - img
+          - generic [ref=e807]:
+            - generic [ref=e808]:
+              - generic [ref=e809]: "#138"
+              - generic [ref=e810]: high
+            - heading "Persistence Test 1756117793773" [level=3] [ref=e811]
+            - paragraph [ref=e812]: Testing complete persistence workflow
+            - generic [ref=e813]:
+              - generic [ref=e814]: "📂 Subtasks (1):"
+              - generic [ref=e815]:
+                - generic [ref=e816]: "1."
+                - text: Subtask 1 - 1756117793773
+                - generic [ref=e817]: (medium)
+            - button "Delete task" [ref=e818]:
+              - img
+          - generic [ref=e819]:
+            - generic [ref=e820]:
+              - generic [ref=e821]: "#139"
+              - generic [ref=e822]: medium
+            - heading "Debug Function Test" [level=3] [ref=e823]
+            - paragraph [ref=e824]: "-"
+            - button "Delete task" [ref=e825]:
+              - img
+          - generic [ref=e826]:
+            - generic [ref=e827]:
+              - generic [ref=e828]: "#140"
+              - generic [ref=e829]: medium
+            - heading "Test Task for Backdrop Click" [level=3] [ref=e830]
+            - paragraph [ref=e831]: Testing backdrop functionality
+            - button "Delete task" [ref=e832]:
+              - img
+          - generic [ref=e833]:
+            - generic [ref=e834]:
+              - generic [ref=e835]: "#141"
+              - generic [ref=e836]: medium
+            - 'heading "Task with special chars: !@#$%^&*()" [level=3] [ref=e837]'
+            - paragraph [ref=e838]: "Description with émojis 🚀 and unicode: 中文 àáâäæãåā"
+            - generic [ref=e839]: 👤 User with spaces & symbols
+            - button "Delete task" [ref=e840]:
+              - img
+          - generic [ref=e841]:
+            - generic [ref=e842]:
+              - generic [ref=e843]: "#142"
+              - generic [ref=e844]: medium
+            - heading "Test Form Reset" [level=3] [ref=e845]
+            - paragraph [ref=e846]: Testing form reset
+            - button "Delete task" [ref=e847]:
+              - img
+          - generic [ref=e848]:
+            - generic [ref=e849]:
+              - generic [ref=e850]: "#143"
+              - generic [ref=e851]: medium
+            - heading "Filter State Test" [level=3] [ref=e852]
+            - paragraph [ref=e853]: "-"
+            - button "Delete task" [ref=e854]:
+              - img
+      - generic [ref=e855]:
+        - generic [ref=e857]:
+          - heading "🚀 In Progress" [level=2] [ref=e858]: 🚀 In Progress
+          - generic [ref=e859]: "27"
+        - generic [ref=e860]:
+          - generic [ref=e861]:
+            - generic [ref=e862]:
+              - generic [ref=e863]: "#1"
+              - generic [ref=e864]: high
+            - heading "Test Form Reset" [level=3] [ref=e865]
+            - paragraph [ref=e866]: Testing form reset
+            - button "Delete task" [ref=e867]:
+              - img
+          - generic [ref=e868]:
+            - generic [ref=e869]:
+              - generic [ref=e870]: "#3"
+              - generic [ref=e871]: medium
+            - 'heading "Task with special chars: !@#$%^&*()" [level=3] [ref=e872]'
+            - paragraph [ref=e873]: "Description with émojis 🚀 and unicode: 中文 àáâäæãåā"
+            - generic [ref=e874]: 👤 User with spaces & symbols
+            - button "Delete task" [ref=e875]:
+              - img
+          - generic [ref=e876]:
+            - generic [ref=e877]:
+              - generic [ref=e878]: "#4"
+              - generic [ref=e879]: medium
+            - heading "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" [level=3] [ref=e880]
+            - paragraph [ref=e881]: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+            - button "Delete task" [ref=e882]:
+              - img
+          - generic [ref=e883]:
+            - generic [ref=e884]:
+              - generic [ref=e885]: "#6"
+              - generic [ref=e886]: medium
+            - heading "Updated Test Task" [level=3] [ref=e887]
+            - paragraph [ref=e888]: "-"
+            - button "Delete task" [ref=e889]:
+              - img
+          - generic [ref=e890]:
+            - generic [ref=e891]:
+              - generic [ref=e892]: "#7"
+              - generic [ref=e893]: high
+            - heading "high Priority Task" [level=3] [ref=e894]
+            - paragraph [ref=e895]: "-"
+            - generic [ref=e896]: 👤 Playwright Test User
+            - generic [ref=e897]: 📅 2024-12-25
+            - button "Delete task" [ref=e898]:
+              - img
+          - generic [ref=e899]:
+            - generic [ref=e900]:
+              - generic [ref=e901]: "#8"
+              - generic [ref=e902]: medium
+            - heading "Edited Task 2 - 1756117397531" [level=3] [ref=e903]
+            - paragraph [ref=e904]: "-"
+            - button "Delete task" [ref=e905]:
+              - img
+          - generic [ref=e906]:
+            - generic [ref=e907]:
+              - generic [ref=e908]: "#10"
+              - generic [ref=e909]: low
+            - heading "Update Test Task" [level=3] [ref=e910]
+            - paragraph [ref=e911]: Original description
+            - button "Delete task" [ref=e912]:
+              - img
+          - generic [ref=e913]:
+            - generic [ref=e914]:
+              - generic [ref=e915]: "#11"
+              - generic [ref=e916]: medium
+            - heading "Concurrent Task 0" [level=3] [ref=e917]
+            - paragraph [ref=e918]: Testing concurrent creation 0
+            - generic [ref=e919]: 👤 Playwright Test User
+            - generic [ref=e920]: 📅 2024-12-25
+            - button "Delete task" [ref=e921]:
+              - img
+          - generic [ref=e922]:
+            - generic [ref=e923]:
+              - generic [ref=e924]: "#13"
+              - generic [ref=e925]: medium
+            - heading "Consistency Test Task" [level=3] [ref=e926]
+            - paragraph [ref=e927]: Testing data consistency
+            - button "Delete task" [ref=e928]:
+              - img
+          - generic [ref=e929]:
+            - generic [ref=e930]:
+              - generic [ref=e931]: "#14"
+              - generic [ref=e932]: medium
+            - heading "API Test Task" [level=3] [ref=e933]
+            - paragraph [ref=e934]: Testing task creation via API
+            - generic [ref=e935]: 👤 API Tester
+            - button "Delete task" [ref=e936]:
+              - img
+          - generic [ref=e937]:
+            - generic [ref=e938]:
+              - generic [ref=e939]: "#16"
+              - generic [ref=e940]: medium
+            - heading "Updated Test Task" [level=3] [ref=e941]
+            - paragraph [ref=e942]: "Description with émojis 💻 and symbols: àáâäæãåā čçćđ"
+            - generic [ref=e943]: 👤 User名前 & Symbols
+            - button "Delete task" [ref=e944]:
+              - img
+          - generic [ref=e945]:
+            - generic [ref=e946]:
+              - generic [ref=e947]: "#17"
+              - generic [ref=e948]: medium
+            - heading "Edited Task 1 - 1756117746886" [level=3] [ref=e949]
+            - paragraph [ref=e950]: "-"
+            - generic [ref=e951]: 👤 Playwright Test User
+            - generic [ref=e952]: 📅 2024-12-25
+            - button "Delete task" [ref=e953]:
+              - img
+          - generic [ref=e954]:
+            - generic [ref=e955]:
+              - generic [ref=e956]: "#22"
+              - generic [ref=e957]: low
+            - heading "Performance Test Task 1" [level=3] [ref=e958]
+            - paragraph [ref=e959]: Testing performance with task number 1
+            - button "Delete task" [ref=e960]:
+              - img
+          - generic [ref=e961]:
+            - generic [ref=e962]:
+              - generic [ref=e963]: "#25"
+              - generic [ref=e964]: medium
+            - heading "Performance Test Task 4" [level=3] [ref=e965]
+            - paragraph [ref=e966]: Testing performance with task number 4
+            - button "Delete task" [ref=e967]:
+              - img
+          - generic [ref=e968]:
+            - generic [ref=e969]:
+              - generic [ref=e970]: "#28"
+              - generic [ref=e971]: low
+            - heading "Performance Test Task 7" [level=3] [ref=e972]
+            - paragraph [ref=e973]: Testing performance with task number 7
+            - button "Delete task" [ref=e974]:
+              - img
+          - generic [ref=e975]:
+            - generic [ref=e976]:
+              - generic [ref=e977]: "#31"
+              - generic [ref=e978]: medium
+            - heading "Performance Test Task 10" [level=3] [ref=e979]
+            - paragraph [ref=e980]: Testing performance with task number 10
+            - button "Delete task" [ref=e981]:
+              - img
+          - generic [ref=e982]:
+            - generic [ref=e983]:
+              - generic [ref=e984]: "#34"
+              - generic [ref=e985]: low
+            - heading "Performance Test Task 13" [level=3] [ref=e986]
+            - paragraph [ref=e987]: Testing performance with task number 13
+            - button "Delete task" [ref=e988]:
+              - img
+          - generic [ref=e989]:
+            - generic [ref=e990]:
+              - generic [ref=e991]: "#37"
+              - generic [ref=e992]: medium
+            - heading "Performance Test Task 16" [level=3] [ref=e993]
+            - paragraph [ref=e994]: Testing performance with task number 16
+            - button "Delete task" [ref=e995]:
+              - img
+          - generic [ref=e996]:
+            - generic [ref=e997]:
+              - generic [ref=e998]: "#40"
+              - generic [ref=e999]: low
+            - heading "Performance Test Task 19" [level=3] [ref=e1000]
+            - paragraph [ref=e1001]: Testing performance with task number 19
+            - button "Delete task" [ref=e1002]:
+              - img
+          - generic [ref=e1003]:
+            - generic [ref=e1004]:
+              - generic [ref=e1005]: "#63"
+              - generic [ref=e1006]: high
+            - heading "Updated Task Title" [level=3] [ref=e1007]
+            - paragraph [ref=e1008]: Updated description
+            - button "Delete task" [ref=e1009]:
+              - img
+          - generic [ref=e1010]:
+            - generic [ref=e1011]:
+              - generic [ref=e1012]: "#83"
+              - generic [ref=e1013]: low
+            - heading "Performance Test Task 1" [level=3] [ref=e1014]
+            - paragraph [ref=e1015]: Testing performance with task number 1
+            - button "Delete task" [ref=e1016]:
+              - img
+          - generic [ref=e1017]:
+            - generic [ref=e1018]:
+              - generic [ref=e1019]: "#86"
+              - generic [ref=e1020]: medium
+            - heading "Performance Test Task 4" [level=3] [ref=e1021]
+            - paragraph [ref=e1022]: Testing performance with task number 4
+            - button "Delete task" [ref=e1023]:
+              - img
+          - generic [ref=e1024]:
+            - generic [ref=e1025]:
+              - generic [ref=e1026]: "#89"
+              - generic [ref=e1027]: low
+            - heading "Performance Test Task 7" [level=3] [ref=e1028]
+            - paragraph [ref=e1029]: Testing performance with task number 7
+            - button "Delete task" [ref=e1030]:
+              - img
+          - generic [ref=e1031]:
+            - generic [ref=e1032]:
+              - generic [ref=e1033]: "#92"
+              - generic [ref=e1034]: medium
+            - heading "Performance Test Task 10" [level=3] [ref=e1035]
+            - paragraph [ref=e1036]: Testing performance with task number 10
+            - button "Delete task" [ref=e1037]:
+              - img
+          - generic [ref=e1038]:
+            - generic [ref=e1039]:
+              - generic [ref=e1040]: "#95"
+              - generic [ref=e1041]: low
+            - heading "Performance Test Task 13" [level=3] [ref=e1042]
+            - paragraph [ref=e1043]: Testing performance with task number 13
+            - button "Delete task" [ref=e1044]:
+              - img
+          - generic [ref=e1045]:
+            - generic [ref=e1046]:
+              - generic [ref=e1047]: "#98"
+              - generic [ref=e1048]: medium
+            - heading "Performance Test Task 16" [level=3] [ref=e1049]
+            - paragraph [ref=e1050]: Testing performance with task number 16
+            - button "Delete task" [ref=e1051]:
+              - img
+          - generic [ref=e1052]:
+            - generic [ref=e1053]:
+              - generic [ref=e1054]: "#101"
+              - generic [ref=e1055]: low
+            - heading "Performance Test Task 19" [level=3] [ref=e1056]
+            - paragraph [ref=e1057]: Testing performance with task number 19
+            - button "Delete task" [ref=e1058]:
+              - img
+      - generic [ref=e1059]:
+        - generic [ref=e1061]:
+          - heading "✅ Done" [level=2] [ref=e1062]: ✅ Done
+          - generic [ref=e1063]: "18"
+        - generic [ref=e1064]:
+          - generic [ref=e1065]:
+            - generic [ref=e1066]:
+              - generic [ref=e1067]: "#2"
+              - generic [ref=e1068]: high
+            - heading "Playwright Test Task" [level=3] [ref=e1069]
+            - paragraph [ref=e1070]: This task was created by Playwright testing
+            - generic [ref=e1071]: 👤 Playwright Test User
+            - generic [ref=e1072]: 📅 2024-12-25
+            - button "Delete task" [ref=e1073]:
+              - img
+          - generic [ref=e1074]:
+            - generic [ref=e1075]:
+              - generic [ref=e1076]: "#5"
+              - generic [ref=e1077]: low
+            - heading "low Priority Task" [level=3] [ref=e1078]
+            - paragraph [ref=e1079]: "-"
+            - button "Delete task" [ref=e1080]:
+              - img
+          - generic [ref=e1081]:
+            - generic [ref=e1082]:
+              - generic [ref=e1083]: "#9"
+              - generic [ref=e1084]: low
+            - heading "Get Task Test" [level=3] [ref=e1085]
+            - paragraph [ref=e1086]: Testing get task by ID
+            - button "Delete task" [ref=e1087]:
+              - img
+          - generic [ref=e1088]:
+            - generic [ref=e1089]:
+              - generic [ref=e1090]: "#12"
+              - generic [ref=e1091]: medium
+            - heading "Concurrent Task 2" [level=3] [ref=e1092]
+            - paragraph [ref=e1093]: Testing concurrent creation 2
+            - button "Delete task" [ref=e1094]:
+              - img
+          - generic [ref=e1095]:
+            - generic [ref=e1096]:
+              - generic [ref=e1097]: "#15"
+              - generic [ref=e1098]: medium
+            - heading [level=3]
+            - heading "Malicious" [level=1] [ref=e1099]
+            - paragraph [ref=e1100]:
+              - img [ref=e1101]
+            - button "Delete task" [ref=e1102]:
+              - img
+          - generic [ref=e1103]:
+            - generic [ref=e1104]:
+              - generic [ref=e1105]: "#18"
+              - generic [ref=e1106]: medium
+            - heading "Edited Task 2 - 1756117748141" [level=3] [ref=e1107]
+            - paragraph [ref=e1108]: "-"
+            - button "Delete task" [ref=e1109]:
+              - img
+          - generic [ref=e1110]:
+            - generic [ref=e1111]:
+              - generic [ref=e1112]: "#23"
+              - generic [ref=e1113]: medium
+            - heading "Performance Test Task 2" [level=3] [ref=e1114]
+            - paragraph [ref=e1115]: Testing performance with task number 2
+            - button "Delete task" [ref=e1116]:
+              - img
+          - generic [ref=e1117]:
+            - generic [ref=e1118]:
+              - generic [ref=e1119]: "#26"
+              - generic [ref=e1120]: low
+            - heading "Performance Test Task 5" [level=3] [ref=e1121]
+            - paragraph [ref=e1122]: Testing performance with task number 5
+            - button "Delete task" [ref=e1123]:
+              - img
+          - generic [ref=e1124]:
+            - generic [ref=e1125]:
+              - generic [ref=e1126]: "#29"
+              - generic [ref=e1127]: medium
+            - heading "Performance Test Task 8" [level=3] [ref=e1128]
+            - paragraph [ref=e1129]: Testing performance with task number 8
+            - button "Delete task" [ref=e1130]:
+              - img
+          - generic [ref=e1131]:
+            - generic [ref=e1132]:
+              - generic [ref=e1133]: "#32"
+              - generic [ref=e1134]: low
+            - heading "Performance Test Task 11" [level=3] [ref=e1135]
+            - paragraph [ref=e1136]: Testing performance with task number 11
+            - button "Delete task" [ref=e1137]:
+              - img
+          - generic [ref=e1138]:
+            - generic [ref=e1139]:
+              - generic [ref=e1140]: "#35"
+              - generic [ref=e1141]: medium
+            - heading "Performance Test Task 14" [level=3] [ref=e1142]
+            - paragraph [ref=e1143]: Testing performance with task number 14
+            - button "Delete task" [ref=e1144]:
+              - img
+          - generic [ref=e1145]:
+            - generic [ref=e1146]:
+              - generic [ref=e1147]: "#38"
+              - generic [ref=e1148]: low
+            - heading "Performance Test Task 17" [level=3] [ref=e1149]
+            - paragraph [ref=e1150]: Testing performance with task number 17
+            - button "Delete task" [ref=e1151]:
+              - img
+          - generic [ref=e1152]:
+            - generic [ref=e1153]:
+              - generic [ref=e1154]: "#84"
+              - generic [ref=e1155]: medium
+            - heading "Performance Test Task 2" [level=3] [ref=e1156]
+            - paragraph [ref=e1157]: Testing performance with task number 2
+            - button "Delete task" [ref=e1158]:
+              - img
+          - generic [ref=e1159]:
+            - generic [ref=e1160]:
+              - generic [ref=e1161]: "#87"
+              - generic [ref=e1162]: low
+            - heading "Performance Test Task 5" [level=3] [ref=e1163]
+            - paragraph [ref=e1164]: Testing performance with task number 5
+            - button "Delete task" [ref=e1165]:
+              - img
+          - generic [ref=e1166]:
+            - generic [ref=e1167]:
+              - generic [ref=e1168]: "#90"
+              - generic [ref=e1169]: medium
+            - heading "Performance Test Task 8" [level=3] [ref=e1170]
+            - paragraph [ref=e1171]: Testing performance with task number 8
+            - button "Delete task" [ref=e1172]:
+              - img
+          - generic [ref=e1173]:
+            - generic [ref=e1174]:
+              - generic [ref=e1175]: "#93"
+              - generic [ref=e1176]: low
+            - heading "Performance Test Task 11" [level=3] [ref=e1177]
+            - paragraph [ref=e1178]: Testing performance with task number 11
+            - button "Delete task" [ref=e1179]:
+              - img
+          - generic [ref=e1180]:
+            - generic [ref=e1181]:
+              - generic [ref=e1182]: "#96"
+              - generic [ref=e1183]: medium
+            - heading "Performance Test Task 14" [level=3] [ref=e1184]
+            - paragraph [ref=e1185]: Testing performance with task number 14
+            - button "Delete task" [ref=e1186]:
+              - img
+          - generic [ref=e1187]:
+            - generic [ref=e1188]:
+              - generic [ref=e1189]: "#99"
+              - generic [ref=e1190]: low
+            - heading "Performance Test Task 17" [level=3] [ref=e1191]
+            - paragraph [ref=e1192]: Testing performance with task number 17
+            - button "Delete task" [ref=e1193]:
+              - img
+    - generic [ref=e1194]:
+      - button "Storage Info" [ref=e1195]:
+        - generic [ref=e1196]:
+          - generic [ref=e1197]: Storage Info
+          - img [ref=e1198]
+      - generic [ref=e1200]:
+        - generic [ref=e1201]:
+          - generic [ref=e1202]: Storage Details
+          - button "Refresh" [ref=e1203]
+        - generic [ref=e1204]: "{ \"base_dir\": \"\\\\workspace\\\\.taskmaster\", \"tasks_file\": \"\\\\workspace\\\\.taskmaster\\\\tasks\\\\tasks.json\", \"state_file\": \"\\\\workspace\\\\.taskmaster\\\\state.json\", \"config_file\": \"\\\\workspace\\\\.taskmaster\\\\config.json\", \"current_tag\": \"master\", \"project_name\": \"workspace\" }"
+  - generic [ref=e1207]:
+    - generic [ref=e1208]:
+      - heading "Create New Task" [level=2] [ref=e1209]
+      - button [ref=e1210]:
+        - img
+    - generic [ref=e1212]:
+      - generic [ref=e1213]:
+        - generic [ref=e1214]:
+          - generic [ref=e1215]: Title *
+          - textbox "Enter task title" [ref=e1216]
+        - generic [ref=e1217]:
+          - generic [ref=e1218]: Priority
+          - combobox [ref=e1219]:
+            - option "Low"
+            - option "Medium" [selected]
+            - option "High"
+      - generic [ref=e1220]:
+        - generic [ref=e1221]: Description
+        - textbox "Enter task description" [ref=e1222]
+      - generic [ref=e1223]:
+        - generic [ref=e1224]:
+          - generic [ref=e1225]: Due Date
+          - textbox [ref=e1226]
+        - generic [ref=e1227]:
+          - generic [ref=e1228]: Assigned To
+          - textbox "Assignee name" [ref=e1229]
+      - generic [ref=e1230]:
+        - generic [ref=e1231]:
+          - heading "📂 Subtasks (Optional)" [level=3] [ref=e1232]
+          - button "Add Subtask" [ref=e1233]:
+            - img [ref=e1234]
+            - text: Add Subtask
+        - paragraph [ref=e1237]: No subtasks added yet
+      - generic [ref=e1238]:
+        - button "Cancel" [ref=e1239]
+        - button "Create Task" [ref=e1240]
+  - generic [ref=e1243]:
+    - generic [ref=e1244]:
+      - heading "Edit Task" [level=2] [ref=e1245]
+      - button [ref=e1246]:
+        - img
+    - generic [ref=e1248]:
+      - generic [ref=e1249]:
+        - generic [ref=e1250]:
+          - generic [ref=e1251]: Title *
+          - textbox "Enter task title" [ref=e1252]
+        - generic [ref=e1253]:
+          - generic [ref=e1254]: Priority
+          - combobox [ref=e1255]:
+            - option "Low"
+            - option "Medium" [selected]
+            - option "High"
+      - generic [ref=e1256]:
+        - generic [ref=e1257]: Description
+        - textbox "Enter task description" [ref=e1258]
+      - generic [ref=e1259]:
+        - generic [ref=e1260]:
+          - generic [ref=e1261]: Status
+          - combobox [ref=e1262]:
+            - option "Todo" [selected]
+            - option "In Progress"
+            - option "Done"
+        - generic [ref=e1263]:
+          - generic [ref=e1264]: Due Date
+          - textbox [ref=e1265]
+        - generic [ref=e1266]:
+          - generic [ref=e1267]: Assigned To
+          - textbox "Assignee name" [ref=e1268]
+      - generic [ref=e1270]:
+        - heading "📂 Subtasks" [level=3] [ref=e1271]
+        - button "Add Subtask" [ref=e1272]:
+          - img [ref=e1273]
+          - text: Add Subtask
+      - generic [ref=e1275]:
+        - button "Cancel" [ref=e1276]
+        - button "Save Changes" [ref=e1277]
+```

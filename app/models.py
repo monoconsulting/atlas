@@ -12,7 +12,7 @@ class SubTask:
         id: Unique integer identifier within the parent task scope.
         title: Short title of the subtask.
         description: Detailed description of the subtask.
-        status: Current status ("todo", "in-progress", "done").
+        status: Current status ("todo", "pending", "in-progress", "done", "blocked", "deferred", "cancelled", "review").
         priority: Priority ("low", "medium", "high").
         due_date: Optional due date YYYY-MM-DD.
         assigned_to: Optional assignee.

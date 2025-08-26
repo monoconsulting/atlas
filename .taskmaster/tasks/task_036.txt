@@ -1,0 +1,11 @@
+# Task ID: 36
+# Title: Create Edit Task Modal Foundation
+# Status: pending
+# Dependencies: 35
+# Priority: high
+# Description: Build modal dialog structure for task editing
+# Details:
+Create modal dialog with proper structure: backdrop, modal content area, header with title and priority badge, scrollable content area, and footer with action buttons. Implement modal open/close functionality with backdrop clicking and ESC key support.
+
+# Test Strategy:
+Modal functionality tests, backdrop interaction tests, keyboard navigation tests, and scroll behavior verification.

@@ -1,0 +1,11 @@
+# Task ID: 35
+# Title: Implement Task Card Click Interaction
+# Status: pending
+# Dependencies: 34
+# Priority: high
+# Description: Make entire task cards clickable to open edit modal
+# Details:
+Make complete task cards clickable elements that open Edit Task modal. Add hover states, proper cursor styling, and keyboard accessibility (Enter key support). Include loading states during modal preparation.
+
+# Test Strategy:
+Click interaction tests, keyboard accessibility tests, hover state verification, and modal opening integration tests.

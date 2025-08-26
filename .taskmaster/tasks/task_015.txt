@@ -1,0 +1,11 @@
+# Task ID: 15
+# Title: Add Automatic Timestamp Management
+# Status: pending
+# Dependencies: 14
+# Priority: medium
+# Description: Implement created_at and updated_at ISO timestamp fields with UTC timezone handling
+# Details:
+Extend Task and SubTask models to include created_at and updated_at fields. Update TaskStorage methods to automatically set created_at on creation and updated_at on modifications. Use datetime.utcnow().isoformat() + 'Z' format for consistency.
+
+# Test Strategy:
+Unit tests for timestamp creation and updates. Verify ISO format and UTC timezone. Test timestamp preservation during partial updates.

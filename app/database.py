@@ -14,12 +14,21 @@ from pydantic import BaseModel
 
 # Database configuration
 DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
+    "DATABASE_URL",
     "mysql+mysqlconnector://tmuser:tmpassword@mysql:3306/taskmaster"
 )
 
-# SQLAlchemy setup
-engine = create_engine(DATABASE_URL, echo=False)
+# SQLAlchemy setup: be resilient in local dev where MySQL may not be available.
+try:
+    engine = create_engine(DATABASE_URL, echo=False)
+    # Try a quick connect to validate the URL (will raise if host unknown)
+    conn = engine.connect()
+    conn.close()
+except Exception:
+    # Fallback to a lightweight local SQLite file for developer/testing environments.
+    sqlite_url = os.getenv("TASKMASTER_SQLITE_URL", "sqlite:///./taskmaster_local.db")
+    engine = create_engine(sqlite_url, echo=False, connect_args={"check_same_thread": False})
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

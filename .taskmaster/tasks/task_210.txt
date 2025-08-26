@@ -1,0 +1,11 @@
+# Task ID: 210
+# Title: Build Project Selector Dashboard UI
+# Status: pending
+# Dependencies: 209
+# Priority: medium
+# Description: Create project management interface at root URL
+# Details:
+Design and implement project dashboard at GET / showing grid of all projects with cards displaying name, custom slug, description, and path. Add edit functionality for each project, 'Discover Projects' and 'Add Project' buttons. Include project edit modal with real-time slug validation and URL preview.
+
+# Test Strategy:
+UI component testing, responsive design validation, modal functionality testing, and user interaction testing.

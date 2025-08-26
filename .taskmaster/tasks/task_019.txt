@@ -1,0 +1,11 @@
+# Task ID: 19
+# Title: Enhance PATCH /task/{task_id} for Partial Updates
+# Status: pending
+# Dependencies: 18
+# Priority: medium
+# Description: Improve task update endpoint to handle partial updates and validation properly
+# Details:
+Ensure PATCH /task/{task_id} supports partial updates, updates only provided fields, sets updated_at timestamp, validates modified fields through Pydantic, and returns updated task object. Handle 404 for non-existing tasks.
+
+# Test Strategy:
+API endpoint tests for partial updates, field validation, timestamp updates, non-existing task handling, and concurrent modification scenarios.

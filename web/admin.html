@@ -103,8 +103,23 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Project Path</label>
                         <input type="text" id="projectPath" required 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <p class="text-xs text-slate-500 mt-1">Absolute path to project directory</p>
+                               class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="/projects/my-project">
+                        <div class="mt-2 p-3 bg-slate-900 border border-slate-800 rounded-lg">
+                            <p class="text-xs font-semibold text-slate-300 mb-2">📁 Container Path Format:</p>
+                            <div class="space-y-1 text-xs text-slate-400">
+                                <div><span class="text-green-400 font-mono">/projects/project-name</span> - For projects in E:\projects\</div>
+                                <div><span class="text-blue-400 font-mono">/workspace</span> - Current mounted project root</div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-slate-800">
+                                <p class="text-xs text-slate-500">
+                                    <strong>Examples:</strong><br>
+                                    • <span class="font-mono text-green-400">/projects/my-webapp</span> (for E:\projects\my-webapp)<br>
+                                    • <span class="font-mono text-green-400">/projects/client-project</span> (for E:\projects\client-project)<br>
+                                    • <span class="font-mono text-blue-400">/workspace</span> (current TaskMasterWeb project)
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     
                     <div>

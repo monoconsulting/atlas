@@ -1,4 +1,10 @@
-# Logs
+# Ignore Python temporary files and test artifacts
+__pycache__/
+*.pyc
+.tmp_smoke_test/
+node_modules/
+web/test-reports/
+test-results/*# Logs
 logs
 *.log
 npm-debug.log*

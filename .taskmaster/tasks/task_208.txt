@@ -1,0 +1,11 @@
+# Task ID: 208
+# Title: Create Auto-Discovery System for Projects
+# Status: pending
+# Dependencies: 207
+# Priority: medium
+# Description: Implement automatic project discovery by scanning filesystem for .taskmaster directories
+# Details:
+Add POST /api/discover-projects endpoint that scans configurable paths (/workspace, /workspace/projects, /workspace/sites) for directories containing .taskmaster folders. Generate initial slugs from directory names, handle conflicts with numbered suffixes, and auto-populate projects database.
+
+# Test Strategy:
+Filesystem scanning tests, slug generation validation, conflict resolution testing, and integration tests with various directory structures.

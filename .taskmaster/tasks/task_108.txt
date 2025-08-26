@@ -1,0 +1,11 @@
+# Task ID: 108
+# Title: Task with special chars: !@#$%^&*()
+# Status: todo
+# Dependencies: None
+# Priority: medium
+# Description: Description with émojis 🚀 and unicode: 中文 àáâäæãåā
+# Details:
+
+
+# Test Strategy:
+

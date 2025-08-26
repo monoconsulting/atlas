@@ -1,0 +1,11 @@
+# Task ID: 11
+# Title: Enhance Task Storage File Discovery Logic
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Improve the existing file discovery mechanism to ensure robust detection of .taskmaster and taskmaster directories
+# Details:
+Update TaskStorage.__init__ to implement the exact discovery logic specified in PRD: primary path /workspace/.taskmaster/, fallback path /workspace/taskmaster/, and auto-creation of .taskmaster/ on first task creation if neither exists. Add proper error handling and logging for directory discovery failures.
+
+# Test Strategy:
+Unit tests for different directory scenarios: existing .taskmaster, existing taskmaster only, neither exists, both exist (should prefer .taskmaster). Integration tests with Docker volume mounts.

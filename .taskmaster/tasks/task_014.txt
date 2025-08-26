@@ -1,0 +1,11 @@
+# Task ID: 14
+# Title: Implement Comprehensive Task Data Model Validation
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Enhance existing Pydantic models to enforce all field constraints specified in PRD
+# Details:
+Update Task and SubTask models in models.py to include all required fields: id, title, description, status (enum: 'todo', 'in-progress', 'done'), priority (enum: 'low', 'medium', 'high'), due_date (YYYY-MM-DD format), assigned_to, estimate, labels, dependencies. Add regex patterns, length constraints, and proper validation decorators.
+
+# Test Strategy:
+Comprehensive unit tests for model validation including edge cases: invalid status values, malformed dates, field length limits, and null handling.

@@ -1,0 +1,11 @@
+# Task ID: 24
+# Title: Create Responsive Two-Column Layout Structure
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Implement the main UI layout framework with responsive design
+# Details:
+Update index.html to implement responsive two-column layout using Tailwind CSS grid system. Left column for input panels, right column for display panels. Ensure proper adaptation to different screen sizes (mobile, tablet, desktop) with appropriate breakpoints.
+
+# Test Strategy:
+Visual testing across different screen sizes, responsive behavior validation, CSS layout tests, and accessibility compliance checks.

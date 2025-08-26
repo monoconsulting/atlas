@@ -1,0 +1,11 @@
+# Task ID: 30
+# Title: Build Add Subtask Form with Parent Task Selection
+# Status: pending
+# Dependencies: 29
+# Priority: high
+# Description: Create subtask creation form with parent task relationship
+# Details:
+Implement subtask creation form with required Parent task ID field, all subtask properties (same as task except no subtasks), and chip-based dependency selector. Add validation for parent task existence and form submission handling.
+
+# Test Strategy:
+Form validation tests, parent task validation, subtask creation integration tests, and parent-child relationship verification.

@@ -1,0 +1,11 @@
+# Task ID: 209
+# Title: Add URL Routing with Custom Slug Support
+# Status: pending
+# Dependencies: 208
+# Priority: high
+# Description: Implement dynamic URL routing system supporting custom project slugs
+# Details:
+Add FastAPI routes: GET /{custom_slug} (project UI), GET /{custom_slug}/api/* (all existing endpoints with project context). Create project lookup middleware, slug validation (alphanumeric, hyphens, underscores only), and reserved word blocking. Maintain backward compatibility for root URLs.
+
+# Test Strategy:
+URL routing tests, slug validation testing, middleware functionality verification, and backward compatibility testing.

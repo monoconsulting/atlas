@@ -1,0 +1,11 @@
+# Task ID: 20
+# Title: Implement POST /task/{task_id}/subtask Endpoint
+# Status: pending
+# Dependencies: 18
+# Priority: high
+# Description: Enhance subtask creation endpoint with proper parent task validation
+# Details:
+Verify POST /task/{task_id}/subtask validates parent task exists, assigns unique subtask ID within parent scope, validates all subtask fields, and returns complete subtask object. Handle parent_id parameter consistency.
+
+# Test Strategy:
+API endpoint tests for subtask creation, parent task validation, subtask ID assignment, field validation, and parent-child relationship integrity.

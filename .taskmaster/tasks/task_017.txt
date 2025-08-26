@@ -1,0 +1,11 @@
+# Task ID: 17
+# Title: Implement Robust GET /task/{task_id} Endpoint
+# Status: pending
+# Dependencies: 16
+# Priority: medium
+# Description: Enhance the existing single task retrieval endpoint with proper error handling
+# Details:
+Ensure GET /task/{task_id} returns proper 404 status with detailed error message when task not found. Add support for optional tag parameter. Include all task fields including subtasks in response.
+
+# Test Strategy:
+API endpoint tests for existing task retrieval, non-existing task (404 response), invalid task ID formats, and different tag scenarios.

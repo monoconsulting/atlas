@@ -1,0 +1,11 @@
+# Task ID: 23
+# Title: Enhance JSON Parsing Error Recovery
+# Status: pending
+# Dependencies: 22
+# Priority: medium
+# Description: Improve existing JSON parsing fallback mechanism for corrupted files
+# Details:
+Enhance _read_json method to handle various JSON corruption scenarios: partial writes, encoding issues, malformed structure. Implement robust fallback parsing that attempts to recover valid JSON from corrupted files while maintaining data integrity.
+
+# Test Strategy:
+Unit tests with various corrupted JSON scenarios: truncated files, invalid characters, partial objects, mixed encodings. Verify graceful degradation and data recovery.

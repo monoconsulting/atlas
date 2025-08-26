@@ -1,0 +1,11 @@
+# Task ID: 39
+# Title: Add Edit Modal Chip-Based Dependencies Management
+# Status: pending
+# Dependencies: 38, 28
+# Priority: medium
+# Description: Implement dependencies editing within the modal using chip interface
+# Details:
+Integrate chip-based dependency selector within edit modal. Show current dependencies as chips, allow adding new dependencies via dropdown, and enable removing existing dependencies. Prevent circular dependencies and self-references.
+
+# Test Strategy:
+Dependencies management tests, circular dependency prevention tests, chip interaction tests, and dependency validation scenarios.
