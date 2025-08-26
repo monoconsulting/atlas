@@ -4437,11 +4437,39 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 227,
+        "title": "Fix TaskMaster JSON parsing issues and optimize file sizes",
+        "description": "Address large JSON file issues causing token limits and parsing failures by cleaning up data structure, ensuring proper TaskMaster status handling, implementing tag support, and optimizing file sizes for both root and .taskmaster directories",
+        "details": "1. Analyze current JSON structure discrepancy: root tasks.json (692KB) vs .taskmaster/tasks/tasks.json (166KB) to identify redundant data and optimization opportunities.\n2. Implement JSON structure cleanup:\n   - Remove duplicate or unnecessary fields\n   - Normalize task status values to TaskMaster standards (pending, in-progress, done, deferred, cancelled, blocked)\n   - Clean up orphaned dependencies and references\n   - Remove any legacy or deprecated fields\n3. Optimize JSON file handling:\n   - Implement streaming JSON parsing for large files using ijson or similar libraryントラ   - Add chunked reading/writing for files over 100KB\n   - Implement compression for stored JSON (gzip compression with .gz extension)\n   - Add file size monitoring and warnings when approaching limits\n4. Enhance tag support implementation:\n   - Ensure proper tag structure in JSON (tags as top-level keys)\n   - Implement tag migration for legacy data structures\n   - Add tag validation and normalization\n   - Support currentTag state management\n5. Improve error handling and recovery:\n   - Enhanced JSON parsing with better error messages\n   - Implement partial file recovery for corrupted JSON\n   - Add backup mechanism before major file operations\n   - Implement rollback capability for failed operations\n6. Add data validation layer:\n   - Validate task IDs are unique within tags\n   - Ensure dependency references are valid\n   - Check for circular dependencies\n   - Validate status values against allowed TaskMaster statuses\n7. Performance optimizations:\n   - Implement lazy loading for task details\n   - Add caching layer for frequently accessed data\n   - Use memory-mapped files for very large JSON files\n   - Implement incremental updates instead of full file rewrites\n8. Add monitoring and diagnostics:\n   - File size tracking and reporting\n   - JSON structure health checks\n   - Performance metrics for parse/write operations\n   - Token usage estimation for AI operations",
+        "testStrategy": "1. File size optimization tests:\n   - Create test files with 1000+ tasks to simulate large datasets\n   - Verify file size reduction of at least 50% after optimization\n   - Test with files approaching various size limits (1MB, 5MB, 10MB)\n2. JSON parsing stress tests:\n   - Test with corrupted JSON files (truncated, malformed, mixed encodings)\n   - Verify successful parsing of files with 10,000+ tasks\n   - Test concurrent read/write operations\n   - Measure parsing performance improvements\n3. Tag support validation:\n   - Test creation, switching, and deletion of tags\n   - Verify task isolation between tags\n   - Test tag migration from legacy structures\n   - Validate currentTag persistence\n4. Status handling tests:\n   - Verify all TaskMaster status values are properly handled\n   - Test status transitions and validation\n   - Ensure backward compatibility with existing status values\n5. Data integrity tests:\n   - Verify no data loss during optimization\n   - Test dependency validation and cleanup\n   - Ensure ID uniqueness within tags\n   - Test circular dependency detection\n6. Performance benchmarks:\n   - Measure load times for various file sizes\n   - Test memory usage with large datasets\n   - Verify response times remain under 100ms for typical operations\n7. Integration tests:\n   - Test compatibility with Task Master AI CLI\n   - Verify MCP server integration continues working\n   - Test web UI functionality with optimized files\n   - Ensure Docker deployment handles large files properly",
+        "status": "done",
+        "dependencies": [
+          23,
+          50,
+          55
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 228,
+        "title": "Test task with new status - blocked",
+        "description": "Create a test task to verify the new 'blocked' status functionality in the TaskMaster system and ensure proper handling of blocked tasks in the UI and backend.",
+        "details": "1. Create a test task that will be marked with the new 'blocked' status to verify system compatibility\n2. Test status transitions: pending -> blocked, in-progress -> blocked, blocked -> pending/in-progress\n3. Verify blocked tasks are properly filtered and displayed in the UI with appropriate visual indicators\n4. Ensure blocked tasks are excluded from 'next task' recommendations\n5. Test blocked status persistence in tasks.json file\n6. Validate blocked tasks appear correctly in task lists with proper styling (e.g., grayed out, special icon)\n7. Test dependency handling - blocked tasks should not block dependent tasks if the blockage is external\n8. Verify API endpoints properly handle blocked status in PATCH requests\n9. Test blocked status in both Edit Task modal and task card displays",
+        "testStrategy": "1. Create task and set status to 'blocked' via UI and API\n2. Verify blocked status persists after page refresh and file reload\n3. Confirm blocked tasks don't appear in 'next task' suggestions\n4. Test all status transitions to/from blocked state\n5. Verify blocked tasks display with correct visual styling in task lists\n6. Test filtering functionality includes blocked status option\n7. Validate JSON structure maintains blocked status correctly\n8. Test blocked task behavior with dependencies - ensure dependent tasks can still be worked on if blockage is external\n9. Verify Edit Task modal correctly shows and allows setting blocked status",
+        "status": "deferred",
+        "dependencies": [
+          227
+        ],
+        "priority": "low",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-08-24T07:33:27.511Z",
-      "updated": "2025-08-25T16:25:05.759Z",
+      "updated": "2025-08-26T10:51:04.872Z",
       "description": "Tasks for master context"
     }
   }

@@ -37,7 +37,7 @@ class AddTaskModel(BaseModel):
     title: str = Field(..., min_length=1, max_length=200)
     description: str = Field(..., min_length=1, max_length=10000)
     priority: str = Field("medium", pattern="^(low|medium|high)$")
-    status: str = Field("todo", pattern="^(todo|in-progress|done)$")
+    status: str = Field("pending", pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     due_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     tag: Optional[str] = None
     assigned_to: Optional[str] = None
@@ -59,7 +59,7 @@ class AddSubTaskModel(BaseModel):
     parent_id: int = Field(..., ge=1)
     title: str = Field(..., min_length=1, max_length=200)
     description: str = Field("", max_length=10000)
-    status: str = Field("todo", pattern="^(todo|in-progress|done)$")
+    status: str = Field("pending", pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     priority: str = Field("medium", pattern="^(low|medium|high)$")
     due_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$")
     tag: Optional[str] = None
@@ -82,7 +82,7 @@ class UpdateTaskModel(BaseModel):
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, min_length=1, max_length=10000)
     priority: Optional[str] = Field(None, pattern="^(low|medium|high)$")
-    status: Optional[str] = Field(None, pattern="^(todo|in-progress|done)$")
+    status: Optional[str] = Field(None, pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     due_date: Optional[str] = Field(None, pattern=r"^(\d{4}-\d{2}-\d{2})?$")
     assigned_to: Optional[str] = None
     estimate: Optional[str] = None
@@ -95,7 +95,7 @@ class UpdateSubTaskModel(BaseModel):
     """Pydantic model for updating a subtask."""
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, min_length=1, max_length=10000)
-    status: Optional[str] = Field(None, pattern="^(todo|in-progress|done)$")
+    status: Optional[str] = Field(None, pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     priority: Optional[str] = Field(None, pattern="^(low|medium|high)$")
     due_date: Optional[str] = Field(None, pattern=r"^(\d{4}-\d{2}-\d{2})?$")
     assigned_to: Optional[str] = None

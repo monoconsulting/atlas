@@ -87,6 +87,11 @@
                             <span class="text-sm text-slate-300">📋 Todo</span>
                         </label>
                         <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" value="pending" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">⏳ Pending</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
                             <input type="checkbox" name="statusFilter" value="in-progress" 
                                 class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
                             <span class="text-sm text-slate-300">🚀 In Progress</span>
@@ -95,6 +100,21 @@
                             <input type="checkbox" name="statusFilter" value="done" 
                                 class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
                             <span class="text-sm text-slate-300">✅ Done</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" value="deferred" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">📅 Deferred</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" value="cancelled" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">❌ Cancelled</span>
+                        </label>
+                        <label class="flex items-center gap-2 hover:bg-slate-800 p-1 rounded cursor-pointer transition-colors">
+                            <input type="checkbox" name="statusFilter" value="review" 
+                                class="filter-checkbox w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-300">👁️ Review</span>
                         </label>
                     </div>
                 </div>
@@ -210,8 +230,12 @@
                     <select id="filterStatus" class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-sm">
                         <option value="">All Status</option>
                         <option value="todo">Todo</option>
+                        <option value="pending">Pending</option>
                         <option value="in-progress">In Progress</option>
                         <option value="done">Done</option>
+                        <option value="deferred">Deferred</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="review">Review</option>
                     </select>
                 </div>
                 <div>
@@ -491,8 +515,12 @@
                                     class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 >
                                     <option value="todo">Todo</option>
+                                    <option value="pending">Pending</option>
                                     <option value="in-progress">In Progress</option>
                                     <option value="done">Done</option>
+                                                <option value="deferred">Deferred</option>
+                                    <option value="cancelled">Cancelled</option>
+                                    <option value="review">Review</option>
                                 </select>
                             </div>
                             <div>
@@ -1138,8 +1166,12 @@
                             <select class="text-xs px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 subtask-status-select" 
                                     data-task-id="${task.id}" data-subtask-id="${subtask.id}">
                                 <option value="todo" ${subtask.status === 'todo' ? 'selected' : ''}>Todo</option>
+                                <option value="pending" ${subtask.status === 'pending' ? 'selected' : ''}>Pending</option>
                                 <option value="in-progress" ${subtask.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
                                 <option value="done" ${subtask.status === 'done' ? 'selected' : ''}>Done</option>
+                                <option value="deferred" ${subtask.status === 'deferred' ? 'selected' : ''}>Deferred</option>
+                                <option value="cancelled" ${subtask.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                <option value="review" ${subtask.status === 'review' ? 'selected' : ''}>Review</option>
                             </select>
                         </div>
                     </div>
