@@ -4,6 +4,11 @@ from dataclasses import dataclass, field, asdict
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
+from sqlalchemy import Column, Integer, String, Text, Boolean, TIMESTAMP, func
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
+
 @dataclass
 class SubTask:
     """Represents a subtask belonging to a parent task.
@@ -112,6 +117,8 @@ class UpdateTaskRequest:
     estimate: Optional[str] = None
     labels: Optional[List[str]] = None
     dependencies: Optional[List[int]] = None
+
+
     deleted: Optional[bool] = None
 
 @dataclass

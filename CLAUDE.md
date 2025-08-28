@@ -220,6 +220,7 @@ Any future development must work AROUND this system, not modify it. The days of 
 - **Timestamps**: Automatic created_at/updated_at ISO timestamps with UTC timezone
 - **Security**: File paths constrained to mounted `/workspace` directory to prevent traversal
 - **Performance**: Client-side filtering/sorting for responsive UI
+- **Slug Validation**: Both client-side and server-side validation ensures project slugs never contain leading slashes (Fixed 2025-08-28)
 
 ## Docker Configuration
 
@@ -316,6 +317,43 @@ mypy app/ task_master_ai/
 # Run comprehensive tests
 npx playwright test tests/comprehensive.spec.js --config playwright-simple.config.js
 ```
+
+## Architecture Decision Records (ADRs)
+
+### ADR-001: Project Slug Validation Implementation (2025-08-28)
+
+**Status**: Implemented ✅  
+**Context**: Project slugs were being stored with leading slashes (e.g., `/kbwhisper`), causing incorrect URL generation and routing issues.
+
+**Problem**: 
+- URLs became malformed: `localhost:8199//kbwhisper` instead of `localhost:8199/kbwhisper`
+- User experience degraded with broken project navigation
+- No validation existed to prevent malformed slugs
+
+**Solution**: Implemented comprehensive slug validation at both client and server levels:
+
+**Client-Side Validation** (`web/admin.html`):
+- Enhanced `updateSlugPreview()` with real-time slug cleaning using `replace(/^\/+/, '')`
+- Form submission validation strips leading slashes before API calls
+- Immediate user feedback shows corrected slug format
+
+**Server-Side Validation** (`app/database.py`):
+- Added Pydantic `@validator('slug')` to `ProjectCreate` and `ProjectUpdate` models
+- Automatic cleaning using `v.lstrip('/')` removes all leading slashes
+- Comprehensive coverage for both POST and PATCH operations
+
+**Testing Results**:
+- ✅ POST `/api/projects` with `"/test-slug"` → Stored as `"test-slug"`
+- ✅ PATCH `/api/projects/N` with `"/another-slug"` → Stored as `"another-slug"`
+- ✅ Fixed existing project ID 20 from `"/kbwhisper"` to `"kbwhisper"`
+- ✅ All project URLs now follow correct format: `localhost:8199/project-slug`
+
+**Consequences**: 
+- **Positive**: Data integrity maintained, URLs work correctly, user experience improved
+- **Negative**: None identified
+- **Risk Mitigation**: Dual validation prevents bypass, backward compatible with existing projects
+
+---
 
 ## Task Master AI Instructions
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**

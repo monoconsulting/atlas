@@ -1,6 +1,6 @@
 # Task ID: 214
 # Title: Error - still impossible to add subtasks!
-# Status: in-progress
+# Status: done
 # Dependencies: None
 # Priority: high
 # Description: It is not possible to add subtasks when edit.
@@ -11,31 +11,31 @@
 
 
 # Subtasks:
-## 1. Fix subtask container visibility issue [pending]
+## 1. Fix subtask container visibility issue [done]
 ### Dependencies: None
 ### Description: Container has correct CSS (display:block, visibility:visible) but is not visible to users or Playwright. Likely z-index or parent element issue.
 ### Details:
 
 
-## 2. Fix Add Subtask button disappearing [pending]
+## 2. Fix Add Subtask button disappearing [done]
 ### Dependencies: None
 ### Description: The Add Subtask button becomes invisible after adding first subtask, preventing multiple subtasks from being added.
 ### Details:
 
 
-## 3. Fix edit modal not opening [pending]
+## 3. Fix edit modal not opening [done]
 ### Dependencies: None
 ### Description: Task cards are clickable but edit modal (#editTaskModal) never becomes visible. No way to edit tasks currently.
 ### Details:
 
 
-## 4. Fix subtasks not saving to backend [pending]
+## 4. Fix subtasks not saving to backend [done]
 ### Dependencies: None
 ### Description: Even if subtasks were visible, they don't save to tasks.json. Need to fix the save mechanism.
 ### Details:
 
 
-## 5. Verify all fixes with test suite [pending]
+## 5. Verify all fixes with test suite [done]
 ### Dependencies: None
 ### Description: Run tests/30-final-subtask-verification.spec.js to ensure 100% pass rate after fixes.
 ### Details:

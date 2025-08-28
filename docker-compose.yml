@@ -10,6 +10,8 @@ services:
     volumes:
       - "${PROJECT_ROOT}:/workspace"
       - "E:/projects:/projects"
+    depends_on:
+      - mysql
     restart: unless-stopped
 
   webserver:
@@ -35,9 +37,22 @@ services:
       MYSQL_USER: ${MYSQL_USER:-tmuser}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-tmpassword}
     ports:
-      - "${MYSQL_HOST_PORT:-3306}:3306"
+      - "${MYSQL_HOST_PORT:-33066}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: ${PHPMYADMIN_CONTAINER_NAME:-taskmasterweb_phpmyadmin}
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+    ports:
+      - "8086:80"
+    depends_on:
+      - mysql
     restart: unless-stopped
 
 volumes:
