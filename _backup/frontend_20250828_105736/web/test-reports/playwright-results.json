@@ -1,0 +1,859 @@
+{
+  "config": {
+    "configFile": "E:\\projects\\taskmasterweb\\playwright.config.js",
+    "rootDir": "E:/projects/taskmasterweb/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "web/test-reports/playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "web/test-reports/playwright-results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "web/test-reports/playwright-results.xml"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "E:/projects/taskmasterweb/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "E:/projects/taskmasterweb/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "E:/projects/taskmasterweb/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "E:/projects/taskmasterweb/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "E:/projects/taskmasterweb/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "E:/projects/taskmasterweb/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "E:/projects/taskmasterweb/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Microsoft Edge",
+        "name": "Microsoft Edge",
+        "testDir": "E:/projects/taskmasterweb/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "E:/projects/taskmasterweb/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Google Chrome",
+        "name": "Google Chrome",
+        "testDir": "E:/projects/taskmasterweb/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "changed",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 1,
+    "webServer": {
+      "command": "python -m uvicorn app.main:app --host 127.0.0.1 --port 8199",
+      "url": "http://127.0.0.1:8199/health",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "test_ui_tasks.spec.ts",
+      "file": "test_ui_tasks.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Kanban Task Board",
+          "file": "test_ui_tasks.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "renders task cards without loading indicator",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 16410,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.task-card') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.task-card') to be visible\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:9:16",
+                        "location": {
+                          "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                          "column": 16,
+                          "line": 9
+                        },
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m     expect(cards)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                            "column": 16,
+                            "line": 9
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.task-card') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m     expect(cards)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:9:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+385ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+8ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+21ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+320ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:8199/\", waiting until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+29ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:8199/\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+22ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+77ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForSelector started \u001b[38;5;45m+6ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('.task-card') to be visible \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+413ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForSelector failed \u001b[38;5;45m+15s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.close started \u001b[38;5;45m+182ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.close succeeded \u001b[38;5;45m+721ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+16ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+154ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-27T20:03:24.607Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                        "column": 16,
+                        "line": 9
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "bfb695ac0bdd2bf01bb2-7f33cb226283947faa3a",
+              "file": "test_ui_tasks.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "renders task cards without loading indicator",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17489,
+                      "error": {
+                        "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.task-card') to be visible\u001b[22m\n",
+                        "stack": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.task-card') to be visible\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:9:16",
+                        "location": {
+                          "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                          "column": 16,
+                          "line": 9
+                        },
+                        "snippet": "\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m     expect(cards)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                            "column": 16,
+                            "line": 9
+                          },
+                          "message": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.task-card') to be visible\u001b[22m\n\n\n\u001b[0m \u001b[90m  7 |\u001b[39m\n \u001b[90m  8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 |\u001b[39m\n \u001b[90m 11 |\u001b[39m     \u001b[36mconst\u001b[39m cards \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 12 |\u001b[39m     expect(cards)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:9:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+771ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+129ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+1s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+147ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"about:blank\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:8199/\", waiting until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+342ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:8199/\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+26ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.waitForSelector started \u001b[38;5;45m+7ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('.task-card') to be visible \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+462ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.waitForSelector failed \u001b[38;5;45m+15s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.close started \u001b[38;5;45m+178ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.close succeeded \u001b[38;5;45m+303ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+19ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+566ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-27T20:03:42.518Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                        "column": 16,
+                        "line": 9
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "bfb695ac0bdd2bf01bb2-6e86009a2070a9bdcd10",
+              "file": "test_ui_tasks.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "renders task cards without loading indicator",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2784,
+                      "error": {
+                        "message": "Error: page.goto: Could not connect to server\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: Could not connect to server\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:6:14",
+                        "location": {
+                          "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                          "column": 14,
+                          "line": 6
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m\"renders task cards without loading indicator\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m   \u001b[90m// The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"http://localhost:8199\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m\n \u001b[90m 8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                            "column": 14,
+                            "line": 6
+                          },
+                          "message": "Error: page.goto: Could not connect to server\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m\"renders task cards without loading indicator\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m   \u001b[90m// The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"http://localhost:8199\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m\n \u001b[90m 8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:6:14\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+63ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+21ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+236ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:8199/\", waiting until \"load\" \u001b[38;5;45m+2ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto failed \u001b[38;5;45m+2s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+7ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.close started \u001b[38;5;45m+224ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.close succeeded \u001b[38;5;45m+30ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+18ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+19ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-27T20:04:02.287Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-webkit\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-webkit\\video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                        "column": 14,
+                        "line": 6
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "bfb695ac0bdd2bf01bb2-956e7ca3bf5a65396297",
+              "file": "test_ui_tasks.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "renders task cards without loading indicator",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2963,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:6:14",
+                        "location": {
+                          "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                          "column": 14,
+                          "line": 6
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m\"renders task cards without loading indicator\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m   \u001b[90m// The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"http://localhost:8199\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m\n \u001b[90m 8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                            "column": 14,
+                            "line": 6
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m\"renders task cards without loading indicator\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m   \u001b[90m// The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"http://localhost:8199\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m\n \u001b[90m 8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:6:14\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+349ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+8ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+25ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+254ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:8199/\", waiting until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto failed \u001b[38;5;45m+2s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"chrome-error://chromewebdata/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+23ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+32ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.close started \u001b[38;5;45m+134ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.close succeeded \u001b[38;5;45m+141ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+20ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+223ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-27T20:04:06.178Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                        "column": 14,
+                        "line": 6
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "bfb695ac0bdd2bf01bb2-5f30ccc22a7c152f8664",
+              "file": "test_ui_tasks.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "renders task cards without loading indicator",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2897,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:6:14",
+                        "location": {
+                          "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                          "column": 14,
+                          "line": 6
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m\"renders task cards without loading indicator\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m   \u001b[90m// The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"http://localhost:8199\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m\n \u001b[90m 8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                            "column": 14,
+                            "line": 6
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8199/\", waiting until \"load\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 4 |\u001b[39m   test(\u001b[32m\"renders task cards without loading indicator\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m   \u001b[90m// The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"http://localhost:8199\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m\n \u001b[90m 8 |\u001b[39m     \u001b[90m// Wait until task cards have loaded\u001b[39m\n \u001b[90m 9 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m\".task-card\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts:6:14\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+245ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+8ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+18ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+169ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:8199/\", waiting until \"load\" \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto failed \u001b[38;5;45m+2s\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+5ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+3ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+1ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"chrome-error://chromewebdata/\" \u001b[38;5;45m+0ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+38ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+4ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.close started \u001b[38;5;45m+149ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.close succeeded \u001b[38;5;45m+169ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+19ms\u001b[0m\n"
+                        },
+                        {
+                          "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+120ms\u001b[0m\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-08-27T20:04:10.682Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\taskmasterweb\\tests\\test_ui_tasks.spec.ts",
+                        "column": 14,
+                        "line": 6
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "bfb695ac0bdd2bf01bb2-d2e0a355931c0f391e74",
+              "file": "test_ui_tasks.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-08-27T20:03:23.690Z",
+    "duration": 50334.922,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}

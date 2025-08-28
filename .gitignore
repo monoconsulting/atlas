@@ -29,3 +29,9 @@ node_modules/
 
 # OS specific
 .DS_Store
+
+# Logs
+
+# Task files
+# tasks.json
+# tasks/ 

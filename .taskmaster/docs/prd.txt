@@ -1,0 +1,59 @@
+# Atlas Frontend Rebuild - Product Requirements Document
+
+## Project Overview
+Complete frontend rebuild of the Atlas TaskMaster web application to eliminate loading bugs, remove workspace ambiguity, and implement a robust, minimal frontend with dynamic status categories and proper subtask management.
+
+## Core Requirements
+
+### Primary Goals
+- Fresh, minimal, robust frontend rendering at http://localhost:8199/<slug>
+- Header text exactly: "Atlas – {projectName}" (no "workspace" wording anywhere)
+- Dynamic status categories with live counters in header
+- Single filter row (dark blue like header) with exact order: Status, Priority, Tags, Sorting, Search
+- Kanban columns generated dynamically from present statuses
+- Subtasks flow must be correct and durable with maximum 8 subtasks per task
+- Remove "Advanced Filters" section entirely
+- All data access via backend endpoints with atomic writes
+
+### Technical Architecture
+- Four ES modules: api.js, state.js, render.js, main.js
+- Dynamic status mapping: pending→Backlog, todo→Todo, in-progress→In progress, review→Review, done→Done, deferred→Deferred, cancelled→Cancelled
+- API endpoints per project slug: GET /{slug}/info, GET /{slug}/tasks, POST /{slug}/task, etc.
+- Docker environment with single PROJECTS_HOST_DIR mount to /projects
+- Headless-only testing with 100% pass requirement
+
+### Data Requirements
+- Canonical data at /projects/{project_slug}/.taskmaster/state.json and tasks/tasks.json
+- Status keys: todo, pending, in-progress, review, done, deferred, cancelled
+- Task fields: id, title, description, status, priority, due_date, assigned_to, estimate, labels, dependencies, subtasks
+- Maximum 8 subtasks per task with server-assigned IDs
+
+### UI Requirements
+- Create New Task modal with immediate parent persistence on first subtask add
+- Edit modals for tasks and subtasks with PUT persistence
+- Error handling with spinner overlay and error banner (no infinite loading)
+- Specific data-testids for all elements for testing
+- Visual palette preservation with dark blue header and filter row
+
+### Testing Requirements
+- Playwright configuration for Chromium headless only
+- Loop script for re-running until 100% pass
+- Artifacts saving: screenshots, videos, traces, HTML reports
+- No modifications to tests or input data allowed
+- Pass/Fail gates for loading states, counters, subtasks, and UI elements
+
+### Deliverables
+- New app/static/index.html and four JS modules
+- Updated docker-compose.yml and .env
+- Reports directory with HTML reports and index page
+- VERIFICATION.md with acceptance criteria evidence
+- Backup of legacy frontend files with explanation
+
+## Success Criteria
+- All UI acceptance criteria pass
+- Playwright suite passes 100% in headless mode
+- No "Loading" text remains visible after fetch resolution
+- Header counters and dynamic columns work correctly
+- Subtask creation and persistence functions properly
+- No workspace text or Advanced Filters elements remain
+- All test artifacts and reports are properly linked and functional

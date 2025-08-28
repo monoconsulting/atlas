@@ -1,0 +1,62 @@
+# Atlas Frontend Rebuild - Legacy Files Backup
+
+**Backup Date:** 2025-08-28 10:57:36
+**Reason:** Complete frontend rebuild to eliminate Loading issues and workspace ambiguity
+
+## Files Backed Up
+
+### app/static/ directory:
+- `index.html` - Main application frontend (legacy)
+- `index_old.html` - Previous version of frontend
+- `index_backup_original.html` - Original backup version
+- `js/` folder (entire directory):
+  - `filters.js` - Legacy filter functionality
+  - `storageInfo.js` - Storage information display
+  - `taskManagement.js` - Task management functions  
+  - `tasks.js` - Task handling logic
+  - `utils.js` - Utility functions
+
+### web/ directory (complete backup):
+- `admin.html` - Project administration interface
+- `index.html` - Development hub interface
+- `server.py` - Development web server
+- `test-reports.html` - Test reporting dashboard
+- `test-results.html` - Test results summary
+- `test-reports/` folder - Complete test report archives
+- `server.log` - Server logs
+
+## Functionality Removed
+
+1. **Legacy Frontend Components:** All existing HTML, CSS, and JavaScript frontend code
+2. **Advanced Filters System:** Complex filtering UI that will be replaced with single filter row
+3. **Loading Issue Code:** Legacy JS that could cause infinite "Loading..." states
+4. **Workspace References:** All UI elements containing "workspace" terminology
+5. **Development Hub:** Temporary removal for rebuild (will be recreated if needed)
+
+## Reason for Removal
+
+Per Atlas-Frontend-Rebuild-RULES.md requirements:
+- Eliminate infinite "Loading..." bug caused by legacy JavaScript
+- Remove all "workspace" terminology from UI
+- Replace Advanced Filters with single filter row
+- Create fresh, minimal, robust frontend from clean slate
+- Implement dynamic status categories with live counters
+- Ensure 100% test success with headless Playwright testing
+
+## Recovery Instructions
+
+If recovery is needed:
+1. Stop the application containers
+2. Copy files from this backup directory back to original locations
+3. Restart containers
+4. Note: Original functionality and bugs will return
+
+## Files NOT Backed Up
+
+- `app/static/tw.css` - Tailwind source CSS (preserved as required)
+- `app/static/tailwind.css` - Compiled CSS (will be preserved/regenerated)
+- All backend Python files (not affected by frontend rebuild)
+- Docker configuration files (will be modified separately)
+- Database files and content
+
+This backup preserves all legacy frontend functionality for potential future reference or emergency recovery.

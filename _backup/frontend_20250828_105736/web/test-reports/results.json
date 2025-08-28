@@ -1,0 +1,179 @@
+{
+  "config": {
+    "configFile": "E:\\projects\\taskmasterweb\\playwright-simple.config.js",
+    "rootDir": "E:/projects/taskmasterweb/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "web/test-reports"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "web/test-reports/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "E:/projects/taskmasterweb/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "E:/projects/taskmasterweb/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "fortigatelog-loading-verification.spec.js",
+      "file": "fortigatelog-loading-verification.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "fortigatelog loading verification - critical functions only",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4426,
+                  "error": {
+                    "message": "Error: Should not have persistent Loading... text\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m5\u001b[39m",
+                    "stack": "Error: Should not have persistent Loading... text\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m5\u001b[39m\n    at E:\\projects\\taskmasterweb\\tests\\fortigatelog-loading-verification.spec.js:30:73",
+                    "location": {
+                      "file": "E:\\projects\\taskmasterweb\\tests\\fortigatelog-loading-verification.spec.js",
+                      "column": 73,
+                      "line": 30
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 28 |\u001b[39m   \u001b[36mconst\u001b[39m loadingElements \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Loading...'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m`Found ${loadingElements} Loading... elements`\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m   expect(loadingElements\u001b[33m,\u001b[39m \u001b[32m'Should not have persistent Loading... text'\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m\n \u001b[90m 32 |\u001b[39m   \u001b[90m// Verify that project slug was detected correctly\u001b[39m\n \u001b[90m 33 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'🔍 Verifying project slug detection...'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "E:\\projects\\taskmasterweb\\tests\\fortigatelog-loading-verification.spec.js",
+                        "column": 73,
+                        "line": 30
+                      },
+                      "message": "Error: Should not have persistent Loading... text\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m5\u001b[39m\n\n\u001b[0m \u001b[90m 28 |\u001b[39m   \u001b[36mconst\u001b[39m loadingElements \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Loading...'\u001b[39m)\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m`Found ${loadingElements} Loading... elements`\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m   expect(loadingElements\u001b[33m,\u001b[39m \u001b[32m'Should not have persistent Loading... text'\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m\n \u001b[90m 32 |\u001b[39m   \u001b[90m// Verify that project slug was detected correctly\u001b[39m\n \u001b[90m 33 |\u001b[39m   console\u001b[33m.\u001b[39mlog(\u001b[32m'🔍 Verifying project slug detection...'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at E:\\projects\\taskmasterweb\\tests\\fortigatelog-loading-verification.spec.js:30:73\u001b[22m"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "🧪 Starting fortigatelog loading verification test\n"
+                    },
+                    {
+                      "text": "📍 Navigating to fortigatelog project...\n"
+                    },
+                    {
+                      "text": "CONSOLE: Failed to load resource: the server responded with a status of 404 (Not Found)\n"
+                    },
+                    {
+                      "text": "🔍 Checking for persistent Loading... text...\n"
+                    },
+                    {
+                      "text": "Found 5 Loading... elements\n"
+                    }
+                  ],
+                  "stderr": [
+                    {
+                      "text": "PAGE ERROR: applySorting is not defined\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2025-08-27T15:49:47.039Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "E:\\projects\\taskmasterweb\\test-results\\fortigatelog-loading-verif-1031d-n---critical-functions-only-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "E:\\projects\\taskmasterweb\\test-results\\fortigatelog-loading-verif-1031d-n---critical-functions-only-chromium\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "E:\\projects\\taskmasterweb\\test-results\\fortigatelog-loading-verif-1031d-n---critical-functions-only-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "E:\\projects\\taskmasterweb\\test-results\\fortigatelog-loading-verif-1031d-n---critical-functions-only-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "E:\\projects\\taskmasterweb\\tests\\fortigatelog-loading-verification.spec.js",
+                    "column": 73,
+                    "line": 30
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ece9826bc9125805485b-fbcef2382a4e3457f3ae",
+          "file": "fortigatelog-loading-verification.spec.js",
+          "line": 3,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-08-27T15:49:45.867Z",
+    "duration": 6181.044,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
