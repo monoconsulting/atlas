@@ -353,6 +353,35 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 - **Negative**: None identified
 - **Risk Mitigation**: Dual validation prevents bypass, backward compatible with existing projects
 
+### ADR-002: Test Reports Link Standardization (2025-08-28)
+
+**Status**: Implemented ✅  
+**Context**: The Development Hub's "View Reports" button was linking to an inconsistent test results file path, creating confusion in the testing workflow.
+
+**Problem**: 
+- "View Reports" button in `/web/index.html` linked to `test-results.html`
+- Actual test reports were located at `/web/test-reports.html`
+- Broken navigation between development hub and test reporting system
+- Inconsistent file naming convention across the project
+
+**Solution**: Updated Development Hub navigation to use standardized test reports path:
+
+**Navigation Update** (`web/index.html` line 79):
+- Changed href from `test-results.html` to `test-reports.html`
+- Maintained consistent button styling and behavior
+- Aligned with existing test infrastructure file naming
+
+**Testing Results**:
+- ✅ "View Reports" button now correctly navigates to `/web/test-reports.html`
+- ✅ Test reports page loads successfully at `http://localhost:9652/test-reports.html`
+- ✅ Development hub navigation flow is now consistent
+- ✅ No breaking changes to existing test infrastructure
+
+**Consequences**: 
+- **Positive**: Consistent navigation experience, correct test report access, improved developer workflow
+- **Negative**: None identified
+- **Risk Mitigation**: Simple link update with immediate validation, no impact on test execution or reporting functionality
+
 ---
 
 ## Task Master AI Instructions
