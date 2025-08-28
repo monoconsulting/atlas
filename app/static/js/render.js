@@ -316,11 +316,20 @@ export function renderAddSubtaskForm(maxSubtasks = 8, currentCount = 0) {
                     class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
                     data-field="description"></textarea>
             </div>
-            <div class="flex justify-between items-center">
+            <div class="flex gap-2">
                 <select class="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-100 text-xs" data-field="priority">
                     <option value="low">Low</option>
                     <option value="medium" selected>Medium</option>
                     <option value="high">High</option>
+                </select>
+                <select class="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-100 text-xs" data-field="status">
+                    <option value="pending">Backlog</option>
+                    <option value="todo" selected>Todo</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="review">Review</option>
+                    <option value="done">Done</option>
+                    <option value="deferred">Deferred</option>
+                    <option value="cancelled">Cancelled</option>
                 </select>
             </div>
         </div>
@@ -388,6 +397,72 @@ export function hideError() {
 }
 
 /**
+ * Update visual indicators for active filters
+ * @param {Object} filters - Current filter values
+ */
+export function updateFilterIndicators(filters) {
+    const filterControls = [
+        { id: 'filterStatus', key: 'status' },
+        { id: 'filterPriority', key: 'priority' },
+        { id: 'filterTags', key: 'tags' },
+        { id: 'filterSearch', key: 'search' }
+    ];
+
+    filterControls.forEach(({ id, key }) => {
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        const isActive = filters[key] && filters[key] !== '';
+        
+        if (isActive) {
+            // Add visual indicator for active filter
+            element.classList.add('ring-2', 'ring-blue-400', 'border-blue-400');
+            element.classList.remove('border-slate-600');
+        } else {
+            // Remove visual indicator for inactive filter
+            element.classList.remove('ring-2', 'ring-blue-400', 'border-blue-400');
+            element.classList.add('border-slate-600');
+        }
+    });
+
+    // Show active filter count in filter bar
+    updateActiveFilterCount(filters);
+}
+
+/**
+ * Update active filter count indicator
+ * @param {Object} filters - Current filter values
+ */
+function updateActiveFilterCount(filters) {
+    const filterBar = document.querySelector('[data-testid="filter-bar"]');
+    if (!filterBar) return;
+
+    // Remove existing filter count indicator
+    const existingIndicator = filterBar.querySelector('.filter-count-indicator');
+    if (existingIndicator) {
+        existingIndicator.remove();
+    }
+
+    // Count active filters (excluding sorting)
+    const activeFilters = Object.entries(filters)
+        .filter(([key, value]) => key !== 'sorting' && value && value !== '')
+        .length;
+
+    if (activeFilters > 0) {
+        // Add active filter count indicator
+        const indicator = document.createElement('div');
+        indicator.className = 'filter-count-indicator absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-semibold';
+        indicator.textContent = `${activeFilters} filter${activeFilters > 1 ? 's' : ''} active`;
+        
+        // Make filter bar relative positioned for the absolute indicator
+        filterBar.classList.add('relative');
+        filterBar.appendChild(indicator);
+    } else {
+        filterBar.classList.remove('relative');
+    }
+}
+
+/**
  * Escape HTML to prevent XSS
  * @param {string} text - Text to escape
  * @returns {string} Escaped text
@@ -421,5 +496,6 @@ export default {
     showSpinner,
     hideSpinner,
     showError,
-    hideError
+    hideError,
+    updateFilterIndicators
 };

@@ -1,6 +1,6 @@
 # Task ID: 5
 # Title: Dynamic Statuses & Header Counters
-# Status: in-progress
+# Status: done
 # Dependencies: 3, 4
 # Priority: high
 # Description: Compute present statuses from fetched tasks, order by status mapping, render all columns with testids, and implement header counters with synchronized counts.
@@ -47,25 +47,25 @@
 10. Validate integration with existing HTML structure from Task 3
 
 # Subtasks:
-## 1. Status computation logic in state.js [pending]
+## 1. Status computation logic in state.js [done]
 ### Dependencies: None
 ### Description: Extract unique statuses, implement status ordering, handle edge cases
 ### Details:
 
 
-## 2. Dynamic column rendering in render.js [pending]
+## 2. Dynamic column rendering in render.js [done]
 ### Dependencies: None
 ### Description: Create renderKanbanColumns() function with data-testid attributes and proper CSS structure
 ### Details:
 
 
-## 3. Header counter system implementation [pending]
+## 3. Header counter system implementation [done]
 ### Dependencies: None
 ### Description: Build updateHeaderCounters() function with count synchronization and loading states
 ### Details:
 
 
-## 4. Integration with existing modules [pending]
+## 4. Integration with existing modules [done]
 ### Dependencies: None
 ### Description: Coordinate status computation with API module and hook counter updates to task operations
 ### Details:

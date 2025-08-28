@@ -151,6 +151,14 @@ function setupStateListeners() {
                 updateUI();
                 break;
                 
+            case 'filters-changed':
+                render.updateFilterIndicators(payload);
+                break;
+                
+            case 'filters-cleared':
+                render.updateFilterIndicators({ status: '', priority: '', tags: '', search: '' });
+                break;
+                
             case 'loading-changed':
                 if (payload) {
                     render.showSpinner();
@@ -191,6 +199,7 @@ function setupEventListeners() {
     document.getElementById('filterTags')?.addEventListener('change', handleFilterChange);
     document.getElementById('filterSorting')?.addEventListener('change', handleSortingChange);
     document.getElementById('filterSearch')?.addEventListener('input', handleFilterChange);
+    document.getElementById('clearFiltersBtn')?.addEventListener('click', handleClearFilters);
     
     // Modal event listeners
     document.getElementById('closeModalBtn')?.addEventListener('click', closeTaskModal);
@@ -220,6 +229,7 @@ function handleFilterChange() {
     };
     
     state.setFilters(filters);
+    render.updateFilterIndicators(filters);
 }
 
 /**
@@ -230,6 +240,25 @@ function handleSortingChange() {
     const [by, order] = sortingValue.split('-');
     
     state.setSorting(by, order);
+}
+
+/**
+ * Handle clearing all filters
+ */
+function handleClearFilters() {
+    // Reset all filter controls to default values
+    const filterStatus = document.getElementById('filterStatus');
+    const filterPriority = document.getElementById('filterPriority');
+    const filterTags = document.getElementById('filterTags');
+    const filterSearch = document.getElementById('filterSearch');
+    
+    if (filterStatus) filterStatus.value = '';
+    if (filterPriority) filterPriority.value = '';
+    if (filterTags) filterTags.value = '';
+    if (filterSearch) filterSearch.value = '';
+    
+    // Clear filters in state (this will trigger the filters-cleared event)
+    state.clearFilters();
 }
 
 /**
@@ -350,6 +379,11 @@ async function handleTaskSubmit(event) {
         let result;
         if (mode === 'create') {
             result = await api.createTask(taskData);
+            
+            // If task created successfully, create subtasks
+            if (result.ok && result.data && result.data.id) {
+                await createSubtasksFromModal(result.data.id);
+            }
         } else {
             result = await api.updateTask(parseInt(taskId), taskData);
         }
@@ -376,6 +410,40 @@ async function handleTaskSubmit(event) {
 function parseLabels(labelsStr) {
     if (!labelsStr) return [];
     return labelsStr.split(',').map(label => label.trim()).filter(label => label);
+}
+
+/**
+ * Create subtasks from modal form data
+ * @param {number} taskId - Parent task ID
+ */
+async function createSubtasksFromModal(taskId) {
+    const subtasksList = document.getElementById('subtasksList');
+    if (!subtasksList) return;
+    
+    const subtaskRows = subtasksList.querySelectorAll('[data-testid^="subtask-row-"]');
+    
+    for (const row of subtaskRows) {
+        const titleInput = row.querySelector('[data-field="title"]');
+        const descInput = row.querySelector('[data-field="description"]');
+        const prioritySelect = row.querySelector('[data-field="priority"]');
+        const statusSelect = row.querySelector('[data-field="status"]');
+        
+        if (titleInput && titleInput.value.trim()) {
+            try {
+                const subtaskData = {
+                    title: titleInput.value.trim(),
+                    description: descInput?.value.trim() || '',
+                    priority: prioritySelect?.value || 'medium',
+                    status: statusSelect?.value || 'todo'
+                };
+                
+                await api.createSubtask(taskId, subtaskData);
+            } catch (error) {
+                console.error('Failed to create subtask:', error);
+                // Continue with remaining subtasks
+            }
+        }
+    }
 }
 
 /**

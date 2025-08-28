@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-08-28T12:25:59.085Z",
-      "updated": "2025-08-28T12:25:59.085Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -165,13 +160,41 @@
         "description": "Create a comprehensive client-side filtering system with status, priority, tags, and search filters that work together in a pipeline and update task counts dynamically.",
         "details": "1. Implement filter state management in state.js:\n   - Add filters object to global state with status, priority, tags, and search properties\n   - Create setFilter() and getFilters() functions with validation\n   - Implement resetFilters() to clear all active filters\n   - Add filter change event system to trigger re-renders\n\n2. Create filtering pipeline in state.js:\n   - Implement applyFilters(tasks) function that processes tasks through all active filters\n   - Status filter: match tasks against selected status values\n   - Priority filter: match tasks against selected priority levels\n   - Tags filter: match tasks that contain any of the selected tags\n   - Search filter: case-insensitive matching against title and description\n   - Chain filters together for combined filtering logic\n\n3. Update render.js to integrate filters:\n   - Modify renderKanbanColumns() to use filtered task data\n   - Create updateTaskCounts() function that reflects filtered results\n   - Ensure header counters show counts based on currently visible (filtered) tasks\n   - Add visual indicators for active filters\n\n4. Implement filter controls event handlers in main.js:\n   - Add event listeners for all filter inputs (checkboxes, search input)\n   - Call state.setFilter() on user interactions\n   - Trigger re-render when filters change\n   - Maintain filter state persistence during session\n\n5. Add filter clearing functionality:\n   - Implement \"Clear All\" button functionality\n   - Reset all filter controls to default state\n   - Update display to show all tasks when filters are cleared",
         "testStrategy": "1. Test individual filter functions work correctly (status, priority, tags, search)\n2. Verify filter pipeline correctly combines multiple active filters\n3. Confirm task counts in headers update to reflect only visible/filtered tasks\n4. Test search filter performs case-insensitive matching on title and description\n5. Validate that clearing filters restores full task display and resets counts\n6. Check filter state persists during user session and resets on page reload\n7. Test edge cases like empty search results and no matching filters\n8. Verify filter controls update UI state correctly when toggled",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
           4,
           5
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Verify existing filter functionality in state.js",
+            "description": "Check current filter state management, pipeline, and applyCurrentFilters implementation",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 2,
+            "title": "Implement filter event handlers in main.js",
+            "description": "Add event listeners for filter controls and wire them to state management",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          },
+          {
+            "id": 3,
+            "title": "Add visual indicators for active filters",
+            "description": "Enhance UI to show when filters are active and provide clear feedback",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 6
+          }
+        ]
       },
       {
         "id": 7,
@@ -179,7 +202,7 @@
         "description": "Implement a comprehensive Create Task modal with all task fields, subtask addition functionality with parent persistence, maximum 8 subtasks limit, and save/cancel operations.",
         "details": "1. Create modal HTML structure in index.html:\n   - Modal backdrop with proper z-index and click-to-close functionality\n   - Modal container with form elements for all task fields (title, description, priority, status, dependencies)\n   - Subtasks section with dynamic add/remove functionality\n   - Action buttons (Save, Cancel) with proper styling and positioning\n\n2. Implement modal JavaScript functionality in main.js:\n   - showCreateTaskModal() function to display modal and reset form\n   - hideCreateTaskModal() function with cleanup and form reset\n   - Form validation for required fields (title, description)\n   - Dependencies dropdown with existing task options\n\n3. Add subtask management system:\n   - addSubtaskToForm() function to dynamically add subtask input rows\n   - removeSubtaskFromForm() function to remove specific subtask rows\n   - Enforce maximum 8 subtasks limit with UI feedback\n   - Subtask validation (non-empty titles)\n\n4. Implement save functionality:\n   - Collect all form data including subtasks array\n   - Call API to create parent task with nested subtasks\n   - Handle API responses and error states\n   - Close modal on successful creation and refresh task display\n\n5. Add modal styling and UX improvements:\n   - Responsive design for different screen sizes\n   - Loading states during API calls\n   - Form field focus management\n   - Keyboard shortcuts (Escape to cancel, Enter to save)\n\n6. Integrate with existing state management:\n   - Update global state with new task data\n   - Trigger task list re-render\n   - Update header counters and filters",
         "testStrategy": "1. Verify modal opens when Create Task button is clicked and displays all required form fields\n2. Test form validation prevents submission with empty required fields\n3. Confirm subtask addition works up to maximum of 8 subtasks with proper UI feedback\n4. Validate subtask removal functionality works correctly for individual rows\n5. Test save functionality creates task with subtasks via API and updates UI\n6. Verify cancel button and backdrop clicks properly close modal without saving\n7. Check modal responsiveness across different screen sizes\n8. Test keyboard navigation and shortcuts work as expected\n9. Confirm error handling displays appropriate messages for API failures\n10. Validate that successful task creation updates task list, counters, and closes modal",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           3,
           4,
@@ -343,25 +366,55 @@
         "title": "test",
         "description": "asdfasdf",
         "priority": "high",
-        "status": "review",
+        "status": "deferred",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-28T12:17:41.733071Z",
-        "updated_at": "2025-08-28T12:18:16.491701Z",
+        "updated_at": "2025-08-28T12:39:48.385392Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 18,
+        "title": "t",
+        "description": "t",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-08-28T12:39:39.619600Z",
+        "updated_at": "2025-08-28T12:39:39.619615Z",
+        "tag": "atlas",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "asdf",
+            "description": "asdf",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-08-28T12:39:39.696361Z",
+            "updated_at": "2025-08-28T12:39:39.696375Z",
+            "extra": {}
+          }
+        ],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ],
-    "metadata": {
-      "created": "2025-08-28T12:25:59.085Z",
-      "updated": "2025-08-28T12:25:59.085Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }

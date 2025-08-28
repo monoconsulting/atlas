@@ -1,6 +1,6 @@
 # Task ID: 6
 # Title: Filters (Functional) - Implement client-side filters for Status/Priority/Tags/Search
-# Status: pending
+# Status: in-progress
 # Dependencies: 4, 5
 # Priority: high
 # Description: Create a comprehensive client-side filtering system with status, priority, tags, and search filters that work together in a pipeline and update task counts dynamically.
@@ -45,3 +45,23 @@
 6. Check filter state persists during user session and resets on page reload
 7. Test edge cases like empty search results and no matching filters
 8. Verify filter controls update UI state correctly when toggled
+
+# Subtasks:
+## 1. Verify existing filter functionality in state.js [pending]
+### Dependencies: None
+### Description: Check current filter state management, pipeline, and applyCurrentFilters implementation
+### Details:
+
+
+## 2. Implement filter event handlers in main.js [pending]
+### Dependencies: None
+### Description: Add event listeners for filter controls and wire them to state management
+### Details:
+
+
+## 3. Add visual indicators for active filters [pending]
+### Dependencies: None
+### Description: Enhance UI to show when filters are active and provide clear feedback
+### Details:
+
+
