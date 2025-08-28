@@ -26,7 +26,8 @@ class TaskStorage:
         from sqlalchemy.orm import Session
         from .database import get_project_by_slug, SessionLocal
 
-        env_dir = os.getenv("TASKMASTER_DIR", "/workspace/.taskmaster")
+        # Default to /projects/taskmasterweb for the main project
+        env_dir = os.getenv("TASKMASTER_DIR", "/projects/taskmasterweb/.taskmaster")
 
         # If base_dir is actually a project slug, resolve from DB
         if isinstance(base_dir, str) and not os.path.isabs(base_dir):
@@ -37,6 +38,9 @@ class TaskStorage:
                 if project:
                     resolved_path = getattr(project, "path", None)
                     if isinstance(resolved_path, str):
+                        # Ensure we append .taskmaster to the project path
+                        if not resolved_path.endswith('.taskmaster'):
+                            resolved_path = os.path.join(resolved_path, '.taskmaster')
                         base_dir = resolved_path
             except Exception as e:
                 print(f"[TaskStorage] failed to resolve project slug '{base_dir}' from DB: {e}")
@@ -56,11 +60,13 @@ class TaskStorage:
             self.state_file = self.base_dir / "state.json"
             self.config_file = self.base_dir / "config.json"
         else:
-            # Default behavior with environment variables
+            # Default behavior - use /projects/taskmasterweb paths
             if not self.base_dir.exists():
-                fb = Path("/workspace/taskmaster")
+                fb = Path("/projects/taskmasterweb/.taskmaster")
                 if fb.exists():
                     self.base_dir = fb
+                elif Path("/projects/taskmasterweb/taskmaster").exists():
+                    self.base_dir = Path("/projects/taskmasterweb/taskmaster")
                 else:
                     self.base_dir.mkdir(parents=True, exist_ok=True)
             self.tasks_file = Path(os.getenv("TASKS_FILE", str(self.base_dir / "tasks" / "tasks.json")))

@@ -26,7 +26,7 @@
         "description": "Simplify Docker configuration by consolidating project mounts into a single PROJECTS_HOST_DIR variable, update environment settings, and configure database to use container paths for improved consistency and maintainability.",
         "details": "1. Update docker-compose.yml to use single PROJECTS_HOST_DIR environment variable:\n   - Replace multiple project-specific volume mounts with ${PROJECTS_HOST_DIR}:/projects\n   - Ensure all containers use consistent /projects mount point\n   - Remove redundant volume definitions\n\n2. Update .env file settings:\n   - Define PROJECTS_HOST_DIR=E:\\projects (Windows host path)\n   - Remove duplicate or conflicting project path variables\n   - Document the new simplified mounting structure\n\n3. Configure database projects.path field:\n   - Update all project records to use container paths (/projects/project-name)\n   - Migrate existing host paths to container equivalents\n   - Add validation to ensure paths start with /projects/\n\n4. Update application code:\n   - Modify path resolution logic to work with container paths\n   - Update any hardcoded path references\n   - Ensure cross-platform compatibility\n\n5. Rebuild containers with no cache:\n   - Run docker-compose down --volumes\n   - Execute docker-compose build --no-cache\n   - Start containers with docker-compose up -d\n\n6. Verify mount points and path resolution:\n   - Test that /projects directory is accessible in containers\n   - Confirm project files are visible at expected paths\n   - Validate database path entries work correctly",
         "testStrategy": "1. Verify docker-compose.yml syntax and PROJECTS_HOST_DIR variable usage\n2. Confirm .env file contains correct PROJECTS_HOST_DIR path\n3. Test container rebuild process completes without errors\n4. Validate /projects mount point exists in all containers\n5. Check that project directories are accessible at /projects/project-name paths\n6. Test database project records use container paths (/projects/...)\n7. Verify application can read/write project files using new paths\n8. Test project creation and access through web interface\n9. Confirm no broken path references remain in logs\n10. Validate cross-container file access works correctly\n11. Test backup and restore functionality with new path structure",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           1
         ],
@@ -237,7 +237,7 @@
     ],
     "metadata": {
       "created": "2025-08-28T08:15:14.602Z",
-      "updated": "2025-08-28T09:00:50.985Z",
+      "updated": "2025-08-28T09:16:51.609Z",
       "description": "Atlas Frontend Rebuild tasks"
     }
   }

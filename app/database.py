@@ -121,6 +121,24 @@ class ProjectCreate(BaseModel):
         if v:
             return v.lstrip('/')
         return v
+    
+    @validator('path')
+    def validate_container_path(cls, v):
+        """Ensure paths use container format starting with /projects/."""
+        if v and not v.startswith('/projects/'):
+            # Auto-convert common patterns to container paths
+            if v.startswith('E:\\projects\\') or v.startswith('E:/projects/'):
+                # Convert Windows host path to container path
+                project_name = v.replace('E:\\projects\\', '').replace('E:/projects/', '').replace('\\', '/')
+                return f'/projects/{project_name}'
+            elif '\\' in v or v.startswith('C:') or v.startswith('D:') or v.startswith('E:'):
+                # Likely a Windows path, extract project name
+                parts = v.replace('\\', '/').split('/')
+                project_name = parts[-1] if parts else 'unknown'
+                return f'/projects/{project_name}'
+            # If not a recognized pattern, prepend /projects/
+            return f'/projects/{v.lstrip("/")}'
+        return v
 
 
 class ProjectUpdate(BaseModel):
@@ -141,6 +159,24 @@ class ProjectUpdate(BaseModel):
         """Remove leading slashes from slug to prevent URL issues."""
         if v:
             return v.lstrip('/')
+        return v
+    
+    @validator('path')
+    def validate_container_path(cls, v):
+        """Ensure paths use container format starting with /projects/."""
+        if v and not v.startswith('/projects/'):
+            # Auto-convert common patterns to container paths
+            if v.startswith('E:\\projects\\') or v.startswith('E:/projects/'):
+                # Convert Windows host path to container path
+                project_name = v.replace('E:\\projects\\', '').replace('E:/projects/', '').replace('\\', '/')
+                return f'/projects/{project_name}'
+            elif '\\' in v or v.startswith('C:') or v.startswith('D:') or v.startswith('E:'):
+                # Likely a Windows path, extract project name
+                parts = v.replace('\\', '/').split('/')
+                project_name = parts[-1] if parts else 'unknown'
+                return f'/projects/{project_name}'
+            # If not a recognized pattern, prepend /projects/
+            return f'/projects/{v.lstrip("/")}'
         return v
 
 

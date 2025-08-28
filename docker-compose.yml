@@ -8,8 +8,7 @@ services:
     ports:
       - "${HOST_PORT:-8199}:8000"
     volumes:
-      - "${PROJECT_ROOT}:/workspace"
-      - "E:/projects:/projects"
+      - "${PROJECTS_HOST_DIR}:/projects"
     depends_on:
       - mysql
     restart: unless-stopped
@@ -22,8 +21,7 @@ services:
     ports:
       - "${WEB_HOST_PORT:-9652}:9652"
     volumes:
-      - "${PROJECT_ROOT}:/workspace"
-      - "E:/projects:/projects"
+      - "${PROJECTS_HOST_DIR}:/projects"
     restart: unless-stopped
     depends_on:
       - taskmasterweb
