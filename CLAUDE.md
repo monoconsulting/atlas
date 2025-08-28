@@ -492,6 +492,59 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 - **Negative**: Required container rebuilds, temporary service disruption during migration
 - **Risk Mitigation**: Comprehensive testing suite, backup preservation, atomic file operations
 
+### ADR-005: Atlas Frontend Rebuild Task 3 Implementation (2025-08-28)
+
+**Status**: Implemented ✅  
+**Context**: Task 3 required creating a minimal HTML shell with Atlas header, header counters, single filter row, and complete removal of Advanced Filters functionality.
+
+**Problem**: 
+- Legacy frontend needed complete replacement with clean, minimal structure
+- Advanced Filters system required elimination while maintaining essential filtering
+- UI needed Atlas branding and dynamic status counters system
+- All data-testid attributes required for comprehensive testing compliance
+
+**Solution**: Complete HTML shell implementation following exact specifications:
+
+**HTML Structure Implementation** (`app/static/index.html`):
+- **Atlas Header**: Dynamic project name format "Atlas – {projectName}" with working directory subtitle
+- **Header Counters**: All 7 status categories (Backlog, Todo, In progress, Review, Done, Deferred, Cancelled) with data-testid compliance
+- **Action Buttons**: Three buttons above filter row (Create New Task, Create New Status, Create New Tag)
+- **Single Filter Row**: Exact control order - Status, Priority, Tags, Sorting, Search with dark blue Atlas theme
+
+**Advanced Filters Elimination**:
+- **Complete Removal**: No legacy advanced filter interface remains
+- **Simplified Interface**: Single row of essential controls only
+- **Data-TestID Cleanup**: No `data-testid="advanced-filters"` elements exist
+- **Clean Architecture**: 151-line minimal HTML structure
+
+**Technical Implementation**:
+- **Responsive Design**: Tailwind CSS grid system (1/2/4/7 columns across breakpoints)
+- **Spinner Overlay System**: Professional loading indicator with CSS animations
+- **Error Handling Structure**: Error banner with proper visibility controls
+- **Modal Foundation**: Task modal structure ready for JavaScript integration
+- **Semantic HTML**: Proper header/main/section tags throughout
+
+**Comprehensive Testing** (12/12 tests passed):
+- File existence and HTML structure validation
+- Atlas header format and header counters verification
+- Filter row control order and Advanced Filters elimination
+- Kanban container and spinner overlay functionality
+- Semantic structure and Tailwind CSS integration
+- Responsive layout and legacy complexity cleanup
+
+**Testing Results**:
+- ✅ All required data-testid attributes implemented exactly as specified
+- ✅ Complete elimination of Advanced Filters functionality confirmed
+- ✅ Professional UI styling consistent with Atlas theme
+- ✅ Responsive layout foundation working across screen sizes
+- ✅ Spinner overlay system with proper CSS animations
+- ✅ Webpage live and accessible at http://localhost:8199
+
+**Consequences**: 
+- **Positive**: Clean minimal foundation, complete Atlas branding, test compliance, JavaScript-ready structure
+- **Negative**: Static interface until JavaScript modules implemented in Task 4
+- **Risk Mitigation**: Comprehensive testing, semantic structure, proper accessibility foundation
+
 ---
 
 ## Task Master AI Instructions
