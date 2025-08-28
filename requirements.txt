@@ -5,3 +5,13 @@ pydantic==1.10.15
 # Database ORM and MySQL driver
 sqlalchemy==2.0.29
 mysql-connector-python==8.1.0
+
+# Dependencies required by TaskStorage
+ijson==3.4.0
+
+# Cross-process file locking for multi-agent concurrency
+portalocker==2.8.0
+
+# Test & tooling
+pytest==7.4.0
+requests==2.31.0

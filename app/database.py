@@ -10,7 +10,7 @@ from typing import Optional
 from sqlalchemy import create_engine, Column, Integer, String, Text, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 # Database configuration
 DATABASE_URL = os.getenv(
@@ -18,16 +18,8 @@ DATABASE_URL = os.getenv(
     "mysql+mysqlconnector://tmuser:tmpassword@mysql:3306/taskmaster"
 )
 
-# SQLAlchemy setup: be resilient in local dev where MySQL may not be available.
-try:
-    engine = create_engine(DATABASE_URL, echo=False)
-    # Try a quick connect to validate the URL (will raise if host unknown)
-    conn = engine.connect()
-    conn.close()
-except Exception:
-    # Fallback to a lightweight local SQLite file for developer/testing environments.
-    sqlite_url = os.getenv("TASKMASTER_SQLITE_URL", "sqlite:///./taskmaster_local.db")
-    engine = create_engine(sqlite_url, echo=False, connect_args={"check_same_thread": False})
+# SQLAlchemy setup: MySQL only
+engine = create_engine(DATABASE_URL, echo=False)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -41,6 +33,7 @@ class Project(Base):
     slug = Column(String(100), unique=True, nullable=False, index=True)
     name = Column(String(255), nullable=False)
     path = Column(String(500), nullable=False)
+    task_file_path = Column(String(500), nullable=True)  # Path to tasks.json file
     description = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -53,6 +46,7 @@ class Project(Base):
             "slug": self.slug,
             "name": self.name,
             "path": self.path,
+            "task_file_path": self.task_file_path,
             "description": self.description,
             "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
             "updated_at": self.updated_at.isoformat() + "Z" if self.updated_at else None,
@@ -66,8 +60,16 @@ class ProjectCreate(BaseModel):
     slug: str
     name: str
     path: str
+    task_file_path: Optional[str] = None
     description: Optional[str] = None
     active: bool = True
+    
+    @validator('slug')
+    def clean_slug(cls, v):
+        """Remove leading slashes from slug to prevent URL issues."""
+        if v:
+            return v.lstrip('/')
+        return v
 
 
 class ProjectUpdate(BaseModel):
@@ -75,8 +77,16 @@ class ProjectUpdate(BaseModel):
     slug: Optional[str] = None
     name: Optional[str] = None
     path: Optional[str] = None
+    task_file_path: Optional[str] = None
     description: Optional[str] = None
     active: Optional[bool] = None
+    
+    @validator('slug')
+    def clean_slug(cls, v):
+        """Remove leading slashes from slug to prevent URL issues."""
+        if v:
+            return v.lstrip('/')
+        return v
 
 
 class ProjectResponse(BaseModel):
@@ -85,6 +95,7 @@ class ProjectResponse(BaseModel):
     slug: str
     name: str
     path: str
+    task_file_path: Optional[str]
     description: Optional[str]
     created_at: Optional[str]
     updated_at: Optional[str]
@@ -126,6 +137,7 @@ def create_project(db, project: ProjectCreate) -> Project:
         slug=project.slug,
         name=project.name, 
         path=project.path,
+        task_file_path=project.task_file_path,
         description=project.description,
         active=project.active
     )

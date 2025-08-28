@@ -94,6 +94,12 @@
                     </div>
                     
                     <div>
+                        <button type="button" id="selectTaskfileBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            ➕ Select Taskfile
+                        </button>
+                    </div>
+                    
+                    <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">URL Slug</label>
                         <input type="text" id="projectSlug" required pattern="[a-zA-Z0-9-_]+" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -123,6 +129,18 @@
                     </div>
                     
                     <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Task File</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="taskFilePath" readonly
+                                   class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="No task file selected">
+                            <button type="button" id="selectTaskFileBtn" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                Select
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
                         <textarea id="projectDescription" rows="3" 
                                   class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
@@ -137,6 +155,45 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Selector Modal -->
+    <div id="fileSelectorModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-lg w-full max-w-2xl mx-4 max-h-[80vh] flex flex-col">
+            <div class="p-6 border-b border-slate-800">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold text-slate-200">Select Task File</h3>
+                    <button id="closeFileSelector" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-center space-x-2 text-sm text-slate-400">
+                        <span>Current Path:</span>
+                        <span id="currentPath" class="font-mono text-slate-300">/projects</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-6">
+                <div id="fileList" class="space-y-2">
+                    <!-- Files will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-slate-800">
+                <div class="flex gap-3">
+                    <input type="text" id="selectedFilePath" readonly
+                           class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono text-sm"
+                           placeholder="No file selected">
+                    <button type="button" id="confirmFileSelection" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50" disabled>
+                        Select
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -165,16 +222,35 @@
             document.getElementById('projectForm').addEventListener('submit', handleProjectSubmit);
             document.getElementById('projectSlug').addEventListener('input', updateSlugPreview);
             
+            // File selector event listeners
+            document.getElementById('selectTaskfileBtn').addEventListener('click', openFileSelector);
+            document.getElementById('selectTaskFileBtn').addEventListener('click', openFileSelector);
+            document.getElementById('closeFileSelector').addEventListener('click', closeFileSelector);
+            document.getElementById('confirmFileSelection').addEventListener('click', confirmFileSelection);
+            
             // Close modal on backdrop click
             document.getElementById('projectModal').addEventListener('click', (e) => {
                 if (e.target.id === 'projectModal') {
                     hideProjectModal();
                 }
             });
+            
+            // Close file selector on backdrop click
+            document.getElementById('fileSelectorModal').addEventListener('click', (e) => {
+                if (e.target.id === 'fileSelectorModal') {
+                    closeFileSelector();
+                }
+            });
         }
 
         function updateSlugPreview() {
-            const slug = document.getElementById('projectSlug').value || 'your-slug';
+            let slug = document.getElementById('projectSlug').value || 'your-slug';
+            // Remove any leading slashes to prevent URL issues
+            slug = slug.replace(/^\/+/, '');
+            // Update the input field if we removed leading slashes
+            if (document.getElementById('projectSlug').value !== slug) {
+                document.getElementById('projectSlug').value = slug;
+            }
             document.getElementById('slugPreview').textContent = slug;
         }
 
@@ -238,14 +314,22 @@
                     
                     <div class="text-xs text-slate-500 space-y-1 mb-4">
                         <div><strong>Path:</strong> <span class="font-mono">${escapeHtml(project.path)}</span></div>
+                        <div><strong>Task File:</strong> <span class="font-mono text-green-400">${escapeHtml(project.task_file_path || 'Not selected')}</span></div>
                         <div><strong>Created:</strong> ${formatDate(project.created_at)}</div>
                         <div><strong>Updated:</strong> ${formatDate(project.updated_at)}</div>
                     </div>
                     
-                    <a href="http://localhost:8199/${escapeHtml(project.slug)}" target="_blank" 
-                       class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                        Open Project
-                    </a>
+                    <div class="flex gap-2">
+                        <a href="http://localhost:8199/${escapeHtml(project.slug)}" target="_blank" 
+                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
+                            Open Project
+                        </a>
+                        <button onclick="disableProject(${project.id})" 
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" 
+                                title="Disable Project">
+                            Disable
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -263,12 +347,14 @@
                 document.getElementById('projectName').value = project.name;
                 document.getElementById('projectSlug').value = project.slug;
                 document.getElementById('projectPath').value = project.path;
+                document.getElementById('taskFilePath').value = project.task_file_path || '';
                 document.getElementById('projectDescription').value = project.description || '';
                 updateSlugPreview();
             } else {
                 document.getElementById('modalTitle').textContent = 'Add New Project';
                 document.getElementById('projectForm').reset();
                 document.getElementById('projectId').value = '';
+                document.getElementById('taskFilePath').value = '';
                 updateSlugPreview();
             }
             
@@ -283,10 +369,16 @@
         async function handleProjectSubmit(e) {
             e.preventDefault();
             
+            const taskFilePath = document.getElementById('taskFilePath').value;
+            
+            // Clean slug to ensure no leading slashes
+            let cleanSlug = document.getElementById('projectSlug').value.replace(/^\/+/, '');
+            
             const formData = {
                 name: document.getElementById('projectName').value,
-                slug: document.getElementById('projectSlug').value,
+                slug: cleanSlug,
                 path: document.getElementById('projectPath').value,
+                task_file_path: taskFilePath || null,
                 description: document.getElementById('projectDescription').value
             };
 
@@ -353,6 +445,34 @@
             }
         }
 
+        async function disableProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            if (!confirm(`Disable project "${project.name}"?\n\nThis will hide the project from the admin interface but preserve its data. You can re-enable it later if needed.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/projects/${projectId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ active: false })
+                });
+
+                if (response.ok) {
+                    loadProjects();
+                    showNotification('Project disabled successfully');
+                } else {
+                    const error = await response.json();
+                    showNotification(error.detail || 'Failed to disable project', 'error');
+                }
+            } catch (error) {
+                console.error('Error disabling project:', error);
+                showNotification('Error disabling project', 'error');
+            }
+        }
+
         async function discoverProjects() {
             showNotification('Project discovery is not yet implemented', 'warning');
             // TODO: Implement project discovery endpoint
@@ -387,6 +507,135 @@
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
             return new Date(dateString).toLocaleDateString() + ' ' + new Date(dateString).toLocaleTimeString();
+        }
+        
+        // File selector functions
+        let currentBrowsePath = '/projects';
+        let selectedTaskFile = null;
+        
+        function openFileSelector() {
+            currentBrowsePath = '/projects';
+            selectedTaskFile = null;
+            document.getElementById('selectedFilePath').value = '';
+            document.getElementById('confirmFileSelection').disabled = true;
+            document.getElementById('fileSelectorModal').classList.remove('hidden');
+            loadFileBrowser(currentBrowsePath);
+        }
+        
+        function closeFileSelector() {
+            document.getElementById('fileSelectorModal').classList.add('hidden');
+        }
+        
+        function confirmFileSelection() {
+            if (selectedTaskFile) {
+                // Set the task file path in the form
+                document.getElementById('taskFilePath').value = selectedTaskFile;
+                
+                // Extract project root path from task file path
+                let projectRoot = selectedTaskFile;
+                if (selectedTaskFile.includes('/.taskmaster/tasks/tasks.json')) {
+                    projectRoot = selectedTaskFile.replace('/.taskmaster/tasks/tasks.json', '');
+                } else if (selectedTaskFile.endsWith('/tasks.json')) {
+                    // Handle other task file locations
+                    projectRoot = selectedTaskFile.substring(0, selectedTaskFile.lastIndexOf('/'));
+                }
+                
+                // Also update the project path field if it's empty or if we're selecting a taskfile
+                if (!document.getElementById('projectPath').value || document.getElementById('projectPath').value === '/projects') {
+                    document.getElementById('projectPath').value = projectRoot;
+                }
+                
+                closeFileSelector();
+            }
+        }
+        
+        async function loadFileBrowser(path) {
+            try {
+                const response = await fetch(`${API_BASE}/browse-files?path=${encodeURIComponent(path)}`);
+                const data = await response.json();
+                
+                if (data.ok) {
+                    currentBrowsePath = data.current_path;
+                    document.getElementById('currentPath').textContent = currentBrowsePath;
+                    renderFileList(data);
+                } else {
+                    showNotification('Failed to browse files: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error browsing files:', error);
+                showNotification('Error browsing files', 'error');
+            }
+        }
+        
+        function renderFileList(data) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            // Add back button if not at root
+            if (currentBrowsePath !== '/projects') {
+                const backItem = document.createElement('div');
+                backItem.className = 'flex items-center p-3 hover:bg-slate-800 rounded-lg cursor-pointer';
+                backItem.innerHTML = `
+                    <svg class="w-5 h-5 mr-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    <span class="text-slate-400">.. (Go back)</span>
+                `;
+                backItem.onclick = () => {
+                    const parentPath = currentBrowsePath.substring(0, currentBrowsePath.lastIndexOf('/')) || '/projects';
+                    loadFileBrowser(parentPath);
+                };
+                fileList.appendChild(backItem);
+            }
+            
+            // Render directories
+            data.directories.forEach(dir => {
+                const dirItem = document.createElement('div');
+                dirItem.className = 'flex items-center justify-between p-3 hover:bg-slate-800 rounded-lg cursor-pointer';
+                dirItem.innerHTML = `
+                    <div class="flex items-center flex-1" onclick="loadFileBrowser('${dir.path}')">
+                        <svg class="w-5 h-5 mr-3 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
+                        </svg>
+                        <span class="text-slate-200">${escapeHtml(dir.name)}</span>
+                        ${dir.has_taskfile ? '<span class="ml-2 text-xs bg-green-600 text-white px-2 py-1 rounded">Has tasks.json</span>' : ''}
+                    </div>
+                    ${dir.has_taskfile ? `
+                        <button onclick="selectTaskFile('${dir.taskfile_path}'); event.stopPropagation();" 
+                                class="ml-3 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                            Select
+                        </button>
+                    ` : ''}
+                `;
+                fileList.appendChild(dirItem);
+            });
+            
+            // Render files
+            data.files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between p-3 hover:bg-slate-800 rounded-lg';
+                fileItem.innerHTML = `
+                    <div class="flex items-center flex-1">
+                        <svg class="w-5 h-5 mr-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-slate-200">${escapeHtml(file.name)}</span>
+                    </div>
+                    ${file.is_taskfile ? `
+                        <button onclick="selectTaskFile('${file.path}')" 
+                                class="ml-3 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                            Select
+                        </button>
+                    ` : ''}
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        function selectTaskFile(path) {
+            selectedTaskFile = path;
+            document.getElementById('selectedFilePath').value = path;
+            document.getElementById('confirmFileSelection').disabled = false;
         }
     </script>
 </body>

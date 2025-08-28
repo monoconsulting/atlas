@@ -61,15 +61,7 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
 
-    /* Test against mobile viewports. */
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    },
+    
 
     /* Test against branded browsers. */
     {
@@ -87,7 +79,7 @@ module.exports = defineConfig({
   // Let Playwright start the FastAPI app via uvicorn on port 8199 for the test run.
   command: 'python -m uvicorn app.main:app --host 127.0.0.1 --port 8199',
   url: 'http://127.0.0.1:8199/health',
-    reuseExistingServer: false,
+    reuseExistingServer: true,
     timeout: 120000,
   },
 

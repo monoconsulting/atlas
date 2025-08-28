@@ -1,6 +1,6 @@
 # Task ID: 213
 # Title: Add to docker-compose.yml
-# Status: todo
+# Status: done
 # Dependencies: None
 # Priority: medium
 # Description: Mounts and stuff to add
@@ -11,9 +11,21 @@
 
 
 # Subtasks:
-## 1. Add E:\projects a [todo]
+## 1. Add E:\projects a [done]
 ### Dependencies: None
 ### Description: Add E:\projects as a mount to the docker-compose. all projects are here in subfolders. When starting anew project it should be possible to pick the correct folder from here
+### Details:
+
+
+## 2. Added Subtask 1756127553637 [done]
+### Dependencies: None
+### Description: sdfg
+### Details:
+
+
+## 3. Added Subtask 1756135127227 [done]
+### Dependencies: None
+### Description: 
 ### Details:
 
 
