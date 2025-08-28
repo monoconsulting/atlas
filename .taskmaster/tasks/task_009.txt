@@ -1,0 +1,236 @@
+# Task ID: 9
+# Title: Refactor Large Component ActionItems.vue
+# Status: done
+# Dependencies: 3
+# Priority: high
+# Description: Break down the 756-line ActionItems.vue component into smaller, focused components, extract reusable logic into composables and services to improve maintainability and readability.
+# Details:
+This task involves refactoring the large ActionItems.vue component to improve maintainability, readability, and reusability:
+
+1. Analyze the current ActionItems.vue component:
+   - Identify distinct UI sections and responsibilities
+   - Map out data flow and state management
+   - Document business logic that can be extracted
+   - Identify reusable patterns for potential composables
+
+2. Create a component architecture plan:
+   - Design a hierarchy of smaller components
+   - Define clear interfaces between components
+   - Determine state management approach (props, emits, provide/inject)
+   - Plan for composition API usage
+
+3. Extract UI components:
+   - Create smaller, focused components for each distinct UI section:
+     ```
+     /components/action-items/
+       ActionItemsList.vue
+       ActionItemCard.vue
+       ActionItemFilters.vue
+       ActionItemHeader.vue
+       ActionItemDetails.vue
+       etc.
+     ```
+   - Ensure each component has a single responsibility
+   - Implement proper prop validation and defaults
+   - Use slots for flexible content composition
+
+4. Extract business logic into composables:
+   - Create reusable composables for common functionality:
+     ```
+     /composables/
+       useActionItemsFiltering.js
+       useActionItemsSorting.js
+       useActionItemsState.js
+       useActionItemsActions.js
+       etc.
+     ```
+   - Implement proper return values with reactive references
+   - Document each composable with JSDoc comments
+   - Ensure composables are testable in isolation
+
+5. Extract service layer for API interactions:
+   - Create service modules for data operations:
+     ```
+     /services/
+       actionItemsService.js
+       actionItemsApi.js
+       etc.
+     ```
+   - Centralize API calls and data transformations
+   - Implement error handling and loading states
+   - Add retry logic for failed requests if needed
+
+6. Refactor the main ActionItems.vue component:
+   - Import and use the new components and composables
+   - Remove duplicated code
+   - Simplify the template structure
+   - Ensure the component is under 300 lines
+
+7. Update imports and references:
+   - Update any components that import or use ActionItems.vue
+   - Ensure proper data flow between components
+   - Verify event handling works correctly
+
+8. Optimize performance:
+   - Implement lazy loading for components where appropriate
+   - Add memoization for expensive computations
+   - Use v-once for static content
+   - Consider using shallowRef for large objects
+
+# Test Strategy:
+1. Code Quality Verification:
+   - Verify the refactored ActionItems.vue is under 300 lines
+   - Run linting tools to ensure code quality standards
+   - Check for proper component naming conventions
+   - Verify all components have proper prop validation
+
+2. Unit Testing:
+   - Create unit tests for each extracted component:
+     ```javascript
+     import { mount } from '@vue/test-utils'
+     import ActionItemCard from '@/components/action-items/ActionItemCard.vue'
+     
+     describe('ActionItemCard', () => {
+       it('renders correctly with props', () => {
+         const wrapper = mount(ActionItemCard, {
+           props: {
+             item: { id: 1, title: 'Test Item', status: 'pending' }
+           }
+         })
+         expect(wrapper.text()).toContain('Test Item')
+         expect(wrapper.find('.status').text()).toBe('pending')
+       })
+       
+       it('emits update event when action button clicked', async () => {
+         const wrapper = mount(ActionItemCard, {
+           props: {
+             item: { id: 1, title: 'Test Item', status: 'pending' }
+           }
+         })
+         await wrapper.find('.action-button').trigger('click')
+         expect(wrapper.emitted('update')).toBeTruthy()
+       })
+     })
+     ```
+   - Test all composables with unit tests:
+     ```javascript
+     import { useActionItemsFiltering } from '@/composables/useActionItemsFiltering'
+     
+     describe('useActionItemsFiltering', () => {
+       it('filters items correctly by status', () => {
+         const items = [
+           { id: 1, status: 'completed' },
+           { id: 2, status: 'pending' }
+         ]
+         const { filterByStatus } = useActionItemsFiltering(items)
+         const result = filterByStatus('completed')
+         expect(result.value).toHaveLength(1)
+         expect(result.value[0].id).toBe(1)
+       })
+     })
+     ```
+   - Test services with mocked API responses
+
+3. Integration Testing:
+   - Create integration tests that verify components work together:
+     ```javascript
+     import { mount } from '@vue/test-utils'
+     import ActionItems from '@/components/ActionItems.vue'
+     import { createTestingPinia } from '@pinia/testing'
+     
+     describe('ActionItems Integration', () => {
+       it('renders all child components correctly', () => {
+         const wrapper = mount(ActionItems, {
+           global: {
+             plugins: [createTestingPinia()]
+           }
+         })
+         expect(wrapper.findComponent({ name: 'ActionItemsList' }).exists()).toBe(true)
+         expect(wrapper.findComponent({ name: 'ActionItemFilters' }).exists()).toBe(true)
+       })
+     })
+     ```
+   - Test data flow between parent and child components
+   - Verify events are properly propagated
+
+4. Visual Regression Testing:
+   - Capture screenshots before and after refactoring
+   - Use tools like Storybook and Chromatic to verify visual consistency
+   - Test responsive behavior across different screen sizes
+
+5. Performance Testing:
+   - Measure component render times before and after refactoring
+   - Verify memory usage improvements
+   - Test with large datasets to ensure performance at scale
+
+6. Manual Testing:
+   - Create a checklist of all ActionItems.vue functionality
+   - Verify each feature works identically after refactoring
+   - Test edge cases and error states
+
+# Subtasks:
+## 1. Analyze ActionItems.vue Component Structure [done]
+### Dependencies: None
+### Description: Perform a detailed analysis of the current ActionItems.vue component to identify UI sections, data flow, state management, and business logic that can be extracted.
+### Details:
+1. Review the entire 756-line component code
+2. Document all UI sections and their responsibilities
+3. Create a data flow diagram showing how state is managed
+4. Identify business logic that can be extracted into composables
+5. List reusable patterns across the component
+6. Document component lifecycle hooks and their purposes
+7. Identify performance bottlenecks
+8. Create a report summarizing findings with recommendations for extraction
+
+## 2. Create Component Architecture Plan [done]
+### Dependencies: 9.1
+### Description: Design a comprehensive architecture plan for breaking down ActionItems.vue into smaller components with clear interfaces and state management approach.
+### Details:
+1. Design a component hierarchy diagram
+2. Define interfaces between components (props, events)
+3. Determine state management approach (local state, provide/inject, Vuex)
+4. Plan naming conventions for new components
+5. Document data flow between components
+6. Create folder structure for new components
+7. Define component responsibilities and boundaries
+8. Create a migration strategy to minimize disruption
+
+## 3. Extract UI Components [done]
+### Dependencies: 9.2
+### Description: Create smaller, focused UI components based on the architecture plan, ensuring each has a single responsibility with proper prop validation.
+### Details:
+1. Create component files according to the architecture plan
+2. Implement ActionItemsList.vue for displaying the list of action items
+3. Implement ActionItemCard.vue for individual action item display
+4. Implement ActionItemFilters.vue for filtering functionality
+5. Implement ActionItemHeader.vue for the header section
+6. Implement ActionItemDetails.vue for detailed view
+7. Ensure proper prop validation and defaults for all components
+8. Use slots for flexible content composition where appropriate
+
+## 4. Extract Business Logic into Composables [done]
+### Dependencies: 9.1
+### Description: Create reusable composables for common functionality identified in the analysis phase, ensuring they are testable and well-documented.
+### Details:
+1. Create useActionItemsFiltering.js for filtering logic
+2. Create useActionItemsSorting.js for sorting functionality
+3. Create useActionItemsState.js for state management
+4. Create useActionItemsActions.js for action handlers
+5. Implement proper return values with reactive references
+6. Add JSDoc comments for all composables
+7. Ensure composables are testable in isolation
+8. Create unit tests for each composable
+
+## 5. Refactor Main Component and Implement Service Layer [done]
+### Dependencies: 9.3, 9.4
+### Description: Refactor the main ActionItems.vue component to use the new components and composables, and implement a service layer for API interactions.
+### Details:
+1. Create service modules for data operations (actionItemsService.js, actionItemsApi.js)
+2. Implement API calls with proper error handling and loading states
+3. Add retry logic for failed requests
+4. Refactor the main ActionItems.vue to use new components and composables
+5. Remove duplicated code and simplify template structure
+6. Ensure the refactored component is under 300 lines
+7. Update any components that import or use ActionItems.vue
+8. Verify all functionality works as expected after refactoring
+

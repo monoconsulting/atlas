@@ -1,0 +1,76 @@
+# Task ID: 227
+# Title: Fix TaskMaster JSON parsing issues and optimize file sizes
+# Status: done
+# Dependencies: 23, 50, 55
+# Priority: high
+# Description: Address large JSON file issues causing token limits and parsing failures by cleaning up data structure, ensuring proper TaskMaster status handling, implementing tag support, and optimizing file sizes for both root and .taskmaster directories
+# Details:
+1. Analyze current JSON structure discrepancy: root tasks.json (692KB) vs .taskmaster/tasks/tasks.json (166KB) to identify redundant data and optimization opportunities.
+2. Implement JSON structure cleanup:
+   - Remove duplicate or unnecessary fields
+   - Normalize task status values to TaskMaster standards (pending, in-progress, done, deferred, cancelled, blocked)
+   - Clean up orphaned dependencies and references
+   - Remove any legacy or deprecated fields
+3. Optimize JSON file handling:
+   - Implement streaming JSON parsing for large files using ijson or similar libraryントラ   - Add chunked reading/writing for files over 100KB
+   - Implement compression for stored JSON (gzip compression with .gz extension)
+   - Add file size monitoring and warnings when approaching limits
+4. Enhance tag support implementation:
+   - Ensure proper tag structure in JSON (tags as top-level keys)
+   - Implement tag migration for legacy data structures
+   - Add tag validation and normalization
+   - Support currentTag state management
+5. Improve error handling and recovery:
+   - Enhanced JSON parsing with better error messages
+   - Implement partial file recovery for corrupted JSON
+   - Add backup mechanism before major file operations
+   - Implement rollback capability for failed operations
+6. Add data validation layer:
+   - Validate task IDs are unique within tags
+   - Ensure dependency references are valid
+   - Check for circular dependencies
+   - Validate status values against allowed TaskMaster statuses
+7. Performance optimizations:
+   - Implement lazy loading for task details
+   - Add caching layer for frequently accessed data
+   - Use memory-mapped files for very large JSON files
+   - Implement incremental updates instead of full file rewrites
+8. Add monitoring and diagnostics:
+   - File size tracking and reporting
+   - JSON structure health checks
+   - Performance metrics for parse/write operations
+   - Token usage estimation for AI operations
+
+# Test Strategy:
+1. File size optimization tests:
+   - Create test files with 1000+ tasks to simulate large datasets
+   - Verify file size reduction of at least 50% after optimization
+   - Test with files approaching various size limits (1MB, 5MB, 10MB)
+2. JSON parsing stress tests:
+   - Test with corrupted JSON files (truncated, malformed, mixed encodings)
+   - Verify successful parsing of files with 10,000+ tasks
+   - Test concurrent read/write operations
+   - Measure parsing performance improvements
+3. Tag support validation:
+   - Test creation, switching, and deletion of tags
+   - Verify task isolation between tags
+   - Test tag migration from legacy structures
+   - Validate currentTag persistence
+4. Status handling tests:
+   - Verify all TaskMaster status values are properly handled
+   - Test status transitions and validation
+   - Ensure backward compatibility with existing status values
+5. Data integrity tests:
+   - Verify no data loss during optimization
+   - Test dependency validation and cleanup
+   - Ensure ID uniqueness within tags
+   - Test circular dependency detection
+6. Performance benchmarks:
+   - Measure load times for various file sizes
+   - Test memory usage with large datasets
+   - Verify response times remain under 100ms for typical operations
+7. Integration tests:
+   - Test compatibility with Task Master AI CLI
+   - Verify MCP server integration continues working
+   - Test web UI functionality with optimized files
+   - Ensure Docker deployment handles large files properly

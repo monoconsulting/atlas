@@ -1,0 +1,5 @@
+{
+  "error": "locator.isVisible: Error: strict mode violation: locator('#createTaskBtn') resolved to 2 elements:\n    1) <button id=\"createTaskBtn\" class=\"px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2\">…</button> aka getByRole('button', { name: 'Create Task' })\n    2) <button id=\"createTaskBtn\" class=\"w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2\">…</button> aka getByRole('button', { name: 'Create New Task' })\n\nCall log:\n\u001b[2m    - checking visibility of locator('#createTaskBtn')\u001b[22m\n",
+  "timestamp": "2025-08-26T16:38:09.469Z",
+  "verdict": "VERIFICATION_FAILURE"
+}

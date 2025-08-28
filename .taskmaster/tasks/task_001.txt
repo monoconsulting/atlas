@@ -1,0 +1,156 @@
+# Task ID: 1
+# Title: Refactor Monolithic main.py into Clean Architecture Components
+# Status: done
+# Dependencies: 25
+# Priority: medium
+# Description: Break down the 4236-line main.py file into service classes, repositories, and routers following clean architecture principles to improve maintainability and testability.
+# Details:
+This task involves refactoring the monolithic main.py file into a clean architecture structure:
+
+1. Analyze the current main.py to identify distinct responsibilities:
+   - API routes and request handling
+   - Business logic
+   - Data access
+   - Utility functions
+
+2. Create a modular directory structure:
+   ```
+   /app
+     /api
+       /routers
+         user_router.py
+         product_router.py
+         etc.
+     /services
+       user_service.py
+       product_service.py
+       etc.
+     /repositories
+       user_repository.py
+       product_repository.py
+       etc.
+     /models
+       user.py
+       product.py
+       etc.
+     /utils
+       helpers.py
+       validators.py
+       etc.
+     main.py
+   ```
+
+3. Extract business logic into service classes:
+   - Create service classes for each domain entity
+   - Move business rules and workflows from main.py to appropriate service classes
+   - Implement dependency injection for repositories
+
+4. Implement repository pattern:
+   - Create repository interfaces and implementations for data access
+   - Abstract database operations behind repository interfaces
+   - Ensure repositories handle all data persistence concerns
+
+5. Reorganize API routes:
+   - Create separate router modules for each resource type
+   - Use FastAPI/Flask Router objects to organize endpoints
+   - Ensure routers only handle HTTP concerns and delegate to services
+
+6. Update main.py to:
+   - Import and register all routers
+   - Configure dependency injection
+   - Initialize application components
+   - Maintain configuration and startup code only
+
+7. Ensure proper error handling across all layers
+8. Maintain backward compatibility during refactoring
+
+The final main.py should be reduced to under 500 lines and primarily handle application initialization and configuration.
+
+# Test Strategy:
+1. Code Quality Verification:
+   - Run static code analysis tools (pylint, flake8) on the refactored codebase
+   - Verify PEP 8 compliance
+   - Check for reduced cyclomatic complexity in the new modules
+
+2. Functionality Testing:
+   - Create a comprehensive test suite covering all refactored components
+   - Implement unit tests for each service class and repository
+   - Develop integration tests for API endpoints
+   - Compare API responses before and after refactoring to ensure identical behavior
+   - Test all edge cases and error handling scenarios
+
+3. Performance Testing:
+   - Benchmark API response times before and after refactoring
+   - Verify no performance degradation in common operations
+   - Test under load to ensure scalability is maintained or improved
+
+4. Code Review:
+   - Conduct peer review focusing on clean architecture principles
+   - Verify proper separation of concerns
+   - Check for appropriate dependency injection
+   - Ensure business logic is properly isolated in service classes
+
+5. Success Criteria Validation:
+   - Confirm main.py is reduced to fewer than 500 lines
+   - Verify all business logic is extracted to service classes
+   - Ensure repository pattern is correctly implemented
+   - Validate API routes are organized into focused routers
+   - Check that all functionality from the original main.py is preserved
+
+6. Documentation:
+   - Verify updated documentation reflects the new architecture
+   - Ensure code comments explain complex logic or design decisions
+
+# Subtasks:
+## 1. Analyze Current main.py Structure and Extract Distinct Responsibilities [done]
+### Dependencies: None
+### Description: Analyze the 4236-line main.py file to map out all API routes, business logic, data access patterns, and utility functions. Create a detailed breakdown of what needs to be extracted into separate modules including route groupings by domain (companies, users, projects, meetings, transcriptions, n8n), service logic, and repository patterns.
+### Details:
+Examine the monolithic main.py file to identify: 1) All 94 API endpoints and group them by functional domain (company management, user management, project management, meeting processing, transcription handling, n8n webhooks, system utilities) 2) Business logic that should be moved to service classes 3) Direct database queries that should be abstracted into repositories 4) Utility functions for media processing, OpenAI integration, file handling 5) Configuration and dependency injection patterns 6) Error handling approaches that need standardization. Document the current coupling between layers and identify refactoring priorities.
+<info added on 2025-08-14T20:17:20.371Z>
+COMPLETED: Comprehensive analysis of main.py structure completed. Identified 13 functional areas (company management, user management, project management, meeting management, transcription handling, document generation, authentication, file handling, notification services, n8n webhooks, system utilities, OpenAI integration, and configuration management). Mapped 65+ API endpoints across these domains.
+
+Critical findings include two monster functions: process_transcription() (500+ lines) and generate_documents() (373 lines). Meeting management functionality spans 844 lines and represents the highest priority for extraction.
+
+Created detailed MAIN_PY_ANALYSIS.md document with:
+- Complete API endpoint inventory with domain groupings
+- Business logic extraction candidates
+- Database query patterns requiring repository abstraction
+- Utility function categorization
+- Dependency coupling map
+- Phase-by-phase refactoring plan with priority rankings
+
+Highest refactoring priorities: 
+1. Extract process_transcription() and generate_documents() into dedicated service classes
+2. Separate meeting management functionality into domain-specific modules
+3. Create repository layer for database operations
+4. Standardize error handling patterns
+</info added on 2025-08-14T20:17:20.371Z>
+
+## 2. Design Clean Architecture Directory Structure and Interfaces [done]
+### Dependencies: 1.1
+### Description: Design the target clean architecture structure with /app/api/routers, /app/services, /app/repositories, /app/models, and /app/utils directories. Define interfaces for repositories, service contracts, and dependency injection patterns that will guide the refactoring process.
+### Details:
+Create the complete directory structure following clean architecture principles: 1) /app/api/routers/ for domain-specific route handlers (company_router.py, user_router.py, project_router.py, meeting_router.py, transcription_router.py, n8n_router.py, system_router.py) 2) /app/services/ for business logic classes with clear interfaces 3) /app/repositories/ for data access abstraction with repository interfaces 4) /app/models/ for domain models separate from database models 5) /app/utils/ for shared utilities. Define abstract base classes for repositories, service interfaces, and dependency injection configuration. Ensure each layer has clear boundaries and dependencies flow inward following clean architecture principles.
+<info added on 2025-08-14T20:24:39.054Z>
+COMPLETED: Clean architecture design fully implemented. Created complete directory structure with 9 main directories, 8+ __init__.py files. Implemented Pydantic BaseSettings configuration in settings.py with environment variables support. Created BaseRepository with full CRUD operations using generics and type hints. Designed custom exception hierarchy with 6 exception types. Set up dependency injection framework for FastAPI. Created comprehensive CLEAN_ARCHITECTURE_DESIGN.md with detailed service extraction strategy, API router mapping, and migration plan. All foundation components ready for Task 1.3 repository implementation.
+</info added on 2025-08-14T20:24:39.054Z>
+
+## 3. Extract and Implement Repository Layer for Data Access [done]
+### Dependencies: 1.2
+### Description: Create repository interfaces and implementations to abstract all database operations from the main.py file. Implement repositories for Company, User, Project, Meeting, Transcription, ActionItem, and SystemConfig entities with consistent patterns for CRUD operations, queries, and error handling.
+### Details:
+Implement the repository pattern by: 1) Creating abstract repository interfaces with common operations (create, get_by_id, get_all, update, delete, find_by_criteria) 2) Implementing concrete repositories for each entity (CompanyRepository, UserRepository, ProjectRepository, MeetingRepository, TranscriptionRepository, ActionItemRepository, SystemConfigRepository) 3) Extracting all direct database queries from main.py into appropriate repositories 4) Standardizing error handling and transaction management across repositories 5) Implementing repository factory pattern for dependency injection 6) Adding query optimization and relationship loading strategies 7) Ensuring repositories handle complex queries currently embedded in route handlers.
+
+## 4. Extract Business Logic into Service Classes [done]
+### Dependencies: 1.3
+### Description: Create service classes to encapsulate business logic currently embedded in route handlers. Implement services for user management, project management, meeting processing, transcription workflows, and media pipeline orchestration with proper dependency injection of repositories.
+### Details:
+Extract business logic into service classes: 1) UserService for user creation, validation, role management 2) ProjectService for project lifecycle, participant management 3) MeetingService for meeting processing, status transitions, metadata handling 4) TranscriptionService for transcription workflows, Whisper integration, document generation 5) MediaService for file handling, conversion, storage operations 6) N8NService for webhook handling and external integration logic 7) SystemService for configuration, health checks, maintenance operations. Each service should accept repository dependencies through constructor injection, implement clear business rules, handle validation and error scenarios, and maintain separation from HTTP concerns. Services should coordinate multiple repositories when needed for complex operations.
+
+## 5. Create API Routers and Refactor main.py to Orchestration Layer [done]
+### Dependencies: 1.4
+### Description: Extract all API routes into domain-specific router modules using FastAPI's APIRouter. Refactor main.py to serve only as the application entry point, handling dependency injection, middleware configuration, router registration, and startup/shutdown events while reducing it to under 500 lines.
+### Details:
+Complete the refactoring by: 1) Creating separate router files for each domain (company_router.py, user_router.py, project_router.py, meeting_router.py, transcription_router.py, n8n_router.py, system_router.py) using FastAPI's APIRouter 2) Moving all route handlers to appropriate routers with dependency injection of services 3) Standardizing error handling, response patterns, and HTTP status codes across all routers 4) Refactoring main.py to contain only: application factory function, middleware configuration, router registration, dependency injection setup, startup/shutdown events, CORS configuration 5) Ensuring main.py is under 500 lines focused on application orchestration 6) Implementing consistent API documentation and validation across routers 7) Adding proper logging and monitoring integration points.
+

@@ -1,0 +1,88 @@
+# Task ID: 8
+# Title: Remove Script Duplicates from scripts/doubles/ Directory
+# Status: done
+# Dependencies: 3
+# Priority: high
+# Description: Remove duplicate scripts in the scripts/doubles/ directory, ensuring only canonical versions remain in the codebase to reduce redundancy and maintenance overhead.
+# Details:
+This task involves identifying and removing duplicate scripts to maintain a cleaner, more maintainable codebase:
+
+1. Analyze the scripts/doubles/ directory:
+   - Create an inventory of all scripts in the directory
+   - Identify the duplicate scripts and their canonical counterparts elsewhere in the codebase
+   - Document the functionality of each script to ensure proper preservation
+
+2. Identify canonical script locations:
+   - Determine where the canonical version of each script should reside
+   - Verify that canonical versions contain all functionality of the duplicates
+   - Create a mapping document linking duplicates to their canonical versions
+
+3. Update references:
+   - Search the entire codebase for references to scripts in the scripts/doubles/ directory
+   - Update all references to point to the canonical script versions
+   - Ensure import paths are correctly adjusted in all files
+
+4. Verification process:
+   - Create a verification script that confirms all functionality is preserved
+   - Run the verification script before and after changes to ensure equivalence
+   - Document any edge cases or special considerations
+
+5. Remove duplicates:
+   - After verification passes, remove the scripts/doubles/ directory
+   - Ensure build and test processes continue to function correctly
+   - Update documentation to reflect the new structure
+
+6. Implementation example for verification script:
+   ```python
+   def verify_script_functionality(duplicate_path, canonical_path):
+       """
+       Compare the functionality of duplicate and canonical scripts.
+       Returns True if functionality is equivalent, False otherwise.
+       """
+       # Import both modules
+       duplicate_module = importlib.import_module(duplicate_path)
+       canonical_module = importlib.import_module(canonical_path)
+       
+       # Compare function signatures and behavior
+       for func_name in dir(duplicate_module):
+           if func_name.startswith('_'):
+               continue
+               
+           if func_name not in dir(canonical_module):
+               print(f"Function {func_name} missing in canonical version")
+               return False
+               
+           # Test with sample inputs to verify behavior
+           # [Additional verification logic]
+       
+       return True
+   ```
+
+# Test Strategy:
+1. Functional Verification:
+   - Create a test suite that exercises all functionality previously provided by scripts in the doubles directory
+   - Run tests before and after removal to ensure behavior remains identical
+   - Verify all edge cases and special conditions are handled correctly
+
+2. Reference Checking:
+   - Use static analysis tools to verify no references to removed scripts remain:
+     ```bash
+     grep -r "scripts/doubles" --include="*.py" .
+     ```
+   - Ensure all imports and requires have been updated to canonical versions
+   - Verify no runtime errors occur due to missing scripts
+
+3. Integration Testing:
+   - Run the full application test suite to ensure no regressions
+   - Verify all components that previously used scripts from doubles directory function correctly
+   - Test startup, shutdown, and key application workflows
+
+4. Build Verification:
+   - Ensure the build process completes successfully without the doubles directory
+   - Verify deployment artifacts are generated correctly
+   - Confirm CI pipeline passes all stages
+
+5. Success Criteria Validation:
+   - Confirm scripts/doubles/ directory has been completely removed
+   - Verify no duplicate script functionality exists in the codebase
+   - Document the mapping between removed scripts and their canonical locations

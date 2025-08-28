@@ -1,0 +1,19 @@
+# Task ID: 359
+# Title: Implement Task File Selector for Project Admin Interface
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Add a file selector feature to the project admin interface that allows users to select and store TaskMaster task files (tasks.json) when adding or editing projects. Include a green '+Select Taskfile' button in the Add Project modal, file browser for /projects directory, storage of task file path and project root path in database, and display of selected task file path in the modal.
+# Details:
+
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. Update database schema for task file paths [pending]
+### Dependencies: None
+### Description: Add task_file_path and project_root_path columns to the projects table in the database schema
+### Details:
+
+

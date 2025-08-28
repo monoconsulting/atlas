@@ -1,0 +1,11 @@
+# Task ID: 225
+# Title: Test Task for Backdrop Click
+# Status: todo
+# Dependencies: None
+# Priority: medium
+# Description: Testing backdrop functionality
+# Details:
+
+
+# Test Strategy:
+

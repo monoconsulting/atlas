@@ -1,0 +1,383 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Docker Environment and Project Structure",
+        "description": "Initialize the containerized multi-service application with Docker Compose orchestration",
+        "details": "Create Docker Compose configuration with services for FastAPI backend, React frontend, MySQL database, and log-poller service. Set up proper networking, volumes for log directory and database persistence, and environment variable configuration. Include restart policies and health checks for all services.",
+        "testStrategy": "Verify all containers start successfully, can communicate with each other, and restart automatically on failure. Test environment variable injection and volume mounting.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Base Docker Compose Configuration File",
+            "description": "Initialize the docker-compose.yml file with basic service definitions for all four services",
+            "dependencies": [],
+            "details": "Create docker-compose.yml in project root with service definitions for fastapi-backend, react-frontend, mysql-database, and log-poller services. Define basic structure with image references, container names, and placeholder configurations. Use version 3.8 format for compatibility.",
+            "status": "done",
+            "testStrategy": "Validate YAML syntax and ensure docker-compose config command runs without errors"
+          },
+          {
+            "id": 2,
+            "title": "Configure MySQL Database Service with Persistence",
+            "description": "Set up MySQL container with persistent storage, environment variables, and initialization scripts",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Configure MySQL 8.0 service with named volume for data persistence mounted to /var/lib/mysql. Set environment variables for MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, and MYSQL_PASSWORD. Create init-db volume for schema initialization scripts. Configure restart policy as unless-stopped and add basic health check.",
+            "status": "done",
+            "testStrategy": "Test database container startup, data persistence across container restarts, and verify environment variables are properly injected"
+          },
+          {
+            "id": 3,
+            "title": "Configure FastAPI Backend Service with Dependencies",
+            "description": "Set up FastAPI service container with database connectivity and environment configuration",
+            "dependencies": [
+              "1.2"
+            ],
+            "details": "Configure FastAPI service to build from local Dockerfile, expose port 8000, and depend on MySQL service. Set environment variables for database connection (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD). Configure restart policy and health check endpoint. Mount source code volume for development.",
+            "status": "done",
+            "testStrategy": "Verify FastAPI container builds successfully, connects to database, and responds to health check requests"
+          },
+          {
+            "id": 4,
+            "title": "Configure React Frontend Service with Build Process",
+            "description": "Set up React development and production build service with proper port mapping",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Configure React service to build from local Dockerfile with multi-stage build for development and production. Expose port 3000 for development server. Set environment variables for API backend URL (REACT_APP_API_URL). Configure volume mounts for source code and node_modules optimization.",
+            "status": "done",
+            "testStrategy": "Test React development server startup, hot reload functionality, and production build generation"
+          },
+          {
+            "id": 5,
+            "title": "Configure Log Poller Service with File System Access",
+            "description": "Set up log poller service with access to shared log directory and API connectivity",
+            "dependencies": [
+              "1.3"
+            ],
+            "details": "Configure log-poller service to build from local Dockerfile and mount shared logs volume at /logs. Set environment variables for API backend URL and polling configuration (POLL_INTERVAL, API_BASE_URL). Configure depends_on relationship with FastAPI service and restart policy. Ensure proper file permissions for log directory access.",
+            "status": "done",
+            "testStrategy": "Verify log poller service can access mounted log directory, communicate with FastAPI backend, and detect file system changes"
+          },
+          {
+            "id": 6,
+            "title": "Set Up Docker Network and Volume Configuration",
+            "description": "Define custom network and named volumes for service communication and data persistence",
+            "dependencies": [
+              "1.2",
+              "1.5"
+            ],
+            "details": "Create custom bridge network 'fortigate-net' for inter-service communication. Define named volumes: 'mysql-data' for database persistence, 'logs-volume' for shared log file access, and 'generated-configs' for output files. Configure all services to use the custom network with appropriate aliases.",
+            "status": "done",
+            "testStrategy": "Test inter-service communication using service names as hostnames, verify volume mounting and data persistence"
+          },
+          {
+            "id": 7,
+            "title": "Add Environment Configuration and Health Checks",
+            "description": "Implement comprehensive environment variable management and health monitoring for all services",
+            "dependencies": [
+              "1.3",
+              "1.4",
+              "1.5"
+            ],
+            "details": "Create .env file template with all required environment variables. Add health check configurations for all services: MySQL using mysqladmin ping, FastAPI using HTTP health endpoint, React using HTTP response check, and log-poller using custom health script. Configure appropriate timeouts, intervals, and retry policies for each service.",
+            "status": "done",
+            "testStrategy": "Verify all services pass health checks, environment variables are properly loaded, and unhealthy services are automatically restarted"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Setup MySQL Database Schema",
+        "description": "Create and initialize the MySQL database with required tables and relationships",
+        "details": "Design and implement database schema with tables: log_batches (id, filename, uploaded_at, status), traffic_flows (id, log_batch_id, src_ip, dst_ip, dst_port, protocol, hit_count), generated_rules (id, src_object, dst_object, dst_port, protocol, status, ai_suggested_name, ai_comment, ai_anomaly_flag), firewall_objects (id, name, type, value). Include proper indexes and foreign key constraints.",
+        "testStrategy": "Validate schema creation, constraint enforcement, and perform basic CRUD operations on all tables. Test database initialization from Docker container.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Database Schema and Create DDL Scripts",
+            "description": "Create comprehensive database schema design with DDL scripts for all required tables including proper column types, constraints, and relationships",
+            "dependencies": [],
+            "details": "Create SQL DDL scripts defining tables: log_batches (id AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255) UNIQUE NOT NULL, uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, status ENUM('pending','processing','completed','failed')), traffic_flows (id AUTO_INCREMENT PRIMARY KEY, log_batch_id INT, src_ip VARCHAR(45), dst_ip VARCHAR(45), dst_port INT, protocol VARCHAR(10), hit_count INT, FOREIGN KEY log_batch_id REFERENCES log_batches(id)), generated_rules (id AUTO_INCREMENT PRIMARY KEY, src_object VARCHAR(100), dst_object VARCHAR(100), dst_port INT, protocol VARCHAR(10), status ENUM('pending','approved','rejected'), ai_suggested_name VARCHAR(255), ai_comment TEXT, ai_anomaly_flag BOOLEAN DEFAULT FALSE), firewall_objects (id AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) UNIQUE, type ENUM('host','network','range'), value VARCHAR(100)). Include proper data types for IP addresses and ensure referential integrity.",
+            "status": "done",
+            "testStrategy": "Validate DDL syntax using MySQL parser and verify all constraints are properly defined"
+          },
+          {
+            "id": 2,
+            "title": "Create Database Indexes for Query Performance",
+            "description": "Design and implement strategic indexes on frequently queried columns to optimize database performance",
+            "dependencies": [
+              "2.1"
+            ],
+            "details": "Create indexes on: traffic_flows(log_batch_id, src_ip, dst_ip, dst_port) for aggregation queries, traffic_flows(src_ip, dst_ip, dst_port) composite index for duplicate detection, log_batches(status, uploaded_at) for status filtering and time-based queries, generated_rules(status) for filtering approved/pending rules, firewall_objects(name) for object lookups. Consider covering indexes for frequently accessed column combinations to reduce I/O operations.",
+            "status": "done",
+            "testStrategy": "Use EXPLAIN ANALYZE to verify index usage in common queries and measure performance improvements"
+          },
+          {
+            "id": 3,
+            "title": "Implement Database Initialization Script",
+            "description": "Create database initialization script that sets up the complete schema with proper error handling and validation",
+            "dependencies": [
+              "2.1",
+              "2.2"
+            ],
+            "details": "Create init.sql script that includes: database creation with proper charset (utf8mb4) and collation, user creation with appropriate privileges, execution of all DDL scripts in correct order, insertion of any required seed data or default firewall objects, proper transaction handling with rollback on errors. Script should be idempotent and handle existing database scenarios gracefully. Include checks for MySQL version compatibility and required features.",
+            "status": "done",
+            "testStrategy": "Test initialization on clean MySQL instance and verify idempotent behavior when run multiple times"
+          },
+          {
+            "id": 4,
+            "title": "Configure Database Connection Parameters and Environment Setup",
+            "description": "Set up database connection configuration, environment variables, and Docker integration for the MySQL database",
+            "dependencies": [
+              "2.3"
+            ],
+            "details": "Configure MySQL Docker container with proper volume mounting for persistent data storage, environment variables for database credentials, port mapping, and initialization script execution. Create .env configuration for connection parameters including host, port, database name, username, password, and connection pool settings. Set up proper networking for backend service communication and configure MySQL settings for optimal performance (innodb_buffer_pool_size, max_connections, etc.).",
+            "status": "done",
+            "testStrategy": "Test database container startup, connection from application, and data persistence across container restarts"
+          },
+          {
+            "id": 5,
+            "title": "Implement Database Migration and Validation System",
+            "description": "Create migration system for schema versioning and comprehensive database validation procedures",
+            "dependencies": [
+              "2.4"
+            ],
+            "details": "Implement database migration framework that tracks schema versions, handles incremental updates, and supports rollback procedures. Create validation procedures to verify: all tables exist with correct structure, foreign key constraints are properly enforced, indexes are created and functioning, data integrity constraints work correctly, connection pooling is configured properly. Include health check endpoints that validate database connectivity and schema integrity for monitoring purposes.",
+            "status": "done",
+            "testStrategy": "Test migration system with version upgrades and rollbacks, validate all constraints by attempting to insert invalid data, and verify health checks detect schema issues"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Implement FastAPI Backend Foundation",
+        "description": "Create the core FastAPI application with database connectivity and basic API structure",
+        "details": "Set up FastAPI application with SQLAlchemy ORM models matching database schema, database connection pooling, Pydantic models for request/response validation, and basic error handling middleware. Include API versioning with /api/v1 prefix and structured logging configuration.",
+        "testStrategy": "Test API startup, database connectivity, and basic endpoint responsiveness. Validate ORM model creation and database queries.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Log Parsing Engine with Polars",
+        "description": "Create high-performance log parsing system using Polars Lazy API for processing FortiGate logs",
+        "details": "Implement log parser that handles key-value pair format to extract src_ip, dst_ip, dst_port, and protocol fields. Use Polars Lazy API for memory-efficient processing of large files (>RAM size). Include traffic flow aggregation logic to calculate hit_counts for unique (src_ip, dst_ip, dst_port) combinations and handle streaming processing for 18,000+ entries per hour.",
+        "testStrategy": "Test with sample log files of various sizes including >1GB files. Verify memory usage stays within limits and processing speed meets requirements. Validate correct parsing of key-value pairs and aggregation accuracy.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Subnet Consolidation Logic",
+        "description": "Create business logic for consolidating multiple source IPs into subnet objects when >5 hosts from same /24 subnet",
+        "details": "Implement algorithm that identifies when more than 5 unique source hosts from the same /24 subnet target the same destination. Replace individual host entries with single /24 CIDR notation subnet object. Include validation for proper subnet calculation and ensure consolidated rules maintain security posture.",
+        "testStrategy": "Test with controlled datasets containing exactly 6 hosts from same subnet to verify consolidation triggers. Validate CIDR calculation accuracy and ensure no traffic flows are lost during consolidation.",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Log Ingestion API Endpoints",
+        "description": "Create API endpoints for manual log upload and automated processing with file validation",
+        "details": "Implement POST /api/v1/logs/upload endpoint with file upload validation, size limits, and format verification. Include asynchronous processing queue for large files, progress tracking, and error handling. Add endpoints for querying upload status and processing progress with proper HTTP status codes and error responses.",
+        "testStrategy": "Test file upload with various formats and sizes. Verify validation rejects invalid files and processing handles large files without timeout. Test concurrent uploads and error scenarios.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Integrate LLM API for Rule Enrichment",
+        "description": "Implement integration with external LLM API for generating rule names, comments, and anomaly detection",
+        "details": "Create LLM service client with rate limiting, retry logic, and timeout handling. Implement prompt engineering for generating meaningful rule names and descriptive comments based on traffic patterns. Include anomaly flag detection for unusual traffic patterns. Use Pydantic for strict response schema validation and fallback handling for API failures.",
+        "testStrategy": "Test LLM API integration with various traffic patterns. Verify rate limiting and retry mechanisms. Validate response parsing and fallback behavior when API is unavailable.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Rule Management API Endpoints",
+        "description": "Create API endpoints for rule candidate review, status management, and FortiOS configuration export",
+        "details": "Implement GET /api/v1/rules/candidates with pagination, filtering, and sorting. Add PUT /api/v1/rules/{rule_id}/status for approval/rejection workflow. Create GET /api/v1/export/fortios endpoint that generates valid FortiOS CLI syntax from approved rules. Include proper FortiOS formatting with policy IDs, names, and comments.",
+        "testStrategy": "Test rule retrieval with various filters and pagination. Verify status updates persist correctly. Validate FortiOS export generates syntactically correct configuration that can be imported into FortiGate devices.",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Log Poller Service",
+        "description": "Create dedicated service for monitoring file system directory and triggering automatic log processing",
+        "details": "Implement file system watcher service that monitors designated /logs directory for new files. Include file locking mechanisms to prevent processing incomplete uploads, duplicate processing prevention, and proper error handling. Service should call API endpoints for processing and include configurable polling intervals.",
+        "testStrategy": "Test automatic detection of new files in monitored directory. Verify no duplicate processing and proper handling of file system events. Test service restart behavior and error recovery.",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement React Frontend with Dashboard and Rule Management",
+        "description": "Create complete React-based web interface with dashboard, log management, and rule review capabilities",
+        "details": "Build React application with components for: statistical dashboard showing key metrics and charts, drag-and-drop log file upload interface, filterable/sortable data grid for rule candidates with approve/reject actions, and export interface for downloading FortiOS configuration. Include responsive design following WCAG 2.1 AA standards and proper error handling with user-friendly messages.",
+        "testStrategy": "Test all UI workflows end-to-end including file upload, rule review, and configuration export. Verify responsiveness across devices and accessibility compliance. Test error handling and user feedback mechanisms.",
+        "priority": "high",
+        "dependencies": [
+          9
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Investigate and Fix Ollama Connectivity Issues",
+        "description": "Diagnose and resolve dashboard connectivity problems with Ollama service, including backend API endpoint verification and configuration fixes.",
+        "details": "Investigate the root cause of Ollama connectivity issues by: 1) Analyzing backend application logs for Ollama-related errors and connection timeouts, 2) Verifying the OLLAMA_API_URL environment variable is correctly configured and reachable from the backend container, 3) Testing direct connectivity to Ollama service endpoints using curl or similar tools, 4) Checking if the specified OLLAMA_MODEL exists and is available on the Ollama host, 5) Validating the AI analyzer service configuration in backend/services/ai_analyzer.py or backend/api/rules.py, 6) Testing the GET /api/v1/rules/{rule_id}/ai_description endpoint functionality, 7) Reviewing Docker Compose networking if running in containers, and 8) Implementing proper error handling and fallback mechanisms as documented in the existing AI integration notes.",
+        "testStrategy": "Test Ollama connectivity by making direct HTTP requests to the configured OLLAMA_API_URL endpoint. Verify the AI description endpoint returns proper responses or fallback descriptions. Test with both valid and invalid Ollama configurations to ensure proper error handling. Validate dashboard displays correct Ollama status after fixes. Test end-to-end rule review workflow with AI descriptions functioning correctly.",
+        "status": "done",
+        "dependencies": [
+          7,
+          10
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Debug and Fix File Upload Bottleneck",
+        "description": "Analyze and resolve upload function failures where files get stuck in uploading state by investigating backend logs, frontend network requests, and processing pipeline.",
+        "details": "Systematically debug the upload bottleneck by: 1) Analyzing backend application logs for upload-related errors, timeouts, and processing failures in the log ingestion API endpoints, 2) Using browser developer tools to inspect network requests, response times, and any failed HTTP calls during file upload, 3) Examining the asynchronous processing queue and file validation pipeline for stuck jobs or resource constraints, 4) Checking file system permissions and disk space on the backend server, 5) Reviewing upload progress tracking mechanisms and WebSocket connections if used, 6) Validating database transaction handling during file processing, 7) Implementing improved error handling with specific error codes and user-friendly messages, 8) Adding comprehensive logging throughout the upload pipeline for better visibility, 9) Optimizing file processing performance by identifying memory leaks or inefficient operations, 10) Testing upload functionality with various file sizes and formats to identify specific failure patterns.",
+        "testStrategy": "Test file uploads with various file sizes from small (1MB) to large (100MB+) to identify size-related bottlenecks. Monitor backend logs during upload attempts to capture specific error messages. Use browser network tab to verify HTTP request/response cycles complete successfully. Test concurrent uploads to identify resource contention issues. Verify upload progress indicators update correctly and handle error states gracefully. Test upload recovery mechanisms after network interruptions. Validate proper cleanup of temporary files and database records for failed uploads.",
+        "status": "done",
+        "dependencies": [
+          6,
+          3
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Enhance Rule Review Interface with AI-Powered Columns and Modal",
+        "description": "Add AI-generated description and insight columns to the rule review interface, implement modal for detailed explanations, and provide re-run AI functionality with chat prompt window.",
+        "details": "Enhance the existing rule review interface by: 1) Adding a 'Description' column that displays AI-generated short descriptions of the selected port/rule, fetched from the existing AI description endpoint, 2) Adding an 'AI-Insight' column that shows explanations of why the AI selected specific ports or made certain recommendations, 3) Implementing a modal dialog that opens when clicking on AI insights to show full detailed explanations with proper formatting, 4) Adding a 're-run AI' icon button in each row that opens a chat prompt window allowing users to ask specific questions about port selections or rule logic, 5) Integrating with the existing /api/v1/rules/{rule_id}/ai_description endpoint and extending it if needed to provide insight data, 6) Ensuring proper loading states, error handling, and fallback to mocked descriptions when AI services are unavailable, 7) Maintaining responsive design and accessibility standards for the new UI components.",
+        "testStrategy": "Test AI column data loading and display across different rule types and statuses. Verify modal opens correctly with properly formatted content and can be closed via multiple methods (X button, ESC key, click outside). Test the re-run AI functionality by submitting various prompts and verifying responses display correctly. Validate error handling when AI services are unavailable, ensuring fallback descriptions appear. Test responsive behavior of new columns on different screen sizes. Verify accessibility compliance for new modal and interactive elements using screen readers and keyboard navigation.",
+        "status": "pending",
+        "dependencies": [
+          10,
+          11
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Automatic Rule Generation Trigger and UI Enhancements",
+        "description": "Fix automatic rule generation trigger after log processing completion, add description column to rules table, create AI insight modal with chat functionality, and fix export functionality.",
+        "details": "Implement the following key fixes and enhancements: 1) Create an event-driven trigger system that automatically calls the /api/v1/rules/generate endpoint after log processing completes by adding webhook/callback mechanism to the log processing pipeline, using Redis pub/sub or database triggers to notify rule generation service when log_batches status changes to 'completed', 2) Add 'description' column to the generated_rules database table with proper migration script and update API models to include this field, 3) Enhance the rule review interface by integrating with existing AI description endpoint to populate description column automatically, 4) Implement AI insight modal component with chat functionality that allows users to ask follow-up questions about specific rules using the configured Ollama/AI service, include chat history and context persistence, 5) Debug and fix export functionality by investigating the configuration download endpoint, ensuring proper FortiOS format generation, and handling edge cases for empty or invalid rule sets, 6) Add proper error handling and retry logic for the automatic rule generation trigger to handle failures gracefully, 7) Update frontend state management to reflect automatic rule generation status and provide user feedback when rules are being generated in background.",
+        "testStrategy": "Test automatic rule generation by uploading log files and verifying rules are generated without manual intervention, monitoring database for proper status transitions and new rule entries. Test description column displays correctly in the rule review interface with proper AI-generated content. Verify AI insight modal opens with chat functionality, allows message input, displays responses properly, and maintains conversation context. Test export functionality downloads valid FortiOS configuration files with correct syntax and includes all approved rules. Test error scenarios including Ollama service downtime, invalid log files, and network failures to ensure graceful degradation. Perform end-to-end testing from log upload through automatic rule generation to final export to validate complete workflow automation.",
+        "status": "pending",
+        "dependencies": [
+          4,
+          6,
+          10,
+          11
+        ],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Event-Driven Rule Generation Trigger System",
+            "description": "Implement automatic rule generation trigger mechanism that monitors log_batches status changes from 'processing' to 'complete' and automatically calls /api/v1/rules/generate endpoint",
+            "dependencies": [],
+            "details": "Add database trigger or polling mechanism to the log processor service that detects when LogBatch.status transitions to 'complete'. Create callback system in log_processor.py _update_batch_completion method to automatically invoke rule generation API. Include retry logic with exponential backoff for failed rule generation calls. Add configuration for enabling/disabling automatic triggering.",
+            "status": "done",
+            "testStrategy": "Test by uploading log files and verifying rules are generated automatically without manual intervention. Monitor database for proper status transitions and verify rule generation API is called immediately after log processing completion. Test failure scenarios and retry behavior."
+          },
+          {
+            "id": 2,
+            "title": "Add Description Column to Generated Rules Database Schema",
+            "description": "Add 'description' column to generated_rules table with proper database migration and update all related API models and database operations",
+            "dependencies": [
+              "14.1"
+            ],
+            "details": "Create database migration script to add 'description' column (Text, nullable) to generated_rules table in models.py. Update GeneratedRule model to include description field. Modify rule generation service in rule_generator.py to populate description field with AI-generated content. Update API response models in rules.py to include description field. Ensure backward compatibility with existing data.",
+            "status": "done",
+            "testStrategy": "Test database migration runs successfully without data loss. Verify description field is populated during rule generation and displayed correctly in API responses. Test that existing rules without descriptions continue to work properly."
+          },
+          {
+            "id": 3,
+            "title": "Enhance Rule Review Interface with AI Description Integration",
+            "description": "Update RuleReview.tsx component to display description column in rules table and integrate with existing AI description endpoint for automatic population",
+            "dependencies": [
+              "14.2"
+            ],
+            "details": "Add description column to the rules table in RuleReview component between 'Service' and 'Status' columns. Integrate with existing /api/v1/rules/{rule_id}/ai_description endpoint to fetch and display AI-generated descriptions. Update rule detail modal to show description field prominently. Ensure proper error handling when AI descriptions are unavailable. Update table sorting and filtering to include description field.",
+            "status": "done",
+            "testStrategy": "Test description column displays correctly in rules table with proper text truncation for long descriptions. Verify AI description endpoint integration works and descriptions are cached appropriately. Test modal view shows full description text and handles missing descriptions gracefully."
+          },
+          {
+            "id": 4,
+            "title": "Implement AI Insight Modal with Chat Functionality",
+            "description": "Create comprehensive AI insight modal component that allows users to ask follow-up questions about specific rules using configured Ollama/AI service with chat history and context persistence",
+            "dependencies": [
+              "14.3"
+            ],
+            "details": "Extend existing AI info modal in RuleReview.tsx to include chat interface below field descriptions. Add chat input field, message history display, and send functionality. Create new API endpoint /api/v1/rules/{rule_id}/chat for conversational AI interactions. Implement chat context persistence using rule-specific conversation threads. Include proper loading states, error handling, and message formatting. Store chat history in component state with optional local storage persistence.",
+            "status": "in-progress",
+            "testStrategy": "Test chat interface allows sending messages and receiving AI responses about specific rules. Verify chat history persists during session and conversation context is maintained. Test error handling when AI service is unavailable and proper loading indicators during AI response generation."
+          },
+          {
+            "id": 5,
+            "title": "Debug and Fix Export Functionality Issues",
+            "description": "Investigate and resolve issues with FortiOS configuration export functionality, ensuring proper format generation and handling of edge cases",
+            "dependencies": [],
+            "details": "Debug export functionality in export.py and fortios_exporter.py by testing with various rule sets including empty sets, rules with special characters, and large rule counts. Fix any issues with FortiOS CLI syntax generation, policy ID assignment, and file download mechanisms. Ensure proper error messages for invalid configurations and handle timeout scenarios for large exports. Test integration with ConfigExport.tsx frontend component.",
+            "status": "pending",
+            "testStrategy": "Test export functionality with different rule combinations including empty rule sets, single rules, and large batches. Verify generated FortiOS configuration is syntactically correct and can be imported into FortiGate devices. Test download functionality works properly in browser and handles network interruptions gracefully."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-19T13:34:12.894Z",
+      "updated": "2025-08-26T17:21:52.671Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

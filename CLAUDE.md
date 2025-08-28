@@ -382,6 +382,64 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 - **Negative**: None identified
 - **Risk Mitigation**: Simple link update with immediate validation, no impact on test execution or reporting functionality
 
+### ADR-003: URL Management and Port Tracking System (2025-08-28)
+
+**Status**: Implemented ✅  
+**Context**: Need to track system URLs (production, development, documentation, phpMyAdmin) and port mappings for better project organization and infrastructure management across multiple TaskMaster projects.
+
+**Problem**: 
+- No centralized tracking of project URLs for different environments
+- No system to monitor port allocations and mappings across projects
+- Manual documentation of Docker port mappings (e.g., 33306:3306)
+- Difficulty in managing complex multi-service project configurations
+- Need for searchable, filterable port management interface
+
+**Solution**: Extended database schema and admin interface with comprehensive URL and port management system:
+
+**Database Extensions**:
+- **Projects Table**: Added `prod_url`, `dev_url`, `docs_url`, `phpmyadmin_url` VARCHAR(500) columns
+- **New Ports Table**: Complete port tracking with project relationships:
+  - `port` (external port, e.g., 33306)
+  - `internal_port` (container port, e.g., 3306)  
+  - `service_name` (web, mysql, api, etc.)
+  - `protocol` (tcp/udp)
+  - `description` and project relationships
+
+**API Endpoints** (`app/main.py`):
+- `GET /api/ports` - List all ports with project information
+- `GET /api/projects/{id}/ports` - Get ports for specific project
+- `POST /api/ports` - Create new port mapping
+- `PATCH /api/ports/{id}` - Update existing port
+- `DELETE /api/ports/{id}` - Remove port mapping
+- Enhanced project endpoints to handle URL fields
+
+**Admin Interface** (`web/admin.html`):
+- **URL Management**: Four-field URL section in project forms (Production, Development, Documentation, phpMyAdmin)
+- **Port Management Interface**: Dedicated section with table view
+- **Advanced Filtering**: Search by port, service, project; filter by protocol; sort by multiple criteria
+- **Port Form**: Intuitive external/internal port mapping with Docker format explanation
+- **Navigation Integration**: "Manage Ports" button with dedicated interface
+
+**Key Features**:
+- **Port Conflict Prevention**: API validates unique ports per project
+- **Comprehensive Search**: Filter ports by project name, service name, port number, description
+- **Visual Port Format Guide**: Explains Docker mapping format (33306:3306)
+- **Project Integration**: Port list shows project names and slugs
+- **Full CRUD Operations**: Complete port lifecycle management
+
+**Testing Results**:
+- ✅ Database schema successfully extended with new fields
+- ✅ API endpoints functional - tested port creation and project URL updates
+- ✅ Admin interface displays URL fields and port management section
+- ✅ Port filtering and sorting operations working correctly
+- ✅ Data persistence confirmed in MySQL database
+- ✅ No breaking changes to existing project functionality
+
+**Consequences**: 
+- **Positive**: Centralized infrastructure tracking, improved project organization, reduced manual documentation, searchable port registry
+- **Negative**: Increased database complexity, additional UI maintenance
+- **Risk Mitigation**: Optional fields maintain backward compatibility, comprehensive validation prevents data conflicts
+
 ---
 
 ## Task Master AI Instructions

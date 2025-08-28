@@ -1,0 +1,27 @@
+# Task ID: 228
+# Title: Test task with new status - blocked
+# Status: deferred
+# Dependencies: 227
+# Priority: low
+# Description: Create a test task to verify the new 'blocked' status functionality in the TaskMaster system and ensure proper handling of blocked tasks in the UI and backend.
+# Details:
+1. Create a test task that will be marked with the new 'blocked' status to verify system compatibility
+2. Test status transitions: pending -> blocked, in-progress -> blocked, blocked -> pending/in-progress
+3. Verify blocked tasks are properly filtered and displayed in the UI with appropriate visual indicators
+4. Ensure blocked tasks are excluded from 'next task' recommendations
+5. Test blocked status persistence in tasks.json file
+6. Validate blocked tasks appear correctly in task lists with proper styling (e.g., grayed out, special icon)
+7. Test dependency handling - blocked tasks should not block dependent tasks if the blockage is external
+8. Verify API endpoints properly handle blocked status in PATCH requests
+9. Test blocked status in both Edit Task modal and task card displays
+
+# Test Strategy:
+1. Create task and set status to 'blocked' via UI and API
+2. Verify blocked status persists after page refresh and file reload
+3. Confirm blocked tasks don't appear in 'next task' suggestions
+4. Test all status transitions to/from blocked state
+5. Verify blocked tasks display with correct visual styling in task lists
+6. Test filtering functionality includes blocked status option
+7. Validate JSON structure maintains blocked status correctly
+8. Test blocked task behavior with dependencies - ensure dependent tasks can still be worked on if blockage is external
+9. Verify Edit Task modal correctly shows and allows setting blocked status

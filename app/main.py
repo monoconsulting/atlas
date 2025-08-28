@@ -13,8 +13,11 @@ from .models import AddTaskRequest, AddSubTaskRequest, UpdateTaskRequest, Update
 from .database import (
     init_db, get_db,
     Project, ProjectCreate, ProjectUpdate, ProjectResponse,
+    Port, PortCreate, PortUpdate, PortResponse,
     get_all_projects, get_project_by_slug, get_project_by_id,
-    create_project, update_project, delete_project
+    create_project, update_project, delete_project,
+    get_all_ports, get_port_by_id, get_ports_by_project,
+    create_port, update_port, delete_port
 )
 
 app = FastAPI(title="taskmasterweb", version="1.5.2")
@@ -272,6 +275,81 @@ def delete_existing_project(project_id: int, db: Session = Depends(get_db)) -> D
         raise HTTPException(status_code=404, detail=f"Project with ID {project_id} not found")
     
     return {"ok": True, "message": f"Project {project_id} deleted successfully"}
+
+
+# Port Management API endpoints
+@app.get("/api/ports", response_class=JSONResponse)
+def get_ports(db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Get all ports with project information."""
+    ports = get_all_ports(db)
+    return {"ok": True, "ports": [port.to_dict() for port in ports]}
+
+
+@app.get("/api/projects/{project_id}/ports", response_class=JSONResponse) 
+def get_project_ports(project_id: int, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Get all ports for a specific project."""
+    # Verify project exists
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail=f"Project with ID {project_id} not found")
+    
+    ports = get_ports_by_project(db, project_id)
+    return {"ok": True, "ports": [port.to_dict() for port in ports], "project": project.to_dict()}
+
+
+@app.post("/api/ports", response_class=JSONResponse)
+def create_new_port(port: PortCreate, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Create a new port."""
+    # Verify project exists
+    project = get_project_by_id(db, port.project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail=f"Project with ID {port.project_id} not found")
+    
+    # Check if port already exists for this project
+    existing_ports = get_ports_by_project(db, port.project_id)
+    for existing in existing_ports:
+        if existing.port == port.port:
+            raise HTTPException(status_code=400, detail=f"Port {port.port} already exists for project {port.project_id}")
+    
+    new_port = create_port(db, port)
+    return {"ok": True, "port": new_port.to_dict()}
+
+
+@app.get("/api/ports/{port_id}", response_class=JSONResponse)
+def get_port_details(port_id: int, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Get detailed information about a port."""
+    port = get_port_by_id(db, port_id)
+    if not port:
+        raise HTTPException(status_code=404, detail=f"Port with ID {port_id} not found")
+    
+    return {"ok": True, "port": port.to_dict()}
+
+
+@app.patch("/api/ports/{port_id}", response_class=JSONResponse)
+def update_existing_port(port_id: int, port_update: PortUpdate, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Update an existing port."""
+    # Check for port conflicts if port number is being changed
+    if port_update.port is not None and port_update.project_id is not None:
+        existing_ports = get_ports_by_project(db, port_update.project_id)
+        for existing in existing_ports:
+            if existing.port == port_update.port and existing.id != port_id:
+                raise HTTPException(status_code=400, detail=f"Port {port_update.port} already exists for project {port_update.project_id}")
+    
+    updated_port = update_port(db, port_id, port_update)
+    if updated_port is None:
+        raise HTTPException(status_code=404, detail=f"Port with ID {port_id} not found")
+    
+    return {"ok": True, "port": updated_port.to_dict()}
+
+
+@app.delete("/api/ports/{port_id}", response_class=JSONResponse)
+def delete_existing_port(port_id: int, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Delete (deactivate) a port."""
+    success = delete_port(db, port_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Port with ID {port_id} not found")
+    
+    return {"ok": True, "message": f"Port {port_id} deleted successfully"}
 
 
 @app.get("/api/browse-files", response_class=JSONResponse)

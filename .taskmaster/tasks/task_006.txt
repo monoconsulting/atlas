@@ -1,0 +1,287 @@
+# Task ID: 6
+# Title: Implement Security Baseline with JWT Authentication and Authorization
+# Status: pending
+# Dependencies: 2, 4
+# Priority: high
+# Description: Add JWT authentication, rate limiting, CORS configuration, and security headers. Implement user roles and permissions system to secure the application.
+# Details:
+This task involves implementing a comprehensive security baseline for the application:
+
+1. JWT Authentication Implementation:
+   - Create a JWT authentication service:
+     ```python
+     class JWTService:
+         def __init__(self, secret_key: str, algorithm: str = "HS256", token_expire_minutes: int = 30):
+             self.secret_key = secret_key
+             self.algorithm = algorithm
+             self.token_expire_minutes = token_expire_minutes
+         
+         def create_access_token(self, data: dict) -> str:
+             to_encode = data.copy()
+             expire = datetime.utcnow() + timedelta(minutes=self.token_expire_minutes)
+             to_encode.update({"exp": expire})
+             return jwt.encode(to_encode, self.secret_key, algorithm=self.algorithm)
+         
+         def verify_token(self, token: str) -> dict:
+             try:
+                 payload = jwt.decode(token, self.secret_key, algorithms=[self.algorithm])
+                 return payload
+             except JWTError:
+                 raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+     ```
+   - Implement authentication middleware:
+     ```python
+     async def jwt_middleware(request: Request, call_next):
+         token = request.headers.get("Authorization")
+         if token and token.startswith("Bearer "):
+             token = token.replace("Bearer ", "")
+             try:
+                 payload = jwt_service.verify_token(token)
+                 request.state.user = payload
+             except Exception:
+                 pass
+         return await call_next(request)
+     ```
+   - Create login/logout endpoints with token generation and validation
+
+2. Rate Limiting Implementation:
+   - Implement a rate limiter middleware using Redis or an in-memory store:
+     ```python
+     class RateLimiter:
+         def __init__(self, redis_client, max_requests: int = 100, window_seconds: int = 60):
+             self.redis = redis_client
+             self.max_requests = max_requests
+             self.window_seconds = window_seconds
+         
+         async def is_rate_limited(self, key: str) -> bool:
+             current = await self.redis.get(key)
+             if current is None:
+                 await self.redis.set(key, 1, ex=self.window_seconds)
+                 return False
+             if int(current) >= self.max_requests:
+                 return True
+             await self.redis.incr(key)
+             return False
+     ```
+   - Apply rate limiting to sensitive endpoints (login, registration, etc.)
+   - Implement tiered rate limiting based on user roles
+
+3. CORS Configuration:
+   - Set up CORS middleware with appropriate settings:
+     ```python
+     app.add_middleware(
+         CORSMiddleware,
+         allow_origins=["https://yourdomain.com", "https://app.yourdomain.com"],
+         allow_credentials=True,
+         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+         allow_headers=["Authorization", "Content-Type"],
+     )
+     ```
+   - Configure different CORS policies for development and production environments
+
+4. Security Headers Implementation:
+   - Add middleware to set security headers on all responses:
+     ```python
+     @app.middleware("http")
+     async def add_security_headers(request: Request, call_next):
+         response = await call_next(request)
+         response.headers["X-Content-Type-Options"] = "nosniff"
+         response.headers["X-Frame-Options"] = "DENY"
+         response.headers["Content-Security-Policy"] = "default-src 'self'"
+         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+         response.headers["X-XSS-Protection"] = "1; mode=block"
+         return response
+     ```
+   - Configure Content Security Policy (CSP) appropriate for the application
+
+5. User Roles and Permissions System:
+   - Design and implement a role-based access control (RBAC) system:
+     ```python
+     class Role(str, Enum):
+         ADMIN = "admin"
+         MANAGER = "manager"
+         USER = "user"
+         GUEST = "guest"
+     
+     class Permission(str, Enum):
+         READ = "read"
+         WRITE = "write"
+         DELETE = "delete"
+         ADMIN = "admin"
+     
+     # Role-Permission mapping
+     ROLE_PERMISSIONS = {
+         Role.ADMIN: [Permission.READ, Permission.WRITE, Permission.DELETE, Permission.ADMIN],
+         Role.MANAGER: [Permission.READ, Permission.WRITE, Permission.DELETE],
+         Role.USER: [Permission.READ, Permission.WRITE],
+         Role.GUEST: [Permission.READ],
+     }
+     ```
+   - Create permission-checking decorators:
+     ```python
+     def requires_permission(permission: Permission):
+         def decorator(func):
+             @wraps(func)
+             async def wrapper(*args, **kwargs):
+                 request = kwargs.get("request") or args[0]
+                 user = request.state.user
+                 if not user:
+                     raise HTTPException(status_code=401, detail="Not authenticated")
+                 
+                 user_role = user.get("role", Role.GUEST)
+                 if permission not in ROLE_PERMISSIONS.get(user_role, []):
+                     raise HTTPException(status_code=403, detail="Not authorized")
+                 
+                 return await func(*args, **kwargs)
+             return wrapper
+         return decorator
+     ```
+   - Update user model and repository to include roles
+   - Implement role assignment and management endpoints
+
+6. Environment Configuration:
+   - Store security-sensitive values in environment variables
+   - Create a secure configuration management system
+   - Implement different security profiles for development/testing/production
+
+7. Security Documentation:
+   - Document all security measures implemented
+   - Create developer guidelines for security best practices
+   - Document the RBAC system and how to use it correctly
+
+# Test Strategy:
+1. JWT Authentication Testing:
+   - Unit test the JWT service:
+     - Test token generation with various payloads
+     - Test token validation with valid and invalid tokens
+     - Test token expiration handling
+   - Integration test the authentication flow:
+     - Test login endpoint with valid and invalid credentials
+     - Verify token is returned on successful login
+     - Test protected endpoints with and without valid tokens
+   - Test token refresh mechanism if implemented
+
+2. Rate Limiting Testing:
+   - Unit test the rate limiter service:
+     - Test counter incrementation
+     - Test window expiration
+   - Integration test rate limiting:
+     - Send requests exceeding the limit and verify 429 responses
+     - Verify rate limit headers are present in responses
+     - Test different rate limits for different user roles
+   - Load test to verify rate limiting under high traffic
+
+3. CORS Configuration Testing:
+   - Test CORS preflight requests (OPTIONS) from allowed origins
+   - Test requests from disallowed origins and verify they're blocked
+   - Verify correct headers are returned for CORS requests
+   - Test with various HTTP methods to ensure proper configuration
+
+4. Security Headers Testing:
+   - Create automated tests to verify all security headers are present on responses
+   - Use security scanning tools like OWASP ZAP to verify header effectiveness
+   - Test CSP by attempting to inject scripts and verifying they're blocked
+   - Verify HSTS is working correctly
+
+5. User Roles and Permissions Testing:
+   - Unit test the permission checking logic:
+     - Test each role against all permissions
+     - Test edge cases and invalid roles
+   - Integration test role-based access:
+     - Create test users with different roles
+     - Attempt to access endpoints with various permission requirements
+     - Verify correct 403 responses for unauthorized access
+   - Test role assignment and modification
+
+6. Security Vulnerability Testing:
+   - Run automated security scanning tools (OWASP ZAP, Snyk, etc.)
+   - Perform penetration testing on authentication and authorization systems
+   - Test for common vulnerabilities:
+     - SQL injection
+     - XSS vulnerabilities
+     - CSRF vulnerabilities
+     - JWT token vulnerabilities (algorithm confusion, etc.)
+
+7. End-to-End Security Testing:
+   - Create comprehensive test scenarios covering the entire security flow
+   - Test user registration, login, accessing protected resources, and logout
+   - Verify security measures work together correctly
+
+8. Documentation Testing:
+   - Review security documentation for completeness and accuracy
+   - Verify all security features are properly documented
+   - Test developer guidelines by having developers implement features following them
+
+# Subtasks:
+## 1. Create JWT Authentication Service [done]
+### Dependencies: None
+### Description: Implement a comprehensive JWT service for token creation, verification, and validation with configurable expiration times and secure algorithms.
+### Details:
+Create JWTService class with methods for token generation, verification, and validation. Include proper error handling for invalid tokens, expired tokens, and malformed JWTs. Implement secure token storage and refresh token functionality.
+
+## 2. Implement Authentication Middleware [done]
+### Dependencies: 6.1
+### Description: Create middleware to handle JWT token extraction from headers, validation, and user context injection into requests.
+### Details:
+Develop middleware that extracts Bearer tokens from Authorization headers, validates them using the JWT service, and injects user information into the request context. Handle authentication failures gracefully with proper HTTP status codes.
+<info added on 2025-08-15T09:22:47.556Z>
+Completed authentication middleware implementation with comprehensive features:
+
+✅ **Authentication Middleware**:
+- JWT token validation middleware with request state injection
+- @require_auth decorator for protected endpoints
+- @require_role decorator for role-based access
+- @require_permission decorator for fine-grained permissions
+- Role hierarchy: superadmin > admin > manager > user > guest
+
+✅ **Protected Endpoints**:
+- Updated API endpoints with permission-based protection
+- Updated admin endpoints with admin-only access
+- Added Request parameter to all protected endpoints
+
+✅ **Permission System**:
+- Comprehensive role-permission mapping system
+- Granular permissions: meeting:read/write/delete, user:read/write/delete, etc.
+- Superadmin wildcard permissions with '*' access
+
+✅ **Middleware Integration**:
+- Added JWTAuthMiddleware to main FastAPI application
+- Excluded public paths: /docs, /redoc, /openapi.json, /health, /api/v1/auth/*
+- Proper middleware ordering with rate limiting and CORS
+
+✅ **Comprehensive Testing**:
+- 20/20 authentication middleware tests passing
+- Tests cover middleware behavior, decorators, permissions, and edge cases
+- Integration tests with real JWT service
+</info added on 2025-08-15T09:22:47.556Z>
+
+## 3. Implement Rate Limiting System [done]
+### Dependencies: None
+### Description: Create rate limiting middleware with Redis backend to prevent abuse and ensure API stability with configurable limits per endpoint and user role.
+### Details:
+Build RateLimiter class with Redis integration for distributed rate limiting. Implement sliding window algorithm with configurable limits based on user roles. Add rate limit headers to responses and proper error handling for exceeded limits.
+
+## 4. Configure CORS and Security Headers [done]
+### Dependencies: None
+### Description: Set up CORS middleware and implement security headers including CSP, HSTS, and XSS protection for secure client-server communication.
+### Details:
+Configure CORS middleware with environment-specific allowed origins, credentials, and methods. Implement security headers middleware including Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, and Strict-Transport-Security headers.
+
+## 5. Design Role-Based Access Control System [pending]
+### Dependencies: 6.2
+### Description: Create comprehensive RBAC system with roles, permissions, and access control decorators for fine-grained authorization throughout the application.
+### Details:
+Define Role and Permission enums, create role-permission mapping, implement permission-checking decorators, and create authorization middleware. Include role hierarchy and inheritance for flexible permission management.
+
+## 6. Update User Model and Authentication Endpoints [pending]
+### Dependencies: 6.1, 6.5
+### Description: Modify user model to include roles, create login/logout endpoints with JWT token generation, and implement user role management functionality.
+### Details:
+Update user database model to include role field, create authentication endpoints for login/logout with JWT token generation, implement role assignment endpoints, and add user profile endpoints with role information.
+
+## 7. Environment Configuration and Security Documentation [pending]
+### Dependencies: 6.1, 6.3, 6.4, 6.5
+### Description: Configure security-sensitive environment variables, create secure configuration management, and document all implemented security measures and RBAC system.
+### Details:
+Set up environment variables for JWT secrets, rate limiting configuration, CORS origins, and other security settings. Create configuration profiles for different environments. Document security implementation, RBAC usage guidelines, and developer security best practices.
+

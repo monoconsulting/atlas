@@ -1,0 +1,67 @@
+# Task ID: 117
+# Title: Security: Audit Auth Column for API Surface
+# Status: pending
+# Dependencies: 23, 109, 110, 111, 112, 114, 115
+# Priority: medium
+# Description: Review API Surface rows and set accurate authentication values (Bearer, permission:..., API Key) for all endpoints, with special attention to internal upload endpoints. Update DATA_FLOW_AUDIT_COMPLETE.md documentation accordingly.
+# Details:
+This task involves a comprehensive security audit of the API authentication mechanisms:
+
+1. API Surface Authentication Review:
+   - Create an inventory of all API endpoints in the system
+   - For each endpoint, review the current authentication method specified in the Auth column
+   - Update the Auth column with accurate values based on the following categories:
+     - Bearer: For endpoints requiring JWT authentication
+     - permission:X: For endpoints requiring specific permissions (replace X with the actual permission name)
+     - API Key: For internal upload endpoints and other services requiring API key authentication
+     - None: For public endpoints that don't require authentication (review these carefully)
+
+2. Special Focus Areas:
+   - Internal upload endpoints: Ensure these are properly secured with API Key authentication
+   - Meeting participant endpoints: Verify proper Bearer token authentication with appropriate permissions
+   - Health check endpoints: Review security implications of authentication requirements
+   - Project user management: Ensure proper permission-based authentication
+
+3. Documentation Updates:
+   - Update the DATA_FLOW_AUDIT_COMPLETE.md document with:
+     - A summary of the authentication audit findings
+     - A table of all endpoints with their updated authentication requirements
+     - Any security recommendations or concerns discovered during the audit
+     - Timestamp and signature of the audit completion
+
+4. Implementation Verification:
+   - For any mismatches between documented and actual authentication requirements, create tickets for remediation
+   - Verify that the authentication mechanisms are properly implemented in the codebase
+   - Test a sample of endpoints to ensure authentication is enforced as documented
+
+# Test Strategy:
+1. Documentation Verification:
+   - Create a checklist of all API endpoints in the system
+   - Compare the updated Auth column values against the actual implementation in the code
+   - Verify that DATA_FLOW_AUDIT_COMPLETE.md has been updated with accurate information
+   - Have a security-focused team member review the documentation for completeness
+
+2. Implementation Testing:
+   - For Bearer token endpoints:
+     - Test with valid tokens having correct permissions
+     - Test with valid tokens lacking required permissions
+     - Test with expired or invalid tokens
+     - Test with no authentication
+   - For API Key endpoints:
+     - Test with valid API keys
+     - Test with invalid API keys
+     - Test with no API key
+   - For permission-based endpoints:
+     - Test with users having the required permissions
+     - Test with users lacking the required permissions
+
+3. Security Validation:
+   - Perform a security scan of the API surface using automated tools
+   - Conduct manual penetration testing on critical endpoints
+   - Verify that internal upload endpoints are properly secured with API Key authentication
+   - Document any security vulnerabilities discovered and create tickets for remediation
+
+4. Final Review:
+   - Conduct a team review of the updated authentication requirements
+   - Verify that all authentication mechanisms align with the organization's security policies
+   - Ensure the DATA_FLOW_AUDIT_COMPLETE.md document is approved by the security team

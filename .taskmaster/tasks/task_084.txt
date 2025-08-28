@@ -1,0 +1,11 @@
+# Task ID: 84
+# Title: 7.1 Möten - Visas de senaste 50 mötena
+# Status: pending
+# Dependencies: 64
+# Priority: high
+# Description: Verify that the latest 50 meetings are displayed in the list
+# Details:
+
+
+# Test Strategy:
+

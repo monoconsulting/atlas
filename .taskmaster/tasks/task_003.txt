@@ -1,0 +1,198 @@
+# Task ID: 3
+# Title: Extract Common Patterns into Shared Utilities and Components
+# Status: todo
+# Dependencies: 1, 2
+# Priority: medium
+# Description: Identify and extract common code patterns into reusable utilities, services, and components to reduce duplication across the codebase to less than 5%.
+# Details:
+This task involves systematically reducing code duplication by creating shared utilities and components:
+
+1. Conduct a code analysis to identify duplication:
+   - Use tools like Sonarqube, PMD, or custom scripts to identify duplicated code blocks
+   - Focus on areas with similar functionality, repeated logic, or copy-pasted sections
+   - Document all instances of duplication with their locations and frequency
+
+2. Categorize duplicated patterns:
+   - UI/Frontend components (buttons, forms, modals, etc.)
+   - Data transformation and validation logic
+   - Error handling routines
+   - API request/response processing
+   - Common business logic operations
+
+3. Create a utilities directory structure:
+   ```
+   /app
+     /utils
+       /validation
+         input_validators.py
+         schema_validators.py
+       /formatting
+         date_formatters.py
+         string_formatters.py
+       /http
+         request_helpers.py
+         response_formatters.py
+     /components
+       /ui
+         base_form.py
+         data_table.py
+         modal_dialog.py
+       /data
+         data_transformers.py
+         pagination_helpers.py
+   ```
+
+4. Implement shared utility functions:
+   - Create pure functions for common operations
+   - Ensure proper typing and documentation
+   - Example utility function:
+   ```python
+   def validate_email(email: str) -> bool:
+       """Validate email format using RFC 5322 standards.
+       
+       Args:
+           email: String to validate as email
+           
+       Returns:
+           bool: True if valid email format, False otherwise
+       """
+       pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+       return bool(re.match(pattern, email))
+   ```
+
+5. Develop reusable components:
+   - Create base classes that can be extended
+   - Implement composition patterns for flexible component reuse
+   - Example component:
+   ```python
+   class DataProcessor:
+       """Base class for data processing operations."""
+       
+       def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
+           """Process input data through validation and transformation pipeline.
+           
+           Args:
+               data: Raw input data dictionary
+               
+           Returns:
+               Processed data dictionary
+           """
+           validated_data = self._validate(data)
+           transformed_data = self._transform(validated_data)
+           return self._format_output(transformed_data)
+           
+       def _validate(self, data: Dict[str, Any]) -> Dict[str, Any]:
+           """Override in subclasses to implement validation."""
+           return data
+           
+       def _transform(self, data: Dict[str, Any]) -> Dict[str, Any]:
+           """Override in subclasses to implement transformation."""
+           return data
+           
+       def _format_output(self, data: Dict[str, Any]) -> Dict[str, Any]:
+           """Override in subclasses to implement output formatting."""
+           return data
+   ```
+
+6. Refactor existing code to use new utilities and components:
+   - Prioritize high-duplication areas first
+   - Update one module at a time, with testing after each change
+   - Document usage patterns for team reference
+
+7. Create developer guidelines:
+   - Document all available utilities and components
+   - Provide usage examples for common scenarios
+   - Establish contribution guidelines for expanding the shared code
+
+8. Implement dependency injection where appropriate:
+   - Allow for flexible configuration of shared components
+   - Facilitate easier testing through mock implementations
+
+9. Measure duplication reduction:
+   - Run code duplication analysis tools before and after
+   - Target less than 5% duplication in the final codebase
+
+# Test Strategy:
+1. Code Duplication Analysis:
+   - Run code duplication detection tools (SonarQube, PMD, etc.) before and after implementation
+   - Verify duplication metrics show reduction to less than 5%
+   - Generate reports showing specific areas of improvement
+
+2. Unit Testing for Utilities:
+   - Create comprehensive unit tests for each utility function with 100% code coverage
+   - Test edge cases and error conditions
+   - Verify consistent behavior across different input types and values
+   - Example test:
+   ```python
+   def test_validate_email():
+       # Valid cases
+       assert validate_email("user@example.com") == True
+       assert validate_email("user.name+tag@example.co.uk") == True
+       
+       # Invalid cases
+       assert validate_email("not-an-email") == False
+       assert validate_email("@missing-username.com") == False
+       assert validate_email("spaces not allowed@example.com") == False
+   ```
+
+3. Component Integration Testing:
+   - Test each reusable component in isolation
+   - Verify components work correctly when integrated with other system parts
+   - Test component extension and customization capabilities
+
+4. Regression Testing:
+   - Run existing test suite to ensure refactoring hasn't broken functionality
+   - Compare application behavior before and after changes
+   - Verify all features continue to work as expected
+
+5. Performance Testing:
+   - Measure performance impact of shared utilities vs. original code
+   - Ensure no significant performance degradation
+   - Optimize critical utilities if performance issues are found
+
+6. Code Review:
+   - Conduct peer reviews of all shared utilities and components
+   - Verify adherence to coding standards and best practices
+   - Check for proper documentation and usage examples
+
+7. Usage Verification:
+   - Create a usage report showing where each utility/component is used
+   - Verify no redundant implementations exist alongside the shared code
+   - Ensure consistent usage patterns across the codebase
+
+8. Documentation Testing:
+   - Verify documentation is clear and comprehensive
+   - Have developers unfamiliar with the code attempt to use utilities based on documentation alone
+   - Update documentation based on feedback
+
+# Subtasks:
+## 1. Conduct Code Duplication Analysis [todo]
+### Dependencies: None
+### Description: Analyze the existing codebase to identify duplicated code patterns using static analysis tools and manual review. Document all instances of duplication with their locations and frequency, focusing on router patterns, validation logic, and data transformation functions.
+### Details:
+Use static analysis tools like SonarQube or custom scripts to scan the backend/app directory. Focus on identifying common patterns across API routers (companies.py, users.py, projects.py, meetings.py, transcriptions.py, actionItems.py), repository classes, service layers, and exception handling. Create a detailed report documenting: duplicate code blocks over 5 lines, similar function signatures, repeated validation patterns, common error handling routines, and data transformation logic. Prioritize areas with highest duplication for refactoring impact.
+
+## 2. Create Shared Validation Utilities [todo]
+### Dependencies: 3.1
+### Description: Extract common validation logic into a centralized utilities module, including email validation, phone number formatting, organization number validation, and data schema validators used across multiple routers and services.
+### Details:
+Create backend/app/utils/validation/ directory with modules: input_validators.py (email, phone, required fields), schema_validators.py (Pydantic model validation helpers), business_validators.py (organization numbers, business rules). Extract validation patterns from routers like companies.py and users.py where similar validation logic is repeated. Implement functions like validate_email(), validate_phone(), validate_organization_number(), and validate_required_fields(). Ensure all validators return consistent error formats compatible with the existing ValidationError exception class.
+
+## 3. Implement Shared Response Formatting Components [todo]
+### Dependencies: 3.1
+### Description: Create reusable response formatting utilities to standardize API response structures across all routers, eliminating the duplicate dictionary construction patterns found in companies.py, users.py, and other router files.
+### Details:
+Create backend/app/utils/formatting/ directory with response_formatters.py containing functions like format_company_response(), format_user_response(), format_error_response(), and format_paginated_response(). Extract the common response formatting patterns from routers where similar dictionary structures are built (lines 84-95 in companies.py, lines 89-100 in users.py). Implement generic formatters that can handle entity-to-dict conversion with consistent field naming and null value handling. Include pagination metadata formatting and error response standardization.
+
+## 4. Develop Shared Error Handling Components [todo]
+### Dependencies: 3.2, 3.3
+### Description: Create centralized error handling utilities and HTTP exception mappers to standardize error responses across all API routers, building upon the existing base_exceptions.py foundation.
+### Details:
+Create backend/app/utils/http/ directory with error_handlers.py and exception_mappers.py. Build upon existing TranskriptException classes in base_exceptions.py to create HTTP exception mappers that convert domain exceptions to appropriate HTTP responses. Extract common error handling patterns from routers (lines 51-60 in companies.py, lines 49-58 in users.py). Implement functions like map_validation_error_to_http(), map_not_found_to_http(), and create_standardized_error_response(). Include logging and monitoring hooks for error tracking.
+
+## 5. Refactor Existing Code to Use Shared Utilities [todo]
+### Dependencies: 3.2, 3.3, 3.4
+### Description: Systematically refactor all API routers, repositories, and services to use the newly created shared utilities, replacing duplicate code patterns with centralized implementations and measuring duplication reduction.
+### Details:
+Update all router files (companies.py, users.py, projects.py, meetings.py, transcriptions.py, actionItems.py) to use shared validation, formatting, and error handling utilities. Replace duplicate validation logic with calls to shared validators. Replace duplicate response formatting with shared formatters. Update error handling to use standardized exception mappers. Ensure all changes maintain existing API contracts. Update imports and dependencies. Run comprehensive tests after each module refactoring to ensure functionality is preserved.
+

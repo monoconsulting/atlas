@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-08-26T17:16:33.074Z",
+  "testResults": {
+    "taskCounts": {
+      "todoCount": "0",
+      "inProgressCount": "0",
+      "doneCount": "0",
+      "projectName": "TaskMasterWeb",
+      "currentTag": "master",
+      "totalTasks": 0
+    },
+    "taskCardsVisible": {
+      "todoCards": 0,
+      "inProgressCards": 0,
+      "doneCards": 0,
+      "totalCards": 0
+    },
+    "isStillLoading": true,
+    "projectName": "TaskMasterWeb",
+    "currentTag": "master"
+  },
+  "screenshots": [
+    "loading-fix-test-screenshot.png"
+  ],
+  "verdict": "STILL_LOADING"
+}
