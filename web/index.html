@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas - Development Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617'
+                        }
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-6 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4">
+                Atlas Development Hub
+            </h1>
+            <p class="text-slate-400 text-lg">Comprehensive Task Management Platform</p>
+            <div class="flex justify-center mt-6">
+                <div class="bg-slate-900 rounded-lg px-6 py-3 border border-slate-800">
+                    <span class="text-sm text-slate-400">Last Updated:</span>
+                    <span class="text-blue-400 font-mono" id="lastUpdated"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <!-- Main Application -->
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-200">TaskMaster App</h3>
+                        <p class="text-slate-500 text-sm">Port 8199</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">
+                    Main task management interface with kanban board, task creation, and subtask management.
+                </p>
+                <a href="http://localhost:8199" target="_blank" 
+                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Launch App
+                </a>
+            </div>
+
+            <!-- Test Results -->
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-200">Test Results</h3>
+                        <p class="text-slate-500 text-sm">Playwright Reports</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">
+                    Comprehensive test reports, coverage analytics, and automated test results with detailed breakdowns.
+                </p>
+                <a href="test-reports.html" 
+                   class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    View Reports
+                </a>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-200">Admin Panel</h3>
+                        <p class="text-slate-500 text-sm">Multi-Project Management</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">
+                    Manage multiple TaskMaster projects, configure custom URLs, and oversee project settings.
+                </p>
+                <a href="admin.html" 
+                   class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Manage Projects
+                </a>
+            </div>
+
+            <!-- Documentation -->
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-200">Documentation</h3>
+                        <p class="text-slate-500 text-sm">Project Guide</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">
+                    Architecture overview, API documentation, development guidelines, and deployment instructions.
+                </p>
+                <a href="#docs" 
+                   class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Read Docs
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Stats -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-12">
+            <h2 class="text-2xl font-semibold text-slate-200 mb-6">Project Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-blue-400" id="testCount">--</div>
+                    <div class="text-slate-500 text-sm">Total Tests</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-400" id="passRate">--%</div>
+                    <div class="text-slate-500 text-sm">Pass Rate</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-purple-400" id="testFiles">--</div>
+                    <div class="text-slate-500 text-sm">Test Files</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-orange-400" id="coverage">--%</div>
+                    <div class="text-slate-500 text-sm">Coverage</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-6" id="docs">
+            <h2 class="text-2xl font-semibold text-slate-200 mb-6">Architecture & Features</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-medium text-slate-300 mb-3">Core Components</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                            FastAPI backend with SQLite storage
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                            Vanilla JavaScript frontend with Tailwind CSS
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                            Docker containerization for portability
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                            Comprehensive Playwright test suite
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-medium text-slate-300 mb-3">Key Features</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-950 rounded-lg p-4">
+                            <h4 class="text-slate-200 font-medium mb-2">📋 Task Management</h4>
+                            <p class="text-slate-500 text-sm">Create, edit, and organize tasks with priorities, due dates, and assignments</p>
+                        </div>
+                        <div class="bg-slate-950 rounded-lg p-4">
+                            <h4 class="text-slate-200 font-medium mb-2">📂 Subtask System</h4>
+                            <p class="text-slate-500 text-sm">Break down complex tasks into manageable subtasks with individual tracking</p>
+                        </div>
+                        <div class="bg-slate-950 rounded-lg p-4">
+                            <h4 class="text-slate-200 font-medium mb-2">🎯 Advanced Filtering</h4>
+                            <p class="text-slate-500 text-sm">Filter tasks by status, priority, assignee, and custom search queries</p>
+                        </div>
+                        <div class="bg-slate-950 rounded-lg p-4">
+                            <h4 class="text-slate-200 font-medium mb-2">📱 Responsive Design</h4>
+                            <p class="text-slate-500 text-sm">Optimized for desktop and mobile with intuitive kanban board interface</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-slate-500 text-sm mt-12 pt-8 border-t border-slate-800">
+            <p>&copy; 2025 TaskMasterWeb Development Hub. Built with FastAPI, Tailwind CSS, and Playwright.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Update timestamp
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+        
+        // Load test stats (placeholder - would normally load from API)
+        setTimeout(() => {
+            document.getElementById('testCount').textContent = '150+';
+            document.getElementById('passRate').textContent = '85%';
+            document.getElementById('testFiles').textContent = '15';
+            document.getElementById('coverage').textContent = '78%';
+        }, 500);
+    </script>
+</body>
+</html>

@@ -352,6 +352,100 @@ def delete_existing_port(port_id: int, db: Session = Depends(get_db)) -> Dict[st
     return {"ok": True, "message": f"Port {port_id} deleted successfully"}
 
 
+# External API endpoints for other systems
+@app.get("/api/external/ports", response_class=JSONResponse)
+def external_get_all_ports(db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """External API: Get all ports with complete project details for external systems."""
+    try:
+        ports = get_all_ports(db)
+        port_details = []
+        
+        for port in ports:
+            # Get complete project information
+            project = get_project_by_id(db, port.project_id)
+            port_data = port.to_dict()
+            
+            # Add complete project details
+            if project:
+                port_data.update({
+                    "project_details": {
+                        "id": project.id,
+                        "slug": project.slug,
+                        "name": project.name,
+                        "path": project.path,
+                        "task_file_path": project.task_file_path,
+                        "description": project.description,
+                        "prod_url": project.prod_url,
+                        "dev_url": project.dev_url,
+                        "docs_url": project.docs_url,
+                        "phpmyadmin_url": project.phpmyadmin_url,
+                        "created_at": project.created_at.isoformat() + "Z" if project.created_at else None,
+                        "updated_at": project.updated_at.isoformat() + "Z" if project.updated_at else None,
+                        "active": project.active
+                    }
+                })
+            
+            port_details.append(port_data)
+        
+        return {
+            "ok": True,
+            "ports": port_details,
+            "total_count": len(port_details),
+            "active_projects": len(set(port.project_id for port in ports if port.active))
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve ports: {str(e)}")
+
+
+@app.post("/api/external/ports", response_class=JSONResponse)
+def external_create_port(port: PortCreate, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """External API: Create a new port for external systems."""
+    # Verify project exists
+    project = get_project_by_id(db, port.project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail=f"Project with ID {port.project_id} not found")
+    
+    # Check for port conflicts within the same project
+    existing_ports = get_ports_by_project(db, port.project_id)
+    for existing_port in existing_ports:
+        if existing_port.port == port.port:
+            raise HTTPException(
+                status_code=409, 
+                detail=f"Port {port.port} already exists for project {port.project_id}"
+            )
+    
+    try:
+        new_port = create_port(db, port)
+        port_data = new_port.to_dict()
+        
+        # Add complete project details to response
+        port_data.update({
+            "project_details": {
+                "id": project.id,
+                "slug": project.slug,
+                "name": project.name,
+                "path": project.path,
+                "task_file_path": project.task_file_path,
+                "description": project.description,
+                "prod_url": project.prod_url,
+                "dev_url": project.dev_url,
+                "docs_url": project.docs_url,
+                "phpmyadmin_url": project.phpmyadmin_url,
+                "created_at": project.created_at.isoformat() + "Z" if project.created_at else None,
+                "updated_at": project.updated_at.isoformat() + "Z" if project.updated_at else None,
+                "active": project.active
+            }
+        })
+        
+        return {
+            "ok": True,
+            "port": port_data,
+            "message": f"Port {port.port} created successfully for project '{project.name}'"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create port: {str(e)}")
+
+
 @app.get("/api/browse-files", response_class=JSONResponse)
 def browse_files(path: str = "/projects") -> Dict[str, Any]:
     """Browse files in the specified directory to find task files."""
