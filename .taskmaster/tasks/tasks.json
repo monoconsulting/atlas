@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-08-28T12:25:59.085Z",
+      "updated": "2025-08-28T12:25:59.085Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -107,13 +112,52 @@
         "description": "Compute present statuses from fetched tasks, order by status mapping, render all columns with testids, and implement header counters with synchronized counts.",
         "details": "1. Create status computation logic in state.js:\n   - Extract unique statuses from fetched tasks array\n   - Define status ordering mapping (todo, in-progress, done)\n   - Sort statuses according to predefined order\n   - Handle edge cases for unknown or custom statuses\n\n2. Implement column rendering in render.js:\n   - Create renderKanbanColumns() function that generates columns for each status\n   - Add data-testid attributes to all column elements for testing\n   - Include proper CSS classes and structure for Kanban board\n   - Ensure columns are dynamically generated based on present statuses\n\n3. Build header counter system:\n   - Create updateHeaderCounters() function in render.js\n   - Count tasks by status and display in header section\n   - Format counters as \"Status: X tasks\" or similar\n   - Position counters in existing header area from Task 3\n\n4. Implement count synchronization:\n   - Hook counter updates to task fetch operations\n   - Update counts when tasks are added, modified, or deleted\n   - Ensure counts reflect current filtered state if filters are active\n   - Add loading states for counter updates\n\n5. Integration with existing modules:\n   - Call status computation from state management functions\n   - Trigger column re-rendering when task data changes\n   - Coordinate with API module for real-time updates",
         "testStrategy": "1. Verify status computation correctly identifies all unique statuses from task data\n2. Confirm statuses are ordered according to defined mapping (todo, in-progress, done)\n3. Check that Kanban columns are rendered with proper data-testid attributes\n4. Validate header counters display correct task counts for each status\n5. Test counter synchronization by adding/modifying/deleting tasks\n6. Ensure columns update dynamically when new statuses are introduced\n7. Verify edge cases like empty task lists or unknown statuses are handled\n8. Check that counters reflect filtered state if filters are applied\n9. Test loading states during counter updates\n10. Validate integration with existing HTML structure from Task 3",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           3,
           4
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Status computation logic in state.js",
+            "description": "Extract unique statuses, implement status ordering, handle edge cases",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 2,
+            "title": "Dynamic column rendering in render.js",
+            "description": "Create renderKanbanColumns() function with data-testid attributes and proper CSS structure",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 3,
+            "title": "Header counter system implementation",
+            "description": "Build updateHeaderCounters() function with count synchronization and loading states",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          },
+          {
+            "id": 4,
+            "title": "Integration with existing modules",
+            "description": "Coordinate status computation with API module and hook counter updates to task operations",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 5
+          }
+        ],
+        "labels": [],
+        "updated_at": "2025-08-28T12:25:50.042436Z"
       },
       {
         "id": 6,
@@ -313,6 +357,11 @@
         "extra": {},
         "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-08-28T12:25:59.085Z",
+      "updated": "2025-08-28T12:25:59.085Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }

@@ -1,6 +1,6 @@
 # Task ID: 4
 # Title: JS Module Scaffolding
-# Status: in-progress
+# Status: done
 # Dependencies: 3
 # Priority: high
 # Description: Create four ES modules: api.js (API routes), state.js (in-memory state), render.js (render functions), main.js (bootstrap and events) to establish the core JavaScript architecture for the application.
@@ -40,31 +40,31 @@
 8. Test error handling in each module responds appropriately to failures
 
 # Subtasks:
-## 1. Fix HTML Foundation - Replace index.html with Atlas-compliant structure [pending]
+## 1. Fix HTML Foundation - Replace index.html with Atlas-compliant structure [done]
 ### Dependencies: None
 ### Description: Replace current broken index.html (with merge conflicts and Advanced Filters) with Atlas-compliant structure: proper header format, header counters with data-testids, single filter row, three action buttons, Kanban container, spinner overlay, remove all Advanced Filters markup
 ### Details:
 
 
-## 2. Create api.js module - API wrapper with project slug routing [pending]
+## 2. Create api.js module - API wrapper with project slug routing [done]
 ### Dependencies: None
 ### Description: Create app/static/js/api.js module that wraps all API routes from Rules §3 with proper project slug routing (/{slug}/info, /{slug}/tasks, /{slug}/task, etc). Handle errors, loading states, and provide clean async functions for CRUD operations. No global helpers.
 ### Details:
 
 
-## 3. Create state.js module - In-memory state management [pending]
+## 3. Create state.js module - In-memory state management [done]
 ### Dependencies: None
 ### Description: Create app/static/js/state.js module for managing in-memory state: slug, currentTag, tasks, filters, sorting. Include status mapping from Rules §2 (pending→Backlog, todo→Todo, etc), filter state management, task data normalization, and state change notifications for re-rendering.
 ### Details:
 
 
-## 4. Create render.js module - Pure render functions [pending]
+## 4. Create render.js module - Pure render functions [done]
 ### Dependencies: None
 ### Description: Create app/static/js/render.js module with pure render functions for all UI components: header counters with proper data-testids, dynamic column generation from present statuses, filter controls, modal rendering (task creation/edit), subtask rendering with max 8 limit enforcement, card rendering with priority indicators.
 ### Details:
 
 
-## 5. Create main.js module - Bootstrap and coordination [pending]
+## 5. Create main.js module - Bootstrap and coordination [done]
 ### Dependencies: None
 ### Description: Create app/static/js/main.js module for application bootstrap: detect slug from URL path, fetch initial info/tasks data on DOMContentLoaded, wire all event handlers, coordinate between api/state/render modules, handle modal lifecycle and form submissions, integrate all modules into working application.
 ### Details:
