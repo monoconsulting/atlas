@@ -1,0 +1,51 @@
+# Task ID: 3
+# Title: Minimal HTML Shell
+# Status: done
+# Dependencies: 1, 2
+# Priority: high
+# Description: Create new app/static/index.html with Atlas header, header counters, single filter row with exact control order, remove Advanced Filters, add Kanban container with spinner overlay
+# Details:
+1. Create new app/static/index.html file with clean, minimal structure:
+   - Atlas header with project name and working directory subtitle
+   - Header counters section for task statistics display
+   - Single filter row containing controls in exact specified order
+   - Remove all Advanced Filters functionality and UI elements
+   - Add main Kanban container with proper CSS classes
+
+2. Implement spinner overlay system:
+   - Create spinner overlay div with loading animation
+   - Position overlay to cover Kanban container during data loading
+   - Add CSS classes for show/hide functionality
+   - Ensure spinner is centered and visible
+
+3. Structure the HTML with semantic elements:
+   - Use proper header, main, and section tags
+   - Apply consistent CSS class naming convention
+   - Ensure responsive layout foundation
+   - Include meta tags for viewport and charset
+
+4. Set up basic CSS structure:
+   - Link to Tailwind CSS compiled stylesheet
+   - Create base layout styles for header, filters, and Kanban areas
+   - Implement spinner animation keyframes
+   - Add utility classes for overlay positioning
+
+5. Remove legacy Advanced Filters:
+   - Eliminate complex multi-column filter interface
+   - Simplify to single row of essential controls
+   - Maintain only core filtering functionality
+   - Clean up associated CSS classes
+
+# Test Strategy:
+1. Verify new index.html file exists in app/static/ directory
+2. Confirm HTML structure contains Atlas header with correct title format
+3. Check header counters section is present and properly positioned
+4. Validate single filter row contains controls in specified order
+5. Ensure Advanced Filters sections have been completely removed
+6. Test Kanban container exists with proper CSS classes
+7. Verify spinner overlay displays correctly when shown
+8. Check spinner animation runs smoothly and is properly centered
+9. Validate HTML is semantically structured with proper tags
+10. Confirm Tailwind CSS stylesheet is properly linked
+11. Test responsive layout foundation works on different screen sizes
+12. Verify no legacy filter complexity remains in the interface

@@ -1,0 +1,36 @@
+# Task ID: 12
+# Title: Data-TestIDs Wiring - Add all exact data-testid attributes from Rules, verify they exist in DOM after load
+# Status: pending
+# Dependencies: 7, 8, 9
+# Priority: medium
+# Description: Add comprehensive data-testid attributes to all interactive elements following established naming conventions and verify DOM presence after page load for testing framework integration.
+# Details:
+1. Add data-testid attributes to all interactive elements in index.html:
+   - Task cards: data-testid="task-card-{id}"
+   - Action buttons: data-testid="btn-{action}" (e.g., btn-create-task, btn-save, btn-cancel)
+   - Form inputs: data-testid="input-{field}" (e.g., input-title, input-description)
+   - Modal elements: data-testid="modal-{type}" (e.g., modal-create-task, modal-edit-task)
+   - Subtask rows: data-testid="subtask-row-{index}"
+   - Filter controls: data-testid="filter-{type}" (e.g., filter-status, filter-priority)
+   - Loading spinners: data-testid="loading-spinner-{context}"
+   - Error banners: data-testid="error-banner-{type}"
+
+2. Create verification function in main.js:
+   - Implement verifyTestIds() function that checks DOM for all expected data-testid attributes
+   - Add console logging for missing or duplicate test IDs
+   - Include validation for dynamically generated elements (task cards, subtask rows)
+   - Call verification function after initial page load and after dynamic content updates
+
+3. Establish data-testid naming rules document:
+   - Create consistent naming convention guidelines
+   - Document all current data-testid patterns and usage
+   - Include examples for future element additions
+   - Ensure compatibility with Playwright test selectors
+
+# Test Strategy:
+1. Verify all static elements have appropriate data-testid attributes by inspecting DOM elements in browser developer tools
+2. Confirm dynamically generated elements (task cards, subtask rows) receive correct data-testid values with proper ID/index substitution
+3. Test verification function successfully identifies all expected data-testid attributes and logs any missing elements
+4. Validate data-testid attributes remain present after all dynamic operations (task creation, editing, deletion, filtering)
+5. Use browser console to run document.querySelectorAll('[data-testid]') and confirm comprehensive coverage of interactive elements
+6. Test that all data-testid values follow established naming conventions and are unique within their context

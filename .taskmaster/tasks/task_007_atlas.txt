@@ -1,0 +1,53 @@
+# Task ID: 7
+# Title: Create New Task Modal with Subtasks
+# Status: pending
+# Dependencies: 3, 4, 6
+# Priority: high
+# Description: Implement a comprehensive Create Task modal with all task fields, subtask addition functionality with parent persistence, maximum 8 subtasks limit, and save/cancel operations.
+# Details:
+1. Create modal HTML structure in index.html:
+   - Modal backdrop with proper z-index and click-to-close functionality
+   - Modal container with form elements for all task fields (title, description, priority, status, dependencies)
+   - Subtasks section with dynamic add/remove functionality
+   - Action buttons (Save, Cancel) with proper styling and positioning
+
+2. Implement modal JavaScript functionality in main.js:
+   - showCreateTaskModal() function to display modal and reset form
+   - hideCreateTaskModal() function with cleanup and form reset
+   - Form validation for required fields (title, description)
+   - Dependencies dropdown with existing task options
+
+3. Add subtask management system:
+   - addSubtaskToForm() function to dynamically add subtask input rows
+   - removeSubtaskFromForm() function to remove specific subtask rows
+   - Enforce maximum 8 subtasks limit with UI feedback
+   - Subtask validation (non-empty titles)
+
+4. Implement save functionality:
+   - Collect all form data including subtasks array
+   - Call API to create parent task with nested subtasks
+   - Handle API responses and error states
+   - Close modal on successful creation and refresh task display
+
+5. Add modal styling and UX improvements:
+   - Responsive design for different screen sizes
+   - Loading states during API calls
+   - Form field focus management
+   - Keyboard shortcuts (Escape to cancel, Enter to save)
+
+6. Integrate with existing state management:
+   - Update global state with new task data
+   - Trigger task list re-render
+   - Update header counters and filters
+
+# Test Strategy:
+1. Verify modal opens when Create Task button is clicked and displays all required form fields
+2. Test form validation prevents submission with empty required fields
+3. Confirm subtask addition works up to maximum of 8 subtasks with proper UI feedback
+4. Validate subtask removal functionality works correctly for individual rows
+5. Test save functionality creates task with subtasks via API and updates UI
+6. Verify cancel button and backdrop clicks properly close modal without saving
+7. Check modal responsiveness across different screen sizes
+8. Test keyboard navigation and shortcuts work as expected
+9. Confirm error handling displays appropriate messages for API failures
+10. Validate that successful task creation updates task list, counters, and closes modal

@@ -1,0 +1,47 @@
+# Task ID: 5
+# Title: Dynamic Statuses & Header Counters
+# Status: pending
+# Dependencies: 3, 4
+# Priority: high
+# Description: Compute present statuses from fetched tasks, order by status mapping, render all columns with testids, and implement header counters with synchronized counts.
+# Details:
+1. Create status computation logic in state.js:
+   - Extract unique statuses from fetched tasks array
+   - Define status ordering mapping (todo, in-progress, done)
+   - Sort statuses according to predefined order
+   - Handle edge cases for unknown or custom statuses
+
+2. Implement column rendering in render.js:
+   - Create renderKanbanColumns() function that generates columns for each status
+   - Add data-testid attributes to all column elements for testing
+   - Include proper CSS classes and structure for Kanban board
+   - Ensure columns are dynamically generated based on present statuses
+
+3. Build header counter system:
+   - Create updateHeaderCounters() function in render.js
+   - Count tasks by status and display in header section
+   - Format counters as "Status: X tasks" or similar
+   - Position counters in existing header area from Task 3
+
+4. Implement count synchronization:
+   - Hook counter updates to task fetch operations
+   - Update counts when tasks are added, modified, or deleted
+   - Ensure counts reflect current filtered state if filters are active
+   - Add loading states for counter updates
+
+5. Integration with existing modules:
+   - Call status computation from state management functions
+   - Trigger column re-rendering when task data changes
+   - Coordinate with API module for real-time updates
+
+# Test Strategy:
+1. Verify status computation correctly identifies all unique statuses from task data
+2. Confirm statuses are ordered according to defined mapping (todo, in-progress, done)
+3. Check that Kanban columns are rendered with proper data-testid attributes
+4. Validate header counters display correct task counts for each status
+5. Test counter synchronization by adding/modifying/deleting tasks
+6. Ensure columns update dynamically when new statuses are introduced
+7. Verify edge cases like empty task lists or unknown statuses are handled
+8. Check that counters reflect filtered state if filters are applied
+9. Test loading states during counter updates
+10. Validate integration with existing HTML structure from Task 3

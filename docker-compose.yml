@@ -16,7 +16,7 @@ services:
   webserver:
     build: .
     container_name: ${WEB_CONTAINER_NAME:-taskmasterweb_webserver}
-    working_dir: /srv/app/web
+    working_dir: /projects/taskmasterweb/web
     command: python server.py
     ports:
       - "${WEB_HOST_PORT:-9652}:9652"

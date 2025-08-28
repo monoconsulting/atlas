@@ -1,0 +1,49 @@
+# Task ID: 8
+# Title: Edit Modals (Tasks & Subtasks)
+# Status: pending
+# Dependencies: 3, 4, 7
+# Priority: high
+# Description: Implement task card click handlers to open edit modals, enable editing of parent tasks and subtask rows with real-time updates, persist changes via PUT API calls, and handle outside click cancellation.
+# Details:
+1. Create edit modal HTML structure in index.html:
+   - Reuse modal backdrop and container from create task modal
+   - Pre-populate form fields with existing task data (title, description, priority, status, dependencies)
+   - Display existing subtasks in editable rows with inline edit capability
+   - Add subtask management buttons (add, remove, reorder) within modal
+   - Include Save Changes and Cancel buttons with proper styling
+
+2. Implement task card click handlers in main.js:
+   - Add click event listeners to all task cards in Kanban columns
+   - Create showEditTaskModal(taskId) function to populate and display modal
+   - Fetch current task data via API and populate form fields
+   - Handle task cards with data-testid attributes for reliable event binding
+
+3. Implement edit modal functionality:
+   - Create populateEditForm(taskData) to fill form with existing values
+   - Enable inline editing of subtask rows with input fields
+   - Implement real-time subtask addition/removal within edit context
+   - Add form validation for required fields and data consistency
+
+4. Implement persistence via PUT API calls:
+   - Create updateTask() function in api.js for PUT requests to /task/{id} endpoint
+   - Handle both parent task updates and subtask modifications in single operation
+   - Include proper error handling and user feedback for failed updates
+   - Update local state and re-render affected UI components after successful save
+
+5. Handle modal interactions:
+   - Implement outside click detection to close modal with unsaved changes warning
+   - Add escape key handler for modal cancellation
+   - Prevent event propagation from form elements to backdrop click handler
+   - Maintain modal open state during save operations with loading indicators
+
+# Test Strategy:
+1. Verify task cards are clickable and open edit modal with correct pre-populated data
+2. Test form fields display existing task values (title, description, priority, status)
+3. Confirm subtask rows are editable and changes reflect immediately in UI
+4. Validate subtask addition/removal works within edit modal context
+5. Test PUT API calls successfully persist changes to backend and update task data
+6. Verify outside click closes modal with unsaved changes confirmation dialog
+7. Check escape key cancels edit operation and closes modal
+8. Test form validation prevents saving invalid data (empty required fields)
+9. Confirm successful save updates Kanban board with new task data
+10. Validate error handling displays appropriate messages for failed save operations

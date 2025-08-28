@@ -1,0 +1,45 @@
+# Task ID: 11
+# Title: Playwright Setup (Headless-Only, Loop Until 100%)
+# Status: pending
+# Dependencies: 4, 6, 9
+# Priority: high
+# Description: Configure Playwright for Chromium headless-only execution, implement artifact saving, create loop script for 100% pass rate, and enforce headed run restrictions.
+# Details:
+1. Install and configure Playwright dependencies:
+   - Install @playwright/test and chromium browser only
+   - Create playwright.config.js with headless: true enforcement
+   - Configure browser to use chromium only, disable webkit and firefox
+   - Set up test artifacts directory structure for screenshots, videos, traces
+
+2. Implement headless-only enforcement:
+   - Add configuration validation to prevent headed: false override
+   - Create custom launcher that forces headless mode
+   - Add environment variable checks to block GUI mode
+   - Implement error handling for headed mode attempts
+
+3. Create comprehensive test loop script:
+   - Develop loop-until-pass.js script that runs tests repeatedly until 100% pass rate
+   - Implement test result parsing and failure analysis
+   - Add configurable retry limits and delay between attempts
+   - Include progress reporting and failure logging
+
+4. Configure artifact collection:
+   - Set up automatic screenshot capture on failures
+   - Enable video recording for all test runs
+   - Configure trace collection with detailed debugging info
+   - Implement artifact cleanup and rotation policies
+
+5. Create test execution wrapper:
+   - Build npm scripts for different test scenarios (single run, loop mode)
+   - Add test result aggregation and reporting
+   - Implement CI/CD friendly exit codes and output formatting
+
+# Test Strategy:
+1. Verify Playwright installation contains only chromium browser and required dependencies
+2. Confirm playwright.config.js enforces headless mode and rejects headed configuration attempts
+3. Test loop script successfully runs tests until 100% pass rate is achieved
+4. Validate artifacts (screenshots, videos, traces) are captured and saved in correct directory structure
+5. Check that headed mode attempts are blocked with appropriate error messages
+6. Verify test loop script handles edge cases like infinite failures and timeout scenarios
+7. Confirm npm scripts execute correctly and provide proper exit codes for CI integration
+8. Test artifact cleanup removes old files while preserving recent test results

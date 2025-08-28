@@ -409,6 +409,20 @@ def browse_files(path: str = "/projects") -> Dict[str, Any]:
         return {"ok": False, "error": str(e), "files": [], "directories": []}
 
 
+@app.get("/test-results.html", response_class=HTMLResponse)
+def serve_test_results() -> HTMLResponse:
+    """Serve the test results page."""
+    test_results_path = os.path.join(os.path.dirname(__file__), "..", "web", "test-results.html")
+    if not os.path.exists(test_results_path):
+        raise HTTPException(status_code=404, detail="Test results not found")
+    
+    try:
+        with open(test_results_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+        return HTMLResponse(html_content)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to read test results: {str(e)}")
+
 @app.get("/{project_slug}", response_class=HTMLResponse)
 def serve_project(project_slug: str, db: Session = Depends(get_db)) -> HTMLResponse:
     """Serve the main application for a specific project based on URL slug."""

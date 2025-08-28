@@ -1,0 +1,47 @@
+# Task ID: 6
+# Title: Filters (Functional) - Implement client-side filters for Status/Priority/Tags/Search
+# Status: pending
+# Dependencies: 4, 5
+# Priority: high
+# Description: Create a comprehensive client-side filtering system with status, priority, tags, and search filters that work together in a pipeline and update task counts dynamically.
+# Details:
+1. Implement filter state management in state.js:
+   - Add filters object to global state with status, priority, tags, and search properties
+   - Create setFilter() and getFilters() functions with validation
+   - Implement resetFilters() to clear all active filters
+   - Add filter change event system to trigger re-renders
+
+2. Create filtering pipeline in state.js:
+   - Implement applyFilters(tasks) function that processes tasks through all active filters
+   - Status filter: match tasks against selected status values
+   - Priority filter: match tasks against selected priority levels
+   - Tags filter: match tasks that contain any of the selected tags
+   - Search filter: case-insensitive matching against title and description
+   - Chain filters together for combined filtering logic
+
+3. Update render.js to integrate filters:
+   - Modify renderKanbanColumns() to use filtered task data
+   - Create updateTaskCounts() function that reflects filtered results
+   - Ensure header counters show counts based on currently visible (filtered) tasks
+   - Add visual indicators for active filters
+
+4. Implement filter controls event handlers in main.js:
+   - Add event listeners for all filter inputs (checkboxes, search input)
+   - Call state.setFilter() on user interactions
+   - Trigger re-render when filters change
+   - Maintain filter state persistence during session
+
+5. Add filter clearing functionality:
+   - Implement "Clear All" button functionality
+   - Reset all filter controls to default state
+   - Update display to show all tasks when filters are cleared
+
+# Test Strategy:
+1. Test individual filter functions work correctly (status, priority, tags, search)
+2. Verify filter pipeline correctly combines multiple active filters
+3. Confirm task counts in headers update to reflect only visible/filtered tasks
+4. Test search filter performs case-insensitive matching on title and description
+5. Validate that clearing filters restores full task display and resets counts
+6. Check filter state persists during user session and resets on page reload
+7. Test edge cases like empty search results and no matching filters
+8. Verify filter controls update UI state correctly when toggled

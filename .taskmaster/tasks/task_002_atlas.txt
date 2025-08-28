@@ -1,0 +1,49 @@
+# Task ID: 2
+# Title: Docker & Env De-ambiguation - Configure docker-compose.yml with single PROJECTS_HOST_DIR mount, update .env settings, set database projects.path to container paths, rebuild and test containers
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Simplify Docker configuration by consolidating project mounts into a single PROJECTS_HOST_DIR variable, update environment settings, and configure database to use container paths for improved consistency and maintainability.
+# Details:
+1. Update docker-compose.yml to use single PROJECTS_HOST_DIR environment variable:
+   - Replace multiple project-specific volume mounts with ${PROJECTS_HOST_DIR}:/projects
+   - Ensure all containers use consistent /projects mount point
+   - Remove redundant volume definitions
+
+2. Update .env file settings:
+   - Define PROJECTS_HOST_DIR=E:\projects (Windows host path)
+   - Remove duplicate or conflicting project path variables
+   - Document the new simplified mounting structure
+
+3. Configure database projects.path field:
+   - Update all project records to use container paths (/projects/project-name)
+   - Migrate existing host paths to container equivalents
+   - Add validation to ensure paths start with /projects/
+
+4. Update application code:
+   - Modify path resolution logic to work with container paths
+   - Update any hardcoded path references
+   - Ensure cross-platform compatibility
+
+5. Rebuild containers with no cache:
+   - Run docker-compose down --volumes
+   - Execute docker-compose build --no-cache
+   - Start containers with docker-compose up -d
+
+6. Verify mount points and path resolution:
+   - Test that /projects directory is accessible in containers
+   - Confirm project files are visible at expected paths
+   - Validate database path entries work correctly
+
+# Test Strategy:
+1. Verify docker-compose.yml syntax and PROJECTS_HOST_DIR variable usage
+2. Confirm .env file contains correct PROJECTS_HOST_DIR path
+3. Test container rebuild process completes without errors
+4. Validate /projects mount point exists in all containers
+5. Check that project directories are accessible at /projects/project-name paths
+6. Test database project records use container paths (/projects/...)
+7. Verify application can read/write project files using new paths
+8. Test project creation and access through web interface
+9. Confirm no broken path references remain in logs
+10. Validate cross-container file access works correctly
+11. Test backup and restore functionality with new path structure

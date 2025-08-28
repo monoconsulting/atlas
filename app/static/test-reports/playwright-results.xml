@@ -1,0 +1,325 @@
+<testsuites id="" name="" tests="5" failures="5" skipped="0" errors="0" time="50.334922">
+<testsuite name="test_ui_tasks.spec.ts" timestamp="2025-08-27T20:03:23.752Z" hostname="chromium" tests="1" failures="1" skipped="0" time="16.41" errors="0">
+<testcase name="Kanban Task Board › renders task cards without loading indicator" classname="test_ui_tasks.spec.ts" time="16.41">
+<failure message="test_ui_tasks.spec.ts:4:7 renders task cards without loading indicator" type="FAILURE">
+<![CDATA[  [chromium] › test_ui_tasks.spec.ts:4:7 › Kanban Task Board › renders task cards without loading indicator 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('.task-card') to be visible
+
+
+       7 |
+       8 |     // Wait until task cards have loaded
+    >  9 |     await page.waitForSelector(".task-card");
+         |                ^
+      10 |
+      11 |     const cards = await page.locator(".task-card").count();
+      12 |     expect(cards).toBeGreaterThan(0);
+        at E:\projects\taskmasterweb\tests\test_ui_tasks.spec.ts:9:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-chromium\error-context.md]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[  [38;5;45;1mpw:api [0m=> browserType.launch started [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m<= browserType.launch succeeded [38;5;45m+385ms[0m
+  [38;5;45;1mpw:api [0m=> browser.newContext started [38;5;45m+8ms[0m
+  [38;5;45;1mpw:api [0m<= browser.newContext succeeded [38;5;45m+21ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.newPage started [38;5;45m+4ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.newPage succeeded [38;5;45m+320ms[0m
+  [38;5;45;1mpw:api [0m=> page.goto started [38;5;45m+4ms[0m
+  [38;5;45;1mpw:api [0mnavigating to "http://localhost:8199/", waiting until "load" [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  "commit" event fired [38;5;45m+29ms[0m
+  [38;5;45;1mpw:api [0m  navigated to "http://localhost:8199/" [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  "domcontentloaded" event fired [38;5;45m+22ms[0m
+  [38;5;45;1mpw:api [0m  "load" event fired [38;5;45m+77ms[0m
+  [38;5;45;1mpw:api [0m<= page.goto succeeded [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m=> page.waitForSelector started [38;5;45m+6ms[0m
+  [38;5;45;1mpw:api [0mwaiting for locator('.task-card') to be visible [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  "networkidle" event fired [38;5;45m+413ms[0m
+  [38;5;45;1mpw:api [0m<= page.waitForSelector failed [38;5;45m+15s[0m
+  [38;5;45;1mpw:api [0mtaking page screenshot [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0mwaiting for fonts to load... [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0mfonts loaded [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.close started [38;5;45m+182ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.close succeeded [38;5;45m+721ms[0m
+  [38;5;45;1mpw:api [0m=> browser.close started [38;5;45m+16ms[0m
+  [38;5;45;1mpw:api [0m<= browser.close succeeded [38;5;45m+154ms[0m
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="test_ui_tasks.spec.ts" timestamp="2025-08-27T20:03:23.752Z" hostname="firefox" tests="1" failures="1" skipped="0" time="17.489" errors="0">
+<testcase name="Kanban Task Board › renders task cards without loading indicator" classname="test_ui_tasks.spec.ts" time="17.489">
+<failure message="test_ui_tasks.spec.ts:4:7 renders task cards without loading indicator" type="FAILURE">
+<![CDATA[  [firefox] › test_ui_tasks.spec.ts:4:7 › Kanban Task Board › renders task cards without loading indicator 
+
+    TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('.task-card') to be visible
+
+
+       7 |
+       8 |     // Wait until task cards have loaded
+    >  9 |     await page.waitForSelector(".task-card");
+         |                ^
+      10 |
+      11 |     const cards = await page.locator(".task-card").count();
+      12 |     expect(cards).toBeGreaterThan(0);
+        at E:\projects\taskmasterweb\tests\test_ui_tasks.spec.ts:9:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-firefox\error-context.md]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[  [38;5;45;1mpw:api [0m=> browserType.launch started [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m<= browserType.launch succeeded [38;5;45m+771ms[0m
+  [38;5;45;1mpw:api [0m=> browser.newContext started [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0m<= browser.newContext succeeded [38;5;45m+129ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.newPage started [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0m  "networkidle" event fired [38;5;45m+1s[0m
+  [38;5;45;1mpw:api [0m  navigated to "about:blank" [38;5;45m+147ms[0m
+  [38;5;45;1mpw:api [0m  navigated to "about:blank" [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.newPage succeeded [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0m=> page.goto started [38;5;45m+4ms[0m
+  [38;5;45;1mpw:api [0mnavigating to "http://localhost:8199/", waiting until "load" [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  "commit" event fired [38;5;45m+342ms[0m
+  [38;5;45;1mpw:api [0m  navigated to "http://localhost:8199/" [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  "domcontentloaded" event fired [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  "load" event fired [38;5;45m+26ms[0m
+  [38;5;45;1mpw:api [0m<= page.goto succeeded [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m=> page.waitForSelector started [38;5;45m+7ms[0m
+  [38;5;45;1mpw:api [0mwaiting for locator('.task-card') to be visible [38;5;45m+2ms[0m
+  [38;5;45;1mpw:api [0m  "networkidle" event fired [38;5;45m+462ms[0m
+  [38;5;45;1mpw:api [0m<= page.waitForSelector failed [38;5;45m+15s[0m
+  [38;5;45;1mpw:api [0mtaking page screenshot [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0mwaiting for fonts to load... [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0mfonts loaded [38;5;45m+2ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.close started [38;5;45m+178ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.close succeeded [38;5;45m+303ms[0m
+  [38;5;45;1mpw:api [0m=> browser.close started [38;5;45m+19ms[0m
+  [38;5;45;1mpw:api [0m<= browser.close succeeded [38;5;45m+566ms[0m
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="test_ui_tasks.spec.ts" timestamp="2025-08-27T20:03:23.752Z" hostname="webkit" tests="1" failures="1" skipped="0" time="2.784" errors="0">
+<testcase name="Kanban Task Board › renders task cards without loading indicator" classname="test_ui_tasks.spec.ts" time="2.784">
+<failure message="test_ui_tasks.spec.ts:4:7 renders task cards without loading indicator" type="FAILURE">
+<![CDATA[  [webkit] › test_ui_tasks.spec.ts:4:7 › Kanban Task Board › renders task cards without loading indicator 
+
+    Error: page.goto: Could not connect to server
+    Call log:
+      - navigating to "http://localhost:8199/", waiting until "load"
+
+
+      4 |   test("renders task cards without loading indicator", async ({ page }) => {
+      5 |   // The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)
+    > 6 |   await page.goto("http://localhost:8199");
+        |              ^
+      7 |
+      8 |     // Wait until task cards have loaded
+      9 |     await page.waitForSelector(".task-card");
+        at E:\projects\taskmasterweb\tests\test_ui_tasks.spec.ts:6:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-webkit\video.webm]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[  [38;5;45;1mpw:api [0m=> browserType.launch started [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m<= browserType.launch succeeded [38;5;45m+63ms[0m
+  [38;5;45;1mpw:api [0m=> browser.newContext started [38;5;45m+4ms[0m
+  [38;5;45;1mpw:api [0m<= browser.newContext succeeded [38;5;45m+21ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.newPage started [38;5;45m+4ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.newPage succeeded [38;5;45m+236ms[0m
+  [38;5;45;1mpw:api [0m=> page.goto started [38;5;45m+2ms[0m
+  [38;5;45;1mpw:api [0mnavigating to "http://localhost:8199/", waiting until "load" [38;5;45m+2ms[0m
+  [38;5;45;1mpw:api [0m<= page.goto failed [38;5;45m+2s[0m
+  [38;5;45;1mpw:api [0mtaking page screenshot [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0mwaiting for fonts to load... [38;5;45m+7ms[0m
+  [38;5;45;1mpw:api [0mfonts loaded [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.close started [38;5;45m+224ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.close succeeded [38;5;45m+30ms[0m
+  [38;5;45;1mpw:api [0m=> browser.close started [38;5;45m+18ms[0m
+  [38;5;45;1mpw:api [0m<= browser.close succeeded [38;5;45m+19ms[0m
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="test_ui_tasks.spec.ts" timestamp="2025-08-27T20:03:23.752Z" hostname="Microsoft Edge" tests="1" failures="1" skipped="0" time="2.963" errors="0">
+<testcase name="Kanban Task Board › renders task cards without loading indicator" classname="test_ui_tasks.spec.ts" time="2.963">
+<failure message="test_ui_tasks.spec.ts:4:7 renders task cards without loading indicator" type="FAILURE">
+<![CDATA[  [Microsoft Edge] › test_ui_tasks.spec.ts:4:7 › Kanban Task Board › renders task cards without loading indicator 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/
+    Call log:
+      - navigating to "http://localhost:8199/", waiting until "load"
+
+
+      4 |   test("renders task cards without loading indicator", async ({ page }) => {
+      5 |   // The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)
+    > 6 |   await page.goto("http://localhost:8199");
+        |              ^
+      7 |
+      8 |     // Wait until task cards have loaded
+      9 |     await page.waitForSelector(".task-card");
+        at E:\projects\taskmasterweb\tests\test_ui_tasks.spec.ts:6:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Microsoft-Edge\error-context.md]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[  [38;5;45;1mpw:api [0m=> browserType.launch started [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m<= browserType.launch succeeded [38;5;45m+349ms[0m
+  [38;5;45;1mpw:api [0m=> browser.newContext started [38;5;45m+8ms[0m
+  [38;5;45;1mpw:api [0m<= browser.newContext succeeded [38;5;45m+25ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.newPage started [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.newPage succeeded [38;5;45m+254ms[0m
+  [38;5;45;1mpw:api [0m=> page.goto started [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0mnavigating to "http://localhost:8199/", waiting until "load" [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m<= page.goto failed [38;5;45m+2s[0m
+  [38;5;45;1mpw:api [0mtaking page screenshot [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0mwaiting for fonts to load... [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0mfonts loaded [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m  "commit" event fired [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  navigated to "chrome-error://chromewebdata/" [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m  "domcontentloaded" event fired [38;5;45m+23ms[0m
+  [38;5;45;1mpw:api [0m  "load" event fired [38;5;45m+32ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.close started [38;5;45m+134ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.close succeeded [38;5;45m+141ms[0m
+  [38;5;45;1mpw:api [0m=> browser.close started [38;5;45m+20ms[0m
+  [38;5;45;1mpw:api [0m<= browser.close succeeded [38;5;45m+223ms[0m
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="test_ui_tasks.spec.ts" timestamp="2025-08-27T20:03:23.752Z" hostname="Google Chrome" tests="1" failures="1" skipped="0" time="2.897" errors="0">
+<testcase name="Kanban Task Board › renders task cards without loading indicator" classname="test_ui_tasks.spec.ts" time="2.897">
+<failure message="test_ui_tasks.spec.ts:4:7 renders task cards without loading indicator" type="FAILURE">
+<![CDATA[  [Google Chrome] › test_ui_tasks.spec.ts:4:7 › Kanban Task Board › renders task cards without loading indicator 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8199/
+    Call log:
+      - navigating to "http://localhost:8199/", waiting until "load"
+
+
+      4 |   test("renders task cards without loading indicator", async ({ page }) => {
+      5 |   // The app is exposed on host port 8199 (see docker-compose.yml HOST_PORT)
+    > 6 |   await page.goto("http://localhost:8199");
+        |              ^
+      7 |
+      8 |     // Wait until task cards have loaded
+      9 |     await page.waitForSelector(".task-card");
+        at E:\projects\taskmasterweb\tests\test_ui_tasks.spec.ts:6:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\test_ui_tasks-Kanban-Task--3cbea-s-without-loading-indicator-Google-Chrome\error-context.md]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[  [38;5;45;1mpw:api [0m=> browserType.launch started [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m<= browserType.launch succeeded [38;5;45m+245ms[0m
+  [38;5;45;1mpw:api [0m=> browser.newContext started [38;5;45m+8ms[0m
+  [38;5;45;1mpw:api [0m<= browser.newContext succeeded [38;5;45m+18ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.newPage started [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.newPage succeeded [38;5;45m+169ms[0m
+  [38;5;45;1mpw:api [0m=> page.goto started [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0mnavigating to "http://localhost:8199/", waiting until "load" [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m<= page.goto failed [38;5;45m+2s[0m
+  [38;5;45;1mpw:api [0mtaking page screenshot [38;5;45m+5ms[0m
+  [38;5;45;1mpw:api [0mwaiting for fonts to load... [38;5;45m+3ms[0m
+  [38;5;45;1mpw:api [0mfonts loaded [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  "commit" event fired [38;5;45m+1ms[0m
+  [38;5;45;1mpw:api [0m  navigated to "chrome-error://chromewebdata/" [38;5;45m+0ms[0m
+  [38;5;45;1mpw:api [0m  "domcontentloaded" event fired [38;5;45m+38ms[0m
+  [38;5;45;1mpw:api [0m  "load" event fired [38;5;45m+4ms[0m
+  [38;5;45;1mpw:api [0m=> browserContext.close started [38;5;45m+149ms[0m
+  [38;5;45;1mpw:api [0m<= browserContext.close succeeded [38;5;45m+169ms[0m
+  [38;5;45;1mpw:api [0m=> browser.close started [38;5;45m+19ms[0m
+  [38;5;45;1mpw:api [0m<= browser.close succeeded [38;5;45m+120ms[0m
+]]>
+</system-err>
+</testcase>
+</testsuite>
+</testsuites>

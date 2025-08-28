@@ -1,0 +1,47 @@
+# Task ID: 13
+# Title: Acceptance Verification - Comprehensive End-to-End Testing
+# Status: pending
+# Dependencies: 5, 8, 9, 10, 11, 12
+# Priority: high
+# Description: Perform comprehensive acceptance testing by visiting project slug URLs, verifying header counters and column functionality, testing subtask creation and persistence, applying filters, and validating count accuracy across all features.
+# Details:
+1. Project Slug URL Verification:
+   - Visit all configured project slug URLs (e.g., localhost:8199/project-slug)
+   - Verify correct routing and page loading for each project
+   - Confirm project-specific data isolation and correct project context
+   - Test URL navigation and browser back/forward functionality
+
+2. Header Counter and Column Verification:
+   - Validate header counters display correct task counts for each status column
+   - Verify counters update in real-time when tasks change status
+   - Confirm column headers match computed statuses (todo, in-progress, done)
+   - Test counter synchronization with actual task data
+
+3. Subtask Creation and Persistence Testing:
+   - Create new subtasks through both create modal and edit modal interfaces
+   - Verify subtasks persist correctly in backend storage (tasks.json)
+   - Test subtask editing, status updates, and deletion functionality
+   - Confirm subtask counts reflect accurately in parent task cards
+
+4. Filter Application and Count Validation:
+   - Apply various filter combinations (status, priority, search terms)
+   - Verify filtered results show correct tasks and update counters accordingly
+   - Test filter reset functionality and ensure full task list restoration
+   - Validate filter state persistence during page interactions
+
+5. Cross-Feature Integration Testing:
+   - Test complete workflows: create task → add subtasks → change status → apply filters
+   - Verify data consistency across all UI components after operations
+   - Confirm no infinite loading states or UI freeze conditions occur
+   - Test error handling and recovery for network failures or invalid data
+
+# Test Strategy:
+1. Execute end-to-end workflow tests covering all major user scenarios from task creation to completion
+2. Verify data persistence by refreshing pages and confirming data integrity
+3. Test cross-project functionality by switching between different project slugs and verifying data isolation
+4. Validate counter accuracy by manually counting tasks and comparing with displayed counters
+5. Perform stress testing with multiple simultaneous operations (create, edit, delete, filter)
+6. Confirm accessibility and usability across different screen sizes and interaction methods
+7. Test error scenarios including network disconnection, invalid API responses, and malformed data
+8. Verify all data-testid attributes are present and functional for automated testing integration
+9. Document any discrepancies between expected and actual behavior for resolution

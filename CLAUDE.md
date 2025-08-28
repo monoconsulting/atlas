@@ -545,6 +545,88 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 - **Negative**: Static interface until JavaScript modules implemented in Task 4
 - **Risk Mitigation**: Comprehensive testing, semantic structure, proper accessibility foundation
 
+### ADR-006: Atlas Frontend JavaScript Architecture Implementation (2025-08-28)
+
+**Status**: Implemented ✅  
+**Context**: Task 4 required implementing complete JavaScript architecture with 4 ES6 modules to provide full Atlas Frontend functionality.
+
+**Problem**: 
+- Broken HTML with merge conflicts and Advanced Filters violations
+- No JavaScript architecture for dynamic UI, filtering, or modal operations
+- Missing project slug routing for API integration
+- No state management system for task data and UI coordination
+
+**Solution**: Implemented comprehensive 4-module JavaScript architecture following ES6 patterns:
+
+**HTML Foundation Replacement** (`app/static/index.html`):
+- **Complete Rebuild**: Replaced broken HTML with Atlas-compliant 265-line structure
+- **Advanced Filters Removal**: Eliminated all legacy advanced filter markup per Rules §4
+- **Atlas Header**: Proper "Atlas – {projectName}" format with dynamic project name loading
+- **7-Status Counters**: All header counters with exact data-testids (counter-backlog, counter-todo, etc.)
+- **Single Filter Row**: Exact control order - Status, Priority, Tags, Sorting, Search
+- **Modal Foundation**: Task creation/edit modal structure with subtask management
+- **Responsive Design**: Tailwind CSS with professional styling and accessibility
+
+**Four ES6 Modules Architecture**:
+
+**`app/static/js/api.js` (180 lines)**:
+- **Project Slug Routing**: All API calls use `/{slug}/` pattern per Rules §3
+- **Complete CRUD**: GET/POST/PATCH operations for tasks and subtasks
+- **Error Handling**: Comprehensive try-catch with user-friendly error messages
+- **Clean Interface**: `setProjectSlug()`, `getTasks()`, `createTask()`, `updateSubtask()`
+
+**`app/static/js/state.js` (400 lines)**:
+- **7-Status Mapping**: Complete system per Rules §2 (pending→Backlog, todo→Todo, etc.)
+- **Filter Pipeline**: Status, priority, tags, search with client-side processing
+- **State Management**: In-memory tasks, filters, sorting with change notifications
+- **Data Normalization**: Task validation, subtasks handling, distinct tag extraction
+
+**`app/static/js/render.js` (450 lines)**:
+- **Pure Functions**: All UI components as stateless render functions
+- **Dynamic Columns**: Generated from present statuses with proper styling
+- **Task Cards**: Priority indicators, subtasks preview, delete functionality  
+- **Modal Components**: Task creation/edit forms, subtask rows with 8-limit enforcement
+- **UI Controls**: Header counters, spinner overlays, error banners
+
+**`app/static/js/main.js` (350 lines)**:
+- **Bootstrap Coordination**: Initializes all modules, detects slug from URL
+- **Event Management**: Complete event handling for filters, modals, forms
+- **State Coordination**: Bridges api, state, and render modules
+- **Error Recovery**: Loading states, error banners, user feedback
+
+**Technical Implementation**:
+```javascript
+// Architecture Pattern
+main.js (Bootstrap & Events)
+├── api.js (Project Slug API Wrapper)
+├── state.js (In-Memory State + 7-Status Mapping)  
+└── render.js (Pure UI Render Functions)
+
+// Data Flow
+URL Slug Detection → API Initialization → Project Info Loading → 
+Tasks Loading → State Management → UI Rendering → Event Handling →
+Filter/Sort Pipeline → Dynamic Updates
+```
+
+**Testing Results**:
+- ✅ Container rebuild with no-cache: All services started successfully
+- ✅ Health check: `{"ok":true,"message":"taskmasterweb is alive"}`
+- ✅ Atlas interface: Serving correctly at `http://localhost:8199/{slug}`
+- ✅ JS modules: All 4 modules accessible at `/static/js/`
+- ✅ API endpoints: Working with project slug routing
+- ✅ Project data: Returns complete TaskMaster info with 16 tasks
+
+**Rules Compliance Verification**:
+- ✅ **Rules §1**: Atlas header, no workspace wording, Advanced Filters removed
+- ✅ **Rules §2**: 7-status mapping with correct UI labels and dynamic columns
+- ✅ **Rules §3**: All API routes use project slug pattern with atomic writes
+- ✅ **Rules §6**: All required data-testids implemented exactly as specified
+
+**Consequences**: 
+- **Positive**: Complete JavaScript architecture, Atlas compliance, dynamic UI capabilities, clean modular design
+- **Negative**: Static interface until further task implementation, increased complexity
+- **Risk Mitigation**: Comprehensive testing, modular architecture allows independent development, proper error handling
+
 ---
 
 ## Task Master AI Instructions

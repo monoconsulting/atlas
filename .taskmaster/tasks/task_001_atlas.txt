@@ -1,0 +1,25 @@
+# Task ID: 1
+# Title: Backup and Clean Slate - Create backup directory with timestamp, move legacy frontend files to backup location, write backup notes explaining removal
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Create a timestamped backup directory and move all legacy frontend files to preserve them before implementing the new system architecture.
+# Details:
+1. Create backup directory with timestamp format: `backup-YYYY-MM-DD-HHMMSS/`
+2. Identify all legacy frontend files including HTML, CSS, JS, and static assets
+3. Move legacy files to backup directory maintaining folder structure
+4. Create `backup-notes.md` documenting:
+   - Date and reason for backup
+   - List of moved files and directories
+   - Brief explanation of what functionality was removed
+   - Instructions for accessing backed up files if needed
+5. Verify backup integrity by checking file counts and sizes
+6. Update .gitignore if needed to exclude backup directory from version control
+
+# Test Strategy:
+1. Verify backup directory exists with correct timestamp format
+2. Confirm all legacy files have been moved (original locations should be empty)
+3. Check backup directory structure matches original organization
+4. Validate backup-notes.md contains complete documentation
+5. Test that backed up files are accessible and readable
+6. Verify git status shows clean working directory after backup

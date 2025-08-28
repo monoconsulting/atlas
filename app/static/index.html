@@ -3,150 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atlas Task Management</title>
-    <link href="tailwind.css" rel="stylesheet">
+    <title>Atlas - Task Management Interface</title>
+    <link href="/static/tailwind.css" rel="stylesheet">
     <style>
-        .spinner-animation {
-            animation: spin 1s linear infinite;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
         }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
         }
-        
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
         }
-        
-        .hidden { display: none !important; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
     </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Header Section -->
-    <header class="bg-blue-900 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold">Atlas – <span id="project-name">Loading...</span></h1>
-                <p class="text-blue-200 text-sm" id="working-directory">Working directory loading...</p>
-            </div>
-            <div data-testid="header-counters" class="flex space-x-4 text-sm">
-                <span data-testid="counter-backlog" class="bg-blue-800 px-2 py-1 rounded">Backlog: <span id="count-backlog">0</span></span>
-                <span data-testid="counter-todo" class="bg-blue-800 px-2 py-1 rounded">Todo: <span id="count-todo">0</span></span>
-                <span data-testid="counter-inprogress" class="bg-blue-800 px-2 py-1 rounded">In progress: <span id="count-inprogress">0</span></span>
-                <span data-testid="counter-review" class="bg-blue-800 px-2 py-1 rounded">Review: <span id="count-review">0</span></span>
-                <span data-testid="counter-done" class="bg-blue-800 px-2 py-1 rounded">Done: <span id="count-done">0</span></span>
-                <span data-testid="counter-deferred" class="bg-blue-800 px-2 py-1 rounded">Deferred: <span id="count-deferred">0</span></span>
-                <span data-testid="counter-cancelled" class="bg-blue-800 px-2 py-1 rounded">Cancelled: <span id="count-cancelled">0</span></span>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-900 border-b border-blue-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-semibold text-slate-100">
+                Atlas – <span id="projectName" class="text-blue-300">Loading...</span>
+            </h1>
+            <div data-testid="header-counters" class="flex items-center gap-4 text-sm">
+                <span data-testid="counter-backlog" class="bg-slate-700 px-2 py-1 rounded text-slate-300">
+                    Backlog: <span class="text-white font-semibold">0</span>
+                </span>
+                <span data-testid="counter-todo" class="bg-slate-700 px-2 py-1 rounded text-slate-300">
+                    Todo: <span class="text-white font-semibold">0</span>
+                </span>
+                <span data-testid="counter-inprogress" class="bg-blue-700 px-2 py-1 rounded text-slate-300">
+                    In progress: <span class="text-white font-semibold">0</span>
+                </span>
+                <span data-testid="counter-review" class="bg-yellow-700 px-2 py-1 rounded text-slate-300">
+                    Review: <span class="text-white font-semibold">0</span>
+                </span>
+                <span data-testid="counter-done" class="bg-green-700 px-2 py-1 rounded text-slate-300">
+                    Done: <span class="text-white font-semibold">0</span>
+                </span>
+                <span data-testid="counter-deferred" class="bg-orange-700 px-2 py-1 rounded text-slate-300">
+                    Deferred: <span class="text-white font-semibold">0</span>
+                </span>
+                <span data-testid="counter-cancelled" class="bg-red-700 px-2 py-1 rounded text-slate-300">
+                    Cancelled: <span class="text-white font-semibold">0</span>
+                </span>
             </div>
         </div>
     </header>
 
-    <!-- Action Buttons Row -->
-    <div class="bg-white border-b border-gray-300 p-4">
-        <div class="container mx-auto flex space-x-4">
-            <button id="create-new-task-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Create New Task</button>
-            <button id="create-new-status-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Create New Status</button>
-            <button id="create-new-tag-btn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded">Create New Tag</button>
+    <main class="max-w-7xl mx-auto px-4 py-4">
+        <!-- Action Buttons -->
+        <div class="mb-4 flex gap-3">
+            <button id="createNewTaskBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                Create New Task
+            </button>
+            <button id="createNewStatusBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
+                Create New Status
+            </button>
+            <button id="createNewTagBtn" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors">
+                Create New Tag
+            </button>
         </div>
-    </div>
 
-    <!-- Filter Row -->
-    <div data-testid="filter-bar" class="bg-blue-900 text-white p-4">
-        <div class="container mx-auto flex items-center space-x-4">
-            <!-- Status Filter -->
-            <div data-testid="filter-status" class="flex items-center space-x-2">
-                <label class="text-sm font-medium">Status:</label>
-                <select id="status-filter" class="text-black px-2 py-1 rounded text-sm">
-                    <option value="">All</option>
-                    <option value="pending">Backlog</option>
-                    <option value="todo">Todo</option>
-                    <option value="in-progress">In progress</option>
-                    <option value="review">Review</option>
-                    <option value="done">Done</option>
-                    <option value="deferred">Deferred</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
+        <!-- Single Filter Row -->
+        <div data-testid="filter-bar" class="bg-blue-900 rounded-lg border border-blue-800 p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                <div>
+                    <label class="block text-sm font-medium text-blue-200 mb-2">Status</label>
+                    <select data-testid="filter-status" id="filterStatus" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-200">
+                        <option value="">All Status</option>
+                        <option value="pending">Backlog</option>
+                        <option value="todo">Todo</option>
+                        <option value="in-progress">In progress</option>
+                        <option value="review">Review</option>
+                        <option value="done">Done</option>
+                        <option value="deferred">Deferred</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-blue-200 mb-2">Priority</label>
+                    <select data-testid="filter-priority" id="filterPriority" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-200">
+                        <option value="">All Priority</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-blue-200 mb-2">Tags</label>
+                    <select data-testid="filter-tags" id="filterTags" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-200">
+                        <option value="">All Tags</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-blue-200 mb-2">Sorting</label>
+                    <select data-testid="filter-sorting" id="filterSorting" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-200">
+                        <option value="id-asc">ID ASC</option>
+                        <option value="id-desc">ID DESC</option>
+                        <option value="priority-desc">Priority</option>
+                        <option value="status-asc">Status</option>
+                        <option value="title-asc">Title</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-blue-200 mb-2">Search</label>
+                    <input data-testid="filter-search" type="text" id="filterSearch" placeholder="Search tasks..." 
+                        class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-200 placeholder-slate-500">
+                </div>
             </div>
-
-            <!-- Priority Filter -->
-            <div data-testid="filter-priority" class="flex items-center space-x-2">
-                <label class="text-sm font-medium">Priority:</label>
-                <select id="priority-filter" class="text-black px-2 py-1 rounded text-sm">
-                    <option value="">All</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                </select>
-            </div>
-
-            <!-- Tags Filter -->
-            <div data-testid="filter-tags" class="flex items-center space-x-2">
-                <label class="text-sm font-medium">Tags:</label>
-                <select id="tags-filter" class="text-black px-2 py-1 rounded text-sm">
-                    <option value="">All Tags</option>
-                </select>
-            </div>
-
-            <!-- Sorting -->
-            <div data-testid="filter-sorting" class="flex items-center space-x-2">
-                <label class="text-sm font-medium">Sort:</label>
-                <select id="sort-filter" class="text-black px-2 py-1 rounded text-sm">
-                    <option value="id-asc">ID (Low to High)</option>
-                    <option value="id-desc">ID (High to Low)</option>
-                    <option value="priority-desc">Priority (High to Low)</option>
-                    <option value="priority-asc">Priority (Low to High)</option>
-                </select>
-            </div>
-
-            <!-- Search -->
-            <div data-testid="filter-search" class="flex items-center space-x-2">
-                <label class="text-sm font-medium">Search:</label>
-                <input type="text" id="search-filter" placeholder="Search tasks..." 
-                       class="text-black px-2 py-1 rounded text-sm w-48">
-            </div>
-        </div>
-    </div>
-
-    <!-- Error Banner (hidden by default) -->
-    <div data-testid="error-banner" class="bg-red-600 text-white p-4 hidden">
-        <div class="container mx-auto">
-            <p id="error-message">An error occurred while loading data.</p>
-        </div>
-    </div>
-
-    <!-- Main Kanban Container -->
-    <main class="container mx-auto p-4 relative">
-        <!-- Spinner Overlay -->
-        <div data-testid="spinner" class="overlay hidden">
-            <div class="spinner-animation border-4 border-blue-200 border-t-4 border-t-blue-600 rounded-full w-12 h-12"></div>
         </div>
 
         <!-- Kanban Board -->
-        <div id="kanban-board" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6">
-            <!-- Dynamic columns will be generated here -->
+        <div id="kanbanContainer" class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <!-- Columns will be dynamically generated here -->
         </div>
     </main>
 
-    <!-- Task Modal (hidden by default) -->
-    <div data-testid="task-modal" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
-                <!-- Modal content will be generated here -->
+    <!-- Spinner Overlay -->
+    <div data-testid="spinner" id="spinnerOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-slate-800 rounded-lg p-6 flex items-center gap-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
+                <span class="text-slate-200">Loading...</span>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Modules -->
-    <script type="module" src="js/main.js"></script>
+    <!-- Error Banner -->
+    <div data-testid="error-banner" id="errorBanner" class="fixed top-20 left-4 right-4 bg-red-900 border border-red-700 text-red-100 px-4 py-3 rounded-lg hidden z-40">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span id="errorMessage">An error occurred</span>
+            </div>
+            <button id="closeErrorBtn" class="text-red-300 hover:text-red-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div data-testid="task-modal" id="taskModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-slate-900 border border-slate-700 rounded-lg w-full max-w-2xl my-8">
+                <div class="sticky top-0 bg-slate-900 border-b border-slate-700 p-6 flex items-center justify-between rounded-t-lg">
+                    <h2 id="modalTitle" class="text-xl font-semibold text-slate-100">Create New Task</h2>
+                    <button id="closeModalBtn" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <form id="taskForm" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Title *</label>
+                                <input type="text" id="taskTitle" required 
+                                    class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Priority</label>
+                                <select id="taskPriority" 
+                                    class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                            <textarea id="taskDescription" rows="3" 
+                                class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Status</label>
+                                <select id="taskStatus" 
+                                    class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="pending">Backlog</option>
+                                    <option value="todo" selected>Todo</option>
+                                    <option value="in-progress">In progress</option>
+                                    <option value="review">Review</option>
+                                    <option value="done">Done</option>
+                                    <option value="deferred">Deferred</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Due Date</label>
+                                <input type="date" id="taskDueDate" 
+                                    class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Assigned To</label>
+                                <input type="text" id="taskAssignedTo" 
+                                    class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Estimate</label>
+                                <input type="text" id="taskEstimate" placeholder="e.g., 4h, 2d" 
+                                    class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Labels</label>
+                                <input type="text" id="taskLabels" placeholder="Comma-separated tags" 
+                                    class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <!-- Subtasks Section -->
+                        <div class="mt-6 pt-6 border-t border-slate-700">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-slate-200">Subtasks</h3>
+                                <button type="button" id="addSubtaskBtn"
+                                    class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    Add Subtask
+                                </button>
+                            </div>
+                            <div id="subtasksList" class="space-y-2">
+                                <p class="text-sm text-slate-500 italic">No subtasks added yet</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-700">
+                            <button type="button" id="cancelTaskBtn"
+                                class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded transition-colors">
+                                Cancel
+                            </button>
+                            <button type="submit" id="saveTaskBtn"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">
+                                Save Task
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Modules -->
+    <script type="module" src="/static/js/main.js"></script>
 </body>
 </html>

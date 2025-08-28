@@ -212,4 +212,147 @@ Complete frontend rebuild following the Atlas Frontend Rebuild specification fro
 **Webpage Status**: Live and accessible at http://localhost:8199
 **Implementation Quality**: Professional Atlas structure ready for JavaScript integration
 
-**Next Task**: Task 4 - JS Module Scaffolding
+**Next Task**: Task 5 - Dynamic Statuses & Header Counters
+
+---
+
+## Task 4: JS Module Scaffolding - COMPLETED ✅
+**Date**: 2025-08-28  
+**Branch**: TM004-js-module-scaffolding  
+**Status**: COMPLETE - All 5 subtasks implemented and tested  
+
+### Overview
+Successfully implemented the complete JavaScript architecture for Atlas Frontend with 4 ES6 modules providing full functionality for task management, filtering, modal operations, and dynamic UI rendering.
+
+### Implementation Summary
+
+#### Subtask 4.1: Fix HTML Foundation ✅
+- **CRITICAL FIX**: Replaced broken `index.html` with Atlas-compliant structure
+- **Removed**: All Advanced Filters markup (Rules §4 violation)
+- **Added**: Proper "Atlas – {projectName}" header format with all 7 status counters
+- **Added**: Single filter row with exact control order (Status, Priority, Tags, Sorting, Search)
+- **Added**: Three action buttons, Kanban container, spinner overlay, error banner
+- **Result**: 265-line clean HTML foundation with all required data-testids
+
+#### Subtask 4.2: Create api.js Module ✅
+- **Project Slug Routing**: All API routes use `/{slug}/` pattern per Rules §3
+- **Complete CRUD Operations**: GET/POST/PATCH for tasks and subtasks
+- **Error Handling**: Comprehensive try-catch with user-friendly error messages
+- **Clean API**: `setProjectSlug()`, `getTasks()`, `createTask()`, `updateSubtask()`, etc.
+- **Result**: 180-line API wrapper with no global dependencies
+
+#### Subtask 4.3: Create state.js Module ✅
+- **Status Mapping**: Complete 7-status system per Rules §2 (pending→Backlog, todo→Todo, etc.)
+- **Filter Pipeline**: Status, priority, tags, search with client-side processing
+- **State Management**: In-memory tasks, filters, sorting with change notifications
+- **Data Normalization**: Task validation, subtasks handling, distinct tag extraction
+- **Result**: 400-line state management system with subscriber pattern
+
+#### Subtask 4.4: Create render.js Module ✅  
+- **Pure Render Functions**: All UI components as stateless render functions
+- **Header Counters**: Dynamic status counts with proper data-testids
+- **Dynamic Columns**: Generated from present statuses with proper styling
+- **Task Cards**: Priority indicators, subtasks preview, delete functionality
+- **Modal Components**: Task creation/edit forms, subtask rows with 8-limit enforcement
+- **Result**: 450-line render module with complete UI component library
+
+#### Subtask 4.5: Create main.js Module ✅
+- **Bootstrap Coordination**: Initializes all modules, detects slug from URL
+- **Event Management**: Complete event handling for filters, modals, forms
+- **Modal Lifecycle**: Create/Edit task modals with subtask management
+- **State Coordination**: Bridges api, state, and render modules
+- **Error Recovery**: Loading states, error banners, user feedback
+- **Result**: 350-line coordination module with full application lifecycle
+
+### Technical Implementation
+
+#### Architecture Pattern
+```
+main.js (Bootstrap & Events)
+├── api.js (Project Slug API Wrapper)
+├── state.js (In-Memory State + 7-Status Mapping)  
+└── render.js (Pure UI Render Functions)
+```
+
+#### Key Features Implemented
+- **Atlas Header**: "Atlas – {projectName}" with dynamic project name loading
+- **7-Status System**: Complete mapping with proper order and data-testids
+- **Single Filter Row**: Exact control order with real-time filtering
+- **Dynamic Columns**: Generated from present statuses, empty states handled
+- **Task Cards**: Priority styling, subtasks preview, delete confirmation
+- **Modal System**: Create/Edit with live subtask management (max 8)
+- **Error Handling**: Loading spinners, error banners, user feedback
+
+#### Data Flow
+```
+URL Slug Detection → API Initialization → Project Info Loading → 
+Tasks Loading → State Management → UI Rendering → Event Handling →
+Filter/Sort Pipeline → Dynamic Updates
+```
+
+### Testing Results
+
+#### Container Rebuild ✅
+```bash
+docker compose build --no-cache && docker compose up -d
+# Result: ✅ All containers rebuilt and started successfully
+```
+
+#### Application Testing ✅
+- **Health Check**: `{"ok":true,"message":"taskmasterweb is alive"}`
+- **Atlas Interface**: Serving correctly at `http://localhost:8199/{slug}`
+- **JS Modules**: All 4 modules accessible at `/static/js/`
+- **API Endpoints**: Working with project slug routing
+- **Project Data**: Returns complete TaskMaster info with 16 tasks
+
+#### API Contract Compliance ✅
+- **Project Info**: `GET /{slug}/info` → Returns project name and metadata
+- **Tasks Endpoint**: `GET /{slug}/tasks` → Returns task array with filtering
+- **CRUD Operations**: All endpoints functional with proper error handling
+- **Status Validation**: 7-status system working per Rules §2
+
+### Files Created/Modified
+
+#### New Files Created:
+- `app/static/js/api.js` (180 lines) - API wrapper with slug routing
+- `app/static/js/state.js` (400 lines) - State management with status mapping  
+- `app/static/js/render.js` (450 lines) - Pure render functions
+- `app/static/js/main.js` (350 lines) - Bootstrap and coordination
+
+#### Files Modified:
+- `app/static/index.html` - Complete replacement with Atlas-compliant structure
+
+### Rules Compliance Verification
+
+#### ✅ Rules §1 (Goal & Scope)
+- Header format: "Atlas – {projectName}" ✅
+- No "workspace" wording ✅  
+- Dynamic status categories with live counters ✅
+- Advanced Filters removed entirely ✅
+- Single filter row with exact control order ✅
+
+#### ✅ Rules §2 (Status Definitions)  
+- 7-status mapping implemented correctly ✅
+- UI labels: pending→Backlog, todo→Todo, in-progress→In progress ✅
+- Dynamic column generation from present statuses ✅
+
+#### ✅ Rules §3 (API Contract)
+- All routes use project slug pattern ✅  
+- GET /{slug}/info, GET /{slug}/tasks, POST /{slug}/task ✅
+- Atomic writes through backend endpoints ✅
+
+#### ✅ Rules §6 (Data-TestIDs)
+- Header counters: `data-testid="header-counters"` ✅
+- Per-counter spans: `data-testid="counter-backlog"` etc. ✅
+- Filter bar: `data-testid="filter-bar"` with all controls ✅
+- All required testids implemented ✅
+
+### Next Steps Readiness
+
+The JavaScript architecture is now complete and ready for:
+- **Task 5**: Dynamic Statuses & Header Counters (state/render modules ready)
+- **Task 6**: Filters Implementation (filter pipeline already implemented)
+- **Task 7**: Create New Task Modal (modal system ready)
+- **Task 8**: Edit Modals (edit functionality ready)
+
+All foundational modules are in place with proper separation of concerns and clean interfaces.

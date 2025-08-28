@@ -1,0 +1,37 @@
+# Task ID: 10
+# Title: Legacy Removal & Verification
+# Status: pending
+# Dependencies: 4, 5, 6, 7, 8, 9
+# Priority: medium
+# Description: Remove all Advanced Filters markup/js, remove workspace strings, remove JSON browse controls, and confirm only 4 JS modules exist in the final codebase.
+# Details:
+1. Remove Advanced Filters components from HTML/JS:
+   - Delete any remaining Advanced Filters HTML markup from index.html
+   - Remove unused Advanced Filters JavaScript functions from all modules
+   - Clean up any Advanced Filters CSS classes and styling
+   - Remove Advanced Filters related event handlers and DOM queries
+
+2. Remove workspace references:
+   - Search and remove all "workspace" string references from codebase
+   - Update any hardcoded paths or labels that reference workspace
+   - Clean up configuration files containing workspace references
+
+3. Remove JSON browse controls:
+   - Delete JSON browse/upload control elements from HTML
+   - Remove JSON file handling JavaScript functions
+   - Clean up JSON browse related event listeners and form controls
+   - Remove any file input elements for JSON browsing
+
+4. Verify final JS module structure:
+   - Confirm exactly 4 JavaScript modules exist: api.js, state.js, render.js, main.js
+   - Remove any additional or temporary JavaScript files
+   - Validate each module contains only necessary functions
+   - Ensure no duplicate or orphaned JavaScript code remains
+
+# Test Strategy:
+1. Perform comprehensive grep/search for 'Advanced Filter', 'workspace', and JSON browse related strings to confirm complete removal
+2. Verify app/static/ directory contains exactly 4 JavaScript files: api.js, state.js, render.js, main.js
+3. Test application functionality remains intact after legacy code removal
+4. Confirm no JavaScript console errors occur due to missing references
+5. Validate HTML contains no orphaned elements or unused CSS classes
+6. Test all remaining features work correctly without removed components
