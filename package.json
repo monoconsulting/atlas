@@ -16,7 +16,28 @@
     "test:webkit": "playwright test --project=webkit",
     "test:mobile": "playwright test --project=\"Mobile Chrome\"",
     "report": "playwright show-report",
-    "install:deps": "playwright install"
+    "install:deps": "playwright install",
+    
+    "_comment_headless": "=== HEADLESS-ONLY TEST SCRIPTS (Task 11) ===",
+    "test:headless": "playwright test --config playwright-headless.config.js",
+    "test:headless-verbose": "playwright test --config playwright-headless.config.js --reporter=list",
+    "test:headless-single": "playwright test --config playwright-headless.config.js --max-failures=1",
+    "test:headless-specific": "playwright test --config playwright-headless.config.js",
+    
+    "_comment_loop": "=== TEST LOOP SCRIPTS (100% Pass Rate) ===",
+    "test:loop": "node scripts/loop-until-pass.js",
+    "test:loop-verbose": "node scripts/loop-until-pass.js --verbose",
+    "test:loop-fast": "node scripts/loop-until-pass.js --max-attempts 5 --delay 2",
+    "test:loop-comprehensive": "node scripts/loop-until-pass.js --max-attempts 20 --delay 10 --verbose",
+    
+    "_comment_artifacts": "=== ARTIFACT MANAGEMENT ===",
+    "artifacts:clean": "node -e \"require('fs').rmSync('test-results', {recursive:true, force:true}); console.log('Artifacts cleaned')\"",
+    "artifacts:show": "node -e \"const fs=require('fs'); if(fs.existsSync('test-results/headless-reports/summary.json')) console.log(JSON.stringify(JSON.parse(fs.readFileSync('test-results/headless-reports/summary.json')),null,2)); else console.log('No summary available')\"",
+    
+    "_comment_ci": "=== CI/CD FRIENDLY SCRIPTS ===",
+    "ci:test": "npm run artifacts:clean && npm run test:headless",
+    "ci:loop": "npm run artifacts:clean && npm run test:loop",
+    "ci:verify": "npm run test:loop-comprehensive"
   },
   "repository": {
     "type": "git",

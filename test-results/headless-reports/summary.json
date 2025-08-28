@@ -1,0 +1,35 @@
+{
+  "executionSummary": {
+    "timestamp": "2025-08-28T14:57:00.535Z",
+    "mode": "headless-only",
+    "browser": "chromium",
+    "config": "playwright-headless.config.js",
+    "enforced_headless": true,
+    "endTime": "2025-08-28T14:57:22.262Z",
+    "duration": "21.73 seconds",
+    "artifacts": {
+      "screenshots": {
+        "count": 0,
+        "files": []
+      },
+      "videos": {
+        "count": 0,
+        "files": []
+      },
+      "traces": {
+        "count": 0,
+        "files": []
+      }
+    },
+    "status": "completed"
+  },
+  "configUsed": "playwright-headless.config.js",
+  "headlessEnforced": true,
+  "browserUsed": "chromium",
+  "artifactLocations": {
+    "reports": "test-results/headless-reports/",
+    "artifacts": "test-results/headless-artifacts/",
+    "html": "test-results/headless-reports/html/index.html",
+    "json": "test-results/headless-reports/results.json"
+  }
+}

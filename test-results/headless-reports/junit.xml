@@ -1,0 +1,919 @@
+<testsuites id="" name="" tests="192" failures="1" skipped="190" errors="0" time="21.843108">
+<testsuite name="01-ui-initialization.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="8" failures="1" skipped="6" time="18.835" errors="0">
+<testcase name="UI Initialization &amp; Layout › should display header with project name" classname="01-ui-initialization.spec.js" time="1.763">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\headless-artifacts\01-ui-initialization-UI-In-d514d-ay-header-with-project-name-chromium-headless\test-finished-1.png]]
+
+[[ATTACHMENT|..\headless-artifacts\01-ui-initialization-UI-In-d514d-ay-header-with-project-name-chromium-headless\video.webm]]
+
+[[ATTACHMENT|..\headless-artifacts\01-ui-initialization-UI-In-d514d-ay-header-with-project-name-chromium-headless\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="UI Initialization &amp; Layout › should display create task button" classname="01-ui-initialization.spec.js" time="17.072">
+<failure message="01-ui-initialization.spec.js:26:3 should display create task button" type="FAILURE">
+<![CDATA[  [chromium-headless] › 01-ui-initialization.spec.js:26:3 › UI Initialization & Layout › should display create task button 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('#createTaskBtn')
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 15000ms
+      - waiting for locator('#createTaskBtn')
+
+
+      26 |   test('should display create task button', async ({ page }) => {
+      27 |     const createBtn = page.locator('#createTaskBtn');
+    > 28 |     await expect(createBtn).toBeVisible();
+         |                             ^
+      29 |     await expect(createBtn).toHaveText(/Create New Task/);
+      30 |     await expect(createBtn).toBeEnabled();
+      31 |   });
+        at E:\projects\taskmasterweb\tests\01-ui-initialization.spec.js:28:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\test-failed-1.png]]
+
+[[ATTACHMENT|..\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\video.webm]]
+
+[[ATTACHMENT|..\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\error-context.md]]
+
+[[ATTACHMENT|..\headless-artifacts\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="UI Initialization &amp; Layout › should display kanban board with three columns" classname="01-ui-initialization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Initialization &amp; Layout › should display task counters for each column" classname="01-ui-initialization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Initialization &amp; Layout › should display quick and advanced filter sections" classname="01-ui-initialization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Initialization &amp; Layout › should load storage information" classname="01-ui-initialization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Initialization &amp; Layout › should load and display tasks initially" classname="01-ui-initialization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Initialization &amp; Layout › should be responsive on mobile devices" classname="01-ui-initialization.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="02-task-creation.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Task Creation › should open create task modal when button is clicked" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should have all required form fields in create modal" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should validate required fields" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should create task successfully with valid data" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should reset form after successful creation" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should close modal with escape key" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should close modal with cancel button" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should handle special characters in task fields" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should create tasks with different priorities" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Creation › should handle long task titles and descriptions" classname="02-task-creation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="03-task-editing.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Task Editing › should open edit modal when task card is clicked" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should pre-populate edit form with existing task data" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should have all edit form fields visible" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should update task title and description" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should move task between columns when status changes" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should update task priority and reflect visual changes" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should update assigned user and due date" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should validate required fields in edit mode" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should close edit modal with escape key" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should close edit modal with cancel button" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should handle multiple quick status changes" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Task Editing › should preserve changes when reopening edit modal" classname="03-task-editing.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="04-filter-system.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="15" failures="0" skipped="15" time="0" errors="0">
+<testcase name="Filter System › Quick Filters › should filter tasks by status using dropdown" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Quick Filters › should filter tasks by priority using dropdown" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Quick Filters › should filter tasks using search input" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Quick Filters › should combine multiple quick filters" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Advanced Filters › should filter using status checkboxes" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Advanced Filters › should filter using priority checkboxes" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Advanced Filters › should use advanced search field" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Advanced Filters › should use additional filters (subtasks, assigned, overdue)" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Advanced Filters › should use quick filter presets" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Advanced Filters › should clear all filters" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Filter Summary and Real-time Updates › should show filter summary when filters are active" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Filter Summary and Real-time Updates › should update filters in real-time" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Filter Summary and Real-time Updates › should maintain filter state during task operations" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Filter Summary and Real-time Updates › should update column counters when filters are applied" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Filter System › Filter Summary and Real-time Updates › should handle complex combined filters" classname="04-filter-system.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="05-kanban-board.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Kanban Board Functionality › should display three kanban columns with proper headers" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should render tasks in correct columns based on status" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should display task cards with proper content" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should show priority visual indicators correctly" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should show task metadata (assignee, due date, subtasks)" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should move tasks between columns when status changes" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should handle empty columns gracefully" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should maintain proper column layout on different screen sizes" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should support task interaction in all columns" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should refresh kanban board data properly" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should handle rapid task status changes" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Kanban Board Functionality › should maintain visual consistency across columns" classname="05-kanban-board.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="06-api-integration.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="API Integration › should successfully call health endpoint" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should successfully call info endpoint" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should successfully fetch tasks list" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should create new task via API" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should get specific task by ID" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should update task via PATCH API" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should handle API errors gracefully" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should validate request data" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should handle concurrent API requests" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should handle network timeouts gracefully" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="API Integration › should maintain data consistency during operations" classname="06-api-integration.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="07-edge-cases.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="20" failures="0" skipped="20" time="0" errors="0">
+<testcase name="Edge Cases and Error Scenarios › Form Validation Edge Cases › should handle very long task titles" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Form Validation Edge Cases › should prevent HTML injection in task fields" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Form Validation Edge Cases › should handle special characters and unicode" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Form Validation Edge Cases › should validate date fields properly" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Form Validation Edge Cases › should handle empty form submission after partial fill" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Network Error Scenarios › should handle offline task creation gracefully" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Network Error Scenarios › should handle slow network responses" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Network Error Scenarios › should handle API server errors" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › UI Stress Tests › should prevent rapid button clicking" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › UI Stress Tests › should handle window resize gracefully" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › UI Stress Tests › should handle rapid filter changes" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › UI Stress Tests › should handle excessive form submissions" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Data Integrity Tests › should maintain task ID uniqueness" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Data Integrity Tests › should maintain status-column consistency" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Data Integrity Tests › should handle corrupted local storage gracefully" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Accessibility Edge Cases › should handle keyboard navigation properly" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Accessibility Edge Cases › should handle focus management in modals" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Accessibility Edge Cases › should work with screen reader patterns" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Browser Compatibility › should handle missing modern JavaScript features" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Edge Cases and Error Scenarios › Browser Compatibility › should work with JavaScript disabled scenarios" classname="07-edge-cases.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="08-performance.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="11" failures="0" skipped="11" time="0" errors="0">
+<testcase name="Performance Tests › should load initial page quickly" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle large numbers of tasks efficiently" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should filter tasks quickly" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle modal operations efficiently" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle rapid task creation efficiently" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle task editing performance" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle complex filter combinations efficiently" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should maintain performance during continuous use" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle memory usage efficiently" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should handle network latency gracefully" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Performance Tests › should optimize rendering with many DOM elements" classname="08-performance.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="09-css-visual.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="32" failures="0" skipped="32" time="0" errors="0">
+<testcase name="CSS and Visual Testing › Tailwind CSS Loading and Application › should load Tailwind CSS successfully" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Tailwind CSS Loading and Application › should apply responsive design classes correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Tailwind CSS Loading and Application › should apply color scheme correctly (dark theme)" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Tailwind CSS Loading and Application › should apply hover effects correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Tailwind CSS Loading and Application › should apply transition effects" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Task Card Visual Styling › should display priority indicators with correct colors" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Task Card Visual Styling › should apply priority border colors correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Task Card Visual Styling › should apply card hover effects" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Task Card Visual Styling › should apply proper spacing and typography" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Modal Styling › should display modal with proper backdrop and positioning" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Modal Styling › should apply modal content styling correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Modal Styling › should style form inputs correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Column Layout and Styling › should apply correct column background and borders" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Column Layout and Styling › should display column headers with proper styling" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Column Layout and Styling › should display task counters with proper styling" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Filter Section Styling › should style quick filters section correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Filter Section Styling › should style advanced filters section correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Filter Section Styling › should style filter buttons correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Filter Section Styling › should style filter checkboxes and labels" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Custom Scrollbar Styling › should apply custom scrollbar styles" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Typography and Text Styling › should apply correct font family and sizes" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Typography and Text Styling › should apply heading styles correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Typography and Text Styling › should apply text color utilities correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Animation and Transition Effects › should apply loading animations" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Animation and Transition Effects › should apply button transitions" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Visual Regression Testing › should match visual baseline for main page" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Visual Regression Testing › should match visual baseline for create modal" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Visual Regression Testing › should match visual baseline for task cards" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › Visual Regression Testing › should match visual baseline on mobile" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › CSS Error Detection › should not have CSS loading errors" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › CSS Error Detection › should have required CSS files loaded" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS and Visual Testing › CSS Error Detection › should apply all utility classes correctly" classname="09-css-visual.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="10-ui-improvements.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="UI Improvements and Bug Fixes › should display Create Task button under Advanced Search section" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Improvements and Bug Fixes › should display subtasks in task cards with proper visibility and sorting" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Improvements and Bug Fixes › should handle subtask clicks without opening main task modal immediately" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Improvements and Bug Fixes › should display Add Subtask button in edit modal" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Improvements and Bug Fixes › should handle long descriptions without text overflow" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Improvements and Bug Fixes › should not display any alert popups during normal operations" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Improvements and Bug Fixes › should sort subtasks by ID in ascending order" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Improvements and Bug Fixes › should display subtasks in edit modal with proper formatting" classname="10-ui-improvements.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="11-ui-fixes-validation.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="UI Fixes Validation › Create Task button moved to Advanced Search section" classname="11-ui-fixes-validation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Validation › Subtasks displayed in task cards with sorting" classname="11-ui-fixes-validation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Validation › Edit modal contains subtasks section" classname="11-ui-fixes-validation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Validation › Description text has overflow protection" classname="11-ui-fixes-validation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Validation › No user-facing alert dialogs for basic operations" classname="11-ui-fixes-validation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Validation › Subtask list properly formatted in edit modal" classname="11-ui-fixes-validation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="12-ui-fixes-comprehensive.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="UI Fixes Comprehensive Test › should click on subtask and open edit modal (task #59)" classname="12-ui-fixes-comprehensive.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Comprehensive Test › should show Create Subtask section in Create Task modal" classname="12-ui-fixes-comprehensive.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Comprehensive Test › should handle long titles with proper text wrapping" classname="12-ui-fixes-comprehensive.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="UI Fixes Comprehensive Test › should create task with subtasks successfully" classname="12-ui-fixes-comprehensive.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="13-debug-subtasks.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Debug Subtasks › should debug subtask clicking issue" classname="13-debug-subtasks.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="14-subtask-visibility.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Subtask Visibility Tests › Basic Modal Test" classname="14-subtask-visibility.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Subtask Visibility Tests › Add Task modal subtask functionality" classname="14-subtask-visibility.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Subtask Visibility Tests › Edit Task modal subtask functionality" classname="14-subtask-visibility.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="15-simple-subtask-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Subtask Test › Simple Add Task with Subtask" classname="15-simple-subtask-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="16-edit-modal-subtask.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Edit Modal Subtask Test › Edit Task modal does not close when Add Subtask is clicked" classname="16-edit-modal-subtask.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="17-direct-edit-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Direct Edit Modal Test › Edit modal functionality with existing tasks" classname="17-direct-edit-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="18-comprehensive-subtask.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Comprehensive Subtask Functionality › All subtask requirements validation" classname="18-comprehensive-subtask.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="19-debug-visibility.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Debug Subtask Visibility › Debug exact visibility issue" classname="19-debug-visibility.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="20-final-subtask-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Final Subtask Functionality Test › Complete subtask workflow WITHOUT force option" classname="20-final-subtask-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="21-subtask-save-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Subtask Save Functionality › Create task with subtask and verify save to tasks.json" classname="21-subtask-save-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="22-debug-save-issue.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Debug Save Issue › Debug why task with subtask is not saving" classname="22-debug-save-issue.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="23-test-js-functions.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Test JavaScript Functions › Test if addSubtaskToCreateForm function works" classname="23-test-js-functions.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="24-check-422-error.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Check 422 Error Details › Capture 422 error details" classname="24-check-422-error.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="25-complete-save-workflow.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Complete Save Workflow › Create task with subtasks and verify complete save workflow" classname="25-complete-save-workflow.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="26-debug-subtask-count.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Debug Subtask Count › Debug why only 1 subtask is created instead of 2" classname="26-debug-subtask-count.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="27-comprehensive-subtask-verification.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Comprehensive Subtask Verification › Scenario 1: Create Task with Multiple Subtasks" classname="27-comprehensive-subtask-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Comprehensive Subtask Verification › Scenario 2: Edit Task - Add Subtasks" classname="27-comprehensive-subtask-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Comprehensive Subtask Verification › Scenario 3: Modal Persistence Check" classname="27-comprehensive-subtask-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Comprehensive Subtask Verification › Scenario 4: Verify Backend Data Integrity" classname="27-comprehensive-subtask-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="27-test-input-events.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Test Input Events › Test exactly what happens when typing in second subtask field" classname="27-test-input-events.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="28-simple-input-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Input Test › Simple test - verify oninput events work" classname="28-simple-input-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="28-simple-modal-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Simple Modal Test › Can open modal and see subtask button" classname="28-simple-modal-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="29-debug-function.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Debug Function › Debug if updateCreateSubtask function exists and works" classname="29-debug-function.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="29-test-subtask-functionality.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Test Subtask Functionality › CRITICAL TEST: Create task with subtasks and verify in tasks.json" classname="29-test-subtask-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Test Subtask Functionality › TEST 2: Edit existing task and add subtasks" classname="29-test-subtask-functionality.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="30-final-subtask-verification.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Final Subtask Verification › FINAL TEST: Verify all subtask issues" classname="30-final-subtask-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="30-final-verification.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Final Verification › Complete end-to-end verification: create, save, and reopen task with subtasks" classname="30-final-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="31-manual-interaction-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="Manual Interaction Test › Force Subtask Creation via JavaScript" classname="31-manual-interaction-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Manual Interaction Test › Test Edit Modal Opening" classname="31-manual-interaction-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="31-persistence-verification.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Complete Persistence Verification › COMPLETE TEST: Create subtask, save, verify tasks.json, reopen and verify persistence" classname="31-persistence-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="32-backdrop-click-test.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Backdrop Click Tests › Create Modal - Backdrop click should close modal" classname="32-backdrop-click-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Backdrop Click Tests › Edit Modal - Backdrop click should close modal" classname="32-backdrop-click-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Backdrop Click Tests › Create Modal - Clicking modal content should NOT close modal" classname="32-backdrop-click-test.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="33-edit-task-add-subtask-validation.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Edit Task - Add Subtask Validation › CRITICAL: Edit existing task and add subtask - Full validation" classname="33-edit-task-add-subtask-validation.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="comprehensive.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="TaskMasterWeb - Comprehensive Workflow Test › Complete workflow: Create task with subtasks, edit, add more subtasks, delete" classname="comprehensive.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="TaskMasterWeb - Comprehensive Workflow Test › Test edge cases and error handling" classname="comprehensive.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e-quick-check.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="quick check: loading, code block, and kanban cards" classname="e2e-quick-check.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="fortigatelog-loading-verification.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="fortigatelog loading verification - critical functions only" classname="fortigatelog-loading-verification.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="test_ui_tasks.spec.ts" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Kanban Task Board › renders task cards without loading indicator" classname="test_ui_tasks.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="test-fortigatelog-fix-final.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Fortigate Log Fix Verification › should not show loading message and log content" classname="test-fortigatelog-fix-final.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="test-fortigatelog-fix.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="fortigatelog fix verification" classname="test-fortigatelog-fix.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="test-loading-fix.spec.js" timestamp="2025-08-28T14:57:01.678Z" hostname="chromium-headless" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Fast loading check" classname="test-loading-fix.spec.js" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

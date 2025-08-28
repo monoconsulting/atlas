@@ -1,0 +1,4909 @@
+{
+  "config": {
+    "configFile": "E:\\projects\\taskmasterweb\\playwright-headless.config.js",
+    "rootDir": "E:/projects/taskmasterweb/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "E:\\projects\\taskmasterweb\\scripts\\headless-global-setup.js",
+    "globalTeardown": "E:\\projects\\taskmasterweb\\scripts\\headless-global-teardown.js",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 1,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "test-results/headless-reports/html",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/headless-reports/results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "test-results/headless-reports/junit.xml"
+        }
+      ],
+      [
+        "line",
+        null
+      ],
+      [
+        "blob",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "E:/projects/taskmasterweb/test-results/headless-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium-headless",
+        "name": "chromium-headless",
+        "testDir": "E:/projects/taskmasterweb/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 1,
+    "webServer": {
+      "command": "python -m uvicorn app.main:app --host 127.0.0.1 --port 8199",
+      "url": "http://127.0.0.1:8199/health",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "01-ui-initialization.spec.js",
+      "file": "01-ui-initialization.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "UI Initialization & Layout",
+          "file": "01-ui-initialization.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display header with project name",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1763,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-28T14:57:03.027Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\headless-artifacts\\01-ui-initialization-UI-In-d514d-ay-header-with-project-name-chromium-headless\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\headless-artifacts\\01-ui-initialization-UI-In-d514d-ay-header-with-project-name-chromium-headless\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\headless-artifacts\\01-ui-initialization-UI-In-d514d-ay-header-with-project-name-chromium-headless\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-f3fc8a8bddbfe2712607",
+              "file": "01-ui-initialization.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "should display create task button",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17072,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('#createTaskBtn')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('#createTaskBtn')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('#createTaskBtn')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('#createTaskBtn')\u001b[22m\n\n    at E:\\projects\\taskmasterweb\\tests\\01-ui-initialization.spec.js:28:29",
+                        "location": {
+                          "file": "E:\\projects\\taskmasterweb\\tests\\01-ui-initialization.spec.js",
+                          "column": 29,
+                          "line": 28
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 26 |\u001b[39m   test(\u001b[32m'should display create task button'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 27 |\u001b[39m     \u001b[36mconst\u001b[39m createBtn \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'#createTaskBtn'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 28 |\u001b[39m     \u001b[36mawait\u001b[39m expect(createBtn)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 29 |\u001b[39m     \u001b[36mawait\u001b[39m expect(createBtn)\u001b[33m.\u001b[39mtoHaveText(\u001b[35m/Create New Task/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 30 |\u001b[39m     \u001b[36mawait\u001b[39m expect(createBtn)\u001b[33m.\u001b[39mtoBeEnabled()\u001b[33m;\u001b[39m\n \u001b[90m 31 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\taskmasterweb\\tests\\01-ui-initialization.spec.js",
+                            "column": 29,
+                            "line": 28
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('#createTaskBtn')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('#createTaskBtn')\u001b[22m\n\n\n  26 |   test('should display create task button', async ({ page }) => {\n  27 |     const createBtn = page.locator('#createTaskBtn');\n> 28 |     await expect(createBtn).toBeVisible();\n     |                             ^\n  29 |     await expect(createBtn).toHaveText(/Create New Task/);\n  30 |     await expect(createBtn).toBeEnabled();\n  31 |   });\n    at E:\\projects\\taskmasterweb\\tests\\01-ui-initialization.spec.js:28:29"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-28T14:57:04.999Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\headless-artifacts\\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\headless-artifacts\\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\headless-artifacts\\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "E:\\projects\\taskmasterweb\\test-results\\headless-artifacts\\01-ui-initialization-UI-In-58926--display-create-task-button-chromium-headless\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\taskmasterweb\\tests\\01-ui-initialization.spec.js",
+                        "column": 29,
+                        "line": 28
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-a5931a4796d2f6ac8db2",
+              "file": "01-ui-initialization.spec.js",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should display kanban board with three columns",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-784018040442f4d917aa",
+              "file": "01-ui-initialization.spec.js",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "should display task counters for each column",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-cf6829bd356cc0b0a430",
+              "file": "01-ui-initialization.spec.js",
+              "line": 45,
+              "column": 3
+            },
+            {
+              "title": "should display quick and advanced filter sections",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-dd49876eb4dca985ca47",
+              "file": "01-ui-initialization.spec.js",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "should load storage information",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-a0a51aad1c2722cae31f",
+              "file": "01-ui-initialization.spec.js",
+              "line": 70,
+              "column": 3
+            },
+            {
+              "title": "should load and display tasks initially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-be8871140fa484c70829",
+              "file": "01-ui-initialization.spec.js",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile devices",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "8eeb606b4473400dad8a-8b99728e2fb9075f395c",
+              "file": "01-ui-initialization.spec.js",
+              "line": 109,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "02-task-creation.spec.js",
+      "file": "02-task-creation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Task Creation",
+          "file": "02-task-creation.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should open create task modal when button is clicked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-3967e9a52414a6cf63ae",
+              "file": "02-task-creation.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "should have all required form fields in create modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-b1d3149ca7e749493744",
+              "file": "02-task-creation.spec.js",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "should validate required fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-747bdde48b1775f73ceb",
+              "file": "02-task-creation.spec.js",
+              "line": 40,
+              "column": 3
+            },
+            {
+              "title": "should create task successfully with valid data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-f5b016fc5173971ad8af",
+              "file": "02-task-creation.spec.js",
+              "line": 52,
+              "column": 3
+            },
+            {
+              "title": "should reset form after successful creation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-f23d2008b902131e91ee",
+              "file": "02-task-creation.spec.js",
+              "line": 85,
+              "column": 3
+            },
+            {
+              "title": "should close modal with escape key",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-d301eef34f452f981a56",
+              "file": "02-task-creation.spec.js",
+              "line": 104,
+              "column": 3
+            },
+            {
+              "title": "should close modal with cancel button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-66ee02a0b77a0ce9dc5a",
+              "file": "02-task-creation.spec.js",
+              "line": 115,
+              "column": 3
+            },
+            {
+              "title": "should handle special characters in task fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-98020650e23fbe0be251",
+              "file": "02-task-creation.spec.js",
+              "line": 127,
+              "column": 3
+            },
+            {
+              "title": "should create tasks with different priorities",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-661e09a34f605d327ce4",
+              "file": "02-task-creation.spec.js",
+              "line": 145,
+              "column": 3
+            },
+            {
+              "title": "should handle long task titles and descriptions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "75f6b8124728105cc704-e7a4b374ea98016adcb9",
+              "file": "02-task-creation.spec.js",
+              "line": 162,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "03-task-editing.spec.js",
+      "file": "03-task-editing.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Task Editing",
+          "file": "03-task-editing.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should open edit modal when task card is clicked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-84fd4e320fe8cab3076a",
+              "file": "03-task-editing.spec.js",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should pre-populate edit form with existing task data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-354f4e4e32c0e6059143",
+              "file": "03-task-editing.spec.js",
+              "line": 30,
+              "column": 3
+            },
+            {
+              "title": "should have all edit form fields visible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-8ac8e73ff9f83090708c",
+              "file": "03-task-editing.spec.js",
+              "line": 51,
+              "column": 3
+            },
+            {
+              "title": "should update task title and description",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-95d87975f16487c75cd7",
+              "file": "03-task-editing.spec.js",
+              "line": 75,
+              "column": 3
+            },
+            {
+              "title": "should move task between columns when status changes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-89a420ef71bce7297a69",
+              "file": "03-task-editing.spec.js",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "should update task priority and reflect visual changes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-2b513c9bf892a582bcfb",
+              "file": "03-task-editing.spec.js",
+              "line": 122,
+              "column": 3
+            },
+            {
+              "title": "should update assigned user and due date",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-f896cd136c9bb037e37d",
+              "file": "03-task-editing.spec.js",
+              "line": 139,
+              "column": 3
+            },
+            {
+              "title": "should validate required fields in edit mode",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-535d7e091adaaa7c63fb",
+              "file": "03-task-editing.spec.js",
+              "line": 159,
+              "column": 3
+            },
+            {
+              "title": "should close edit modal with escape key",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-9e54f0c4e6a5b43ba462",
+              "file": "03-task-editing.spec.js",
+              "line": 173,
+              "column": 3
+            },
+            {
+              "title": "should close edit modal with cancel button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-dbbbbcc6d7e1a193a470",
+              "file": "03-task-editing.spec.js",
+              "line": 186,
+              "column": 3
+            },
+            {
+              "title": "should handle multiple quick status changes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-79c88936165a069c3ef2",
+              "file": "03-task-editing.spec.js",
+              "line": 200,
+              "column": 3
+            },
+            {
+              "title": "should preserve changes when reopening edit modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ab997783d9f5fe3f90bc-50dacab0565d58a56f82",
+              "file": "03-task-editing.spec.js",
+              "line": 226,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "04-filter-system.spec.js",
+      "file": "04-filter-system.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Filter System",
+          "file": "04-filter-system.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Quick Filters",
+              "file": "04-filter-system.spec.js",
+              "line": 15,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should filter tasks by status using dropdown",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-2043084ddaf1d1066b22",
+                  "file": "04-filter-system.spec.js",
+                  "line": 16,
+                  "column": 5
+                },
+                {
+                  "title": "should filter tasks by priority using dropdown",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-9e4dfac13b7bf4a8890c",
+                  "file": "04-filter-system.spec.js",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should filter tasks using search input",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-10b6ed0cd03f2cf1ee6c",
+                  "file": "04-filter-system.spec.js",
+                  "line": 60,
+                  "column": 5
+                },
+                {
+                  "title": "should combine multiple quick filters",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-7dc51514bb1cc287720b",
+                  "file": "04-filter-system.spec.js",
+                  "line": 80,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Advanced Filters",
+              "file": "04-filter-system.spec.js",
+              "line": 102,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should filter using status checkboxes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-c6fda95b8a968542b7cd",
+                  "file": "04-filter-system.spec.js",
+                  "line": 103,
+                  "column": 5
+                },
+                {
+                  "title": "should filter using priority checkboxes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-d2d2503ae84a0606e6c1",
+                  "file": "04-filter-system.spec.js",
+                  "line": 122,
+                  "column": 5
+                },
+                {
+                  "title": "should use advanced search field",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-8bc3f670c6035ecae6c7",
+                  "file": "04-filter-system.spec.js",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "should use additional filters (subtasks, assigned, overdue)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-1e7ec61cd28c29692938",
+                  "file": "04-filter-system.spec.js",
+                  "line": 164,
+                  "column": 5
+                },
+                {
+                  "title": "should use quick filter presets",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-40e230fe21fe1af1b25b",
+                  "file": "04-filter-system.spec.js",
+                  "line": 187,
+                  "column": 5
+                },
+                {
+                  "title": "should clear all filters",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-4b70b8e61a55f09de8d0",
+                  "file": "04-filter-system.spec.js",
+                  "line": 207,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Filter Summary and Real-time Updates",
+              "file": "04-filter-system.spec.js",
+              "line": 233,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should show filter summary when filters are active",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-5bd63ae606090084a7b4",
+                  "file": "04-filter-system.spec.js",
+                  "line": 234,
+                  "column": 5
+                },
+                {
+                  "title": "should update filters in real-time",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-8c96dc184d150e41da91",
+                  "file": "04-filter-system.spec.js",
+                  "line": 255,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain filter state during task operations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-396464396e2322c34465",
+                  "file": "04-filter-system.spec.js",
+                  "line": 277,
+                  "column": 5
+                },
+                {
+                  "title": "should update column counters when filters are applied",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-1e254e46faa505305198",
+                  "file": "04-filter-system.spec.js",
+                  "line": 296,
+                  "column": 5
+                },
+                {
+                  "title": "should handle complex combined filters",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "51430a4f1486c59cc45f-ea9f3380347a46bdee6e",
+                  "file": "04-filter-system.spec.js",
+                  "line": 319,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "05-kanban-board.spec.js",
+      "file": "05-kanban-board.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Kanban Board Functionality",
+          "file": "05-kanban-board.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display three kanban columns with proper headers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-02ad1ffbd45268f836b8",
+              "file": "05-kanban-board.spec.js",
+              "line": 17,
+              "column": 3
+            },
+            {
+              "title": "should render tasks in correct columns based on status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-8dba10620b8cd452c85d",
+              "file": "05-kanban-board.spec.js",
+              "line": 34,
+              "column": 3
+            },
+            {
+              "title": "should display task cards with proper content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-6216e0c84c4d4b3daeb9",
+              "file": "05-kanban-board.spec.js",
+              "line": 52,
+              "column": 3
+            },
+            {
+              "title": "should show priority visual indicators correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-92238dc748823f1d9810",
+              "file": "05-kanban-board.spec.js",
+              "line": 73,
+              "column": 3
+            },
+            {
+              "title": "should show task metadata (assignee, due date, subtasks)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-debec8c5eeaf7489ec24",
+              "file": "05-kanban-board.spec.js",
+              "line": 101,
+              "column": 3
+            },
+            {
+              "title": "should move tasks between columns when status changes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-353687ab6b4c484c3fcd",
+              "file": "05-kanban-board.spec.js",
+              "line": 128,
+              "column": 3
+            },
+            {
+              "title": "should handle empty columns gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-7d051c9f9461835489a3",
+              "file": "05-kanban-board.spec.js",
+              "line": 159,
+              "column": 3
+            },
+            {
+              "title": "should maintain proper column layout on different screen sizes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-70a12fb985cc5f025d4b",
+              "file": "05-kanban-board.spec.js",
+              "line": 178,
+              "column": 3
+            },
+            {
+              "title": "should support task interaction in all columns",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-3c7d23a2d6c0ec2a36b6",
+              "file": "05-kanban-board.spec.js",
+              "line": 200,
+              "column": 3
+            },
+            {
+              "title": "should refresh kanban board data properly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-56e243c6dde235998f80",
+              "file": "05-kanban-board.spec.js",
+              "line": 224,
+              "column": 3
+            },
+            {
+              "title": "should handle rapid task status changes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-ceac13ed565f3718ccfc",
+              "file": "05-kanban-board.spec.js",
+              "line": 251,
+              "column": 3
+            },
+            {
+              "title": "should maintain visual consistency across columns",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "1e1ec08a83f01235078b-05ec965251d7bd11559c",
+              "file": "05-kanban-board.spec.js",
+              "line": 279,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "06-api-integration.spec.js",
+      "file": "06-api-integration.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "API Integration",
+          "file": "06-api-integration.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should successfully call health endpoint",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-6380179df60217353aba",
+              "file": "06-api-integration.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "should successfully call info endpoint",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-13149bf423a0fc35ba04",
+              "file": "06-api-integration.spec.js",
+              "line": 29,
+              "column": 3
+            },
+            {
+              "title": "should successfully fetch tasks list",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-4ae7e0747d98ef7ffab9",
+              "file": "06-api-integration.spec.js",
+              "line": 56,
+              "column": 3
+            },
+            {
+              "title": "should create new task via API",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-b16397b7021807ca8025",
+              "file": "06-api-integration.spec.js",
+              "line": 86,
+              "column": 3
+            },
+            {
+              "title": "should get specific task by ID",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-2a4c74af6b2c47c0b6cb",
+              "file": "06-api-integration.spec.js",
+              "line": 127,
+              "column": 3
+            },
+            {
+              "title": "should update task via PATCH API",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-b4261822e8761d6c33ca",
+              "file": "06-api-integration.spec.js",
+              "line": 171,
+              "column": 3
+            },
+            {
+              "title": "should handle API errors gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-ea0bca6b2a783b01e4d7",
+              "file": "06-api-integration.spec.js",
+              "line": 230,
+              "column": 3
+            },
+            {
+              "title": "should validate request data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-cfe71a1155ceb0233720",
+              "file": "06-api-integration.spec.js",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "should handle concurrent API requests",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-7980fbafaa67680ae309",
+              "file": "06-api-integration.spec.js",
+              "line": 278,
+              "column": 3
+            },
+            {
+              "title": "should handle network timeouts gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-9ed543f1bdab42403fac",
+              "file": "06-api-integration.spec.js",
+              "line": 317,
+              "column": 3
+            },
+            {
+              "title": "should maintain data consistency during operations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f37342bb9a4cc4328583-25f92f71c08a010c2256",
+              "file": "06-api-integration.spec.js",
+              "line": 346,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "07-edge-cases.spec.js",
+      "file": "07-edge-cases.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Edge Cases and Error Scenarios",
+          "file": "07-edge-cases.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Form Validation Edge Cases",
+              "file": "07-edge-cases.spec.js",
+              "line": 9,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle very long task titles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-652af89b27a519094c85",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should prevent HTML injection in task fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-6f9205e6486e7c423484",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 28,
+                  "column": 5
+                },
+                {
+                  "title": "should handle special characters and unicode",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-8c8896ad16d3f82c01a8",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 57,
+                  "column": 5
+                },
+                {
+                  "title": "should validate date fields properly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-b3b6912a710b6fea1e8e",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 74,
+                  "column": 5
+                },
+                {
+                  "title": "should handle empty form submission after partial fill",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-571e8e022e01f0261808",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 97,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Network Error Scenarios",
+              "file": "07-edge-cases.spec.js",
+              "line": 114,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle offline task creation gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-889f3d2c7b67a79b0617",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 115,
+                  "column": 5
+                },
+                {
+                  "title": "should handle slow network responses",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-91457a8a7327bc952bab",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should handle API server errors",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-99f38cf60d9f7f2aac2b",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 160,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "UI Stress Tests",
+              "file": "07-edge-cases.spec.js",
+              "line": 186,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should prevent rapid button clicking",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-488b290bbd26ce9ea2f5",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 187,
+                  "column": 5
+                },
+                {
+                  "title": "should handle window resize gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-eacbd6e3524de50b6364",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 202,
+                  "column": 5
+                },
+                {
+                  "title": "should handle rapid filter changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-5abdd14c7c9822d6a80f",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 222,
+                  "column": 5
+                },
+                {
+                  "title": "should handle excessive form submissions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-8943a501058577ab1b53",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 242,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Data Integrity Tests",
+              "file": "07-edge-cases.spec.js",
+              "line": 260,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should maintain task ID uniqueness",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-2fca1b7bd270544640ad",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 261,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain status-column consistency",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-3e239cf48b1995d99a70",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 295,
+                  "column": 5
+                },
+                {
+                  "title": "should handle corrupted local storage gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-984d88eab045ef8cb21c",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 311,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Accessibility Edge Cases",
+              "file": "07-edge-cases.spec.js",
+              "line": 328,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle keyboard navigation properly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-045c61aaa5d7f93e8c25",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 329,
+                  "column": 5
+                },
+                {
+                  "title": "should handle focus management in modals",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-9ceb8aee65bbc3947270",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 348,
+                  "column": 5
+                },
+                {
+                  "title": "should work with screen reader patterns",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-29564b6b8f58158c821e",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 362,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Browser Compatibility",
+              "file": "07-edge-cases.spec.js",
+              "line": 382,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle missing modern JavaScript features",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-0b7d3f0a31d3a9f780e2",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 383,
+                  "column": 5
+                },
+                {
+                  "title": "should work with JavaScript disabled scenarios",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "9060243024e9392ca41c-3b1d719db5e944906067",
+                  "file": "07-edge-cases.spec.js",
+                  "line": 389,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "08-performance.spec.js",
+      "file": "08-performance.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Performance Tests",
+          "file": "08-performance.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load initial page quickly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-007ab390f095ead5944a",
+              "file": "08-performance.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "should handle large numbers of tasks efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-9e198a29406dc53bf850",
+              "file": "08-performance.spec.js",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should filter tasks quickly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-2a5b77d02ce06a6396f1",
+              "file": "08-performance.spec.js",
+              "line": 63,
+              "column": 3
+            },
+            {
+              "title": "should handle modal operations efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-fbc827583d498a03c043",
+              "file": "08-performance.spec.js",
+              "line": 97,
+              "column": 3
+            },
+            {
+              "title": "should handle rapid task creation efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-f15004d14979e5ef7d9b",
+              "file": "08-performance.spec.js",
+              "line": 125,
+              "column": 3
+            },
+            {
+              "title": "should handle task editing performance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-cd0362158d619d7fbc9d",
+              "file": "08-performance.spec.js",
+              "line": 146,
+              "column": 3
+            },
+            {
+              "title": "should handle complex filter combinations efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-407af4f820319a835fba",
+              "file": "08-performance.spec.js",
+              "line": 182,
+              "column": 3
+            },
+            {
+              "title": "should maintain performance during continuous use",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-729e57b8b152d16ecf1a",
+              "file": "08-performance.spec.js",
+              "line": 212,
+              "column": 3
+            },
+            {
+              "title": "should handle memory usage efficiently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-820fff325ecb6aaebdfb",
+              "file": "08-performance.spec.js",
+              "line": 247,
+              "column": 3
+            },
+            {
+              "title": "should handle network latency gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-967944b32ce66c24f7c5",
+              "file": "08-performance.spec.js",
+              "line": 302,
+              "column": 3
+            },
+            {
+              "title": "should optimize rendering with many DOM elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a63c258fb66f78a83b54-f36bda8d352c216a0613",
+              "file": "08-performance.spec.js",
+              "line": 334,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "09-css-visual.spec.js",
+      "file": "09-css-visual.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CSS and Visual Testing",
+          "file": "09-css-visual.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Tailwind CSS Loading and Application",
+              "file": "09-css-visual.spec.js",
+              "line": 9,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should load Tailwind CSS successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-a9f145362da06a55bdfc",
+                  "file": "09-css-visual.spec.js",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should apply responsive design classes correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-93ef7f0a08ff78247670",
+                  "file": "09-css-visual.spec.js",
+                  "line": 33,
+                  "column": 5
+                },
+                {
+                  "title": "should apply color scheme correctly (dark theme)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-7cc92e76a4db327e9d5f",
+                  "file": "09-css-visual.spec.js",
+                  "line": 60,
+                  "column": 5
+                },
+                {
+                  "title": "should apply hover effects correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-2ead32faa96d31166b76",
+                  "file": "09-css-visual.spec.js",
+                  "line": 85,
+                  "column": 5
+                },
+                {
+                  "title": "should apply transition effects",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-e6ed4b1aeb7d6536f9d4",
+                  "file": "09-css-visual.spec.js",
+                  "line": 106,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Task Card Visual Styling",
+              "file": "09-css-visual.spec.js",
+              "line": 119,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display priority indicators with correct colors",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-e4bbf368a53cfdfd8929",
+                  "file": "09-css-visual.spec.js",
+                  "line": 120,
+                  "column": 5
+                },
+                {
+                  "title": "should apply priority border colors correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-364d2e4d543781a48390",
+                  "file": "09-css-visual.spec.js",
+                  "line": 157,
+                  "column": 5
+                },
+                {
+                  "title": "should apply card hover effects",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-e8b1a35d0ee52cd04f7e",
+                  "file": "09-css-visual.spec.js",
+                  "line": 194,
+                  "column": 5
+                },
+                {
+                  "title": "should apply proper spacing and typography",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-ee7b6cc09cfa27292893",
+                  "file": "09-css-visual.spec.js",
+                  "line": 226,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Modal Styling",
+              "file": "09-css-visual.spec.js",
+              "line": 269,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display modal with proper backdrop and positioning",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-b33b3f0f0d7b769f6237",
+                  "file": "09-css-visual.spec.js",
+                  "line": 270,
+                  "column": 5
+                },
+                {
+                  "title": "should apply modal content styling correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-62dda5cca376b4726f99",
+                  "file": "09-css-visual.spec.js",
+                  "line": 290,
+                  "column": 5
+                },
+                {
+                  "title": "should style form inputs correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-ea3c6a02fed96ceda7fb",
+                  "file": "09-css-visual.spec.js",
+                  "line": 308,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Column Layout and Styling",
+              "file": "09-css-visual.spec.js",
+              "line": 330,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should apply correct column background and borders",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-9727e0a56294f0e15ae4",
+                  "file": "09-css-visual.spec.js",
+                  "line": 331,
+                  "column": 5
+                },
+                {
+                  "title": "should display column headers with proper styling",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-690df59d7e6d8005122b",
+                  "file": "09-css-visual.spec.js",
+                  "line": 356,
+                  "column": 5
+                },
+                {
+                  "title": "should display task counters with proper styling",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-58b7464754bd16c69284",
+                  "file": "09-css-visual.spec.js",
+                  "line": 378,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Filter Section Styling",
+              "file": "09-css-visual.spec.js",
+              "line": 401,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should style quick filters section correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-fe7aa94df2646a857607",
+                  "file": "09-css-visual.spec.js",
+                  "line": 402,
+                  "column": 5
+                },
+                {
+                  "title": "should style advanced filters section correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-8b615bd0c02b1e2119c4",
+                  "file": "09-css-visual.spec.js",
+                  "line": 418,
+                  "column": 5
+                },
+                {
+                  "title": "should style filter buttons correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-963441999fa4862d751c",
+                  "file": "09-css-visual.spec.js",
+                  "line": 434,
+                  "column": 5
+                },
+                {
+                  "title": "should style filter checkboxes and labels",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-ddc8024f9cff52991c7c",
+                  "file": "09-css-visual.spec.js",
+                  "line": 460,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Custom Scrollbar Styling",
+              "file": "09-css-visual.spec.js",
+              "line": 478,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should apply custom scrollbar styles",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-534e443ec989323abbe8",
+                  "file": "09-css-visual.spec.js",
+                  "line": 479,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Typography and Text Styling",
+              "file": "09-css-visual.spec.js",
+              "line": 507,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should apply correct font family and sizes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-64c3355a9e9133484bc2",
+                  "file": "09-css-visual.spec.js",
+                  "line": 508,
+                  "column": 5
+                },
+                {
+                  "title": "should apply heading styles correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-7fd57c881bdaa0e225d2",
+                  "file": "09-css-visual.spec.js",
+                  "line": 522,
+                  "column": 5
+                },
+                {
+                  "title": "should apply text color utilities correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-af959b25f7e46625f3d1",
+                  "file": "09-css-visual.spec.js",
+                  "line": 537,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Animation and Transition Effects",
+              "file": "09-css-visual.spec.js",
+              "line": 559,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should apply loading animations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-529bb870f36c5044ba78",
+                  "file": "09-css-visual.spec.js",
+                  "line": 560,
+                  "column": 5
+                },
+                {
+                  "title": "should apply button transitions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-7fb5cbbe777e3c1db50f",
+                  "file": "09-css-visual.spec.js",
+                  "line": 584,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Visual Regression Testing",
+              "file": "09-css-visual.spec.js",
+              "line": 606,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should match visual baseline for main page",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-4d3d374ba601eb792164",
+                  "file": "09-css-visual.spec.js",
+                  "line": 607,
+                  "column": 5
+                },
+                {
+                  "title": "should match visual baseline for create modal",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-3693ef88a15bbdd28fe4",
+                  "file": "09-css-visual.spec.js",
+                  "line": 615,
+                  "column": 5
+                },
+                {
+                  "title": "should match visual baseline for task cards",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-c67f6a01d869f36210b1",
+                  "file": "09-css-visual.spec.js",
+                  "line": 625,
+                  "column": 5
+                },
+                {
+                  "title": "should match visual baseline on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-3d5df6f9f8854c9d88d7",
+                  "file": "09-css-visual.spec.js",
+                  "line": 636,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "CSS Error Detection",
+              "file": "09-css-visual.spec.js",
+              "line": 646,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should not have CSS loading errors",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-bf3adce169804568392d",
+                  "file": "09-css-visual.spec.js",
+                  "line": 647,
+                  "column": 5
+                },
+                {
+                  "title": "should have required CSS files loaded",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-64cbd9896b31606e7431",
+                  "file": "09-css-visual.spec.js",
+                  "line": 663,
+                  "column": 5
+                },
+                {
+                  "title": "should apply all utility classes correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 120000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium-headless",
+                      "projectName": "chromium-headless",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "8457eca0923140f12472-c872d5dc7215212e303b",
+                  "file": "09-css-visual.spec.js",
+                  "line": 682,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "10-ui-improvements.spec.js",
+      "file": "10-ui-improvements.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "UI Improvements and Bug Fixes",
+          "file": "10-ui-improvements.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display Create Task button under Advanced Search section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-edfc02e96782bcf6db08",
+              "file": "10-ui-improvements.spec.js",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should display subtasks in task cards with proper visibility and sorting",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-aa84f8e74d2051104ac6",
+              "file": "10-ui-improvements.spec.js",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should handle subtask clicks without opening main task modal immediately",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-a872b0eaeb84d491ea27",
+              "file": "10-ui-improvements.spec.js",
+              "line": 80,
+              "column": 3
+            },
+            {
+              "title": "should display Add Subtask button in edit modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-b4742afe1ff213d5ae45",
+              "file": "10-ui-improvements.spec.js",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should handle long descriptions without text overflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-c1c70976535510ad963a",
+              "file": "10-ui-improvements.spec.js",
+              "line": 143,
+              "column": 3
+            },
+            {
+              "title": "should not display any alert popups during normal operations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-af7d5b36b2ca66713905",
+              "file": "10-ui-improvements.spec.js",
+              "line": 187,
+              "column": 3
+            },
+            {
+              "title": "should sort subtasks by ID in ascending order",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-4db1f5354f9c644c6d2f",
+              "file": "10-ui-improvements.spec.js",
+              "line": 233,
+              "column": 3
+            },
+            {
+              "title": "should display subtasks in edit modal with proper formatting",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3cf03c996c6dafa3d9ff-d980f7fad4fc686b21fc",
+              "file": "10-ui-improvements.spec.js",
+              "line": 277,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "11-ui-fixes-validation.spec.js",
+      "file": "11-ui-fixes-validation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "UI Fixes Validation",
+          "file": "11-ui-fixes-validation.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Create Task button moved to Advanced Search section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "871f4af318b5cce3a3fe-9fbd0a599435dd473a53",
+              "file": "11-ui-fixes-validation.spec.js",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "Subtasks displayed in task cards with sorting",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "871f4af318b5cce3a3fe-75bad3f20b1f1807067b",
+              "file": "11-ui-fixes-validation.spec.js",
+              "line": 32,
+              "column": 3
+            },
+            {
+              "title": "Edit modal contains subtasks section",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "871f4af318b5cce3a3fe-22fcd6dd3f162adce748",
+              "file": "11-ui-fixes-validation.spec.js",
+              "line": 62,
+              "column": 3
+            },
+            {
+              "title": "Description text has overflow protection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "871f4af318b5cce3a3fe-76ff6c5597b570df67a6",
+              "file": "11-ui-fixes-validation.spec.js",
+              "line": 83,
+              "column": 3
+            },
+            {
+              "title": "No user-facing alert dialogs for basic operations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "871f4af318b5cce3a3fe-792529e9b676da5a8346",
+              "file": "11-ui-fixes-validation.spec.js",
+              "line": 115,
+              "column": 3
+            },
+            {
+              "title": "Subtask list properly formatted in edit modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "871f4af318b5cce3a3fe-478525dcbff34a695976",
+              "file": "11-ui-fixes-validation.spec.js",
+              "line": 155,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "12-ui-fixes-comprehensive.spec.js",
+      "file": "12-ui-fixes-comprehensive.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "UI Fixes Comprehensive Test",
+          "file": "12-ui-fixes-comprehensive.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should click on subtask and open edit modal (task #59)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba2f1dc607b838bc8344-585936474a6819c9881b",
+              "file": "12-ui-fixes-comprehensive.spec.js",
+              "line": 15,
+              "column": 3
+            },
+            {
+              "title": "should show Create Subtask section in Create Task modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba2f1dc607b838bc8344-6207df8d127a345a2b77",
+              "file": "12-ui-fixes-comprehensive.spec.js",
+              "line": 43,
+              "column": 3
+            },
+            {
+              "title": "should handle long titles with proper text wrapping",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba2f1dc607b838bc8344-787ef89af41760eb9a52",
+              "file": "12-ui-fixes-comprehensive.spec.js",
+              "line": 73,
+              "column": 3
+            },
+            {
+              "title": "should create task with subtasks successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ba2f1dc607b838bc8344-4b0e908084ffa028aaec",
+              "file": "12-ui-fixes-comprehensive.spec.js",
+              "line": 105,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "13-debug-subtasks.spec.js",
+      "file": "13-debug-subtasks.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Subtasks",
+          "file": "13-debug-subtasks.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should debug subtask clicking issue",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "89a3c06fd98e8cc560ef-09c699bda64fa4dedfbf",
+              "file": "13-debug-subtasks.spec.js",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "14-subtask-visibility.spec.js",
+      "file": "14-subtask-visibility.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Subtask Visibility Tests",
+          "file": "14-subtask-visibility.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Basic Modal Test",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f8ec049c2603aadbfbff-f677ece78df7f3c3b5a4",
+              "file": "14-subtask-visibility.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "Add Task modal subtask functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f8ec049c2603aadbfbff-1670071b38108b1ac713",
+              "file": "14-subtask-visibility.spec.js",
+              "line": 28,
+              "column": 3
+            },
+            {
+              "title": "Edit Task modal subtask functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f8ec049c2603aadbfbff-07f9ba3a7dc3062a91eb",
+              "file": "14-subtask-visibility.spec.js",
+              "line": 153,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "15-simple-subtask-test.spec.js",
+      "file": "15-simple-subtask-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Simple Subtask Test",
+          "file": "15-simple-subtask-test.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Simple Add Task with Subtask",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7901594ffa6d324f47b9-42b7bc8f000ae28ae7ec",
+              "file": "15-simple-subtask-test.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "16-edit-modal-subtask.spec.js",
+      "file": "16-edit-modal-subtask.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Edit Modal Subtask Test",
+          "file": "16-edit-modal-subtask.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Edit Task modal does not close when Add Subtask is clicked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ca862f9c4069f0fb1932-1688b7d64e9d400cdd8b",
+              "file": "16-edit-modal-subtask.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "17-direct-edit-test.spec.js",
+      "file": "17-direct-edit-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Direct Edit Modal Test",
+          "file": "17-direct-edit-test.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Edit modal functionality with existing tasks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9d84ce8be414f557235d-266ea95d66e61118094e",
+              "file": "17-direct-edit-test.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "18-comprehensive-subtask.spec.js",
+      "file": "18-comprehensive-subtask.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Comprehensive Subtask Functionality",
+          "file": "18-comprehensive-subtask.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "All subtask requirements validation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c9e089a1b162c7273e7d-f8dbde834d493e09b383",
+              "file": "18-comprehensive-subtask.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "19-debug-visibility.spec.js",
+      "file": "19-debug-visibility.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Subtask Visibility",
+          "file": "19-debug-visibility.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Debug exact visibility issue",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a2e45afcef6d5532d678-9951fcdda46b14e533d7",
+              "file": "19-debug-visibility.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "20-final-subtask-test.spec.js",
+      "file": "20-final-subtask-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Final Subtask Functionality Test",
+          "file": "20-final-subtask-test.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete subtask workflow WITHOUT force option",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "19222a3b22b4fc3c689b-d53f102c09694f29d646",
+              "file": "20-final-subtask-test.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "21-subtask-save-test.spec.js",
+      "file": "21-subtask-save-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Subtask Save Functionality",
+          "file": "21-subtask-save-test.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Create task with subtask and verify save to tasks.json",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cd5465bf9c169353a095-c9a3ec3d76fbbabb90a2",
+              "file": "21-subtask-save-test.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "22-debug-save-issue.spec.js",
+      "file": "22-debug-save-issue.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Save Issue",
+          "file": "22-debug-save-issue.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Debug why task with subtask is not saving",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "782ed2a0b3e9fa94c4ab-d4ff563f403acfbc3e13",
+              "file": "22-debug-save-issue.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "23-test-js-functions.spec.js",
+      "file": "23-test-js-functions.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Test JavaScript Functions",
+          "file": "23-test-js-functions.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Test if addSubtaskToCreateForm function works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9d172cd9325c2e9d999b-59272b8f26112befe1b8",
+              "file": "23-test-js-functions.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "24-check-422-error.spec.js",
+      "file": "24-check-422-error.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Check 422 Error Details",
+          "file": "24-check-422-error.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Capture 422 error details",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e7d4629e48861e133985-0e9894c2f6dc433aed02",
+              "file": "24-check-422-error.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "25-complete-save-workflow.spec.js",
+      "file": "25-complete-save-workflow.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Complete Save Workflow",
+          "file": "25-complete-save-workflow.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Create task with subtasks and verify complete save workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f1f98099fd96716e94cd-0a1bd016b0ab815c4f84",
+              "file": "25-complete-save-workflow.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "26-debug-subtask-count.spec.js",
+      "file": "26-debug-subtask-count.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Subtask Count",
+          "file": "26-debug-subtask-count.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Debug why only 1 subtask is created instead of 2",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "0e8c5421fc12906d8ffc-45ca206e8eb8195e22c2",
+              "file": "26-debug-subtask-count.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "27-comprehensive-subtask-verification.spec.js",
+      "file": "27-comprehensive-subtask-verification.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Comprehensive Subtask Verification",
+          "file": "27-comprehensive-subtask-verification.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Scenario 1: Create Task with Multiple Subtasks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4485e4b1c8d4a08b8fb4-292130ffd9709c54b03f",
+              "file": "27-comprehensive-subtask-verification.spec.js",
+              "line": 32,
+              "column": 3
+            },
+            {
+              "title": "Scenario 2: Edit Task - Add Subtasks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4485e4b1c8d4a08b8fb4-eb8c21cb1d4784ce9f87",
+              "file": "27-comprehensive-subtask-verification.spec.js",
+              "line": 136,
+              "column": 3
+            },
+            {
+              "title": "Scenario 3: Modal Persistence Check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4485e4b1c8d4a08b8fb4-f61a9163ef2717e9d884",
+              "file": "27-comprehensive-subtask-verification.spec.js",
+              "line": 212,
+              "column": 3
+            },
+            {
+              "title": "Scenario 4: Verify Backend Data Integrity",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4485e4b1c8d4a08b8fb4-f84f8f8952d7c483bfad",
+              "file": "27-comprehensive-subtask-verification.spec.js",
+              "line": 254,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "27-test-input-events.spec.js",
+      "file": "27-test-input-events.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Test Input Events",
+          "file": "27-test-input-events.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Test exactly what happens when typing in second subtask field",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "485550cd6b01b423fefb-490ef03444134b7fd247",
+              "file": "27-test-input-events.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "28-simple-input-test.spec.js",
+      "file": "28-simple-input-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Simple Input Test",
+          "file": "28-simple-input-test.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Simple test - verify oninput events work",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "67e42303b2fb50ad201b-7f48289e3642d67a1989",
+              "file": "28-simple-input-test.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "28-simple-modal-test.spec.js",
+      "file": "28-simple-modal-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Simple Modal Test",
+          "file": "28-simple-modal-test.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Can open modal and see subtask button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "cfb9ad9f36f7471d9a86-96f6f76dd5e145dbeccc",
+              "file": "28-simple-modal-test.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "29-debug-function.spec.js",
+      "file": "29-debug-function.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Function",
+          "file": "29-debug-function.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Debug if updateCreateSubtask function exists and works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b5ccc0ac172ab733e26b-49e17846a84fbc009e57",
+              "file": "29-debug-function.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "29-test-subtask-functionality.spec.js",
+      "file": "29-test-subtask-functionality.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Test Subtask Functionality",
+          "file": "29-test-subtask-functionality.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "CRITICAL TEST: Create task with subtasks and verify in tasks.json",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ff115bfa268ddbf617b8-ee178da0c3301bc72a74",
+              "file": "29-test-subtask-functionality.spec.js",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "TEST 2: Edit existing task and add subtasks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "ff115bfa268ddbf617b8-facface37229d527f65c",
+              "file": "29-test-subtask-functionality.spec.js",
+              "line": 181,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "30-final-subtask-verification.spec.js",
+      "file": "30-final-subtask-verification.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Final Subtask Verification",
+          "file": "30-final-subtask-verification.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "FINAL TEST: Verify all subtask issues",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "de9d14970ead2f1ffb31-849a79f5d8088d9a8b63",
+              "file": "30-final-subtask-verification.spec.js",
+              "line": 24,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "30-final-verification.spec.js",
+      "file": "30-final-verification.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Final Verification",
+          "file": "30-final-verification.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete end-to-end verification: create, save, and reopen task with subtasks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "de87474719dda6517964-d8ae4cbf60f76529fd76",
+              "file": "30-final-verification.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "31-manual-interaction-test.spec.js",
+      "file": "31-manual-interaction-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Manual Interaction Test",
+          "file": "31-manual-interaction-test.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Force Subtask Creation via JavaScript",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c7cb3b131e7f9b0295a7-fe14842efd8212aa8e6f",
+              "file": "31-manual-interaction-test.spec.js",
+              "line": 24,
+              "column": 3
+            },
+            {
+              "title": "Test Edit Modal Opening",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c7cb3b131e7f9b0295a7-c1efb5ac245445af76ff",
+              "file": "31-manual-interaction-test.spec.js",
+              "line": 142,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "31-persistence-verification.spec.js",
+      "file": "31-persistence-verification.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Complete Persistence Verification",
+          "file": "31-persistence-verification.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "COMPLETE TEST: Create subtask, save, verify tasks.json, reopen and verify persistence",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "2ce4a9fbe189d0c2ea78-b3d10427c8d717a50726",
+              "file": "31-persistence-verification.spec.js",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "32-backdrop-click-test.spec.js",
+      "file": "32-backdrop-click-test.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Backdrop Click Tests",
+          "file": "32-backdrop-click-test.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Create Modal - Backdrop click should close modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "daae0883e4bc808c987a-ff805f9269fb103aa571",
+              "file": "32-backdrop-click-test.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "Edit Modal - Backdrop click should close modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "daae0883e4bc808c987a-9aa80be8a1daa3e916c8",
+              "file": "32-backdrop-click-test.spec.js",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "Create Modal - Clicking modal content should NOT close modal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "daae0883e4bc808c987a-3258b6ab84787dda03c0",
+              "file": "32-backdrop-click-test.spec.js",
+              "line": 58,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "33-edit-task-add-subtask-validation.spec.js",
+      "file": "33-edit-task-add-subtask-validation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Edit Task - Add Subtask Validation",
+          "file": "33-edit-task-add-subtask-validation.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "CRITICAL: Edit existing task and add subtask - Full validation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c166f90c18195d8dff26-ad21b1fc0a6ee0ede2db",
+              "file": "33-edit-task-add-subtask-validation.spec.js",
+              "line": 36,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "comprehensive.spec.js",
+      "file": "comprehensive.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "TaskMasterWeb - Comprehensive Workflow Test",
+          "file": "comprehensive.spec.js",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Complete workflow: Create task with subtasks, edit, add more subtasks, delete",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "22db194ba5a9c5d8ddb2-92a3471c9b08a9eedfa1",
+              "file": "comprehensive.spec.js",
+              "line": 14,
+              "column": 3
+            },
+            {
+              "title": "Test edge cases and error handling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "22db194ba5a9c5d8ddb2-78ebb45ca7bd412b58b8",
+              "file": "comprehensive.spec.js",
+              "line": 213,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "e2e-quick-check.spec.js",
+      "file": "e2e-quick-check.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "quick check: loading, code block, and kanban cards",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-headless",
+              "projectName": "chromium-headless",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "3ddcfb826cb538dfec4b-3aef58b22aa3b5d6f425",
+          "file": "e2e-quick-check.spec.js",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "fortigatelog-loading-verification.spec.js",
+      "file": "fortigatelog-loading-verification.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "fortigatelog loading verification - critical functions only",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-headless",
+              "projectName": "chromium-headless",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ece9826bc9125805485b-e1c87a3f54f1fe8475b1",
+          "file": "fortigatelog-loading-verification.spec.js",
+          "line": 3,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "test_ui_tasks.spec.ts",
+      "file": "test_ui_tasks.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Kanban Task Board",
+          "file": "test_ui_tasks.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "renders task cards without loading indicator",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bfb695ac0bdd2bf01bb2-ba4cff5c2dcd1c20e439",
+              "file": "test_ui_tasks.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "test-fortigatelog-fix-final.spec.js",
+      "file": "test-fortigatelog-fix-final.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Fortigate Log Fix Verification",
+          "file": "test-fortigatelog-fix-final.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should not show loading message and log content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-headless",
+                  "projectName": "chromium-headless",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4f9d1513ca3303042885-df5c7b453df21bc9c357",
+              "file": "test-fortigatelog-fix-final.spec.js",
+              "line": 6,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "test-fortigatelog-fix.spec.js",
+      "file": "test-fortigatelog-fix.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "fortigatelog fix verification",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-headless",
+              "projectName": "chromium-headless",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "b5a583fb20504d0133f2-f2c1cc11034333dbce66",
+          "file": "test-fortigatelog-fix.spec.js",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "test-loading-fix.spec.js",
+      "file": "test-loading-fix.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Fast loading check",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-headless",
+              "projectName": "chromium-headless",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "b7de0bb4ccce592d6f9b-28b45a5363191d339cf5",
+          "file": "test-loading-fix.spec.js",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "message": "\u001b[31mTesting stopped early after 1 maximum allowed failures.\u001b[39m"
+    }
+  ],
+  "stats": {
+    "startTime": "2025-08-28T14:57:00.423Z",
+    "duration": 21843.108,
+    "expected": 1,
+    "skipped": 190,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
