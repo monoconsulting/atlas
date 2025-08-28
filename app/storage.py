@@ -8,15 +8,11 @@ from datetime import datetime
 from contextlib import contextmanager
 from .models import Task, SubTask, AddTaskRequest, AddSubTaskRequest, UpdateTaskRequest, UpdateSubTaskRequest
 
-<<<<<<< HEAD
-import ijson
-=======
 try:
     import ijson  # optional dependency for streaming large JSON files
 except Exception:
     ijson = None
 import portalocker
->>>>>>> TM359-task-file-selector
 
 class TaskStorage:
     """Read/write Taskmaster files in the mounted project."""
@@ -166,7 +162,6 @@ class TaskStorage:
         self.parsing_errors: List[Dict[str, Any]] = []
         self.duplicate_task_ids: List[Dict[str, Any]] = []
 
-<<<<<<< HEAD
     def _read_json(self, path: Path) -> Dict[str, Any]:
         if not path.exists():
             return {}
@@ -204,7 +199,6 @@ class TaskStorage:
         
         return files
     
-=======
     def get_current_tag(self) -> str:
         """Get the current tag from state file, defaulting to 'master'."""
         if not self.state_file.exists():
@@ -215,8 +209,6 @@ class TaskStorage:
             return state_data.get("currentTag", "master")
         except Exception:
             return "master"
-
->>>>>>> TM359-task-file-selector
     def ensure_tasks_struct(self) -> Dict[str, Any]:
         """Load and merge tasks from all available task files."""
         merged_data = {}
