@@ -69,9 +69,14 @@ class TaskStorage:
                     self.base_dir = Path("/projects/taskmasterweb/taskmaster")
                 else:
                     self.base_dir.mkdir(parents=True, exist_ok=True)
-            self.tasks_file = Path(os.getenv("TASKS_FILE", str(self.base_dir / "tasks" / "tasks.json")))
-            self.state_file = Path(os.getenv("STATE_FILE", str(self.base_dir / "state.json")))
-            self.config_file = Path(os.getenv("CONFIG_FILE", str(self.base_dir / "config.json")))
+            # Only use environment variables if they are non-empty
+            tasks_env = os.getenv("TASKS_FILE", "").strip()
+            state_env = os.getenv("STATE_FILE", "").strip()
+            config_env = os.getenv("CONFIG_FILE", "").strip()
+            
+            self.tasks_file = Path(tasks_env) if tasks_env else self.base_dir / "tasks" / "tasks.json"
+            self.state_file = Path(state_env) if state_env else self.base_dir / "state.json"
+            self.config_file = Path(config_env) if config_env else self.base_dir / "config.json"
         
         self.tasks_file.parent.mkdir(parents=True, exist_ok=True)
         
@@ -190,6 +195,23 @@ class TaskStorage:
         tmp = path.with_suffix(".tmp")
         tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
         tmp.replace(path)
+
+    @contextmanager
+    def _file_lock(self):
+        """Context manager for file locking during read-modify-write operations."""
+        lock_file = self.tasks_file.with_suffix(".lock")
+        lock_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        try:
+            with open(lock_file, 'w') as f:
+                portalocker.lock(f, portalocker.LOCK_EX)
+                yield
+        finally:
+            if lock_file.exists():
+                try:
+                    lock_file.unlink()
+                except (OSError, FileNotFoundError):
+                    pass  # Lock file cleanup is best effort
 
     def get_all_task_files(self) -> List[Path]:
         """Get all available task files (both root and .taskmaster)."""

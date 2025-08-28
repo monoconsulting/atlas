@@ -2,8 +2,8 @@
   "master": {
     "tasks": [],
     "metadata": {
-      "created": "2025-08-28T08:15:14.600Z",
-      "updated": "2025-08-28T08:15:14.600Z",
+      "created": "2025-08-28T09:29:40.338Z",
+      "updated": "2025-08-28T09:29:40.338Z",
       "description": "Tasks for master context"
     }
   },
@@ -233,12 +233,31 @@
         ],
         "priority": "high",
         "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Task 2 Path Verification",
+        "description": "Test task creation with corrected container paths",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-08-28T09:27:57.200124Z",
+        "updated_at": "2025-08-28T09:27:57.200168Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ],
     "metadata": {
-      "created": "2025-08-28T08:15:14.602Z",
-      "updated": "2025-08-28T09:16:51.609Z",
-      "description": "Atlas Frontend Rebuild tasks"
+      "created": "2025-08-28T09:29:40.338Z",
+      "updated": "2025-08-28T09:29:40.338Z",
+      "description": "Tasks for atlas context"
     }
   }
 }

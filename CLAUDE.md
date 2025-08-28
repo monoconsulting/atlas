@@ -440,6 +440,58 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 - **Negative**: Increased database complexity, additional UI maintenance
 - **Risk Mitigation**: Optional fields maintain backward compatibility, comprehensive validation prevents data conflicts
 
+### ADR-004: Docker Environment De-ambiguation for Atlas Frontend Rebuild (2025-08-28)
+
+**Status**: Implemented ✅  
+**Context**: Task 2 of Atlas Frontend Rebuild required consolidating Docker volumes to a single mount point and eliminating workspace path ambiguity.
+
+**Problem**: 
+- Multiple conflicting mount points: `/workspace`, `/projects/{slug}`, various environment-specific paths
+- Empty environment variables causing `Path(".")` errors in TaskStorage
+- Missing `_file_lock` method breaking atomic file operations
+- Inconsistent project path formats across database records
+- Path ambiguity preventing reliable API endpoints like `GET /{slug}/tasks`
+
+**Solution**: Comprehensive Docker and storage system overhaul:
+
+**Docker Configuration** (`docker-compose.yml`, `.env`):
+- **Single Mount Point**: Consolidated to `"${PROJECTS_HOST_DIR}:/projects"` 
+- **Removed Legacy Mounts**: Eliminated `/workspace` and multiple project-specific mounts
+- **Clear Environment**: Set `PROJECTS_HOST_DIR=E:/projects` as single source of truth
+- **Documentation**: Added comprehensive comments explaining mount strategy
+
+**Storage System Fixes** (`app/storage.py`):
+- **Added Missing File Lock**: Implemented `_file_lock` contextmanager with portalocker
+- **Fixed Path Resolution**: Enhanced environment variable handling to prevent empty path errors
+- **Default Path Update**: Changed from `/workspace` to `/projects/taskmasterweb/.taskmaster`
+- **Container Path Validation**: Only use environment variables when non-empty
+
+**Database Migration** (`app/database.py`, `scripts/migrate_to_container_paths.py`):
+- **Path Validators**: Added Pydantic validators enforcing `/projects/` prefix
+- **Automatic Migration**: Created script to convert existing paths to container format  
+- **Data Integrity**: All project records now use consistent `/projects/{slug}` format
+
+**Comprehensive Testing** (11/11 tests passed):
+- Docker syntax validation and mount verification
+- Container rebuild without errors (no-cache build)
+- Cross-container file access validation
+- API functionality testing with new paths
+- Database path consistency verification
+
+**Testing Results**:
+- ✅ All containers use single `/projects` mount point
+- ✅ TaskStorage operations work with proper file locking
+- ✅ API endpoints functional: `GET /info`, `POST /task`, `GET /tasks`
+- ✅ Database paths migrated to container format
+- ✅ No path-related errors in application logs
+- ✅ Cross-container file access confirmed
+- ✅ Backup/restore functionality verified
+
+**Consequences**: 
+- **Positive**: Eliminated path ambiguity, robust file operations, consistent project isolation, API compliance for frontend
+- **Negative**: Required container rebuilds, temporary service disruption during migration
+- **Risk Mitigation**: Comprehensive testing suite, backup preservation, atomic file operations
+
 ---
 
 ## Task Master AI Instructions
