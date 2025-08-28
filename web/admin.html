@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Admin - Project Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617'
+                        }
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-6 py-8 max-w-7xl">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent mb-4">
+                Atlas Admin
+            </h1>
+            <p class="text-slate-400 text-lg">Multi-Project Management Dashboard</p>
+            <div class="flex justify-center mt-6 gap-4">
+                <div class="bg-slate-900 rounded-lg px-4 py-2 border border-slate-800">
+                    <span class="text-sm text-slate-400">Projects:</span>
+                    <span class="text-orange-400 font-mono" id="projectCount">-</span>
+                </div>
+                <div class="bg-slate-900 rounded-lg px-4 py-2 border border-slate-800">
+                    <span class="text-sm text-slate-400">API Status:</span>
+                    <span class="text-green-400 font-mono" id="apiStatus">Connected</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="mb-8">
+            <div class="flex justify-center space-x-4">
+                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg transition-colors">
+                    ← Back to Hub
+                </a>
+                <button id="discoverBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    🔍 Discover Projects
+                </button>
+                <button id="addProjectBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    ➕ Add Project
+                </button>
+                <button id="managePortsBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    🔌 Manage Ports
+                </button>
+            </div>
+        </nav>
+
+        <!-- Projects Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12" id="projectsGrid">
+            <!-- Projects will be loaded here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-16 hidden">
+            <div class="text-6xl mb-4">📂</div>
+            <h3 class="text-xl font-semibold text-slate-300 mb-2">No Projects Found</h3>
+            <p class="text-slate-500 mb-6">Get started by discovering existing projects or adding a new one.</p>
+            <button onclick="discoverProjects()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
+                Discover Projects
+            </button>
+        </div>
+
+        <!-- Port Management Section -->
+        <div id="portManagementSection" class="hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-semibold text-slate-200">🔌 Port Management</h2>
+                    <div class="flex gap-3">
+                        <button id="addPortBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            ➕ Add Port
+                        </button>
+                        <button id="backToProjectsBtn" class="bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-lg transition-colors">
+                            ← Back to Projects
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Port Filters -->
+                <div class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Search</label>
+                            <input type="text" id="portSearch" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                   placeholder="Search ports, services...">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Project</label>
+                            <select id="portProjectFilter" 
+                                    class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">All Projects</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Protocol</label>
+                            <select id="portProtocolFilter" 
+                                    class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">All Protocols</option>
+                                <option value="tcp">TCP</option>
+                                <option value="udp">UDP</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Sort By</label>
+                            <select id="portSortBy" 
+                                    class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="port_asc">Port (Low to High)</option>
+                                <option value="port_desc">Port (High to Low)</option>
+                                <option value="project_name">Project Name</option>
+                                <option value="service_name">Service Name</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Port List -->
+                <div class="bg-slate-950 border border-slate-800 rounded-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-slate-800 border-b border-slate-700">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Port</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Internal</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Service</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Project</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Protocol</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Description</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="portsTableBody" class="divide-y divide-slate-800">
+                                <!-- Ports will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Empty Ports State -->
+                <div id="emptyPortsState" class="text-center py-16 hidden">
+                    <div class="text-4xl mb-4">🔌</div>
+                    <h3 class="text-lg font-semibold text-slate-300 mb-2">No Ports Found</h3>
+                    <p class="text-slate-500 mb-6">Add ports to track your project's networking configuration.</p>
+                    <button onclick="openAddPortModal()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium">
+                        Add First Port
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Project Modal -->
+    <div id="projectModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-slate-200" id="modalTitle">Add New Project</h3>
+                    <button id="closeModal" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="projectForm" class="space-y-4">
+                    <input type="hidden" id="projectId">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Project Name</label>
+                        <input type="text" id="projectName" required 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <button type="button" id="selectTaskfileBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                            ➕ Select Taskfile
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">URL Slug</label>
+                        <input type="text" id="projectSlug" required pattern="[a-zA-Z0-9-_]+" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <p class="text-xs text-slate-500 mt-1">Will be accessible at: <span class="font-mono">localhost:8199/<span id="slugPreview">your-slug</span></span></p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Project Path</label>
+                        <input type="text" id="projectPath" required 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="/projects/my-project">
+                        <div class="mt-2 p-3 bg-slate-900 border border-slate-800 rounded-lg">
+                            <p class="text-xs font-semibold text-slate-300 mb-2">📁 Container Path Format:</p>
+                            <div class="space-y-1 text-xs text-slate-400">
+                                <div><span class="text-green-400 font-mono">/projects/project-name</span> - For projects in E:\projects\</div>
+                                <div><span class="text-blue-400 font-mono">/workspace</span> - Current mounted project root</div>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-slate-800">
+                                <p class="text-xs text-slate-500">
+                                    <strong>Examples:</strong><br>
+                                    • <span class="font-mono text-green-400">/projects/my-webapp</span> (for E:\projects\my-webapp)<br>
+                                    • <span class="font-mono text-green-400">/projects/client-project</span> (for E:\projects\client-project)<br>
+                                    • <span class="font-mono text-blue-400">/workspace</span> (current TaskMasterWeb project)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Task File</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="taskFilePath" readonly
+                                   class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="No task file selected">
+                            <button type="button" id="selectTaskFileBtn" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                Select
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- URL Management Section -->
+                    <div class="border-t border-slate-800 pt-4">
+                        <h4 class="text-lg font-semibold text-slate-300 mb-4">📎 System URLs</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Production URL</label>
+                                <input type="url" id="prodUrl" 
+                                       class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="https://prod.example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Development URL</label>
+                                <input type="url" id="devUrl" 
+                                       class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="https://dev.example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">Documentation URL</label>
+                                <input type="url" id="docsUrl" 
+                                       class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="https://docs.example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-300 mb-2">phpMyAdmin URL</label>
+                                <input type="url" id="phpmyadminUrl" 
+                                       class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="http://localhost:8080">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                        <textarea id="projectDescription" rows="3" 
+                                  class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors">
+                            Save Project
+                        </button>
+                        <button type="button" id="cancelBtn" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Selector Modal -->
+    <div id="fileSelectorModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-lg w-full max-w-2xl mx-4 max-h-[80vh] flex flex-col">
+            <div class="p-6 border-b border-slate-800">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold text-slate-200">Select Task File</h3>
+                    <button id="closeFileSelector" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-center space-x-2 text-sm text-slate-400">
+                        <span>Current Path:</span>
+                        <span id="currentPath" class="font-mono text-slate-300">/projects</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-6">
+                <div id="fileList" class="space-y-2">
+                    <!-- Files will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-slate-800">
+                <div class="flex gap-3">
+                    <input type="text" id="selectedFilePath" readonly
+                           class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono text-sm"
+                           placeholder="No file selected">
+                    <button type="button" id="confirmFileSelection" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50" disabled>
+                        Select
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Port Modal -->
+    <div id="portModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-slate-200" id="portModalTitle">Add New Port</h3>
+                    <button id="closePortModal" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="portForm" class="space-y-4">
+                    <input type="hidden" id="portId">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Project</label>
+                        <select id="portProjectId" required 
+                                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">Select a project...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">External Port</label>
+                            <input type="number" id="portNumber" required min="1" max="65535" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                   placeholder="8080">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Internal Port</label>
+                            <input type="number" id="portInternalNumber" min="1" max="65535" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 font-mono focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                   placeholder="80">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Service Name</label>
+                            <input type="text" id="portServiceName" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                   placeholder="web, mysql, api...">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Protocol</label>
+                            <select id="portProtocol" 
+                                    class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="tcp">TCP</option>
+                                <option value="udp">UDP</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                        <textarea id="portDescription" rows="2" 
+                                  class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                  placeholder="Brief description of this port mapping..."></textarea>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-slate-950 border border-slate-800 rounded-lg">
+                        <h4 class="text-sm font-medium text-slate-300 mb-2">📋 Port Mapping Format</h4>
+                        <p class="text-xs text-slate-400 mb-2">
+                            For Docker port mappings like <span class="font-mono text-green-400">33306:3306</span>:
+                        </p>
+                        <ul class="text-xs text-slate-500 space-y-1">
+                            <li>• External Port: <span class="font-mono text-green-400">33306</span> (the port you access from outside)</li>
+                            <li>• Internal Port: <span class="font-mono text-green-400">3306</span> (the port inside the container)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium transition-colors">
+                            Save Port
+                        </button>
+                        <button type="button" id="cancelPortBtn" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <span id="notificationText">Action completed successfully</span>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8199/api';
+        let projects = [];
+        let editingProjectId = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjects();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('addProjectBtn').addEventListener('click', () => showProjectModal());
+            document.getElementById('discoverBtn').addEventListener('click', discoverProjects);
+            document.getElementById('closeModal').addEventListener('click', hideProjectModal);
+            document.getElementById('cancelBtn').addEventListener('click', hideProjectModal);
+            document.getElementById('projectForm').addEventListener('submit', handleProjectSubmit);
+            document.getElementById('projectSlug').addEventListener('input', updateSlugPreview);
+            
+            // File selector event listeners
+            document.getElementById('selectTaskfileBtn').addEventListener('click', openFileSelector);
+            document.getElementById('selectTaskFileBtn').addEventListener('click', openFileSelector);
+            document.getElementById('closeFileSelector').addEventListener('click', closeFileSelector);
+            document.getElementById('confirmFileSelection').addEventListener('click', confirmFileSelection);
+            
+            // Port management event listeners
+            document.getElementById('managePortsBtn').addEventListener('click', showPortManagement);
+            document.getElementById('backToProjectsBtn').addEventListener('click', showProjectManagement);
+            document.getElementById('addPortBtn').addEventListener('click', () => showPortModal());
+            document.getElementById('closePortModal').addEventListener('click', hidePortModal);
+            document.getElementById('cancelPortBtn').addEventListener('click', hidePortModal);
+            document.getElementById('portForm').addEventListener('submit', handlePortSubmit);
+            
+            // Port filtering event listeners
+            document.getElementById('portSearch').addEventListener('input', filterPorts);
+            document.getElementById('portProjectFilter').addEventListener('change', filterPorts);
+            document.getElementById('portProtocolFilter').addEventListener('change', filterPorts);
+            document.getElementById('portSortBy').addEventListener('change', filterPorts);
+            
+            // Close modal on backdrop click
+            document.getElementById('projectModal').addEventListener('click', (e) => {
+                if (e.target.id === 'projectModal') {
+                    hideProjectModal();
+                }
+            });
+            
+            // Close file selector on backdrop click
+            document.getElementById('fileSelectorModal').addEventListener('click', (e) => {
+                if (e.target.id === 'fileSelectorModal') {
+                    closeFileSelector();
+                }
+            });
+            
+            // Close port modal on backdrop click
+            document.getElementById('portModal').addEventListener('click', (e) => {
+                if (e.target.id === 'portModal') {
+                    hidePortModal();
+                }
+            });
+        }
+
+        function updateSlugPreview() {
+            let slug = document.getElementById('projectSlug').value || 'your-slug';
+            // Remove any leading slashes to prevent URL issues
+            slug = slug.replace(/^\/+/, '');
+            // Update the input field if we removed leading slashes
+            if (document.getElementById('projectSlug').value !== slug) {
+                document.getElementById('projectSlug').value = slug;
+            }
+            document.getElementById('slugPreview').textContent = slug;
+        }
+
+        async function loadProjects() {
+            try {
+                const response = await fetch(`${API_BASE}/projects`);
+                const data = await response.json();
+                
+                if (data.ok) {
+                    projects = data.projects;
+                    renderProjects();
+                    updateStats();
+                } else {
+                    showNotification('Failed to load projects', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                showNotification('Error connecting to API', 'error');
+                document.getElementById('apiStatus').textContent = 'Disconnected';
+                document.getElementById('apiStatus').className = 'text-red-400 font-mono';
+            }
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (projects.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            grid.innerHTML = projects.map(project => `
+                <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-200">${escapeHtml(project.name)}</h3>
+                            <div class="flex items-center mt-1">
+                                <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded font-mono">/${escapeHtml(project.slug)}</span>
+                                <span class="text-slate-500 text-xs ml-2">ID: ${project.id}</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editProject(${project.id})" class="text-slate-400 hover:text-blue-400 transition-colors" title="Edit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="deleteProject(${project.id})" class="text-slate-400 hover:text-red-400 transition-colors" title="Delete">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-400 text-sm mb-4">${escapeHtml(project.description || 'No description')}</p>
+                    
+                    <div class="text-xs text-slate-500 space-y-1 mb-4">
+                        <div><strong>Path:</strong> <span class="font-mono">${escapeHtml(project.path)}</span></div>
+                        <div><strong>Task File:</strong> <span class="font-mono text-green-400">${escapeHtml(project.task_file_path || 'Not selected')}</span></div>
+                        <div><strong>Created:</strong> ${formatDate(project.created_at)}</div>
+                        <div><strong>Updated:</strong> ${formatDate(project.updated_at)}</div>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <a href="http://localhost:8199/${escapeHtml(project.slug)}" target="_blank" 
+                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
+                            Open Project
+                        </a>
+                        <button onclick="disableProject(${project.id})" 
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" 
+                                title="Disable Project">
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('projectCount').textContent = projects.length;
+        }
+
+        function showProjectModal(project = null) {
+            editingProjectId = project ? project.id : null;
+            
+            if (project) {
+                document.getElementById('modalTitle').textContent = 'Edit Project';
+                document.getElementById('projectId').value = project.id;
+                document.getElementById('projectName').value = project.name;
+                document.getElementById('projectSlug').value = project.slug;
+                document.getElementById('projectPath').value = project.path;
+                document.getElementById('taskFilePath').value = project.task_file_path || '';
+                document.getElementById('projectDescription').value = project.description || '';
+                document.getElementById('prodUrl').value = project.prod_url || '';
+                document.getElementById('devUrl').value = project.dev_url || '';
+                document.getElementById('docsUrl').value = project.docs_url || '';
+                document.getElementById('phpmyadminUrl').value = project.phpmyadmin_url || '';
+                updateSlugPreview();
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add New Project';
+                document.getElementById('projectForm').reset();
+                document.getElementById('projectId').value = '';
+                document.getElementById('taskFilePath').value = '';
+                updateSlugPreview();
+            }
+            
+            document.getElementById('projectModal').classList.remove('hidden');
+        }
+
+        function hideProjectModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+            editingProjectId = null;
+        }
+
+        async function handleProjectSubmit(e) {
+            e.preventDefault();
+            
+            const taskFilePath = document.getElementById('taskFilePath').value;
+            
+            // Clean slug to ensure no leading slashes
+            let cleanSlug = document.getElementById('projectSlug').value.replace(/^\/+/, '');
+            
+            const formData = {
+                name: document.getElementById('projectName').value,
+                slug: cleanSlug,
+                path: document.getElementById('projectPath').value,
+                task_file_path: taskFilePath || null,
+                description: document.getElementById('projectDescription').value,
+                prod_url: document.getElementById('prodUrl').value || null,
+                dev_url: document.getElementById('devUrl').value || null,
+                docs_url: document.getElementById('docsUrl').value || null,
+                phpmyadmin_url: document.getElementById('phpmyadminUrl').value || null
+            };
+
+            try {
+                let response;
+                if (editingProjectId) {
+                    response = await fetch(`${API_BASE}/projects/${editingProjectId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/projects`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                }
+
+                if (response.ok) {
+                    hideProjectModal();
+                    loadProjects();
+                    showNotification(editingProjectId ? 'Project updated successfully' : 'Project created successfully');
+                } else {
+                    const error = await response.json();
+                    showNotification(error.detail || 'Failed to save project', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving project:', error);
+                showNotification('Error saving project', 'error');
+            }
+        }
+
+        function editProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (project) {
+                showProjectModal(project);
+            }
+        }
+
+        async function deleteProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            if (!confirm(`Delete project "${project.name}"?\n\nThis will deactivate the project but preserve its data.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/projects/${projectId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadProjects();
+                    showNotification('Project deleted successfully');
+                } else {
+                    const error = await response.json();
+                    showNotification(error.detail || 'Failed to delete project', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                showNotification('Error deleting project', 'error');
+            }
+        }
+
+        async function disableProject(projectId) {
+            const project = projects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            if (!confirm(`Disable project "${project.name}"?\n\nThis will hide the project from the admin interface but preserve its data. You can re-enable it later if needed.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/projects/${projectId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ active: false })
+                });
+
+                if (response.ok) {
+                    loadProjects();
+                    showNotification('Project disabled successfully');
+                } else {
+                    const error = await response.json();
+                    showNotification(error.detail || 'Failed to disable project', 'error');
+                }
+            } catch (error) {
+                console.error('Error disabling project:', error);
+                showNotification('Error disabling project', 'error');
+            }
+        }
+
+        async function discoverProjects() {
+            showNotification('Project discovery is not yet implemented', 'warning');
+            // TODO: Implement project discovery endpoint
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            
+            // Set color based on type
+            notification.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50 ${
+                type === 'error' ? 'bg-red-600' : type === 'warning' ? 'bg-orange-600' : 'bg-green-600'
+            } text-white`;
+            
+            // Show notification
+            notification.classList.remove('translate-x-full');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString() + ' ' + new Date(dateString).toLocaleTimeString();
+        }
+        
+        // File selector functions
+        let currentBrowsePath = '/projects';
+        let selectedTaskFile = null;
+        
+        function openFileSelector() {
+            currentBrowsePath = '/projects';
+            selectedTaskFile = null;
+            document.getElementById('selectedFilePath').value = '';
+            document.getElementById('confirmFileSelection').disabled = true;
+            document.getElementById('fileSelectorModal').classList.remove('hidden');
+            loadFileBrowser(currentBrowsePath);
+        }
+        
+        function closeFileSelector() {
+            document.getElementById('fileSelectorModal').classList.add('hidden');
+        }
+        
+        function confirmFileSelection() {
+            if (selectedTaskFile) {
+                // Set the task file path in the form
+                document.getElementById('taskFilePath').value = selectedTaskFile;
+                
+                // Extract project root path from task file path
+                let projectRoot = selectedTaskFile;
+                if (selectedTaskFile.includes('/.taskmaster/tasks/tasks.json')) {
+                    projectRoot = selectedTaskFile.replace('/.taskmaster/tasks/tasks.json', '');
+                } else if (selectedTaskFile.endsWith('/tasks.json')) {
+                    // Handle other task file locations
+                    projectRoot = selectedTaskFile.substring(0, selectedTaskFile.lastIndexOf('/'));
+                }
+                
+                // Also update the project path field if it's empty or if we're selecting a taskfile
+                if (!document.getElementById('projectPath').value || document.getElementById('projectPath').value === '/projects') {
+                    document.getElementById('projectPath').value = projectRoot;
+                }
+                
+                closeFileSelector();
+            }
+        }
+        
+        async function loadFileBrowser(path) {
+            try {
+                const response = await fetch(`${API_BASE}/browse-files?path=${encodeURIComponent(path)}`);
+                const data = await response.json();
+                
+                if (data.ok) {
+                    currentBrowsePath = data.current_path;
+                    document.getElementById('currentPath').textContent = currentBrowsePath;
+                    renderFileList(data);
+                } else {
+                    showNotification('Failed to browse files: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error browsing files:', error);
+                showNotification('Error browsing files', 'error');
+            }
+        }
+        
+        function renderFileList(data) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            // Add back button if not at root
+            if (currentBrowsePath !== '/projects') {
+                const backItem = document.createElement('div');
+                backItem.className = 'flex items-center p-3 hover:bg-slate-800 rounded-lg cursor-pointer';
+                backItem.innerHTML = `
+                    <svg class="w-5 h-5 mr-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    <span class="text-slate-400">.. (Go back)</span>
+                `;
+                backItem.onclick = () => {
+                    const parentPath = currentBrowsePath.substring(0, currentBrowsePath.lastIndexOf('/')) || '/projects';
+                    loadFileBrowser(parentPath);
+                };
+                fileList.appendChild(backItem);
+            }
+            
+            // Render directories
+            data.directories.forEach(dir => {
+                const dirItem = document.createElement('div');
+                dirItem.className = 'flex items-center justify-between p-3 hover:bg-slate-800 rounded-lg cursor-pointer';
+                dirItem.innerHTML = `
+                    <div class="flex items-center flex-1" onclick="loadFileBrowser('${dir.path}')">
+                        <svg class="w-5 h-5 mr-3 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
+                        </svg>
+                        <span class="text-slate-200">${escapeHtml(dir.name)}</span>
+                        ${dir.has_taskfile ? '<span class="ml-2 text-xs bg-green-600 text-white px-2 py-1 rounded">Has tasks.json</span>' : ''}
+                    </div>
+                    ${dir.has_taskfile ? `
+                        <button onclick="selectTaskFile('${dir.taskfile_path}'); event.stopPropagation();" 
+                                class="ml-3 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                            Select
+                        </button>
+                    ` : ''}
+                `;
+                fileList.appendChild(dirItem);
+            });
+            
+            // Render files
+            data.files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between p-3 hover:bg-slate-800 rounded-lg';
+                fileItem.innerHTML = `
+                    <div class="flex items-center flex-1">
+                        <svg class="w-5 h-5 mr-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-slate-200">${escapeHtml(file.name)}</span>
+                    </div>
+                    ${file.is_taskfile ? `
+                        <button onclick="selectTaskFile('${file.path}')" 
+                                class="ml-3 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                            Select
+                        </button>
+                    ` : ''}
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        // Port Management Functions
+        let ports = [];
+        let allPorts = [];
+        let editingPortId = null;
+
+        function showPortManagement() {
+            document.querySelector('.container > div:nth-child(3)').classList.add('hidden'); // Projects grid
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('portManagementSection').classList.remove('hidden');
+            loadPorts();
+        }
+
+        function showProjectManagement() {
+            document.getElementById('portManagementSection').classList.add('hidden');
+            document.querySelector('.container > div:nth-child(3)').classList.remove('hidden'); // Projects grid
+            if (projects.length === 0) {
+                document.getElementById('emptyState').classList.remove('hidden');
+            }
+        }
+
+        async function loadPorts() {
+            try {
+                const response = await fetch(`${API_BASE}/ports`);
+                const data = await response.json();
+                
+                if (data.ok) {
+                    allPorts = data.ports;
+                    ports = [...allPorts];
+                    renderPorts();
+                    populatePortProjectFilter();
+                } else {
+                    showNotification('Failed to load ports', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading ports:', error);
+                showNotification('Error loading ports', 'error');
+            }
+        }
+
+        function renderPorts() {
+            const tbody = document.getElementById('portsTableBody');
+            const emptyState = document.getElementById('emptyPortsState');
+            
+            if (ports.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = ports.map(port => `
+                <tr class="hover:bg-slate-900 transition-colors">
+                    <td class="px-4 py-3">
+                        <span class="font-mono text-green-400 font-medium">${port.port}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="font-mono text-blue-400">${port.internal_port || '-'}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="text-slate-300">${escapeHtml(port.service_name || '-')}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center">
+                            <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded font-mono">${escapeHtml(port.project_slug || '')}</span>
+                            <span class="text-slate-400 text-xs ml-2">${escapeHtml(port.project_name || '')}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="bg-slate-700 text-slate-300 text-xs px-2 py-1 rounded uppercase font-mono">${port.protocol}</span>
+                    </td>
+                    <td class="px-4 py-3 max-w-xs">
+                        <span class="text-slate-400 text-sm truncate block">${escapeHtml(port.description || '-')}</span>
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <div class="flex justify-center gap-2">
+                            <button onclick="editPort(${port.id})" class="text-slate-400 hover:text-purple-400 transition-colors" title="Edit Port">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="deletePort(${port.id})" class="text-slate-400 hover:text-red-400 transition-colors" title="Delete Port">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function populatePortProjectFilter() {
+            const select = document.getElementById('portProjectFilter');
+            const uniqueProjects = [...new Set(allPorts.map(port => port.project_name).filter(Boolean))];
+            
+            select.innerHTML = '<option value="">All Projects</option>';
+            uniqueProjects.forEach(projectName => {
+                select.innerHTML += `<option value="${escapeHtml(projectName)}">${escapeHtml(projectName)}</option>`;
+            });
+        }
+
+        function filterPorts() {
+            const searchTerm = document.getElementById('portSearch').value.toLowerCase();
+            const projectFilter = document.getElementById('portProjectFilter').value;
+            const protocolFilter = document.getElementById('portProtocolFilter').value;
+            const sortBy = document.getElementById('portSortBy').value;
+            
+            let filtered = allPorts.filter(port => {
+                const matchesSearch = !searchTerm || 
+                    port.port.toString().includes(searchTerm) ||
+                    (port.service_name && port.service_name.toLowerCase().includes(searchTerm)) ||
+                    (port.project_name && port.project_name.toLowerCase().includes(searchTerm)) ||
+                    (port.description && port.description.toLowerCase().includes(searchTerm));
+                    
+                const matchesProject = !projectFilter || port.project_name === projectFilter;
+                const matchesProtocol = !protocolFilter || port.protocol === protocolFilter;
+                
+                return matchesSearch && matchesProject && matchesProtocol;
+            });
+            
+            // Sort filtered results
+            filtered.sort((a, b) => {
+                switch (sortBy) {
+                    case 'port_asc':
+                        return a.port - b.port;
+                    case 'port_desc':
+                        return b.port - a.port;
+                    case 'project_name':
+                        return (a.project_name || '').localeCompare(b.project_name || '');
+                    case 'service_name':
+                        return (a.service_name || '').localeCompare(b.service_name || '');
+                    default:
+                        return a.port - b.port;
+                }
+            });
+            
+            ports = filtered;
+            renderPorts();
+        }
+
+        function showPortModal(port = null) {
+            editingPortId = port ? port.id : null;
+            
+            // Load projects for the dropdown
+            const select = document.getElementById('portProjectId');
+            select.innerHTML = '<option value="">Select a project...</option>';
+            projects.forEach(project => {
+                select.innerHTML += `<option value="${project.id}">${escapeHtml(project.name)} (${escapeHtml(project.slug)})</option>`;
+            });
+            
+            if (port) {
+                document.getElementById('portModalTitle').textContent = 'Edit Port';
+                document.getElementById('portId').value = port.id;
+                document.getElementById('portProjectId').value = port.project_id;
+                document.getElementById('portNumber').value = port.port;
+                document.getElementById('portInternalNumber').value = port.internal_port || '';
+                document.getElementById('portServiceName').value = port.service_name || '';
+                document.getElementById('portProtocol').value = port.protocol;
+                document.getElementById('portDescription').value = port.description || '';
+            } else {
+                document.getElementById('portModalTitle').textContent = 'Add New Port';
+                document.getElementById('portForm').reset();
+                document.getElementById('portId').value = '';
+            }
+            
+            document.getElementById('portModal').classList.remove('hidden');
+        }
+
+        function hidePortModal() {
+            document.getElementById('portModal').classList.add('hidden');
+            editingPortId = null;
+        }
+
+        async function handlePortSubmit(e) {
+            e.preventDefault();
+            
+            const formData = {
+                project_id: parseInt(document.getElementById('portProjectId').value),
+                port: parseInt(document.getElementById('portNumber').value),
+                internal_port: document.getElementById('portInternalNumber').value ? parseInt(document.getElementById('portInternalNumber').value) : null,
+                service_name: document.getElementById('portServiceName').value || null,
+                protocol: document.getElementById('portProtocol').value,
+                description: document.getElementById('portDescription').value || null
+            };
+
+            try {
+                let response;
+                if (editingPortId) {
+                    response = await fetch(`${API_BASE}/ports/${editingPortId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/ports`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                }
+
+                if (response.ok) {
+                    hidePortModal();
+                    loadPorts();
+                    showNotification(editingPortId ? 'Port updated successfully' : 'Port created successfully');
+                } else {
+                    const error = await response.json();
+                    showNotification(error.detail || 'Failed to save port', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving port:', error);
+                showNotification('Error saving port', 'error');
+            }
+        }
+
+        function editPort(portId) {
+            const port = allPorts.find(p => p.id === portId);
+            if (port) {
+                showPortModal(port);
+            }
+        }
+
+        async function deletePort(portId) {
+            const port = allPorts.find(p => p.id === portId);
+            if (!port) return;
+            
+            if (confirm(`Are you sure you want to delete port ${port.port}${port.service_name ? ` (${port.service_name})` : ''}?`)) {
+                try {
+                    const response = await fetch(`${API_BASE}/ports/${portId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        loadPorts();
+                        showNotification('Port deleted successfully');
+                    } else {
+                        const error = await response.json();
+                        showNotification(error.detail || 'Failed to delete port', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting port:', error);
+                    showNotification('Error deleting port', 'error');
+                }
+            }
+        }
+
+        function openAddPortModal() {
+            showPortModal();
+        }
+        
+        function selectTaskFile(path) {
+            selectedTaskFile = path;
+            document.getElementById('selectedFilePath').value = path;
+            document.getElementById('confirmFileSelection').disabled = false;
+        }
+    </script>
+</body>
+</html>
