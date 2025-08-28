@@ -1,0 +1,312 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Atlas – TaskMasterWeb" [level=1] [ref=e4]:
+        - text: Atlas –
+        - generic [ref=e5]: TaskMasterWeb
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - text: "Backlog:"
+          - generic [ref=e8]: "6"
+        - generic [ref=e9]:
+          - text: "Todo:"
+          - generic [ref=e10]: "2"
+        - generic [ref=e11]:
+          - text: "In progress:"
+          - generic [ref=e12]: "1"
+        - generic [ref=e13]:
+          - text: "Review:"
+          - generic [ref=e14]: "0"
+        - generic [ref=e15]:
+          - text: "Done:"
+          - generic [ref=e16]: "8"
+        - generic [ref=e17]:
+          - text: "Deferred:"
+          - generic [ref=e18]: "1"
+        - generic [ref=e19]:
+          - text: "Cancelled:"
+          - generic [ref=e20]: "0"
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - button "Create New Task" [ref=e23]
+      - button "Create New Status" [ref=e24]
+      - button "Create New Tag" [ref=e25]
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]: Status
+          - combobox [ref=e30]:
+            - option "All Status" [selected]
+            - option "Backlog"
+            - option "Todo"
+            - option "In progress"
+            - option "Review"
+            - option "Done"
+            - option "Deferred"
+            - option "Cancelled"
+        - generic [ref=e31]:
+          - generic [ref=e32]: Priority
+          - combobox [ref=e33]:
+            - option "All Priority" [selected]
+            - option "High"
+            - option "Medium"
+            - option "Low"
+        - generic [ref=e34]:
+          - generic [ref=e35]: Tags
+          - combobox [ref=e36]:
+            - option "All Tags" [selected]
+        - generic [ref=e37]:
+          - generic [ref=e38]: Sorting
+          - combobox [ref=e39]:
+            - option "ID ASC" [selected]
+            - option "ID DESC"
+            - option "Priority"
+            - option "Status"
+            - option "Title"
+        - generic [ref=e40]:
+          - generic [ref=e41]: Search
+          - textbox "Search tasks..." [ref=e42]
+      - button "Clear Filters" [ref=e44]:
+        - img [ref=e45]
+        - text: Clear Filters
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e50]:
+          - heading "Backlog" [level=2] [ref=e51]: Backlog
+          - generic [ref=e53]: "6"
+        - generic [ref=e54]:
+          - generic [ref=e55] [cursor=pointer]:
+            - generic [ref=e56] [cursor=pointer]:
+              - generic [ref=e57] [cursor=pointer]: "#10"
+              - generic [ref=e58] [cursor=pointer]: medium
+            - heading "Legacy Removal & Verification" [level=3] [ref=e59] [cursor=pointer]
+            - paragraph [ref=e60] [cursor=pointer]: Remove all Advanced Filters markup/js, remove workspace strings, remove JSON browse controls, and confirm only 4 JS modules exist in the final codebase.
+            - button "Delete task" [ref=e61]:
+              - img [ref=e62]
+          - generic [ref=e64] [cursor=pointer]:
+            - generic [ref=e65] [cursor=pointer]:
+              - generic [ref=e66] [cursor=pointer]: "#11"
+              - generic [ref=e67] [cursor=pointer]: high
+            - heading "Playwright Setup (Headless-Only, Loop Until 100%)" [level=3] [ref=e68] [cursor=pointer]
+            - paragraph [ref=e69] [cursor=pointer]: Configure Playwright for Chromium headless-only execution, implement artifact saving, create loop script for 100% pass rate, and enforce headed run restrictions.
+            - button "Delete task" [ref=e70]:
+              - img [ref=e71]
+          - generic [ref=e73] [cursor=pointer]:
+            - generic [ref=e74] [cursor=pointer]:
+              - generic [ref=e75] [cursor=pointer]: "#12"
+              - generic [ref=e76] [cursor=pointer]: medium
+            - heading "Data-TestIDs Wiring - Add all exact data-testid attributes from Rules, verify they exist in DOM after load" [level=3] [ref=e77] [cursor=pointer]
+            - paragraph [ref=e78] [cursor=pointer]: Add comprehensive data-testid attributes to all interactive elements following established naming conventions and verify DOM presence after page load for testing framework integration.
+            - button "Delete task" [ref=e79]:
+              - img [ref=e80]
+          - generic [ref=e82] [cursor=pointer]:
+            - generic [ref=e83] [cursor=pointer]:
+              - generic [ref=e84] [cursor=pointer]: "#13"
+              - generic [ref=e85] [cursor=pointer]: high
+            - heading "Acceptance Verification - Comprehensive End-to-End Testing" [level=3] [ref=e86] [cursor=pointer]
+            - paragraph [ref=e87] [cursor=pointer]: Perform comprehensive acceptance testing by visiting project slug URLs, verifying header counters and column functionality, testing subtask creation and persistence, applying filters, and validating count accuracy across all features.
+            - button "Delete task" [ref=e88]:
+              - img [ref=e89]
+          - generic [ref=e91] [cursor=pointer]:
+            - generic [ref=e92] [cursor=pointer]:
+              - generic [ref=e93] [cursor=pointer]: "#14"
+              - generic [ref=e94] [cursor=pointer]: high
+            - heading "Deliverables - New index.html and 4 JS modules, updated docker-compose.yml/.env, reports directory with HTML reports, VERIFICATION.md" [level=3] [ref=e95] [cursor=pointer]
+            - paragraph [ref=e96] [cursor=pointer]: Create final deliverables including new index.html with 4 JS modules integration, updated Docker configuration, comprehensive test reports directory, and verification documentation.
+            - button "Delete task" [ref=e97]:
+              - img [ref=e98]
+          - generic [ref=e100] [cursor=pointer]:
+            - generic [ref=e101] [cursor=pointer]:
+              - generic [ref=e102] [cursor=pointer]: "#15"
+              - generic [ref=e103] [cursor=pointer]: high
+            - heading "Gate to Done - All UI criteria pass, Playwright 100% headless success, artifacts exist and linked, no test/data modifications" [level=3] [ref=e104] [cursor=pointer]
+            - paragraph [ref=e105] [cursor=pointer]: Final validation gate ensuring all UI criteria pass completely, Playwright achieves 100% success rate in headless mode, all test artifacts are properly generated and linked, and no unauthorized test or data modifications exist.
+            - button "Delete task" [ref=e106]:
+              - img [ref=e107]
+      - generic [ref=e109]:
+        - generic [ref=e111]:
+          - heading "Todo" [level=2] [ref=e112]: Todo
+          - generic [ref=e114]: "2"
+        - generic [ref=e115]:
+          - generic [ref=e116] [cursor=pointer]:
+            - generic [ref=e117] [cursor=pointer]:
+              - generic [ref=e118] [cursor=pointer]: "#16"
+              - generic [ref=e119] [cursor=pointer]: medium
+            - heading "Task 2 Path Verification" [level=3] [ref=e120] [cursor=pointer]
+            - paragraph [ref=e121] [cursor=pointer]: Test task creation with corrected container paths
+            - button "Delete task" [ref=e122]:
+              - img [ref=e123]
+          - generic [ref=e125] [cursor=pointer]:
+            - generic [ref=e126] [cursor=pointer]:
+              - generic [ref=e127] [cursor=pointer]: "#18"
+              - generic [ref=e128] [cursor=pointer]: medium
+            - heading "t" [level=3] [ref=e129] [cursor=pointer]
+            - paragraph [ref=e130] [cursor=pointer]: t
+            - generic [ref=e131] [cursor=pointer]:
+              - generic [ref=e132] [cursor=pointer]: "📂 Subtasks (1):"
+              - generic "asdf" [ref=e133] [cursor=pointer]:
+                - generic [ref=e134] [cursor=pointer]: "1."
+                - text: asdf
+                - generic [ref=e135] [cursor=pointer]: (medium)
+            - button "Delete task" [ref=e136]:
+              - img [ref=e137]
+      - generic [ref=e139]:
+        - generic [ref=e141]:
+          - heading "In progress" [level=2] [ref=e142]: In progress
+          - generic [ref=e144]: "1"
+        - generic [ref=e146] [cursor=pointer]:
+          - generic [ref=e147] [cursor=pointer]:
+            - generic [ref=e148] [cursor=pointer]: "#9"
+            - generic [ref=e149] [cursor=pointer]: high
+          - heading "Error Handling (No Infinite Loading)" [level=3] [ref=e150] [cursor=pointer]
+          - paragraph [ref=e151] [cursor=pointer]: Implement comprehensive loading state management with spinners, error banners, and guaranteed loading state cleanup to prevent infinite loading indicators.
+          - button "Delete task" [ref=e152]:
+            - img [ref=e153]
+      - generic [ref=e155]:
+        - generic [ref=e157]:
+          - heading "Review" [level=2] [ref=e158]: Review
+          - generic [ref=e160]: "0"
+        - generic [ref=e162]: No tasks
+      - generic [ref=e163]:
+        - generic [ref=e165]:
+          - heading "Done" [level=2] [ref=e166]: Done
+          - generic [ref=e168]: "8"
+        - generic [ref=e169]:
+          - generic [ref=e170] [cursor=pointer]:
+            - generic [ref=e171] [cursor=pointer]:
+              - generic [ref=e172] [cursor=pointer]: "#1"
+              - generic [ref=e173] [cursor=pointer]: high
+            - heading "Backup and Clean Slate - Create backup directory with timestamp, move legacy frontend files to backup location, write backup notes explaining removal" [level=3] [ref=e174] [cursor=pointer]
+            - paragraph [ref=e175] [cursor=pointer]: Create a timestamped backup directory and move all legacy frontend files to preserve them before implementing the new system architecture.
+            - button "Delete task" [ref=e176]:
+              - img [ref=e177]
+          - generic [ref=e179] [cursor=pointer]:
+            - generic [ref=e180] [cursor=pointer]:
+              - generic [ref=e181] [cursor=pointer]: "#2"
+              - generic [ref=e182] [cursor=pointer]: high
+            - heading "Docker & Env De-ambiguation - Configure docker-compose.yml with single PROJECTS_HOST_DIR mount, update .env settings, set database projects.path to container paths, rebuild and test containers" [level=3] [ref=e183] [cursor=pointer]
+            - paragraph [ref=e184] [cursor=pointer]: Simplify Docker configuration by consolidating project mounts into a single PROJECTS_HOST_DIR variable, update environment settings, and configure database to use container paths for improved consistency and maintainability.
+            - button "Delete task" [ref=e185]:
+              - img [ref=e186]
+          - generic [ref=e188] [cursor=pointer]:
+            - generic [ref=e189] [cursor=pointer]:
+              - generic [ref=e190] [cursor=pointer]: "#3"
+              - generic [ref=e191] [cursor=pointer]: high
+            - heading "Minimal HTML Shell" [level=3] [ref=e192] [cursor=pointer]
+            - paragraph [ref=e193] [cursor=pointer]: Create new app/static/index.html with Atlas header, header counters, single filter row with exact control order, remove Advanced Filters, add Kanban container with spinner overlay
+            - button "Delete task" [ref=e194]:
+              - img [ref=e195]
+          - generic [ref=e197] [cursor=pointer]:
+            - generic [ref=e198] [cursor=pointer]:
+              - generic [ref=e199] [cursor=pointer]: "#4"
+              - generic [ref=e200] [cursor=pointer]: high
+            - heading "JS Module Scaffolding" [level=3] [ref=e201] [cursor=pointer]
+            - paragraph [ref=e202] [cursor=pointer]: "Create four ES modules: api.js (API routes), state.js (in-memory state), render.js (render functions), main.js (bootstrap and events) to establish the core JavaScript architecture for the application."
+            - generic [ref=e203] [cursor=pointer]:
+              - generic [ref=e204] [cursor=pointer]: "📂 Subtasks (5):"
+              - generic "Fix HTML Foundation - Replace index.html with Atlas-compliant structure" [ref=e205] [cursor=pointer]:
+                - generic [ref=e206] [cursor=pointer]: "1."
+                - text: Fix HTML Foundation - Replace ...
+                - generic [ref=e207] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Create api.js module - API wrapper with project slug routing" [ref=e208] [cursor=pointer]:
+                - generic [ref=e209] [cursor=pointer]: "2."
+                - text: Create api.js module - API wra...
+                - generic [ref=e210] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Create state.js module - In-memory state management" [ref=e211] [cursor=pointer]:
+                - generic [ref=e212] [cursor=pointer]: "3."
+                - text: Create state.js module - In-me...
+                - generic [ref=e213] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic [ref=e214] [cursor=pointer]: ...and 2 more
+            - button "Delete task" [ref=e215]:
+              - img [ref=e216]
+          - generic [ref=e218] [cursor=pointer]:
+            - generic [ref=e219] [cursor=pointer]:
+              - generic [ref=e220] [cursor=pointer]: "#5"
+              - generic [ref=e221] [cursor=pointer]: high
+            - heading "Dynamic Statuses & Header Counters" [level=3] [ref=e222] [cursor=pointer]
+            - paragraph [ref=e223] [cursor=pointer]: Compute present statuses from fetched tasks, order by status mapping, render all columns with testids, and implement header counters with synchronized counts.
+            - generic [ref=e224] [cursor=pointer]:
+              - generic [ref=e225] [cursor=pointer]: "📂 Subtasks (4):"
+              - generic "Status computation logic in state.js" [ref=e226] [cursor=pointer]:
+                - generic [ref=e227] [cursor=pointer]: "1."
+                - text: Status computation logic in st...
+                - generic [ref=e228] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Dynamic column rendering in render.js" [ref=e229] [cursor=pointer]:
+                - generic [ref=e230] [cursor=pointer]: "2."
+                - text: Dynamic column rendering in re...
+                - generic [ref=e231] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Header counter system implementation" [ref=e232] [cursor=pointer]:
+                - generic [ref=e233] [cursor=pointer]: "3."
+                - text: Header counter system implemen...
+                - generic [ref=e234] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic [ref=e235] [cursor=pointer]: ...and 1 more
+            - button "Delete task" [ref=e236]:
+              - img [ref=e237]
+          - generic [ref=e239] [cursor=pointer]:
+            - generic [ref=e240] [cursor=pointer]:
+              - generic [ref=e241] [cursor=pointer]: "#6"
+              - generic [ref=e242] [cursor=pointer]: high
+            - heading "Filters (Functional) - Implement client-side filters for Status/Priority/Tags/Search" [level=3] [ref=e243] [cursor=pointer]
+            - paragraph [ref=e244] [cursor=pointer]: Create a comprehensive client-side filtering system with status, priority, tags, and search filters that work together in a pipeline and update task counts dynamically.
+            - generic [ref=e245] [cursor=pointer]:
+              - generic [ref=e246] [cursor=pointer]: "📂 Subtasks (3):"
+              - generic "Verify existing filter functionality in state.js" [ref=e247] [cursor=pointer]:
+                - generic [ref=e248] [cursor=pointer]: "1."
+                - text: Verify existing filter functio...
+                - generic [ref=e249] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Implement filter event handlers in main.js" [ref=e250] [cursor=pointer]:
+                - generic [ref=e251] [cursor=pointer]: "2."
+                - text: Implement filter event handler...
+                - generic [ref=e252] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Add visual indicators for active filters" [ref=e253] [cursor=pointer]:
+                - generic [ref=e254] [cursor=pointer]: "3."
+                - text: Add visual indicators for acti...
+                - generic [ref=e255] [cursor=pointer]: (undefined)
+                - text: ✓
+            - button "Delete task" [ref=e256]:
+              - img [ref=e257]
+          - generic [ref=e259] [cursor=pointer]:
+            - generic [ref=e260] [cursor=pointer]:
+              - generic [ref=e261] [cursor=pointer]: "#7"
+              - generic [ref=e262] [cursor=pointer]: high
+            - heading "Create New Task Modal with Subtasks" [level=3] [ref=e263] [cursor=pointer]
+            - paragraph [ref=e264] [cursor=pointer]: Implement a comprehensive Create Task modal with all task fields, subtask addition functionality with parent persistence, maximum 8 subtasks limit, and save/cancel operations.
+            - button "Delete task" [ref=e265]:
+              - img [ref=e266]
+          - generic [ref=e268] [cursor=pointer]:
+            - generic [ref=e269] [cursor=pointer]:
+              - generic [ref=e270] [cursor=pointer]: "#8"
+              - generic [ref=e271] [cursor=pointer]: high
+            - heading "Edit Modals (Tasks & Subtasks)" [level=3] [ref=e272] [cursor=pointer]
+            - paragraph [ref=e273] [cursor=pointer]: Implement task card click handlers to open edit modals, enable editing of parent tasks and subtask rows with real-time updates, persist changes via PUT API calls, and handle outside click cancellation.
+            - button "Delete task" [ref=e274]:
+              - img [ref=e275]
+      - generic [ref=e277]:
+        - generic [ref=e279]:
+          - heading "Deferred" [level=2] [ref=e280]: Deferred
+          - generic [ref=e282]: "1"
+        - generic [ref=e284] [cursor=pointer]:
+          - generic [ref=e285] [cursor=pointer]:
+            - generic [ref=e286] [cursor=pointer]: "#17"
+            - generic [ref=e287] [cursor=pointer]: high
+          - heading "test" [level=3] [ref=e288] [cursor=pointer]
+          - paragraph [ref=e289] [cursor=pointer]: asdfasdf
+          - button "Delete task" [ref=e290]:
+            - img [ref=e291]
+      - generic [ref=e293]:
+        - generic [ref=e295]:
+          - heading "Cancelled" [level=2] [ref=e296]: Cancelled
+          - generic [ref=e298]: "0"
+        - generic [ref=e300]: No tasks
+```

@@ -1,8 +1,10 @@
 /**
  * API wrapper module for Atlas Frontend
  * Handles all API routes with project slug routing per Rules §3
- * No global helpers - pure API wrapper functions
+ * Enhanced with per-operation loading states and error categorization
  */
+
+import { setLoading } from './state.js';
 
 let currentSlug = '';
 
@@ -35,13 +37,17 @@ function buildApiUrl(endpoint) {
 }
 
 /**
- * Generic fetch wrapper with error handling
+ * Generic fetch wrapper with enhanced error handling and loading states
  * @param {string} url - API URL
  * @param {object} options - Fetch options
- * @returns {Promise<object>} API response data
+ * @param {string} operationName - Operation name for loading state tracking
+ * @returns {Promise<object>} API response data with error categorization
  */
-async function apiCall(url, options = {}) {
+async function apiCall(url, options = {}, operationName = 'api-call') {
     try {
+        // Start loading state for this operation
+        setLoading(operationName, true);
+        
         const response = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
@@ -51,17 +57,62 @@ async function apiCall(url, options = {}) {
         });
 
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            // Categorize HTTP errors
+            let errorType = 'server';
+            let errorMessage = `${response.status} ${response.statusText}`;
+            
+            if (response.status >= 400 && response.status < 500) {
+                errorType = response.status === 404 ? 'network' : 'validation';
+                
+                // Try to get more specific error from response body
+                try {
+                    const errorData = await response.json();
+                    if (errorData.message) {
+                        errorMessage = errorData.message;
+                    }
+                } catch (e) {
+                    // If we can't parse the error response, use status text
+                }
+            } else if (response.status >= 500) {
+                errorType = 'server';
+            } else if (response.status === 0 || !navigator.onLine) {
+                errorType = 'network';
+                errorMessage = 'Network connection unavailable';
+            }
+            
+            const error = new Error(errorMessage);
+            error.type = errorType;
+            error.status = response.status;
+            throw error;
         }
 
         const data = await response.json();
-        if (!data.ok) {
-            throw new Error(data.message || 'API operation failed');
+        if (!data.ok && data.ok !== undefined) {
+            // API returned error in response body
+            const error = new Error(data.message || 'API operation failed');
+            error.type = 'server';
+            throw error;
         }
 
+        // Operation completed successfully
+        setLoading(operationName, false);
         return data;
+        
     } catch (error) {
-        console.error('API call failed:', error);
+        // Ensure loading state is cleared on error
+        setLoading(operationName, false);
+        
+        console.error(`API call failed [${operationName}]:`, error);
+        
+        // Enhance error with type information if not already set
+        if (!error.type) {
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                error.type = 'network';
+            } else {
+                error.type = 'server';
+            }
+        }
+        
         throw error;
     }
 }
@@ -73,7 +124,7 @@ async function apiCall(url, options = {}) {
  */
 export async function getProjectInfo() {
     const url = buildApiUrl('/info');
-    return await apiCall(url);
+    return await apiCall(url, {}, 'getProjectInfo');
 }
 
 /**
@@ -87,7 +138,7 @@ export async function getTasks(tag = null) {
     if (tag) {
         url += `?tag=${encodeURIComponent(tag)}`;
     }
-    return await apiCall(url);
+    return await apiCall(url, {}, 'getTasks');
 }
 
 /**
@@ -102,7 +153,7 @@ export async function getTask(taskId, tag = null) {
     if (tag) {
         url += `?tag=${encodeURIComponent(tag)}`;
     }
-    return await apiCall(url);
+    return await apiCall(url, {}, 'getTask');
 }
 
 /**
@@ -116,7 +167,7 @@ export async function createTask(taskData) {
     return await apiCall(url, {
         method: 'POST',
         body: JSON.stringify(taskData)
-    });
+    }, 'createTask');
 }
 
 /**
@@ -131,7 +182,7 @@ export async function updateTask(taskId, updateData) {
     return await apiCall(url, {
         method: 'PATCH',
         body: JSON.stringify(updateData)
-    });
+    }, 'updateTask');
 }
 
 /**
@@ -149,7 +200,7 @@ export async function createSubtask(taskId, subtaskData) {
             parent_id: taskId,
             ...subtaskData
         })
-    });
+    }, 'createSubtask');
 }
 
 /**
@@ -165,7 +216,7 @@ export async function updateSubtask(taskId, subtaskId, updateData) {
     return await apiCall(url, {
         method: 'PATCH',
         body: JSON.stringify(updateData)
-    });
+    }, 'updateSubtask');
 }
 
 /**
@@ -178,7 +229,7 @@ export async function deleteTask(taskId) {
     return await apiCall(url, {
         method: 'PATCH',
         body: JSON.stringify({ deleted: true })
-    });
+    }, 'deleteTask');
 }
 
 /**
@@ -186,7 +237,7 @@ export async function deleteTask(taskId) {
  * @returns {Promise<object>} Health status
  */
 export async function healthCheck() {
-    return await apiCall('/health');
+    return await apiCall('/health', {}, 'healthCheck');
 }
 
 // Export API functions for use by other modules

@@ -76,7 +76,7 @@ async function loadProjectInfo() {
         }
     } catch (error) {
         console.error('Failed to load project info:', error);
-        render.showError('Failed to load project information');
+        render.showError('Failed to load project information', error.type || 'network');
     }
 }
 
@@ -85,19 +85,15 @@ async function loadProjectInfo() {
  */
 async function loadTasks() {
     try {
-        state.setLoading(true);
         const response = await api.getTasks();
         
         if (response.ok && response.data) {
             state.setTasks(response.data);
             updateUI();
         }
-        
-        state.setLoading(false);
     } catch (error) {
         console.error('Failed to load tasks:', error);
-        state.setLoading(false);
-        render.showError('Failed to load tasks: ' + error.message);
+        render.showError('Failed to load tasks', error.type || 'server');
     }
 }
 
@@ -356,8 +352,6 @@ async function handleTaskSubmit(event) {
     const taskId = form.dataset.taskId;
     
     try {
-        render.showSpinner();
-        
         // Collect form data
         const taskData = {
             title: document.getElementById('taskTitle').value.trim(),
@@ -371,10 +365,13 @@ async function handleTaskSubmit(event) {
         };
         
         if (!taskData.title) {
-            render.showError('Task title is required');
-            render.hideSpinner();
+            render.showError('Task title is required', 'validation');
             return;
         }
+        
+        // Set button loading state
+        const saveBtn = document.getElementById('saveTaskBtn');
+        render.setButtonLoading(saveBtn, true, 'Saving...');
         
         let result;
         if (mode === 'create') {
@@ -391,14 +388,15 @@ async function handleTaskSubmit(event) {
         if (result.ok) {
             closeTaskModal();
             await loadTasks(); // Refresh tasks
-            render.showError(`Task ${mode === 'create' ? 'created' : 'updated'} successfully`);
+            render.showSuccess(`Task ${mode === 'create' ? 'created' : 'updated'} successfully`);
         }
         
-        render.hideSpinner();
+        render.setButtonLoading(saveBtn, false);
     } catch (error) {
         console.error('Failed to save task:', error);
-        render.hideSpinner();
-        render.showError(`Failed to ${mode} task: ${error.message}`);
+        const saveBtn = document.getElementById('saveTaskBtn');
+        render.setButtonLoading(saveBtn, false);
+        render.showError(`Failed to ${mode} task`, error.type || 'server');
     }
 }
 
@@ -456,18 +454,15 @@ async function deleteTask(taskId) {
     }
     
     try {
-        render.showSpinner();
         const result = await api.deleteTask(taskId);
         
         if (result.ok) {
             await loadTasks(); // Refresh tasks
+            render.showSuccess('Task deleted successfully');
         }
-        
-        render.hideSpinner();
     } catch (error) {
         console.error('Failed to delete task:', error);
-        render.hideSpinner();
-        render.showError('Failed to delete task: ' + error.message);
+        render.showError('Failed to delete task', error.type || 'server');
     }
 }
 
@@ -621,8 +616,44 @@ function handleKeyDown(event) {
     }
 }
 
+/**
+ * Setup loading state cleanup mechanisms
+ */
+function setupLoadingCleanup() {
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        state.clearAllLoadingStates();
+    });
+    
+    // Cleanup on page hide (mobile/tab switching)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            state.clearAllLoadingStates();
+        }
+    });
+    
+    // Periodic cleanup check every 60 seconds to catch any stale states
+    setInterval(() => {
+        const loadingOps = state.getLoadingOperations();
+        if (loadingOps.length > 0) {
+            console.debug('Periodic cleanup check - current loading operations:', loadingOps);
+        }
+    }, 60000);
+    
+    // Global error handler for uncaught promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+        console.error('Unhandled promise rejection:', event.reason);
+        render.showError('An unexpected error occurred', 'server');
+        // Clear any stale loading states
+        state.clearAllLoadingStates();
+    });
+}
+
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initialize);
+document.addEventListener('DOMContentLoaded', () => {
+    initialize();
+    setupLoadingCleanup();
+});
 
 // Export for debugging
 export { initialize, loadTasks, openEditModal, deleteTask };

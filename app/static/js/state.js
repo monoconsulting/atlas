@@ -49,6 +49,12 @@ const state = {
     loading: false,
     error: null,
     
+    // Per-operation loading state tracking
+    loadingOperations: {
+        // Maps operation IDs to loading state and timeout IDs
+        // e.g., 'fetchTasks': { loading: true, timeoutId: 123 }
+    },
+    
     // Subtask management state
     subtasks: {
         editingTaskId: null,
@@ -388,20 +394,92 @@ export function getDistinctTags() {
 }
 
 /**
- * Set loading state
- * @param {boolean} loading - Loading state
+ * Set loading state for a specific operation
+ * @param {string} operation - Operation name (e.g., 'fetchTasks', 'createTask')
+ * @param {boolean} isLoading - Loading state
  */
-export function setLoading(loading) {
-    state.loading = loading;
-    notify('loading-changed', loading);
+export function setLoading(operation, isLoading = true) {
+    if (isLoading) {
+        // Clear existing timeout if operation was already loading
+        if (state.loadingOperations[operation]?.timeoutId) {
+            clearTimeout(state.loadingOperations[operation].timeoutId);
+        }
+        
+        // Set loading state with 30-second automatic cleanup
+        const timeoutId = setTimeout(() => {
+            console.warn(`Loading operation '${operation}' timed out after 30 seconds, forcing cleanup`);
+            setLoading(operation, false);
+        }, 30000);
+        
+        state.loadingOperations[operation] = { loading: true, timeoutId };
+    } else {
+        // Clear loading state and timeout
+        if (state.loadingOperations[operation]) {
+            if (state.loadingOperations[operation].timeoutId) {
+                clearTimeout(state.loadingOperations[operation].timeoutId);
+            }
+            delete state.loadingOperations[operation];
+        }
+    }
+    
+    // Update global loading state (true if any operation is loading)
+    const wasLoading = state.loading;
+    state.loading = Object.keys(state.loadingOperations).length > 0;
+    
+    // Only notify if global loading state changed
+    if (state.loading !== wasLoading) {
+        notify('loading-changed', state.loading);
+    }
+    
+    // Always notify about specific operation changes
+    notify('operation-loading-changed', { operation, loading: isLoading });
 }
 
 /**
- * Get loading state
- * @returns {boolean} Current loading state
+ * Get loading state for specific operation
+ * @param {string} operation - Operation name
+ * @returns {boolean} Loading state for operation
+ */
+export function isLoading(operation) {
+    return state.loadingOperations[operation]?.loading || false;
+}
+
+/**
+ * Get global loading state
+ * @returns {boolean} True if any operation is loading
  */
 export function getLoading() {
     return state.loading;
+}
+
+/**
+ * Check if any operations are currently loading
+ * @returns {boolean} True if any operation is loading
+ */
+export function isAnyLoading() {
+    return Object.keys(state.loadingOperations).length > 0;
+}
+
+/**
+ * Get list of currently loading operations
+ * @returns {Array<string>} Array of operation names
+ */
+export function getLoadingOperations() {
+    return Object.keys(state.loadingOperations);
+}
+
+/**
+ * Clear all loading states (for cleanup on page unload)
+ */
+export function clearAllLoadingStates() {
+    Object.values(state.loadingOperations).forEach(op => {
+        if (op.timeoutId) {
+            clearTimeout(op.timeoutId);
+        }
+    });
+    state.loadingOperations = {};
+    state.loading = false;
+    notify('loading-changed', false);
 }
 
 /**
@@ -478,7 +556,11 @@ export default {
     
     // UI state
     setLoading,
+    isLoading,
     getLoading,
+    isAnyLoading,
+    getLoadingOperations,
+    clearAllLoadingStates,
     setError,
     getError,
     clearError,

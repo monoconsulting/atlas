@@ -348,11 +348,17 @@ export function renderTagOptions(tags) {
 }
 
 /**
- * Show loading spinner
+ * Show loading spinner with optional message
+ * @param {string} message - Optional loading message
  */
-export function showSpinner() {
+export function showSpinner(message = 'Loading...') {
     const spinner = document.querySelector('[data-testid="spinner"]');
     if (spinner) {
+        // Update spinner message if element exists
+        const messageElement = spinner.querySelector('span');
+        if (messageElement) {
+            messageElement.textContent = message;
+        }
         spinner.classList.remove('hidden');
     }
 }
@@ -368,21 +374,99 @@ export function hideSpinner() {
 }
 
 /**
- * Show error banner
- * @param {string} message - Error message
+ * Set button loading state
+ * @param {string|HTMLElement} buttonSelector - Button selector or element
+ * @param {boolean} isLoading - Loading state
+ * @param {string} loadingText - Text to show while loading
  */
-export function showError(message) {
+export function setButtonLoading(buttonSelector, isLoading, loadingText = 'Loading...') {
+    const button = typeof buttonSelector === 'string' 
+        ? document.querySelector(buttonSelector) 
+        : buttonSelector;
+    
+    if (!button) return;
+    
+    if (isLoading) {
+        // Store original text and disable button
+        if (!button.dataset.originalText) {
+            button.dataset.originalText = button.textContent;
+        }
+        button.disabled = true;
+        button.textContent = loadingText;
+        button.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+        // Restore original text and enable button
+        if (button.dataset.originalText) {
+            button.textContent = button.dataset.originalText;
+            delete button.dataset.originalText;
+        }
+        button.disabled = false;
+        button.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+}
+
+/**
+ * Show error banner with categorization
+ * @param {string} message - Error message
+ * @param {string} type - Error type ('network', 'validation', 'server', 'info')
+ * @param {number} duration - Auto-hide duration in ms (0 = no auto-hide)
+ */
+export function showError(message, type = 'server', duration = 5000) {
     const errorBanner = document.querySelector('[data-testid="error-banner"]');
     const errorMessage = document.getElementById('errorMessage');
     
     if (errorBanner && errorMessage) {
-        errorMessage.textContent = message;
+        // Clear any existing auto-hide timeout
+        if (errorBanner.hideTimeout) {
+            clearTimeout(errorBanner.hideTimeout);
+        }
+        
+        // Categorize error message with user-friendly prefix
+        let displayMessage = message;
+        switch (type) {
+            case 'network':
+                displayMessage = `Network Error: ${message}`;
+                break;
+            case 'validation':
+                displayMessage = `Validation Error: ${message}`;
+                break;
+            case 'server':
+                displayMessage = `Server Error: ${message}`;
+                break;
+            case 'info':
+                displayMessage = message; // No prefix for info messages
+                break;
+        }
+        
+        errorMessage.textContent = displayMessage;
+        
+        // Update banner styling based on error type
+        errorBanner.className = 'fixed top-20 left-4 right-4 px-4 py-3 rounded-lg z-40 border';
+        
+        switch (type) {
+            case 'network':
+                errorBanner.classList.add('bg-orange-900', 'border-orange-700', 'text-orange-100');
+                break;
+            case 'validation':
+                errorBanner.classList.add('bg-yellow-900', 'border-yellow-700', 'text-yellow-100');
+                break;
+            case 'info':
+                errorBanner.classList.add('bg-blue-900', 'border-blue-700', 'text-blue-100');
+                break;
+            case 'server':
+            default:
+                errorBanner.classList.add('bg-red-900', 'border-red-700', 'text-red-100');
+                break;
+        }
+        
         errorBanner.classList.remove('hidden');
         
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-            hideError();
-        }, 5000);
+        // Auto-hide after specified duration
+        if (duration > 0) {
+            errorBanner.hideTimeout = setTimeout(() => {
+                hideError();
+            }, duration);
+        }
     }
 }
 
@@ -393,6 +477,42 @@ export function hideError() {
     const errorBanner = document.querySelector('[data-testid="error-banner"]');
     if (errorBanner) {
         errorBanner.classList.add('hidden');
+        
+        // Clear any pending auto-hide timeout
+        if (errorBanner.hideTimeout) {
+            clearTimeout(errorBanner.hideTimeout);
+            errorBanner.hideTimeout = null;
+        }
+    }
+}
+
+/**
+ * Show success message (using error banner with success styling)
+ * @param {string} message - Success message
+ * @param {number} duration - Auto-hide duration in ms
+ */
+export function showSuccess(message, duration = 3000) {
+    const errorBanner = document.querySelector('[data-testid="error-banner"]');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    if (errorBanner && errorMessage) {
+        // Clear any existing timeout
+        if (errorBanner.hideTimeout) {
+            clearTimeout(errorBanner.hideTimeout);
+        }
+        
+        errorMessage.textContent = message;
+        
+        // Style as success banner
+        errorBanner.className = 'fixed top-20 left-4 right-4 bg-green-900 border border-green-700 text-green-100 px-4 py-3 rounded-lg z-40';
+        errorBanner.classList.remove('hidden');
+        
+        // Auto-hide after duration
+        if (duration > 0) {
+            errorBanner.hideTimeout = setTimeout(() => {
+                hideError();
+            }, duration);
+        }
     }
 }
 
@@ -495,7 +615,9 @@ export default {
     renderTagOptions,
     showSpinner,
     hideSpinner,
+    setButtonLoading,
     showError,
     hideError,
+    showSuccess,
     updateFilterIndicators
 };
