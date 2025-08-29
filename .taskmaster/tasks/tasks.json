@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-08-28T14:33:36.653Z",
-      "updated": "2025-08-28T14:33:36.653Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -271,7 +266,7 @@
         "description": "Configure Playwright for Chromium headless-only execution, implement artifact saving, create loop script for 100% pass rate, and enforce headed run restrictions.",
         "details": "1. Install and configure Playwright dependencies:\n   - Install @playwright/test and chromium browser only\n   - Create playwright.config.js with headless: true enforcement\n   - Configure browser to use chromium only, disable webkit and firefox\n   - Set up test artifacts directory structure for screenshots, videos, traces\n\n2. Implement headless-only enforcement:\n   - Add configuration validation to prevent headed: false override\n   - Create custom launcher that forces headless mode\n   - Add environment variable checks to block GUI mode\n   - Implement error handling for headed mode attempts\n\n3. Create comprehensive test loop script:\n   - Develop loop-until-pass.js script that runs tests repeatedly until 100% pass rate\n   - Implement test result parsing and failure analysis\n   - Add configurable retry limits and delay between attempts\n   - Include progress reporting and failure logging\n\n4. Configure artifact collection:\n   - Set up automatic screenshot capture on failures\n   - Enable video recording for all test runs\n   - Configure trace collection with detailed debugging info\n   - Implement artifact cleanup and rotation policies\n\n5. Create test execution wrapper:\n   - Build npm scripts for different test scenarios (single run, loop mode)\n   - Add test result aggregation and reporting\n   - Implement CI/CD friendly exit codes and output formatting",
         "testStrategy": "1. Verify Playwright installation contains only chromium browser and required dependencies\n2. Confirm playwright.config.js enforces headless mode and rejects headed configuration attempts\n3. Test loop script successfully runs tests until 100% pass rate is achieved\n4. Validate artifacts (screenshots, videos, traces) are captured and saved in correct directory structure\n5. Check that headed mode attempts are blocked with appropriate error messages\n6. Verify test loop script handles edge cases like infinite failures and timeout scenarios\n7. Confirm npm scripts execute correctly and provide proper exit codes for CI integration\n8. Test artifact cleanup removes old files while preserving recent test results",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           4,
           6,
@@ -420,12 +415,26 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 19,
+        "title": "Add refresh button",
+        "description": "Add a refresh button in the project page when searching for a tasks.json-file. Sometimes it is not updated so it is nice to have.",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-08-28T20:50:20.340829Z",
+        "updated_at": "2025-08-28T20:50:20.340839Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ],
-    "metadata": {
-      "created": "2025-08-28T14:33:36.653Z",
-      "updated": "2025-08-28T14:49:52.271Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
