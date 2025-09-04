@@ -7,6 +7,7 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 from contextlib import contextmanager
 from .models import Task, SubTask, AddTaskRequest, AddSubTaskRequest, UpdateTaskRequest, UpdateSubTaskRequest
+from . import trace as tm_trace
 
 try:
     import ijson  # optional dependency for streaming large JSON files
@@ -26,8 +27,8 @@ class TaskStorage:
         from sqlalchemy.orm import Session
         from .database import get_project_by_slug, SessionLocal
 
-        # Default to /projects/taskmasterweb for the main project
-        env_dir = os.getenv("TASKMASTER_DIR", "/projects/taskmasterweb/.taskmaster")
+        # Default to /projects/atlas for the main project
+        env_dir = os.getenv("TASKMASTER_DIR", "/projects/atlas/.taskmaster")
 
         # If base_dir is actually a project slug, resolve from DB
         if isinstance(base_dir, str) and not os.path.isabs(base_dir):
@@ -60,13 +61,13 @@ class TaskStorage:
             self.state_file = self.base_dir / "state.json"
             self.config_file = self.base_dir / "config.json"
         else:
-            # Default behavior - use /projects/taskmasterweb paths
+            # Default behavior - use /projects/atlas paths
             if not self.base_dir.exists():
-                fb = Path("/projects/taskmasterweb/.taskmaster")
+                fb = Path("/projects/atlas/.taskmaster")
                 if fb.exists():
                     self.base_dir = fb
-                elif Path("/projects/taskmasterweb/taskmaster").exists():
-                    self.base_dir = Path("/projects/taskmasterweb/taskmaster")
+                elif Path("/projects/atlas/taskmaster").exists():
+                    self.base_dir = Path("/projects/atlas/taskmaster")
                 else:
                     self.base_dir.mkdir(parents=True, exist_ok=True)
             # Only use environment variables if they are non-empty
@@ -109,6 +110,7 @@ class TaskStorage:
             return {}
         
         self._log_file_info(path, "streaming_read")
+        tm_trace.log_event("fs_read", file=str(path), mode="streaming")
         
         try:
             with open(path, 'rb') as file:
@@ -164,8 +166,11 @@ class TaskStorage:
     def _write_json(self, path: Path, data: Dict[str, Any]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+        body = json.dumps(data, indent=2, ensure_ascii=False)
+        tmp.write_text(body, encoding="utf-8")
+        tm_trace.log_event("fs_write_tmp", file=str(tmp), bytes=len(body.encode("utf-8")))
         tmp.replace(path)
+        tm_trace.log_event("fs_replace", file=str(path))
         
         # Support for multiple task files (root tasks.json and .taskmaster/tasks/tasks.json)
         self.root_tasks_file = Path("tasks.json") if Path("tasks.json").exists() else None

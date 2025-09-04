@@ -40,7 +40,7 @@ if [ $? -eq 0 ]; then
     echo "✅ SQL script executed successfully!"
     echo ""
     echo "🔄 Next Steps:"
-    echo "   1. Restart TaskMaster containers: docker compose restart taskmasterweb"
+    echo "   1. Restart Atlas containers: docker compose restart atlas"
     echo "   2. Test Logrefine access: http://localhost:8199/logrefine"  
     echo "   3. Verify /logrefine/info endpoint shows task data"
     echo ""

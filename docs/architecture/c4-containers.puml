@@ -1,0 +1,45 @@
+@startuml
+title TaskMasterWeb - Container Overview
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam wrapWidth 250
+skinparam defaultFontName Arial
+
+actor "User" as User
+
+node "TaskMasterWeb" as System {
+  rectangle "Webserver\n(Python)\nHost 9652" as Web
+  rectangle "Atlas API\n(FastAPI / Uvicorn)\nContainer 8000\nHost 8199" as API
+  database "MySQL 8\nContainer 3306\nHost 33066" as DB
+  folder "JSON Storage\nAtomic writes (.tmp -> replace)\nSoft deletes (deleted:true)" as FS
+}
+
+rectangle "Weaviate\nVector DB\nHost 8092 -> 8080\n(+ gRPC 50051)" as Weaviate
+rectangle "SonarQube\nCode Quality\nHost 9010 -> 9000\n(latest community)" as Sonar
+rectangle "PlantUML Server\nDiagram Render\nHost 8010 -> 8080" as PlantUML
+
+User --> Web : HTTP
+Web --> API : HTTP JSON
+API --> DB : SQL
+API --> FS : Atomic JSON I/O
+API --> Weaviate : HTTP / gRPC
+API --> Sonar : Webhooks / links
+Web --> Sonar : Link to dashboard
+User --> Sonar : View reports
+API --> PlantUML : Render diagrams (opt)
+User --> PlantUML : Preview (opt)
+
+note right of FS
+  Base dir per project\n
+  Fallback: /workspace/taskmaster\n
+  Merge tasks.json (root + .taskmaster)
+end note
+
+note bottom of API
+  CORS from HOST_PORT\n
+  Routes: /{project_slug}/task\n
+  Concurrency via portalocker
+end note
+
+@enduml

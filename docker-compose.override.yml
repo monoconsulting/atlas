@@ -1,0 +1,93 @@
+# docker-compose.override.yml
+# Purpose: Add SonarQube (+ PostgreSQL) and PlantUML Server alongside your existing Atlas stack
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.override.yml up -d sonarqube_db sonarqube plantuml
+# Quick checks:
+#   curl http://localhost:${SONAR_HOST_PORT:-9000}/api/system/health
+#   curl --data-binary "@diagram.puml" http://localhost:${PLANTUML_HOST_PORT:-8080}/svg > diagram.svg
+#
+# Notes:
+# - This file does NOT modify your base compose; it only extends it.
+# - Atlas will see SonarQube at http://sonarqube:9000 and PlantUML at http://plantuml:8080 via Docker DNS.
+# - Default ports: 9000 (SonarQube), 8080 (PlantUML). Override via .env if needed.
+# - SonarQube requires vm.max_map_count >= 524288 on the host (you already handled this via a scheduled task).
+#
+services:
+  # Extend Atlas with service URLs and startup ordering
+  atlas:
+    environment:
+      SONAR_HOST_URL: "http://sonarqube:9000"
+      PLANTUML_SERVER_URL: "http://plantuml:8080"
+    depends_on:
+      sonarqube:
+        condition: service_healthy
+      plantuml:
+        condition: service_started
+
+  # PostgreSQL backing DB for SonarQube
+  sonarqube_db:
+    profiles: ["extras"]
+    image: postgres:16-alpine
+    container_name: ${SONAR_DB_CONTAINER_NAME:-atlas_sonar_db}
+    environment:
+      POSTGRES_USER: ${SONARQUBE_DB_USER:-sonar}
+      POSTGRES_PASSWORD: ${SONARQUBE_DB_PASSWORD:-sonar}
+      POSTGRES_DB: ${SONARQUBE_DB_NAME:-sonarqube}
+    volumes:
+      - sonarqube_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # SonarQube Server (Community LTS)
+  sonarqube:
+    profiles: ["extras"]
+    image: sonarqube:community
+    container_name: ${SONARQUBE_CONTAINER_NAME:-atlas_sonarqube}
+    depends_on:
+      sonarqube_db:
+        condition: service_healthy
+    environment:
+      SONAR_JDBC_URL: "jdbc:postgresql://sonarqube_db:5432/${SONARQUBE_DB_NAME:-sonarqube}"
+      SONAR_JDBC_USERNAME: ${SONARQUBE_DB_USER:-sonar}
+      SONAR_JDBC_PASSWORD: ${SONARQUBE_DB_PASSWORD:-sonar}
+      # Optional JVM tuning example:
+      # SONAR_JAVA_OPTS: "-Xms512m -Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"
+    ports:
+      - "${SONAR_HOST_PORT:-9010}:9000"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9000/api/system/health | grep -q '\"health\":\"GREEN\"'"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+
+  # PlantUML server (Jetty)
+  plantuml:
+    profiles: ["extras"]
+    image: plantuml/plantuml-server:jetty-v1.2025.2
+    container_name: ${PLANTUML_CONTAINER_NAME:-atlas_plantuml}
+    ports:
+      - "${PLANTUML_HOST_PORT:-8010}:8080"
+    # Optional Java memory:
+    # environment:
+    #   JAVA_TOOL_OPTIONS: "-Xms256m -Xmx512m"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_db_data:

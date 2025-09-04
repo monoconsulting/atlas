@@ -1,5 +1,5 @@
 """
-Database models and connection setup for TaskMasterWeb multi-project support.
+Database models and connection setup for Atlas multi-project support.
 """
 
 from __future__ import annotations

@@ -1,0 +1,18 @@
+@startuml packages_app
+set namespaceSeparator none
+package "app" as app {
+}
+package "app.database" as app.database {
+}
+package "app.main" as app.main {
+}
+package "app.models" as app.models {
+}
+package "app.storage" as app.storage {
+}
+app.main --> app.database
+app.main --> app.models
+app.main --> app.storage
+app.storage --> app.database
+app.storage --> app.models
+@enduml

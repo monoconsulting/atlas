@@ -16,7 +16,7 @@
         "id": 12,
         "title": "Add GET /health Endpoint Validation",
         "description": "Ensure the existing health check endpoint meets API specification requirements",
-        "details": "Verify that the existing GET /health endpoint returns the correct JSON format: {ok: true, message: 'taskmasterweb is alive'}. Add proper response typing and ensure it's documented in the API.",
+        "details": "Verify that the existing GET /health endpoint returns the correct JSON format: {ok: true, message: 'atlas is alive'}. Add proper response typing and ensure it's documented in the API.",
         "testStrategy": "API endpoint test to verify response structure and HTTP status codes. Test with different application states.",
         "priority": "low",
         "dependencies": [],
@@ -562,7 +562,7 @@
         "id": 54,
         "title": "Create Production Deployment Package",
         "description": "Package application for production deployment as specified in PRD",
-        "details": "Create deliverable .zip archive containing taskmasterweb directory with all necessary files: app/ directory, Dockerfile, docker-compose.yml, .env.example, requirements.txt, tailwind.config.js, and README.md. Ensure all dependencies are included and no development files are included.",
+        "details": "Create deliverable .zip archive containing atlas directory with all necessary files: app/ directory, Dockerfile, docker-compose.yml, .env.example, requirements.txt, tailwind.config.js, and README.md. Ensure all dependencies are included and no development files are included.",
         "testStrategy": "Package completeness tests, deployment tests from archive, dependency verification, and production environment testing.",
         "priority": "medium",
         "dependencies": [

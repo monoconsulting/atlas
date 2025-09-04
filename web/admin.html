@@ -21,6 +21,34 @@
     </script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen">
+    <script>
+        // Route relative "/api/..." calls to the backend on localhost:8199 when
+        // this page is served from the static web server (e.g., port 9652 or via atlas.localhost).
+        (function () {
+            try {
+                const originalFetch = window.fetch.bind(window);
+                // If we're not already on the backend origin (port 8199), redirect relative API calls there.
+                const isBackendOrigin = location.hostname === 'localhost' && location.port === '8199';
+                const API_BASE = isBackendOrigin ? location.origin : 'http://localhost:8199';
+
+                window.fetch = (input, init) => {
+                    try {
+                        if (typeof input === 'string' && input.startsWith('/api/')) {
+                            return originalFetch(API_BASE + input, init);
+                        } else if (input && typeof input === 'object' && 'url' in input && input.url && input.url.startsWith('/api/')) {
+                            const req = new Request(API_BASE + input.url, input);
+                            return originalFetch(req, init);
+                        }
+                    } catch (e) {
+                        // fall through to original fetch on any errors
+                    }
+                    return originalFetch(input, init);
+                };
+            } catch (e) {
+                console.warn('API base routing shim failed:', e);
+            }
+        })();
+    </script>
     <div class="container mx-auto px-6 py-8 max-w-7xl">
         <!-- Header -->
         <header class="text-center mb-12">
@@ -79,6 +107,9 @@
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-semibold text-slate-200">🔌 Port Management</h2>
                     <div class="flex gap-3">
+                        <button id="scanDockerBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            🐳 Scan Docker Ports
+                        </button>
                         <button id="addPortBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
                             ➕ Add Port
                         </button>
@@ -212,7 +243,7 @@
                                     <strong>Examples:</strong><br>
                                     • <span class="font-mono text-green-400">/projects/my-webapp</span> (for E:\projects\my-webapp)<br>
                                     • <span class="font-mono text-green-400">/projects/client-project</span> (for E:\projects\client-project)<br>
-                                    • <span class="font-mono text-blue-400">/workspace</span> (current TaskMasterWeb project)
+                                    • <span class="font-mono text-blue-400">/workspace</span> (current Atlas project)
                                 </p>
                             </div>
                         </div>
@@ -412,7 +443,8 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8199/api';
+        // Same-origin API via Traefik: use relative base
+        const API_BASE = '';
         let projects = [];
         let editingProjectId = null;
 
@@ -420,6 +452,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadProjects();
             setupEventListeners();
+            // Load SonarQube metrics after projects load
+            setTimeout(() => loadAllProjectMetrics(), 2000);
         });
 
         function setupEventListeners() {
@@ -439,6 +473,7 @@
             // Port management event listeners
             document.getElementById('managePortsBtn').addEventListener('click', showPortManagement);
             document.getElementById('backToProjectsBtn').addEventListener('click', showProjectManagement);
+            document.getElementById('scanDockerBtn').addEventListener('click', scanDockerPorts);
             document.getElementById('addPortBtn').addEventListener('click', () => showPortModal());
             document.getElementById('closePortModal').addEventListener('click', hidePortModal);
             document.getElementById('cancelPortBtn').addEventListener('click', hidePortModal);
@@ -485,7 +520,7 @@
 
         async function loadProjects() {
             try {
-                const response = await fetch(`${API_BASE}/projects`);
+                const response = await fetch(`/api/projects`);
                 const data = await response.json();
                 
                 if (data.ok) {
@@ -548,8 +583,8 @@
                         <div><strong>Updated:</strong> ${formatDate(project.updated_at)}</div>
                     </div>
                     
-                    <div class="flex gap-2">
-                        <a href="http://localhost:8199/${escapeHtml(project.slug)}" target="_blank" 
+                    <div class="flex gap-2 mb-3">
+                        <a href="/${escapeHtml(project.slug)}" target="_blank" 
                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
                             Open Project
                         </a>
@@ -558,6 +593,25 @@
                                 title="Disable Project">
                             Disable
                         </button>
+                    </div>
+                    
+                    <!-- SonarQube Analysis Section -->
+                    <div class="border-t border-slate-700 pt-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs text-slate-400">Code Analysis</span>
+                            <div id="sonar-status-${project.id}" class="text-xs"></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="runCodeAnalysis(${project.id})" 
+                                    class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">
+                                🔍 Run Analysis
+                            </button>
+                            <button onclick="viewAnalysisResults(${project.id})" 
+                                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">
+                                📊 View Results
+                            </button>
+                        </div>
+                        <div id="sonar-metrics-${project.id}" class="mt-2 text-xs"></div>
                     </div>
                 </div>
             `).join('');
@@ -622,13 +676,13 @@
             try {
                 let response;
                 if (editingProjectId) {
-                    response = await fetch(`${API_BASE}/projects/${editingProjectId}`, {
+                    response = await fetch(`/api/projects/${editingProjectId}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
                     });
                 } else {
-                    response = await fetch(`${API_BASE}/projects`, {
+                    response = await fetch(`/api/projects`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
@@ -665,7 +719,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/projects/${projectId}`, {
+                const response = await fetch(`/api/projects/${projectId}`, {
                     method: 'DELETE'
                 });
 
@@ -691,7 +745,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/projects/${projectId}`, {
+                const response = await fetch(`/api/projects/${projectId}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ active: false })
@@ -788,7 +842,7 @@
         
         async function loadFileBrowser(path) {
             try {
-                const response = await fetch(`${API_BASE}/browse-files?path=${encodeURIComponent(path)}`);
+                const response = await fetch(`/api/browse-files?path=${encodeURIComponent(path)}`);
                 const data = await response.json();
                 
                 if (data.ok) {
@@ -878,6 +932,15 @@
             document.querySelector('.container > div:nth-child(3)').classList.add('hidden'); // Projects grid
             document.getElementById('emptyState').classList.add('hidden');
             document.getElementById('portManagementSection').classList.remove('hidden');
+            
+            // Clear any existing error notifications from project loading
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => notif.remove());
+            
+            // Reset API status indicator
+            document.getElementById('apiStatus').textContent = 'Connected';
+            document.getElementById('apiStatus').className = 'text-green-400 font-mono';
+            
             loadPorts();
         }
 
@@ -891,20 +954,29 @@
 
         async function loadPorts() {
             try {
-                const response = await fetch(`${API_BASE}/ports`);
+                console.log('Attempting to load ports from:', `/ports`);
+                const response = await fetch(`/api/ports`);
+                console.log('Ports API response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const data = await response.json();
+                console.log('Ports data received:', data);
                 
                 if (data.ok) {
                     allPorts = data.ports;
                     ports = [...allPorts];
                     renderPorts();
                     populatePortProjectFilter();
+                    console.log('Successfully loaded', data.ports.length, 'ports');
                 } else {
-                    showNotification('Failed to load ports', 'error');
+                    showNotification('Failed to load ports: ' + (data.error || 'Unknown error'), 'error');
                 }
             } catch (error) {
                 console.error('Error loading ports:', error);
-                showNotification('Error loading ports', 'error');
+                showNotification('Error connecting to ports API: ' + error.message, 'error');
             }
         }
 
@@ -1058,13 +1130,13 @@
             try {
                 let response;
                 if (editingPortId) {
-                    response = await fetch(`${API_BASE}/ports/${editingPortId}`, {
+                    response = await fetch(`/api/ports/${editingPortId}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
                     });
                 } else {
-                    response = await fetch(`${API_BASE}/ports`, {
+                    response = await fetch(`/api/ports`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
@@ -1098,7 +1170,7 @@
             
             if (confirm(`Are you sure you want to delete port ${port.port}${port.service_name ? ` (${port.service_name})` : ''}?`)) {
                 try {
-                    const response = await fetch(`${API_BASE}/ports/${portId}`, {
+                    const response = await fetch(`/api/ports/${portId}`, {
                         method: 'DELETE'
                     });
                     
@@ -1125,6 +1197,231 @@
             document.getElementById('selectedFilePath').value = path;
             document.getElementById('confirmFileSelection').disabled = false;
         }
+
+        async function scanDockerPorts() {
+            const scanBtn = document.getElementById('scanDockerBtn');
+            const originalText = scanBtn.innerHTML;
+            
+            try {
+                // Show loading state
+                scanBtn.innerHTML = '🔄 Scanning...';
+                scanBtn.disabled = true;
+                
+                // Call the Docker scan API
+                const response = await fetch(`/api/docker/scan`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok && result.scanned_ports && result.scanned_ports.length > 0) {
+                    // Show results and ask if user wants to import
+                    const portsFound = result.scanned_ports.length;
+                    const message = `Found ${portsFound} Docker container port${portsFound > 1 ? 's' : ''}:\n\n` +
+                        result.scanned_ports.map(port => 
+                            `• ${port.container_name}: ${port.external_port}→${port.internal_port} (${port.service_name})`
+                        ).join('\n') +
+                        `\n\nDo you want to import these ports to the database?`;
+                    
+                    if (confirm(message)) {
+                        // Import the ports
+                        await importDockerPorts();
+                    }
+                } else if (result.ok) {
+                    alert('No Docker containers with port mappings found.');
+                } else {
+                    throw new Error(result.detail || 'Docker scan failed');
+                }
+                
+            } catch (error) {
+                console.error('Docker scan error:', error);
+                alert(`Docker scan failed: ${error.message}`);
+            } finally {
+                // Restore button state
+                scanBtn.innerHTML = originalText;
+                scanBtn.disabled = false;
+            }
+        }
+
+        async function importDockerPorts() {
+            try {
+                const response = await fetch(`/api/docker/import`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    alert(`Successfully imported ${result.imported} port${result.imported !== 1 ? 's' : ''}. ` +
+                          `${result.skipped} port${result.skipped !== 1 ? 's' : ''} skipped (already exist).`);
+                    
+                    // Reload ports to show the new ones
+                    await loadPorts();
+                } else {
+                    throw new Error(result.detail || 'Import failed');
+                }
+                
+            } catch (error) {
+                console.error('Docker import error:', error);
+                alert(`Failed to import Docker ports: ${error.message}`);
+            }
+        }
+        
+        // ============================================================================
+        // SonarQube Integration Functions
+        // ============================================================================
+        
+        async function checkSonarQubeStatus() {
+            try {
+                const response = await fetch(`/api/sonarqube/status`);
+                const status = await response.json();
+                return status;
+            } catch (error) {
+                console.error('SonarQube status check failed:', error);
+                return { running: false, error: error.message };
+            }
+        }
+        
+        async function runCodeAnalysis(projectId) {
+            const statusDiv = document.getElementById(`sonar-status-${projectId}`);
+            const metricsDiv = document.getElementById(`sonar-metrics-${projectId}`);
+            
+            // Check SonarQube status first
+            statusDiv.innerHTML = '<span class="text-yellow-400">Checking SonarQube...</span>';
+            const sonarStatus = await checkSonarQubeStatus();
+            
+            if (!sonarStatus.running) {
+                statusDiv.innerHTML = '<span class="text-red-400">SonarQube offline</span>';
+                alert('SonarQube is not running. Please start SonarQube first:\ndocker compose up -d sonarqube sonarqube_db');
+                return;
+            }
+            
+            // Run analysis
+            statusDiv.innerHTML = '<span class="text-blue-400">🔄 Analyzing...</span>';
+            metricsDiv.innerHTML = '<div class="text-slate-500">Running code analysis, this may take a few minutes...</div>';
+            
+            try {
+                const response = await fetch(`/api/projects/${projectId}/analyze`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusDiv.innerHTML = '<span class="text-green-400">✓ Analysis complete</span>';
+                    // Load metrics after successful analysis
+                    setTimeout(() => loadProjectMetrics(projectId), 2000);
+                } else {
+                    statusDiv.innerHTML = '<span class="text-red-400">Analysis failed</span>';
+                    metricsDiv.innerHTML = `<div class="text-red-400">${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Analysis error:', error);
+                statusDiv.innerHTML = '<span class="text-red-400">Error</span>';
+                metricsDiv.innerHTML = `<div class="text-red-400">Failed to run analysis: ${error.message}</div>`;
+            }
+        }
+        
+        async function loadProjectMetrics(projectId) {
+            const metricsDiv = document.getElementById(`sonar-metrics-${projectId}`);
+            const statusDiv = document.getElementById(`sonar-status-${projectId}`);
+            
+            try {
+                const response = await fetch(`/api/projects/${projectId}/sonarqube-metrics`);
+                const metrics = await response.json();
+                
+                if (metrics.error) {
+                    metricsDiv.innerHTML = '<div class="text-slate-500">No analysis data available</div>';
+                    return;
+                }
+                
+                // Display quality gate status
+                let qualityGateColor = 'text-slate-400';
+                if (metrics.quality_gate === 'OK') qualityGateColor = 'text-green-400';
+                else if (metrics.quality_gate === 'ERROR') qualityGateColor = 'text-red-400';
+                
+                statusDiv.innerHTML = `<span class="${qualityGateColor}">Quality: ${metrics.quality_gate || 'N/A'}</span>`;
+                
+                // Display metrics
+                let metricsHtml = '<div class="grid grid-cols-2 gap-2">';
+                
+                if (metrics.issues) {
+                    metricsHtml += `
+                        <div class="text-slate-400">
+                            <span class="text-red-400 font-bold">${metrics.issues.blockers || 0}</span> Blockers
+                        </div>
+                        <div class="text-slate-400">
+                            <span class="text-orange-400 font-bold">${metrics.issues.critical || 0}</span> Critical
+                        </div>
+                    `;
+                }
+                
+                if (metrics.metrics) {
+                    if (metrics.metrics.bugs !== undefined) {
+                        metricsHtml += `<div class="text-slate-400">🐛 ${metrics.metrics.bugs} Bugs</div>`;
+                    }
+                    if (metrics.metrics.vulnerabilities !== undefined) {
+                        metricsHtml += `<div class="text-slate-400">🔓 ${metrics.metrics.vulnerabilities} Vulnerabilities</div>`;
+                    }
+                    if (metrics.metrics.code_smells !== undefined) {
+                        metricsHtml += `<div class="text-slate-400">🔧 ${metrics.metrics.code_smells} Code Smells</div>`;
+                    }
+                    if (metrics.metrics.coverage !== undefined) {
+                        metricsHtml += `<div class="text-slate-400">📊 ${parseFloat(metrics.metrics.coverage).toFixed(1)}% Coverage</div>`;
+                    }
+                }
+                
+                metricsHtml += '</div>';
+                metricsDiv.innerHTML = metricsHtml;
+                
+            } catch (error) {
+                console.error('Metrics load error:', error);
+                metricsDiv.innerHTML = '<div class="text-slate-500">Failed to load metrics</div>';
+            }
+        }
+        
+        async function viewAnalysisResults(projectId) {
+            // First get the SonarQube URL
+            try {
+                const response = await fetch(`/api/projects/${projectId}/sonarqube-url`);
+                const data = await response.json();
+                
+                // Open results page with project info
+                const params = new URLSearchParams({
+                    project_id: projectId,
+                    project_key: data.project_key,
+                    project_name: data.project_name
+                });
+                
+                window.open(`sonarqube-results.html?${params.toString()}`, '_blank');
+                
+            } catch (error) {
+                console.error('Failed to get SonarQube URL:', error);
+                alert('Failed to get analysis results URL');
+            }
+        }
+        
+        // Load metrics for all projects on page load
+        async function loadAllProjectMetrics() {
+            // Wait a bit for projects to load first
+            setTimeout(() => {
+                projects.forEach(project => {
+                    loadProjectMetrics(project.id);
+                });
+            }, 1000);
+        }
+        
+        // Expose functions globally for external access
+        window.showPortManagement = showPortManagement;
+        window.showProjectManagement = showProjectManagement;
     </script>
 </body>
 </html>
+
+

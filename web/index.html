@@ -36,28 +36,76 @@
             </div>
         </header>
 
+        <!-- Services Status Bar -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-slate-200">Services Status</h2>
+                <button onclick="refreshServices()" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm transition-colors">
+                    Refresh
+                </button>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4" id="servicesGrid">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-gray-600 rounded-full mx-auto mb-2 flex items-center justify-center">
+                        <div class="w-3 h-3 bg-gray-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <div class="text-xs text-slate-400">Loading...</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Navigation Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <!-- Main Application -->
+            <!-- Traefik Management -->
             <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
                 <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+                    <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center mr-4">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="text-xl font-semibold text-slate-200">TaskMaster App</h3>
-                        <p class="text-slate-500 text-sm">Port 8199</p>
+                        <h3 class="text-xl font-semibold text-slate-200">Traefik Management</h3>
+                        <p class="text-slate-500 text-sm">Reverse Proxy Admin</p>
                     </div>
                 </div>
                 <p class="text-slate-400 text-sm mb-4">
-                    Main task management interface with kanban board, task creation, and subtask management.
+                    Configure routes, monitor traffic, manage certificates, and control load balancing for all services.
                 </p>
-                <a href="http://localhost:8199" target="_blank" 
-                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                    Launch App
+                <a href="traefik.html" 
+                   class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    Open Dashboard
                 </a>
+            </div>
+
+            <!-- Port Management -->
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4M5 12l4 4"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16l4-4-4-4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-200">Port Management</h3>
+                        <p class="text-slate-500 text-sm">Docker Port Configuration</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm mb-4">
+                    Monitor Docker containers, configure port mappings, and manage service URLs across projects.
+                </p>
+                <div class="flex gap-2">
+                    <a href="admin.html" 
+                       class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                       onclick="openPortManagement()">
+                        Manage Ports
+                    </a>
+                    <a href="http://localhost:8199" target="_blank" 
+                       class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        Atlas Web
+                    </a>
+                </div>
             </div>
 
             <!-- Test Results -->
@@ -85,7 +133,7 @@
             <!-- Admin Panel -->
             <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
                 <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mr-4">
+                    <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -97,10 +145,10 @@
                     </div>
                 </div>
                 <p class="text-slate-400 text-sm mb-4">
-                    Manage multiple TaskMaster projects, configure custom URLs, and oversee project settings.
+                    Manage multiple Atlas projects, configure custom URLs, and oversee project settings.
                 </p>
                 <a href="admin.html" 
-                   class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                   class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                     Manage Projects
                 </a>
             </div>
@@ -203,7 +251,7 @@
 
         <!-- Footer -->
         <footer class="text-center text-slate-500 text-sm mt-12 pt-8 border-t border-slate-800">
-            <p>&copy; 2025 TaskMasterWeb Development Hub. Built with FastAPI, Tailwind CSS, and Playwright.</p>
+            <p>&copy; 2025 Atlas Development Hub. Built with FastAPI, Tailwind CSS, and Playwright.</p>
         </footer>
     </div>
 
@@ -218,6 +266,142 @@
             document.getElementById('testFiles').textContent = '15';
             document.getElementById('coverage').textContent = '78%';
         }, 500);
+        
+        // Port Management Functions
+        function openPortManagement() {
+            // Open admin.html and switch to port management
+            const newWindow = window.open('admin.html', '_blank');
+            // Try to switch to port management after page loads
+            newWindow.addEventListener('load', () => {
+                try {
+                    newWindow.showPortManagement && newWindow.showPortManagement();
+                } catch (e) {
+                    console.log('Could not auto-switch to port management');
+                }
+            });
+        }
+        
+        // Services Status Functions
+        const API_BASE = 'http://localhost:8199';
+        
+        async function checkServiceHealth(url) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    signal: controller.signal,
+                    mode: 'cors'
+                });
+                
+                clearTimeout(timeoutId);
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+        
+        async function refreshServices() {
+            try {
+                // Get all ports from API
+                const response = await fetch(`${API_BASE}/api/ports`);
+                const data = await response.json();
+                
+                if (!data.ok) {
+                    throw new Error('Failed to load ports');
+                }
+                
+                const ports = data.ports;
+                const servicesGrid = document.getElementById('servicesGrid');
+                servicesGrid.innerHTML = '';
+                
+                // Group services by project for better organization
+                const servicesByProject = {};
+                const importantServices = [];
+                
+                // Define important services to always show
+                const criticalPorts = [80, 443, 8199, 9652, 8086, 3000, 8001];
+                const webPorts = [80, 443, 3000, 3002, 3104, 8004, 8079, 8199, 9000, 9001];
+                
+                ports.forEach(port => {
+                    const isWeb = webPorts.includes(port.port);
+                    const isCritical = criticalPorts.includes(port.port);
+                    
+                    if (isCritical || isWeb) {
+                        importantServices.push({
+                            ...port,
+                            isWeb,
+                            isCritical,
+                            url: `http://localhost:${port.port}`
+                        });
+                    }
+                });
+                
+                // Sort by importance and port number
+                importantServices.sort((a, b) => {
+                    if (a.isCritical && !b.isCritical) return -1;
+                    if (!a.isCritical && b.isCritical) return 1;
+                    return a.port - b.port;
+                });
+                
+                // Limit to max 12 services for display
+                const servicesToShow = importantServices.slice(0, 12);
+                
+                // Check each service and create status indicators
+                const statusPromises = servicesToShow.map(async (service) => {
+                    const isHealthy = await checkServiceHealth(service.url);
+                    
+                    const serviceDiv = document.createElement('div');
+                    serviceDiv.className = 'text-center cursor-pointer hover:opacity-80 transition-opacity';
+                    serviceDiv.onclick = () => window.open(service.url, '_blank');
+                    
+                    const statusColor = isHealthy ? 'bg-green-500' : 'bg-red-500';
+                    const bgColor = service.isCritical ? 'bg-blue-600' : 'bg-slate-600';
+                    
+                    serviceDiv.innerHTML = `
+                        <div class="w-12 h-12 ${bgColor} rounded-full mx-auto mb-2 flex items-center justify-center relative">
+                            <div class="w-3 h-3 ${statusColor} rounded-full"></div>
+                            <div class="absolute -bottom-1 -right-1 text-xs bg-slate-800 text-white px-1 rounded">
+                                ${service.port}
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-300 truncate" title="${service.service_name} (${service.project_name})">
+                            ${service.service_name}
+                        </div>
+                    `;
+                    
+                    return serviceDiv;
+                });
+                
+                // Wait for all status checks and add to grid
+                const serviceElements = await Promise.all(statusPromises);
+                serviceElements.forEach(element => servicesGrid.appendChild(element));
+                
+                // Add summary
+                const healthyCount = serviceElements.filter(el => 
+                    el.querySelector('.bg-green-500')).length;
+                
+                console.log(`Services status: ${healthyCount}/${serviceElements.length} healthy`);
+                
+            } catch (error) {
+                console.error('Error refreshing services:', error);
+                const servicesGrid = document.getElementById('servicesGrid');
+                servicesGrid.innerHTML = `
+                    <div class="col-span-full text-center text-red-400">
+                        Failed to load services status
+                    </div>
+                `;
+            }
+        }
+        
+        // Initial load
+        window.addEventListener('load', () => {
+            refreshServices();
+        });
+        
+        // Auto-refresh every 30 seconds
+        setInterval(refreshServices, 30000);
     </script>
 </body>
 </html>

@@ -57,7 +57,7 @@ http://localhost:8199/client-work    # Client Work project tasks
 
 **Project Path Configuration** (Enhanced 2025-08-25):
 - **Container Paths**: Use `/projects/project-name` for projects in `E:\projects\` directory
-- **Current Project**: Use `/workspace` for the current TaskMasterWeb project
+- **Current Project**: Use `/workspace` for the current Atlas project
 - **Examples**: `/projects/my-webapp`, `/projects/client-project`, `/workspace`
 - **Validation**: Paths must be absolute and accessible within Docker containers
 - **Docker Mounts**: `E:\projects:/projects` and `${PROJECT_ROOT}:/workspace` in containers
@@ -463,7 +463,7 @@ npx playwright test tests/comprehensive.spec.js --config playwright-simple.confi
 **Storage System Fixes** (`app/storage.py`):
 - **Added Missing File Lock**: Implemented `_file_lock` contextmanager with portalocker
 - **Fixed Path Resolution**: Enhanced environment variable handling to prevent empty path errors
-- **Default Path Update**: Changed from `/workspace` to `/projects/taskmasterweb/.taskmaster`
+- **Default Path Update**: Changed from `/workspace` to `/projects/atlas/.taskmaster`
 - **Container Path Validation**: Only use environment variables when non-empty
 
 **Database Migration** (`app/database.py`, `scripts/migrate_to_container_paths.py`):
@@ -610,7 +610,7 @@ Filter/Sort Pipeline → Dynamic Updates
 
 **Testing Results**:
 - ✅ Container rebuild with no-cache: All services started successfully
-- ✅ Health check: `{"ok":true,"message":"taskmasterweb is alive"}`
+- ✅ Health check: `{"ok":true,"message":"atlas is alive"}`
 - ✅ Atlas interface: Serving correctly at `http://localhost:8199/{slug}`
 - ✅ JS modules: All 4 modules accessible at `/static/js/`
 - ✅ API endpoints: Working with project slug routing

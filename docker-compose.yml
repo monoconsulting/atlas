@@ -1,22 +1,28 @@
 
 services:
-  taskmasterweb:
+  atlas:
     build: .
-    container_name: ${CONTAINER_NAME:-taskmasterweb}
+    container_name: ${CONTAINER_NAME:-atlas}
     env_file:
       - .env
     ports:
-      - "${HOST_PORT:-8199}:8000"
+      - "${HOST_PORT:-8194}:8000"
     volumes:
       - "${PROJECTS_HOST_DIR}:/projects"
     depends_on:
       - mysql
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.atlas.rule=Host(`atlas.localhost`)"
+      - "traefik.http.services.atlas.loadbalancer.server.port=8000"
+    networks:
+      - web
 
   webserver:
     build: .
-    container_name: ${WEB_CONTAINER_NAME:-taskmasterweb_webserver}
-    working_dir: /projects/taskmasterweb/web
+    container_name: ${WEB_CONTAINER_NAME:-atlas_web}
+    working_dir: /projects/atlas/web
     command: python server.py
     ports:
       - "${WEB_HOST_PORT:-9652}:9652"
@@ -24,11 +30,11 @@ services:
       - "${PROJECTS_HOST_DIR}:/projects"
     restart: unless-stopped
     depends_on:
-      - taskmasterweb
+      - atlas
 
   mysql:
     image: mysql:8.0
-    container_name: ${MYSQL_CONTAINER_NAME:-taskmasterweb_mysql}
+    container_name: ${MYSQL_CONTAINER_NAME:-atlas_mysql}
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-taskmaster}
@@ -39,10 +45,12 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     restart: unless-stopped
+    networks:
+      - web
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: ${PHPMYADMIN_CONTAINER_NAME:-taskmasterweb_phpmyadmin}
+    container_name: ${PHPMYADMIN_CONTAINER_NAME:-atlas_phpmyadmin}
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
@@ -52,6 +60,12 @@ services:
     depends_on:
       - mysql
     restart: unless-stopped
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
 
 volumes:
   mysql-data:

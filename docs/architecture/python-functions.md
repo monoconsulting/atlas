@@ -1,0 +1,26 @@
+# Python Code Map (app)
+
+## __init__
+- File: `/src/app/__init__.py`
+
+## database
+- File: `/src/app/database.py`
+- Classes: Port, PortCreate, PortResponse, PortUpdate, Project, ProjectCreate, ProjectResponse, ProjectUpdate
+- Functions: create_port, create_project, delete_port, delete_project, get_all_ports, get_all_projects, get_db, get_port_by_id, get_ports_by_project, get_project_by_id, get_project_by_slug, init_db, update_port, update_project
+- Imports: __future__, datetime, os, pydantic, sqlalchemy, typing
+
+## main
+- File: `/src/app/main.py`
+- Classes: AddSubTaskModel, AddTaskModel, UpdateSubTaskModel, UpdateTaskModel
+- Functions: add_project_subtask, add_project_task, add_subtask, add_task, browse_files, create_new_port, create_new_project, delete_existing_port, delete_existing_project, determine_service_info, external_create_port, external_get_all_ports, get_mock_docker_data, get_port_details, get_ports, get_project, get_project_info, get_project_ports, get_project_task, get_project_tasks, get_task, health, import_docker_ports, index, info, list_projects, scan_docker_containers, scan_docker_ports, serve_project, serve_test_results, tasks, update_existing_port, update_existing_project, update_project_subtask, update_project_task, update_subtask, update_task
+- Imports: __future__, database, fastapi, json, models, os, pathlib, pydantic, re, sqlalchemy, storage, subprocess, time, typing
+
+## models
+- File: `/src/app/models.py`
+- Classes: AddSubTaskRequest, AddTaskRequest, SubTask, Task, UpdateSubTaskRequest, UpdateTaskRequest
+- Imports: __future__, dataclasses, datetime, sqlalchemy, typing
+
+## storage
+- File: `/src/app/storage.py`
+- Classes: TaskStorage
+- Imports: __future__, contextlib, database, datetime, ijson, json, models, os, pathlib, portalocker, sqlalchemy, time, typing

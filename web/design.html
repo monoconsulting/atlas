@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Design System - 5 Style Variations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        atlas: {
+                            bg: '#0f172a',      // Main background
+                            frame: '#090e21',   // Frames and containers
+                            text: '#687588',    // Normal text
+                            header: '#d6dade',  // Header text
+                            accent: '#f97316',  // Orange accent
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom gradient backgrounds */
+        .gradient-1 { background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%); }
+        .gradient-2 { background: linear-gradient(135deg, #f97316 0%, #f59e0b 50%, #eab308 100%); }
+        .gradient-3 { background: linear-gradient(135deg, #f97316 0%, #ec4899 50%, #8b5cf6 100%); }
+        .gradient-4 { background: linear-gradient(135deg, #f97316 0%, #06b6d4 50%, #0ea5e9 100%); }
+        .gradient-5 { background: linear-gradient(135deg, #f97316 0%, #10b981 50%, #059669 100%); }
+        
+        .glass { 
+            background: rgba(9, 14, 33, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        
+        .neo-button {
+            background: #0f172a;
+            border: 2px solid #f97316;
+            box-shadow: 
+                inset 0 1px 0 0 rgba(249, 115, 22, 0.2),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .neo-button:hover {
+            background: #f97316;
+            transform: translateY(-1px);
+            box-shadow: 
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+                0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Smooth transitions */
+        * { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .style-section {
+            min-height: 100vh;
+            scroll-snap-align: start;
+        }
+        
+        html {
+            scroll-snap-type: y mandatory;
+        }
+    </style>
+</head>
+<body style="background-color: #0f172a; color: #687588;" class="font-sans">
+
+    <!-- Navigation -->
+    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 glass rounded-full px-6 py-3">
+        <div class="flex items-center gap-4">
+            <a href="#style1" class="px-4 py-2 rounded-full hover:bg-orange-500/20 text-sm font-medium">Style 1</a>
+            <a href="#style2" class="px-4 py-2 rounded-full hover:bg-orange-500/20 text-sm font-medium">Style 2</a>
+            <a href="#style3" class="px-4 py-2 rounded-full hover:bg-orange-500/20 text-sm font-medium">Style 3</a>
+            <a href="#style4" class="px-4 py-2 rounded-full hover:bg-orange-500/20 text-sm font-medium">Style 4</a>
+            <a href="#style5" class="px-4 py-2 rounded-full hover:bg-orange-500/20 text-sm font-medium">Style 5</a>
+        </div>
+    </nav>
+
+    <!-- Style 1: Minimal Glass Morphism -->
+    <section id="style1" class="style-section p-8">
+        <div class="gradient-1 h-32 rounded-t-3xl mb-8 flex items-center justify-center">
+            <h1 class="text-4xl font-bold text-white">Atlas – Style 1: Glass Morphism</h1>
+        </div>
+        
+        <div class="max-w-6xl mx-auto">
+            <!-- Header with counters -->
+            <div class="glass rounded-2xl p-6 mb-8">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center">
+                            <span class="text-white font-bold">A</span>
+                        </div>
+                        <h2 class="text-2xl font-bold" style="color: #d6dade;">Atlas TaskMaster</h2>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="glass px-4 py-2 rounded-xl text-sm">Todo: <strong class="text-orange-400">12</strong></span>
+                        <span class="glass px-4 py-2 rounded-xl text-sm">In Progress: <strong class="text-orange-400">5</strong></span>
+                        <span class="glass px-4 py-2 rounded-xl text-sm">Done: <strong class="text-orange-400">23</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action buttons -->
+            <div class="flex gap-4 mb-8">
+                <button class="neo-button px-6 py-3 rounded-xl font-medium text-orange-400 hover:text-white">Create Task</button>
+                <button class="neo-button px-6 py-3 rounded-xl font-medium text-orange-400 hover:text-white">Manage Projects</button>
+                <button class="neo-button px-6 py-3 rounded-xl font-medium text-orange-400 hover:text-white">Settings</button>
+            </div>
+            
+            <!-- Content area -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4" style="color: #d6dade;">Backlog</h3>
+                    <div class="space-y-3">
+                        <div class="bg-atlas-frame rounded-lg p-4 border-l-4 border-orange-500">
+                            <h4 class="font-medium" style="color: #d6dade;">Design new dashboard</h4>
+                            <p class="text-sm opacity-80">High priority task</p>
+                        </div>
+                        <div class="bg-atlas-frame rounded-lg p-4 border-l-4 border-orange-300">
+                            <h4 class="font-medium" style="color: #d6dade;">Update documentation</h4>
+                            <p class="text-sm opacity-80">Medium priority task</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4" style="color: #d6dade;">In Progress</h3>
+                    <div class="space-y-3">
+                        <div class="bg-atlas-frame rounded-lg p-4 border-l-4 border-blue-500">
+                            <h4 class="font-medium" style="color: #d6dade;">API integration</h4>
+                            <p class="text-sm opacity-80">Currently working on</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4" style="color: #d6dade;">Done</h3>
+                    <div class="space-y-3">
+                        <div class="bg-atlas-frame rounded-lg p-4 border-l-4 border-green-500">
+                            <h4 class="font-medium" style="color: #d6dade;">Login system</h4>
+                            <p class="text-sm opacity-80">Completed yesterday</p>
+                        </div>
+                        <div class="bg-atlas-frame rounded-lg p-4 border-l-4 border-green-500">
+                            <h4 class="font-medium" style="color: #d6dade;">Database setup</h4>
+                            <p class="text-sm opacity-80">Completed last week</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Style 2: Modern Card System -->
+    <section id="style2" class="style-section p-8">
+        <div class="gradient-2 h-32 rounded-t-3xl mb-8 flex items-center justify-center">
+            <h1 class="text-4xl font-bold text-white">Atlas – Style 2: Modern Cards</h1>
+        </div>
+        
+        <div class="max-w-6xl mx-auto">
+            <!-- Sleek header -->
+            <div class="bg-atlas-frame rounded-3xl p-8 mb-8 border border-orange-500/30">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-6">
+                        <div class="w-16 h-16 gradient-2 rounded-2xl flex items-center justify-center shadow-2xl">
+                            <span class="text-white font-bold text-xl">A</span>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold" style="color: #d6dade;">Atlas</h2>
+                            <p class="text-orange-400 font-medium">Task Management Platform</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-400">47</div>
+                            <div class="text-xs uppercase tracking-wider opacity-70">Total Tasks</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-400">85%</div>
+                            <div class="text-xs uppercase tracking-wider opacity-70">Completed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-400">12</div>
+                            <div class="text-xs uppercase tracking-wider opacity-70">Active</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Floating action buttons -->
+            <div class="flex justify-center gap-4 mb-8">
+                <button class="group bg-gradient-to-r from-orange-500 to-red-500 px-8 py-4 rounded-2xl font-semibold text-white shadow-2xl hover:shadow-orange-500/25 transform hover:scale-105">
+                    <span class="flex items-center gap-2">
+                        <span>+</span> New Task
+                    </span>
+                </button>
+                <button class="group bg-atlas-frame border-2 border-orange-500 px-8 py-4 rounded-2xl font-semibold text-orange-400 hover:bg-orange-500 hover:text-white transform hover:scale-105">
+                    <span class="flex items-center gap-2">
+                        <span>⚙</span> Settings
+                    </span>
+                </button>
+                <button class="group bg-atlas-frame border-2 border-orange-500 px-8 py-4 rounded-2xl font-semibold text-orange-400 hover:bg-orange-500 hover:text-white transform hover:scale-105">
+                    <span class="flex items-center gap-2">
+                        <span>📊</span> Analytics
+                    </span>
+                </button>
+            </div>
+            
+            <!-- Enhanced cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div class="bg-atlas-frame rounded-3xl p-6 border border-orange-500/20 hover:border-orange-500/50 transform hover:translate-y-[-4px] shadow-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold" style="color: #d6dade;">Priority Tasks</h3>
+                        <span class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-medium">High</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-atlas-bg rounded-xl p-4 border border-red-500/30">
+                            <h4 class="font-semibold" style="color: #d6dade;">Critical Bug Fix</h4>
+                            <p class="text-sm opacity-80 mt-1">Authentication system failure</p>
+                            <div class="flex justify-between items-center mt-3">
+                                <span class="text-xs text-orange-400">Due: Today</span>
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-atlas-frame rounded-3xl p-6 border border-orange-500/20 hover:border-orange-500/50 transform hover:translate-y-[-4px] shadow-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold" style="color: #d6dade;">In Progress</h3>
+                        <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-atlas-bg rounded-xl p-4 border border-blue-500/30">
+                            <h4 class="font-semibold" style="color: #d6dade;">Feature Development</h4>
+                            <p class="text-sm opacity-80 mt-1">New dashboard components</p>
+                            <div class="mt-3">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span style="color: #d6dade;">Progress</span>
+                                    <span class="text-orange-400">65%</span>
+                                </div>
+                                <div class="w-full bg-atlas-bg rounded-full h-2">
+                                    <div class="bg-gradient-to-r from-orange-400 to-orange-500 h-2 rounded-full" style="width: 65%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-atlas-frame rounded-3xl p-6 border border-orange-500/20 hover:border-orange-500/50 transform hover:translate-y-[-4px] shadow-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold" style="color: #d6dade;">Completed</h3>
+                        <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium">Done</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-atlas-bg rounded-xl p-4 border border-green-500/30">
+                            <h4 class="font-semibold" style="color: #d6dade;">User Interface</h4>
+                            <p class="text-sm opacity-80 mt-1">Login page redesign</p>
+                            <div class="flex justify-between items-center mt-3">
+                                <span class="text-xs text-orange-400">Completed: 2 days ago</span>
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Style 3: Futuristic Neon -->
+    <section id="style3" class="style-section p-8">
+        <div class="gradient-3 h-32 rounded-t-3xl mb-8 flex items-center justify-center">
+            <h1 class="text-4xl font-bold text-white">Atlas – Style 3: Futuristic Neon</h1>
+        </div>
+        
+        <div class="max-w-6xl mx-auto">
+            <!-- Neon header -->
+            <div class="relative bg-atlas-frame rounded-2xl p-8 mb-8" style="border: 2px solid #f97316; box-shadow: 0 0 30px rgba(249, 115, 22, 0.3), inset 0 0 30px rgba(249, 115, 22, 0.1);">
+                <div class="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl"></div>
+                <div class="relative flex justify-between items-center">
+                    <div class="flex items-center gap-6">
+                        <div class="w-20 h-20 bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 rounded-2xl flex items-center justify-center relative" style="box-shadow: 0 0 40px rgba(249, 115, 22, 0.5);">
+                            <span class="text-white font-bold text-2xl">A</span>
+                            <div class="absolute inset-0 bg-gradient-to-br from-orange-400/50 via-pink-500/50 to-purple-600/50 rounded-2xl animate-pulse"></div>
+                        </div>
+                        <div>
+                            <h2 class="text-4xl font-bold bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">ATLAS</h2>
+                            <p class="text-orange-400 font-mono text-sm tracking-wider">NEURAL_TASK_MANAGEMENT_v2.1</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="text-center p-4 bg-atlas-bg rounded-xl border border-orange-500/50">
+                            <div class="text-3xl font-mono text-orange-400">127</div>
+                            <div class="text-xs text-purple-400 uppercase tracking-widest">THREADS</div>
+                        </div>
+                        <div class="text-center p-4 bg-atlas-bg rounded-xl border border-pink-500/50">
+                            <div class="text-3xl font-mono text-pink-400">94%</div>
+                            <div class="text-xs text-orange-400 uppercase tracking-widest">EFFICIENCY</div>
+                        </div>
+                        <div class="text-center p-4 bg-atlas-bg rounded-xl border border-purple-500/50">
+                            <div class="text-3xl font-mono text-purple-400">∞</div>
+                            <div class="text-xs text-pink-400 uppercase tracking-widest">POTENTIAL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Neon controls -->
+            <div class="flex justify-center gap-6 mb-12">
+                <button class="group relative px-8 py-4 bg-atlas-frame border-2 border-orange-500 rounded-lg font-mono text-orange-400 hover:text-white overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-orange-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                    <span class="relative z-10">[ INIT_TASK ]</span>
+                </button>
+                <button class="group relative px-8 py-4 bg-atlas-frame border-2 border-pink-500 rounded-lg font-mono text-pink-400 hover:text-white overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                    <span class="relative z-10">[ ANALYZE ]</span>
+                </button>
+                <button class="group relative px-8 py-4 bg-atlas-frame border-2 border-purple-500 rounded-lg font-mono text-purple-400 hover:text-white overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                    <span class="relative z-10">[ CONFIG ]</span>
+                </button>
+            </div>
+            
+            <!-- Holographic panels -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-pink-500/20 rounded-2xl blur-xl"></div>
+                    <div class="relative bg-atlas-frame border border-orange-500/50 rounded-2xl p-6" style="backdrop-filter: blur(10px);">
+                        <h3 class="text-xl font-mono text-orange-400 mb-4">&gt; ACTIVE_PROCESSES</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-atlas-bg rounded-lg border border-orange-500/30">
+                                <div>
+                                    <div class="font-mono text-sm" style="color: #d6dade;">neural_network_training.exe</div>
+                                    <div class="text-xs text-orange-400">PID: 7743 | CPU: 89%</div>
+                                </div>
+                                <div class="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-atlas-bg rounded-lg border border-pink-500/30">
+                                <div>
+                                    <div class="font-mono text-sm" style="color: #d6dade;">data_sync_protocol.bat</div>
+                                    <div class="text-xs text-pink-400">PID: 9281 | MEM: 2.1GB</div>
+                                </div>
+                                <div class="w-3 h-3 bg-pink-500 rounded-full animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-orange-500/20 rounded-2xl blur-xl"></div>
+                    <div class="relative bg-atlas-frame border border-purple-500/50 rounded-2xl p-6" style="backdrop-filter: blur(10px);">
+                        <h3 class="text-xl font-mono text-purple-400 mb-4">&gt; SYSTEM_STATUS</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-mono text-sm" style="color: #d6dade;">CORE_INTEGRITY:</span>
+                                <span class="text-green-400 font-mono">100%</span>
+                            </div>
+                            <div class="w-full bg-atlas-bg rounded-full h-2">
+                                <div class="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full w-full"></div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-mono text-sm" style="color: #d6dade;">NEURAL_LINKS:</span>
+                                <span class="text-purple-400 font-mono">47/50 ACTIVE</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-mono text-sm" style="color: #d6dade;">QUANTUM_STATE:</span>
+                                <span class="text-orange-400 font-mono">STABLE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Style 4: Corporate Minimal -->
+    <section id="style4" class="style-section p-8">
+        <div class="gradient-4 h-32 rounded-t-3xl mb-8 flex items-center justify-center">
+            <h1 class="text-4xl font-bold text-white">Atlas – Style 4: Corporate Minimal</h1>
+        </div>
+        
+        <div class="max-w-6xl mx-auto">
+            <!-- Clean corporate header -->
+            <div class="bg-atlas-frame rounded-lg border-l-4 border-orange-500 p-8 mb-8 shadow-2xl">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-6">
+                        <div class="w-16 h-16 bg-orange-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-2xl">A</span>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-light" style="color: #d6dade;">Atlas</h2>
+                            <p class="text-orange-500 text-sm font-medium uppercase tracking-wider">Project Management Suite</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-8">
+                        <div class="text-center">
+                            <div class="text-2xl font-light" style="color: #d6dade;">342</div>
+                            <div class="text-xs uppercase tracking-widest text-orange-400">Tasks Completed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-light" style="color: #d6dade;">12</div>
+                            <div class="text-xs uppercase tracking-widest text-orange-400">Active Projects</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-light" style="color: #d6dade;">98%</div>
+                            <div class="text-xs uppercase tracking-widest text-orange-400">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Minimalist action bar -->
+            <div class="bg-atlas-frame rounded-lg p-6 mb-8">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-light" style="color: #d6dade;">Quick Actions</h3>
+                    <div class="flex gap-4">
+                        <button class="px-6 py-2 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded font-medium transition-colors">Create Task</button>
+                        <button class="px-6 py-2 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded font-medium transition-colors">Manage Teams</button>
+                        <button class="px-6 py-2 bg-orange-500 text-white hover:bg-orange-600 rounded font-medium transition-colors">Export Report</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Clean data presentation -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-atlas-frame rounded-lg p-6 border-l-4 border-red-500">
+                    <h4 class="text-lg font-medium mb-2" style="color: #d6dade;">Critical</h4>
+                    <div class="text-3xl font-light text-red-400 mb-2">3</div>
+                    <p class="text-sm opacity-70">Requires immediate attention</p>
+                    <div class="mt-4">
+                        <div class="bg-atlas-bg rounded p-3 mb-2">
+                            <div class="font-medium text-sm" style="color: #d6dade;">Server Maintenance</div>
+                            <div class="text-xs opacity-70">Due: Today</div>
+                        </div>
+                        <div class="bg-atlas-bg rounded p-3 mb-2">
+                            <div class="font-medium text-sm" style="color: #d6dade;">Security Audit</div>
+                            <div class="text-xs opacity-70">Due: Tomorrow</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-atlas-frame rounded-lg p-6 border-l-4 border-yellow-500">
+                    <h4 class="text-lg font-medium mb-2" style="color: #d6dade;">High Priority</h4>
+                    <div class="text-3xl font-light text-yellow-400 mb-2">7</div>
+                    <p class="text-sm opacity-70">Important tasks this week</p>
+                    <div class="mt-4 space-y-2">
+                        <div class="bg-atlas-bg rounded p-3">
+                            <div class="font-medium text-sm" style="color: #d6dade;">Feature Release</div>
+                            <div class="text-xs opacity-70">Due: Friday</div>
+                        </div>
+                        <div class="bg-atlas-bg rounded p-3">
+                            <div class="font-medium text-sm" style="color: #d6dade;">Client Meeting</div>
+                            <div class="text-xs opacity-70">Due: Wednesday</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-atlas-frame rounded-lg p-6 border-l-4 border-blue-500">
+                    <h4 class="text-lg font-medium mb-2" style="color: #d6dade;">In Progress</h4>
+                    <div class="text-3xl font-light text-blue-400 mb-2">15</div>
+                    <p class="text-sm opacity-70">Currently active tasks</p>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-xs mb-2">
+                            <span>Overall Progress</span>
+                            <span class="text-orange-400">73%</span>
+                        </div>
+                        <div class="w-full bg-atlas-bg rounded-full h-2">
+                            <div class="bg-orange-500 h-2 rounded-full" style="width: 73%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-atlas-frame rounded-lg p-6 border-l-4 border-green-500">
+                    <h4 class="text-lg font-medium mb-2" style="color: #d6dade;">Completed</h4>
+                    <div class="text-3xl font-light text-green-400 mb-2">28</div>
+                    <p class="text-sm opacity-70">Finished this month</p>
+                    <div class="mt-4">
+                        <div class="text-center p-4 bg-green-500/10 rounded-lg">
+                            <div class="text-2xl mb-1">🎉</div>
+                            <div class="text-xs text-green-400">Great progress!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Style 5: Nature-Inspired Organic -->
+    <section id="style5" class="style-section p-8">
+        <div class="gradient-5 h-32 rounded-t-3xl mb-8 flex items-center justify-center">
+            <h1 class="text-4xl font-bold text-white">Atlas – Style 5: Nature-Inspired</h1>
+        </div>
+        
+        <div class="max-w-6xl mx-auto">
+            <!-- Organic flowing header -->
+            <div class="relative bg-atlas-frame rounded-3xl p-8 mb-8 overflow-hidden" style="border: 2px solid #f97316;">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-orange-500/20 to-green-500/20 rounded-full transform translate-x-32 -translate-y-32"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-green-500/20 to-orange-500/20 rounded-full transform -translate-x-24 translate-y-24"></div>
+                <div class="relative flex justify-between items-center">
+                    <div class="flex items-center gap-6">
+                        <div class="w-20 h-20 bg-gradient-to-br from-orange-500 via-yellow-500 to-green-500 rounded-full flex items-center justify-center shadow-2xl relative">
+                            <span class="text-white font-bold text-2xl">🌱</span>
+                            <div class="absolute inset-0 bg-gradient-to-br from-orange-400/50 via-yellow-400/50 to-green-400/50 rounded-full animate-pulse"></div>
+                        </div>
+                        <div>
+                            <h2 class="text-4xl font-bold bg-gradient-to-r from-orange-400 via-yellow-500 to-green-500 bg-clip-text text-transparent">Atlas</h2>
+                            <p class="text-green-400 font-medium">Growing Your Ideas Into Reality</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="text-center p-4 bg-atlas-bg/80 rounded-2xl backdrop-blur-sm">
+                            <div class="text-2xl mb-1">🌳</div>
+                            <div class="text-xl font-semibold text-green-400">47</div>
+                            <div class="text-xs text-orange-400">Growing Projects</div>
+                        </div>
+                        <div class="text-center p-4 bg-atlas-bg/80 rounded-2xl backdrop-blur-sm">
+                            <div class="text-2xl mb-1">🍃</div>
+                            <div class="text-xl font-semibold text-yellow-400">156</div>
+                            <div class="text-xs text-orange-400">Tasks Blooming</div>
+                        </div>
+                        <div class="text-center p-4 bg-atlas-bg/80 rounded-2xl backdrop-blur-sm">
+                            <div class="text-2xl mb-1">🌺</div>
+                            <div class="text-xl font-semibold text-pink-400">89%</div>
+                            <div class="text-xs text-orange-400">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Organic action pods -->
+            <div class="flex justify-center gap-6 mb-12">
+                <button class="group relative px-8 py-4 bg-gradient-to-r from-green-500/20 to-orange-500/20 border-2 border-green-500 rounded-full hover:from-green-500 hover:to-orange-500 transition-all duration-500">
+                    <span class="text-green-400 group-hover:text-white font-medium flex items-center gap-2">
+                        🌱 Plant New Task
+                    </span>
+                </button>
+                <button class="group relative px-8 py-4 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 border-2 border-orange-500 rounded-full hover:from-orange-500 hover:to-yellow-500 transition-all duration-500">
+                    <span class="text-orange-400 group-hover:text-white font-medium flex items-center gap-2">
+                        🌞 Nurture Progress
+                    </span>
+                </button>
+                <button class="group relative px-8 py-4 bg-gradient-to-r from-yellow-500/20 to-green-500/20 border-2 border-yellow-500 rounded-full hover:from-yellow-500 hover:to-green-500 transition-all duration-500">
+                    <span class="text-yellow-400 group-hover:text-white font-medium flex items-center gap-2">
+                        🌻 Harvest Results
+                    </span>
+                </button>
+            </div>
+            
+            <!-- Flowing organic layout -->
+            <div class="space-y-8">
+                <!-- Seedling stage -->
+                <div class="bg-atlas-frame rounded-3xl p-6 border-2 border-green-500/50 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-green-400/30 to-transparent rounded-full"></div>
+                    <div class="relative">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="text-3xl">🌱</div>
+                            <h3 class="text-2xl font-semibold text-green-400">Seedling Stage</h3>
+                            <span class="text-sm text-orange-400 bg-orange-500/20 px-3 py-1 rounded-full">New Ideas Growing</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="bg-atlas-bg rounded-2xl p-4 border border-green-500/30">
+                                <h4 class="font-semibold mb-2" style="color: #d6dade;">🌿 Mobile App Concept</h4>
+                                <p class="text-sm opacity-80 mb-3">Initial planning and research phase</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-green-400">Just planted</span>
+                                    <div class="w-8 h-2 bg-atlas-frame rounded-full">
+                                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-atlas-bg rounded-2xl p-4 border border-green-500/30">
+                                <h4 class="font-semibold mb-2" style="color: #d6dade;">🌱 Design System</h4>
+                                <p class="text-sm opacity-80 mb-3">Creating unified component library</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-green-400">Growing strong</span>
+                                    <div class="w-8 h-2 bg-atlas-frame rounded-full">
+                                        <div class="w-3 h-2 bg-green-500 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-atlas-bg rounded-2xl p-4 border border-green-500/30">
+                                <h4 class="font-semibold mb-2" style="color: #d6dade;">🍀 User Research</h4>
+                                <p class="text-sm opacity-80 mb-3">Understanding customer needs</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs text-green-400">Taking root</span>
+                                    <div class="w-8 h-2 bg-atlas-frame rounded-full">
+                                        <div class="w-4 h-2 bg-green-500 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Blooming stage -->
+                <div class="bg-atlas-frame rounded-3xl p-6 border-2 border-orange-500/50 relative overflow-hidden">
+                    <div class="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-orange-400/30 to-transparent rounded-full"></div>
+                    <div class="relative">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="text-3xl">🌻</div>
+                            <h3 class="text-2xl font-semibold text-orange-400">Blooming Stage</h3>
+                            <span class="text-sm text-yellow-400 bg-yellow-500/20 px-3 py-1 rounded-full">Active Development</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-atlas-bg rounded-2xl p-6 border border-orange-500/30">
+                                <h4 class="font-semibold mb-3" style="color: #d6dade;">🌺 Dashboard Redesign</h4>
+                                <p class="text-sm opacity-80 mb-4">Full UI/UX overhaul in progress</p>
+                                <div class="space-y-2 mb-4">
+                                    <div class="flex justify-between text-xs">
+                                        <span>Progress</span>
+                                        <span class="text-orange-400">73%</span>
+                                    </div>
+                                    <div class="w-full bg-atlas-frame rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-orange-500 to-yellow-500 h-2 rounded-full" style="width: 73%;"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-orange-400">Blooming beautifully</span>
+                                    <div class="text-lg animate-pulse">🌸</div>
+                                </div>
+                            </div>
+                            <div class="bg-atlas-bg rounded-2xl p-6 border border-orange-500/30">
+                                <h4 class="font-semibold mb-3" style="color: #d6dade;">🌼 API Integration</h4>
+                                <p class="text-sm opacity-80 mb-4">Connecting all the pieces together</p>
+                                <div class="space-y-2 mb-4">
+                                    <div class="flex justify-between text-xs">
+                                        <span>Connections</span>
+                                        <span class="text-orange-400">12/15</span>
+                                    </div>
+                                    <div class="flex gap-1">
+                                        {Array.from({length: 15}, (_, i) => (
+                                            <div key={i} className={`w-4 h-2 rounded-full ${i < 12 ? 'bg-orange-500' : 'bg-atlas-frame'}`}></div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-orange-400">Almost there</span>
+                                    <div class="text-lg">🌻</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Harvest stage -->
+                <div class="bg-atlas-frame rounded-3xl p-6 border-2 border-yellow-500/50 relative overflow-hidden">
+                    <div class="absolute top-0 left-1/2 w-36 h-36 bg-gradient-to-br from-yellow-400/30 to-transparent rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="relative">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="text-3xl">🌾</div>
+                            <h3 class="text-2xl font-semibold text-yellow-400">Harvest Time</h3>
+                            <span class="text-sm text-green-400 bg-green-500/20 px-3 py-1 rounded-full">Ready to Launch</span>
+                        </div>
+                        <div class="text-center py-8">
+                            <div class="text-6xl mb-4">🎉</div>
+                            <h4 class="text-2xl font-semibold mb-4" style="color: #d6dade;">Authentication System Complete!</h4>
+                            <p class="text-lg opacity-80 mb-6">Your hard work has paid off - another successful harvest! 🌟</p>
+                            <div class="flex justify-center gap-4">
+                                <button class="px-8 py-3 bg-gradient-to-r from-yellow-500 to-green-500 text-white rounded-full font-semibold hover:scale-105 transform transition-all">
+                                    🚀 Deploy to Production
+                                </button>
+                                <button class="px-8 py-3 border-2 border-yellow-500 text-yellow-400 rounded-full font-semibold hover:bg-yellow-500 hover:text-white transition-all">
+                                    📊 View Analytics
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.neo-button, .group').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05) translateY(-2px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) translateY(0)';
+            });
+        });
+    </script>
+
+</body>
+</html>

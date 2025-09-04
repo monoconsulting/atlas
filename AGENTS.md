@@ -1,63 +1,44 @@
-# AGENTS.md
+# Repository Guidelines
 
-This file provides guidance to agents when working with code in this repository.
+## Project Structure & Modules
+- `app/`: Service logic and storage (`app/storage.py`, optional `app/database.py`).
+- `web/`: Frontend assets; `index.html` is dynamically patched per project.
+- `tests/`: Concurrency test `tests/test_concurrent_writes.py`.
+- `scripts/`: Smoke utilities like `scripts/concurrent_post.py`.
+- `.github/workflows/`: CI (`concurrency.yml`).
 
-## Non-Obvious Build Patterns
+## Build, Test, and Development
+- Build/run (multi-container): `docker-compose build --no-cache && docker-compose up -d`
+  - Ports: app `8199`, webserver `9652`, MySQL `3306`.
+- Tailwind CSS: compiled only during Docker build via binary download (no local build).
+- Concurrency test: `pytest -q tests/test_concurrent_writes.py`.
+- Manual smoke: `python scripts/concurrent_post.py` against running containers.
 
-- **Tailwind CSS compiled in Docker only**: No local build - CSS compiled during `docker build` using binary download, not CDN
-- **Multi-container architecture**: Main app (8199), webserver (9652), MySQL (3306) - NOT a single service
-- **Project-specific storage**: Each project slug creates isolated TaskStorage with custom base_dir, bypassing env vars
-- **Dual task file support**: Merges both `.taskmaster/tasks/tasks.json` AND root `tasks.json` with duplicate ID detection
+## Coding Style & Conventions
+- Python: PEP 8, 4-space indent, `snake_case` for functions/variables; modules lowercase.
+- JSON storage (critical):
+  - Atomic writes via temp files (`.tmp`) then replace; never direct writes.
+  - Soft deletes: set `{"deleted": true}`; never remove tasks.
+  - Large files (>100KB): parse with `ijson` streaming, not `json.loads()`.
+  - ID rules: auto-increment within tag scope; support numeric and dotted IDs.
+  - File merge: combine `.taskmaster/tasks/tasks.json` and root `tasks.json`; silently skip duplicates.
 
-## Critical File Patterns
+## Testing Guidelines
+- Framework: `pytest` for storage/concurrency. Playwright config uses single worker and non-parallel runs; reports under `web/test-reports/`.
+- Naming: test files `test_*.py`; co-locate with `tests/`.
+- Run targeted tests before pushing; include cases for lock contention and recovery.
 
-- **Atomic JSON writes**: All JSON operations use temp files (`path.with_suffix(".tmp")`) then replace - never direct writes
-- **Soft deletes only**: Tasks marked `deleted: true`, never removed from JSON (prevents data loss)
-- **Large file streaming**: Files >100KB use `ijson` streaming parser, not `json.loads()`
-- **Event propagation prevention**: ALL subtask buttons must use `e.stopPropagation()` to prevent modal closure
+## Commit & Pull Request Guidelines
+- Commits: imperative mood with scope (e.g., `storage: fix atomic write retry`).
+- PRs: clear description, linked issues, reproduction steps, and screenshots/logs when UI/storage behavior changes.
+- CI must pass (concurrency test included). Explain any changes to locking or file thresholds.
 
-## API Route Discovery
+## Architecture & Ops Notes
+- Multi-container architecture; dynamic routing per project at `/{project_slug}/task`.
+- CORS derives from `HOST_PORT`; verify envs in Docker.
+- Storage base dir is per-project; fallback to `/workspace/taskmaster` if `/workspace/.taskmaster` missing.
+- Locking via `portalocker`: `_file_lock()` with retry/backoff. If contention occurs, inspect logs for "acquired/released lock" and consider increasing timeout; for sustained needs, evaluate DB-backed `TaskStorage`.
 
-- **Dynamic project routing**: `/{project_slug}/task` creates project-specific TaskStorage instances
-- **HTML content injection**: Project routes modify index.html content dynamically, replacing API URLs
-- **CORS origins from HOST_PORT**: Dynamic CORS configuration based on environment variables
+## Frontend Safety
+- Prevent modal closures: all subtask buttons must call `e.stopPropagation()`.
 
-## Test Configuration
-
-- **Single worker only**: `workers: 1` in playwright config prevents race conditions
-- **Non-parallel execution**: `fullyParallel: false` - required for task creation/deletion tests
-- **Custom test reports**: Reports go to `web/test-reports/` for development hub integration
-
-## Storage Quirks
-
-- **ID generation**: Auto-incrementing within tag scope, handles both numeric and dotted IDs
-- **State file fallback**: Uses `/workspace/taskmaster` if `/workspace/.taskmaster` missing
-- **Error recovery**: JSON parsing includes partial recovery from corrupted files
-- **Duplicate handling**: Silently skips duplicate task IDs during file merging
-
-## Concurrency and CI
-
-- Concurrency test harness: pytest-based concurrent write test added at [`tests/test_concurrent_writes.py`](tests/test_concurrent_writes.py:1). It spawns multiple processes that call TaskStorage.add_task against the same base_dir to validate locking.
-- Manual smoke script: [`scripts/concurrent_post.py`](scripts/concurrent_post.py:1) is available for quick manual verification against a running service (docker-compose up -d).
-- Storage implementation: See the portalocker-based locking and streaming logic in [`app/storage.py`](app/storage.py:1). Key artifacts:
-  - `_file_lock()` provides cross-process exclusive locking with retry/backoff.
-  - `_read_json_streaming()` uses `ijson.kvitems` for top-level mapping streaming.
-  - `_write_json()` performs atomic tmp -> replace writes.
-
-CI workflow:
-- A GitHub Actions workflow was added to run the concurrency test on pushes and pull requests: `.github/workflows/concurrency.yml`.
-- CI installs test dependencies (pytest, requests) and runs `pytest -q tests/test_concurrent_writes.py` to catch regressions in lock behavior.
-
-Operational guidance:
-- Manual smoke run:
-  1. Start containers: `docker-compose build --no-cache && docker-compose up -d`
-  2. Run manual concurrent verifier: `python scripts/concurrent_post.py`
-  3. Inspect app logs for `[TaskStorage] acquired lock` / `released lock` and any `parsing_errors`.
-- If CI or manual tests report LockException retries exceeded:
-  - Check container logs for repeated `failed to acquire lock` messages and timestamps.
-  - Increase `_file_lock` timeout or retries temporarily to triage.
-  - For sustained contention, consider migrating to a DB-backed TaskStorage (see `app/database.py`) as a long-term solution.
-
-Notes:
-- Requirements updated to include `pytest` and `requests` to support the harness and smoke script.
-- Keep `LARGE_FILE_THRESHOLD` and streaming behavior under observation when files approach >1MB; adjust thresholds if necessary.

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traefik Management - Atlas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="container mx-auto px-6 py-8 max-w-7xl">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
+                        Traefik Management Console
+                    </h1>
+                    <p class="text-slate-400 mt-2">Reverse Proxy & Load Balancer Administration</p>
+                </div>
+                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition-colors">
+                    ← Back to Hub
+                </a>
+            </div>
+        </header>
+
+        <!-- Connection Status -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse-slow mr-3"></div>
+                    <span class="text-slate-300">Traefik Instance: </span>
+                    <span class="text-indigo-400 font-mono ml-2" id="traefikUrl">http://localhost:8080</span>
+                </div>
+                <button onclick="refreshData(event)" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors">
+                    Refresh Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Map (Hostname -> Port) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-slate-200">Quick Map: Hostname → Local Port</h2>
+                <div class="text-slate-400 text-sm">Creates a simple HTTP router via file provider</div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Hostname</label>
+                    <input id="qmHost" type="text" placeholder="e.g. transkriptprod.localhost"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Target Port</label>
+                    <input id="qmPort" type="number" min="1" max="65535" placeholder="e.g. 3000"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Entrypoint</label>
+                    <select id="qmEntrypoint" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                        <option value="web" selected>web</option>
+                        <option value="websecure">websecure</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Use TLS</label>
+                    <div class="flex items-center h-[42px]">
+                        <input id="qmTls" type="checkbox" class="w-4 h-4 mr-2">
+                        <span class="text-slate-400 text-sm">Enable TLS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 flex gap-2">
+                <button onclick="quickMapRoute(event)" class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg text-sm">Create Route</button>
+                <button onclick="scanDockerQuick(event)" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg text-sm">Scan Docker → Propose</button>
+            </div>
+            <div id="qmScanResults" class="mt-4 hidden">
+                <h3 class="text-slate-200 font-semibold mb-2">Discovered Containers</h3>
+                <div id="qmScanList" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Active Routes</span>
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <div class="text-2xl font-bold text-indigo-400" id="activeRoutes">24</div>
+                <div class="text-xs text-slate-500 mt-1">+3 from last hour</div>
+            </div>
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Total Services</span>
+                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </div>
+                <div class="text-2xl font-bold text-green-400" id="totalServices">12</div>
+                <div class="text-xs text-slate-500 mt-1">All healthy</div>
+            </div>
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">SSL Certificates</span>
+                    <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <div class="text-2xl font-bold text-purple-400" id="sslCerts">8</div>
+                <div class="text-xs text-slate-500 mt-1">All valid</div>
+            </div>
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-sm">Middlewares</span>
+                    <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                    </svg>
+                </div>
+                <div class="text-2xl font-bold text-orange-400" id="middlewares">15</div>
+                <div class="text-xs text-slate-500 mt-1">Active filters</div>
+            </div>
+        </div>
+
+        <!-- Main Content Tabs -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg">
+            <!-- Tab Navigation -->
+            <div class="border-b border-slate-800">
+                <nav class="flex space-x-1 p-2">
+                    <button onclick="switchTab('routes')" class="tab-btn active" data-tab="routes">
+                        HTTP Routes
+                    </button>
+                    <button onclick="switchTab('services')" class="tab-btn" data-tab="services">
+                        Services
+                    </button>
+                    <button onclick="switchTab('middlewares')" class="tab-btn" data-tab="middlewares">
+                        Middlewares
+                    </button>
+                    <button onclick="switchTab('certificates')" class="tab-btn" data-tab="certificates">
+                        Certificates
+                    </button>
+                    <button onclick="switchTab('config')" class="tab-btn" data-tab="config">
+                        Configuration
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="p-6">
+                <!-- Routes Tab -->
+                <div id="routes-content" class="tab-content">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-slate-200">HTTP Routes Configuration</h2>
+                        <button onclick="openAddRouteModal(event)" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors">
+                            + Add Route
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-slate-800">
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Route Name</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Rule</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Service</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Middlewares</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Status</th>
+                                    <th class="text-right py-3 px-4 text-slate-400 font-medium">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="routesTable">
+                                <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-mono text-sm text-indigo-400">api-gateway</td>
+                                    <td class="py-3 px-4 text-sm">Host(`api.example.com`)</td>
+                                    <td class="py-3 px-4 text-sm">backend-api@docker</td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-slate-800 px-2 py-1 rounded text-xs">rate-limit</span>
+                                        <span class="bg-slate-800 px-2 py-1 rounded text-xs">auth</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <button onclick="editRoute('api-gateway')" class="text-indigo-400 hover:text-indigo-300 mr-2">Edit</button>
+                                        <button onclick="deleteRoute('api-gateway')" class="text-red-400 hover:text-red-300">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-mono text-sm text-indigo-400">web-app</td>
+                                    <td class="py-3 px-4 text-sm">Host(`app.example.com`)</td>
+                                    <td class="py-3 px-4 text-sm">webapp@docker</td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-slate-800 px-2 py-1 rounded text-xs">compress</span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <button onclick="editRoute('web-app')" class="text-indigo-400 hover:text-indigo-300 mr-2">Edit</button>
+                                        <button onclick="deleteRoute('web-app')" class="text-red-400 hover:text-red-300">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Services Tab -->
+                <div id="services-content" class="tab-content hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-slate-200">Backend Services</h2>
+                        <button onclick="addService()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors">
+                            + Add Service
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-mono text-indigo-400">backend-api</h3>
+                                <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Healthy</span>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Type:</span>
+                                    <span>Docker Container</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Load Balancer:</span>
+                                    <span>Round Robin</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Servers:</span>
+                                    <span>3 instances</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-slate-700 flex justify-end space-x-2">
+                                <button class="text-indigo-400 hover:text-indigo-300 text-sm">Edit</button>
+                                <button class="text-red-400 hover:text-red-300 text-sm">Remove</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-mono text-indigo-400">webapp</h3>
+                                <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Healthy</span>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Type:</span>
+                                    <span>Docker Container</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Load Balancer:</span>
+                                    <span>Sticky Session</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Servers:</span>
+                                    <span>2 instances</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-slate-700 flex justify-end space-x-2">
+                                <button class="text-indigo-400 hover:text-indigo-300 text-sm">Edit</button>
+                                <button class="text-red-400 hover:text-red-300 text-sm">Remove</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-mono text-indigo-400">database</h3>
+                                <span class="bg-yellow-900/50 text-yellow-400 px-2 py-1 rounded text-xs">Warning</span>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Type:</span>
+                                    <span>TCP Service</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Load Balancer:</span>
+                                    <span>First Available</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Servers:</span>
+                                    <span>1 instance</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-slate-700 flex justify-end space-x-2">
+                                <button class="text-indigo-400 hover:text-indigo-300 text-sm">Edit</button>
+                                <button class="text-red-400 hover:text-red-300 text-sm">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middlewares Tab -->
+                <div id="middlewares-content" class="tab-content hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-slate-200">Middleware Configuration</h2>
+                        <button onclick="addMiddleware()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors">
+                            + Add Middleware
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-mono text-indigo-400 mb-1">rate-limit</h3>
+                                    <p class="text-sm text-slate-400">Rate limiting middleware - 100 req/min</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span>
+                                    <button class="text-indigo-400 hover:text-indigo-300">Configure</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-mono text-indigo-400 mb-1">auth</h3>
+                                    <p class="text-sm text-slate-400">Basic authentication middleware</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span>
+                                    <button class="text-indigo-400 hover:text-indigo-300">Configure</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-mono text-indigo-400 mb-1">compress</h3>
+                                    <p class="text-sm text-slate-400">GZIP compression middleware</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span>
+                                    <button class="text-indigo-400 hover:text-indigo-300">Configure</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certificates Tab -->
+                <div id="certificates-content" class="tab-content hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-slate-200">SSL/TLS Certificates</h2>
+                        <button onclick="requestCertificate()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors">
+                            + Request Certificate
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-slate-800">
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Domain</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Issuer</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Valid From</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Valid Until</th>
+                                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Status</th>
+                                    <th class="text-right py-3 px-4 text-slate-400 font-medium">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-mono text-sm">*.example.com</td>
+                                    <td class="py-3 px-4 text-sm">Let's Encrypt</td>
+                                    <td class="py-3 px-4 text-sm">2025-01-01</td>
+                                    <td class="py-3 px-4 text-sm">2025-04-01</td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Valid</span>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <button class="text-indigo-400 hover:text-indigo-300 mr-2">Renew</button>
+                                        <button class="text-red-400 hover:text-red-300">Revoke</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-mono text-sm">api.example.com</td>
+                                    <td class="py-3 px-4 text-sm">Let's Encrypt</td>
+                                    <td class="py-3 px-4 text-sm">2024-12-15</td>
+                                    <td class="py-3 px-4 text-sm">2025-03-15</td>
+                                    <td class="py-3 px-4">
+                                        <span class="bg-yellow-900/50 text-yellow-400 px-2 py-1 rounded text-xs">Expiring Soon</span>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <button class="text-indigo-400 hover:text-indigo-300 mr-2">Renew</button>
+                                        <button class="text-red-400 hover:text-red-300">Revoke</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Configuration Tab -->
+                <div id="config-content" class="tab-content hidden">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold text-slate-200 mb-4">Traefik Configuration</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-medium text-slate-300 mb-3">Entry Points</h3>
+                                <div class="space-y-3">
+                                    <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-mono text-indigo-400">web</span>
+                                            <span class="text-sm text-slate-400">:80</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-mono text-indigo-400">websecure</span>
+                                            <span class="text-sm text-slate-400">:443</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-medium text-slate-300 mb-3">Providers</h3>
+                                <div class="space-y-3">
+                                    <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-mono text-indigo-400">Docker</span>
+                                            <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Enabled</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-mono text-indigo-400">File</span>
+                                            <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Enabled</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-lg font-medium text-slate-300 mb-3">Dynamic Configuration</h3>
+                            <div class="bg-slate-900 rounded-lg p-4 border border-slate-700">
+                                <pre class="text-sm text-slate-400 font-mono overflow-x-auto">http:
+  routers:
+    api:
+      rule: "Host(`traefik.localhost`)"
+      service: api@internal
+      middlewares:
+        - auth
+  
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - "admin:$2y$10$..."
+  
+  services:
+    api:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:8080"</pre>
+                            </div>
+                            <div class="mt-4 flex justify-end">
+                                <button onclick="saveConfiguration()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors">
+                                    Save Configuration
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-slate-500 text-sm mt-12 pt-8 border-t border-slate-800">
+            <p>&copy; 2025 Traefik Management Console - Atlas Development Hub</p>
+        </footer>
+    </div>
+
+    <style>
+        .tab-btn {
+            @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors;
+            @apply text-slate-400 hover:text-slate-200 hover:bg-slate-800;
+        }
+        .tab-btn.active {
+            @apply bg-indigo-600 text-white hover:bg-indigo-700;
+        }
+        .tab-content {
+            min-height: 400px;
+        }
+    </style>
+
+    <!-- Add Route Modal -->
+    <div id="addRouteModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50" onclick="closeAddRouteModal()">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 w-full max-w-lg" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-slate-200">Add HTTP Route</h3>
+                <button class="text-slate-400 hover:text-slate-200" onclick="closeAddRouteModal(event)">✕</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Name</label>
+                    <input id="routeName" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="myapp" />
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Host rule</label>
+                    <input id="routeHost" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="myapp.localhost" />
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Service URL</label>
+                    <input id="routeServiceUrl" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="http://app:8000" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Entrypoint</label>
+                        <select id="routeEntrypoint" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2">
+                            <option value="web">web (:80)</option>
+                            <option value="websecure">websecure (:443)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center mt-6">
+                        <input id="routeTls" type="checkbox" class="mr-2" />
+                        <label for="routeTls" class="text-sm text-slate-400">Enable TLS</label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Middlewares (comma separated)</label>
+                    <input id="routeMiddlewares" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="auth, compress" />
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded" onclick="closeAddRouteModal(event)">Cancel</button>
+                <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded" onclick="submitAddRoute(event)">Save</button>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">Note: Traefik API is read-only; this writes a dynamic file Traefik can load if configured.</p>
+        </div>
+    </div>
+
+    <script>
+        // Same-origin API via Traefik
+        const API_BASE = '';
+        
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById(tabName + '-content').classList.remove('hidden');
+            
+            // Add active class to clicked button
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        }
+        
+        async function refreshData(e) {
+            if (e) e.stopPropagation();
+            try {
+                const res = await fetch(`${API_BASE}/api/traefik/overview`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                document.getElementById('traefikUrl').textContent = data.base.replace('/api','');
+                document.getElementById('activeRoutes').textContent = data.counts.routes;
+                document.getElementById('totalServices').textContent = data.counts.services;
+                document.getElementById('sslCerts').textContent = 0; // not from API in CE
+                const mwEl = document.getElementById('middlewares'); if(mwEl) mwEl.textContent = data.counts.middlewares ?? 0;
+                showNotification('Traefik data refreshed');
+                // Refresh routers list as well
+                await loadRouters();
+            } catch (err) {
+                showNotification(`Failed to refresh: ${err.message || err}`);
+            }
+        }
+        
+        function openAddRouteModal(e){ if(e) e.stopPropagation(); document.getElementById('addRouteModal').classList.remove('hidden'); document.getElementById('addRouteModal').classList.add('flex'); }
+        function closeAddRouteModal(e){ if(e) e.stopPropagation(); const m=document.getElementById('addRouteModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+        async function submitAddRoute(e){
+            if(e) e.stopPropagation();
+            const name = document.getElementById('routeName').value.trim();
+            const host = document.getElementById('routeHost').value.trim();
+            const service_url = document.getElementById('routeServiceUrl').value.trim();
+            const entrypoint = document.getElementById('routeEntrypoint').value;
+            const tls = document.getElementById('routeTls').checked;
+            const middlewares = document.getElementById('routeMiddlewares').value.split(',').map(s=>s.trim()).filter(Boolean);
+            if(!name || !host || !service_url){ showNotification('Name, Host and Service URL are required'); return; }
+            try{
+                const res = await fetch(`${API_BASE}/api/traefik/routes`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, host, service_url, entrypoint, middlewares, tls}) });
+                const data = await res.json();
+                if(!res.ok || !data.ok){ throw new Error(data.detail || 'Failed'); }
+                showNotification(`Route saved to ${data.file}`);
+                closeAddRouteModal();
+                await loadRouters();
+            }catch(err){ showNotification(`Error: ${err.message || err}`); }
+        }
+
+        // Quick Map: create a simple host → local port route
+        async function quickMapRoute(e){
+            if(e) e.stopPropagation();
+            const host = (document.getElementById('qmHost').value || '').trim();
+            const port = parseInt(document.getElementById('qmPort').value || '0', 10);
+            const entrypoint = document.getElementById('qmEntrypoint').value;
+            const tls = document.getElementById('qmTls').checked;
+            if(!host || !port){ showNotification('Hostname and Port are required'); return; }
+            const name = host.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+            const service_url = `http://host.docker.internal:${port}`;
+            try{
+                const res = await fetch(`${API_BASE}/api/traefik/routes`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, host, service_url, entrypoint, middlewares: [], tls}) });
+                const data = await res.json();
+                if(!res.ok || !data.ok){ throw new Error(data.detail || 'Failed'); }
+                showNotification(`Mapped ${host} → ${service_url}`);
+                await loadRouters();
+            }catch(err){ showNotification(`Error: ${err.message || err}`); }
+        }
+
+        // Quick Map: scan Docker and propose common routes
+        async function scanDockerQuick(e){
+            if(e) e.stopPropagation();
+            const box = document.getElementById('qmScanResults');
+            const list = document.getElementById('qmScanList');
+            list.innerHTML = '<div class="text-slate-400">Scanning containers…</div>';
+            box.classList.remove('hidden');
+            try{
+                const res = await fetch(`${API_BASE}/api/docker/scan`, { method: 'POST', headers: {'Content-Type':'application/json'} });
+                const data = await res.json();
+                const rows = Array.isArray(data.scanned_ports) ? data.scanned_ports : [];
+                if(rows.length === 0){ list.innerHTML = '<div class="text-slate-500">No containers with ports found</div>'; return; }
+                list.innerHTML = '';
+                rows.forEach(row => {
+                    const suggestedHost = `${(row.container_name || 'service').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.localhost`;
+                    const card = document.createElement('div');
+                    card.className = 'p-3 border border-slate-800 rounded-lg bg-slate-950 flex items-center justify-between';
+                    card.innerHTML = `
+                        <div>
+                          <div class="text-slate-200 font-mono">${row.container_name} <span class="text-slate-500">(${row.image || ''})</span></div>
+                          <div class="text-slate-400 text-sm">${row.external_port}→${row.internal_port} • ${row.service_name}</div>
+                          <div class="text-slate-400 text-sm">Suggest: <span class="text-indigo-400">${suggestedHost}</span> → http://host.docker.internal:${row.external_port}</div>
+                        </div>
+                        <div class="flex gap-2">
+                          <button class="bg-orange-600 hover:bg-orange-700 px-3 py-1 rounded text-sm" onclick="createSuggestedRoute('${suggestedHost}', ${row.external_port})">Create</button>
+                        </div>`;
+                    list.appendChild(card);
+                });
+            }catch(err){ list.innerHTML = `<div class=\"text-red-400\">Scan failed: ${err.message || err}</div>`; }
+        }
+
+        async function createSuggestedRoute(host, port){
+            const entrypoint = 'web';
+            const tls = false;
+            const name = host.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+            const service_url = `http://host.docker.internal:${port}`;
+            try{
+                const res = await fetch(`${API_BASE}/api/traefik/routes`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, host, service_url, entrypoint, middlewares: [], tls}) });
+                const data = await res.json();
+                if(!res.ok || !data.ok){ throw new Error(data.detail || 'Failed'); }
+                showNotification(`Mapped ${host} → ${service_url}`);
+                await loadRouters();
+            }catch(err){ showNotification(`Error: ${err.message || err}`); }
+        }
+        
+        function editRoute(name) {
+            showNotification(`Editing route: ${name}`);
+        }
+        
+        function deleteRoute(name) {
+            if (confirm(`Are you sure you want to delete route: ${name}?`)) {
+                showNotification(`Route ${name} deleted`);
+            }
+        }
+        
+        function addService() {
+            showNotification('Service configuration dialog would open here');
+        }
+        
+        function addMiddleware() {
+            showNotification('Middleware configuration dialog would open here');
+        }
+        
+        function requestCertificate() {
+            showNotification('Certificate request dialog would open here');
+        }
+        
+        function saveConfiguration() {
+            showNotification('Configuration saved successfully');
+        }
+        
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse';
+            notification.textContent = message;
+            
+            // Add to body
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        async function loadRouters(){
+            try{
+                const res = await fetch(`${API_BASE}/api/traefik/http/routers`);
+                if(!res.ok) return;
+                const json = await res.json();
+                const rows = Array.isArray(json.data) ? json.data : [];
+                const tbody = document.getElementById('routesTable');
+                if(!tbody) return;
+                tbody.innerHTML = '';
+                rows.forEach(r => {
+                    const name = r.name || r.router || '(unnamed)';
+                    const rule = r.rule || (r.matcher || '');
+                    const service = r.service || (r.using || '');
+                    const mws = (r.middlewares || []).map(m => typeof m === 'string' ? m : (m.name || '')).filter(Boolean);
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-slate-800 hover:bg-slate-800/50';
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 font-mono text-sm text-indigo-400">${name}</td>
+                        <td class="py-3 px-4 text-sm">${rule}</td>
+                        <td class="py-3 px-4 text-sm">${service}</td>
+                        <td class="py-3 px-4">${mws.map(x=>`<span class="bg-slate-800 px-2 py-1 rounded text-xs mr-1">${x}</span>`).join('')}</td>
+                        <td class="py-3 px-4"><span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span></td>
+                        <td class="py-3 px-4 text-right">
+                            <button onclick="editRoute('${name}')" class="text-indigo-400 hover:text-indigo-300 mr-2">Edit</button>
+                            <button onclick="deleteRoute('${name}')" class="text-red-400 hover:text-red-300">Delete</button>
+                        </td>`;
+                    tbody.appendChild(tr);
+                });
+            }catch(err){ /* silent */ }
+        }
+
+        // Kick initial refresh after load
+        window.addEventListener('load', () => { refreshData(); loadRouters(); });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atlas - Task Management Interface</title>
+    <title>Atlas - Loading... - TaskMaster Web</title>
     <link href="/static/tailwind.css" rel="stylesheet">
     <style>
         .custom-scrollbar::-webkit-scrollbar {
@@ -23,32 +23,60 @@
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
     <!-- Header -->
-    <header class="bg-blue-900 border-b border-blue-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <h1 class="text-2xl font-semibold text-slate-100">
-                Atlas – <span id="projectName" class="text-blue-300">Loading...</span>
-            </h1>
-            <div data-testid="header-counters" class="flex items-center gap-4 text-sm">
-                <span data-testid="counter-backlog" class="bg-slate-700 px-2 py-1 rounded text-slate-300">
-                    Backlog: <span class="text-white font-semibold">0</span>
+    <header class="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 border-b border-slate-700 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold">
+                        <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Atlas</span>
+                        <span class="text-slate-300"> – </span>
+                        <span id="projectName" class="text-slate-200">Loading...</span>
+                        <span class="text-slate-400"> – TaskMaster Web</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="http://localhost:9652" target="_blank" 
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7"></path>
+                        </svg>
+                        Dev Hub
+                    </a>
+                    <a id="projectPageLink" href="#" target="_blank" 
+                        class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Project
+                    </a>
+                </div>
+            </div>
+            <div data-testid="header-counters" class="flex items-center gap-3 text-sm">
+                <span data-testid="counter-backlog" class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-600 text-slate-300 backdrop-blur-sm">
+                    Backlog: <span class="text-slate-100 font-semibold">0</span>
                 </span>
-                <span data-testid="counter-todo" class="bg-slate-700 px-2 py-1 rounded text-slate-300">
-                    Todo: <span class="text-white font-semibold">0</span>
+                <span data-testid="counter-todo" class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-600 text-slate-300 backdrop-blur-sm">
+                    Todo: <span class="text-slate-100 font-semibold">0</span>
                 </span>
-                <span data-testid="counter-inprogress" class="bg-blue-700 px-2 py-1 rounded text-slate-300">
-                    In progress: <span class="text-white font-semibold">0</span>
+                <span data-testid="counter-inprogress" class="bg-blue-800/80 px-3 py-1.5 rounded-lg border border-blue-600 text-blue-200 backdrop-blur-sm">
+                    In progress: <span class="text-blue-100 font-semibold">0</span>
                 </span>
-                <span data-testid="counter-review" class="bg-yellow-700 px-2 py-1 rounded text-slate-300">
-                    Review: <span class="text-white font-semibold">0</span>
+                <span data-testid="counter-review" class="bg-yellow-800/80 px-3 py-1.5 rounded-lg border border-yellow-600 text-yellow-200 backdrop-blur-sm">
+                    Review: <span class="text-yellow-100 font-semibold">0</span>
                 </span>
-                <span data-testid="counter-done" class="bg-green-700 px-2 py-1 rounded text-slate-300">
-                    Done: <span class="text-white font-semibold">0</span>
+                <span data-testid="counter-done" class="bg-green-800/80 px-3 py-1.5 rounded-lg border border-green-600 text-green-200 backdrop-blur-sm">
+                    Done: <span class="text-green-100 font-semibold">0</span>
                 </span>
-                <span data-testid="counter-deferred" class="bg-orange-700 px-2 py-1 rounded text-slate-300">
-                    Deferred: <span class="text-white font-semibold">0</span>
+                <span data-testid="counter-deferred" class="bg-orange-800/80 px-3 py-1.5 rounded-lg border border-orange-600 text-orange-200 backdrop-blur-sm">
+                    Deferred: <span class="text-orange-100 font-semibold">0</span>
                 </span>
-                <span data-testid="counter-cancelled" class="bg-red-700 px-2 py-1 rounded text-slate-300">
-                    Cancelled: <span class="text-white font-semibold">0</span>
+                <span data-testid="counter-cancelled" class="bg-red-800/80 px-3 py-1.5 rounded-lg border border-red-600 text-red-200 backdrop-blur-sm">
+                    Cancelled: <span class="text-red-100 font-semibold">0</span>
                 </span>
             </div>
         </div>
@@ -56,14 +84,23 @@
 
     <main class="max-w-7xl mx-auto px-4 py-4">
         <!-- Action Buttons -->
-        <div class="mb-4 flex gap-3">
-            <button id="createNewTaskBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+        <div class="mb-6 flex gap-3">
+            <button id="createNewTaskBtn" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
                 Create New Task
             </button>
-            <button id="createNewStatusBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
+            <button id="createNewStatusBtn" class="px-5 py-2.5 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
                 Create New Status
             </button>
-            <button id="createNewTagBtn" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors">
+            <button id="createNewTagBtn" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                </svg>
                 Create New Tag
             </button>
         </div>

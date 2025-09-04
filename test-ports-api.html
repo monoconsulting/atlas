@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Ports API</title>
+</head>
+<body>
+    <h1>Testing Ports API</h1>
+    <div id="result"></div>
+    <script>
+        const API_HOST = window.location.hostname || 'localhost';
+        const API_PORT = 8199;
+        const API_BASE = `http://${API_HOST}:${API_PORT}/api`;
+        
+        console.log('API_BASE:', API_BASE);
+        
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            try {
+                const response = await fetch(`${API_BASE}/ports`);
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.ok) {
+                    resultDiv.innerHTML = `<p style="color: green;">Success! Found ${data.ports.length} ports</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">API returned error: ${JSON.stringify(data)}</p>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `<p style="color: red;">ERROR CONNECTING TO API: ${error.message}</p>`;
+            }
+        }
+        
+        testAPI();
+    </script>
+</body>
+</html>

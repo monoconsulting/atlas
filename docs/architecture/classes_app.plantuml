@@ -1,0 +1,259 @@
+@startuml classes_app
+set namespaceSeparator none
+class "AddSubTaskModel" as app.main.AddSubTaskModel {
+  assigned_to : Optional[str]
+  dependencies : List[int]
+  description : str
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : List[str]
+  parent_id : int
+  priority : str
+  status : str
+  tag : Optional[str]
+  title : str
+}
+class "AddSubTaskRequest" as app.models.AddSubTaskRequest {
+  assigned_to : Optional[str]
+  dependencies : List[int]
+  description : str
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : List[str]
+  parent_id : int
+  priority : str
+  status : str
+  tag : Optional[str]
+  title : str
+}
+class "AddTaskModel" as app.main.AddTaskModel {
+  assigned_to : Optional[str]
+  dependencies : List[int]
+  description : str
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : List[str]
+  priority : str
+  status : str
+  tag : Optional[str]
+  title : str
+}
+class "AddTaskRequest" as app.models.AddTaskRequest {
+  assigned_to : Optional[str]
+  dependencies : List[int]
+  description : str
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : List[str]
+  priority : str
+  status : str
+  tag : Optional[str]
+  title : str
+}
+class "Port" as app.database.Port {
+  active
+  created_at
+  description
+  id
+  internal_port
+  port
+  project
+  project_id
+  protocol
+  service_name
+  updated_at
+  to_dict() -> dict
+}
+class "PortCreate" as app.database.PortCreate {
+  active : bool
+  description : Optional[str]
+  internal_port : Optional[int]
+  port : int
+  project_id : int
+  protocol : str
+  service_name : Optional[str]
+}
+class "PortResponse" as app.database.PortResponse {
+  active : bool
+  created_at : Optional[str]
+  description : Optional[str]
+  id : int
+  internal_port : Optional[int]
+  port : int
+  project_id : int
+  project_name : Optional[str]
+  project_slug : Optional[str]
+  protocol : str
+  service_name : Optional[str]
+  updated_at : Optional[str]
+}
+class "PortUpdate" as app.database.PortUpdate {
+  active : Optional[bool]
+  description : Optional[str]
+  internal_port : Optional[int]
+  port : Optional[int]
+  project_id : Optional[int]
+  protocol : Optional[str]
+  service_name : Optional[str]
+}
+class "Project" as app.database.Project {
+  active
+  created_at
+  description
+  dev_url
+  docs_url
+  id
+  name
+  path
+  phpmyadmin_url
+  prod_url
+  slug
+  task_file_path
+  updated_at
+  to_dict() -> dict
+}
+class "ProjectCreate" as app.database.ProjectCreate {
+  active : bool
+  description : Optional[str]
+  dev_url : Optional[str]
+  docs_url : Optional[str]
+  name : str
+  path : str
+  phpmyadmin_url : Optional[str]
+  prod_url : Optional[str]
+  slug : str
+  task_file_path : Optional[str]
+  clean_slug(v)
+  validate_container_path(v)
+}
+class "ProjectResponse" as app.database.ProjectResponse {
+  active : bool
+  created_at : Optional[str]
+  description : Optional[str]
+  dev_url : Optional[str]
+  docs_url : Optional[str]
+  id : int
+  name : str
+  path : str
+  phpmyadmin_url : Optional[str]
+  prod_url : Optional[str]
+  slug : str
+  task_file_path : Optional[str]
+  updated_at : Optional[str]
+}
+class "ProjectUpdate" as app.database.ProjectUpdate {
+  active : Optional[bool]
+  description : Optional[str]
+  dev_url : Optional[str]
+  docs_url : Optional[str]
+  name : Optional[str]
+  path : Optional[str]
+  phpmyadmin_url : Optional[str]
+  prod_url : Optional[str]
+  slug : Optional[str]
+  task_file_path : Optional[str]
+  clean_slug(v)
+  validate_container_path(v)
+}
+class "SubTask" as app.models.SubTask {
+  assigned_to : Optional[str]
+  created_at : str
+  dependencies : List[int]
+  description : str
+  due_date : Optional[str]
+  estimate : Optional[str]
+  extra : Dict[str, Any]
+  id : int
+  labels : List[str]
+  priority : str
+  status : str
+  title : str
+  updated_at : str
+  to_dict() -> Dict[str, Any]
+}
+class "Task" as app.models.Task {
+  assigned_to : Optional[str]
+  created_at : str
+  deleted : bool
+  dependencies : List[int]
+  description : str
+  due_date : Optional[str]
+  estimate : Optional[str]
+  extra : Dict[str, Any]
+  id : int
+  labels : List[str]
+  priority : str
+  status : str
+  subtasks : List[Dict[str, Any]]
+  tag : str
+  title : str
+  updated_at : str
+  to_dict() -> Dict[str, Any]
+}
+class "TaskStorage" as app.storage.TaskStorage {
+  LARGE_FILE_THRESHOLD : int
+  base_dir : Path
+  config_file : Path
+  duplicate_task_ids : List[Dict[str, Any]]
+  parsing_errors : List[Dict[str, Any]]
+  root_tasks_file : NoneType
+  state_file : Path
+  tasks_file : Path
+  add_subtask(req: AddSubTaskRequest) -> SubTask
+  add_task(req: AddTaskRequest) -> Task
+  ensure_tasks_struct() -> Dict[str, Any]
+  get_all_task_files() -> List[Path]
+  get_current_tag() -> str
+  get_task(task_id: int, tag: Optional[str], include_deleted: bool) -> Optional[Dict[str, Any]]
+  info() -> Dict[str, Any]
+  list_tasks(tag: Optional[str], include_deleted: bool) -> List[Dict[str, Any]]
+  update_subtask(task_id: int, sub_id: int, req: UpdateSubTaskRequest, tag: Optional[str]) -> Dict[str, Any]
+  update_task(task_id: int, req: UpdateTaskRequest, tag: Optional[str]) -> Dict[str, Any]
+}
+class "UpdateSubTaskModel" as app.main.UpdateSubTaskModel {
+  assigned_to : Optional[str]
+  dependencies : Optional[List[int]]
+  description : Optional[str]
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : Optional[List[str]]
+  priority : Optional[str]
+  status : Optional[str]
+  title : Optional[str]
+}
+class "UpdateSubTaskRequest" as app.models.UpdateSubTaskRequest {
+  assigned_to : Optional[str]
+  dependencies : Optional[List[int]]
+  description : Optional[str]
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : Optional[List[str]]
+  priority : Optional[str]
+  status : Optional[str]
+  title : Optional[str]
+}
+class "UpdateTaskModel" as app.main.UpdateTaskModel {
+  assigned_to : Optional[str]
+  deleted : Optional[bool]
+  dependencies : Optional[List[int]]
+  description : Optional[str]
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : Optional[List[str]]
+  priority : Optional[str]
+  status : Optional[str]
+  title : Optional[str]
+}
+class "UpdateTaskRequest" as app.models.UpdateTaskRequest {
+  assigned_to : Optional[str]
+  deleted : Optional[bool]
+  dependencies : Optional[List[int]]
+  description : Optional[str]
+  due_date : Optional[str]
+  estimate : Optional[str]
+  labels : Optional[List[str]]
+  priority : Optional[str]
+  status : Optional[str]
+  title : Optional[str]
+}
+@enduml

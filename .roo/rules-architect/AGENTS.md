@@ -1,6 +1,6 @@
 # Architect Mode - Non-Obvious Constraints
 
-- **Multi-container dependency**: WebServer depends on TaskMasterWeb service - affects startup order
+- **Multi-container dependency**: WebServer depends on Atlas service - affects startup order
 - **Database isolation**: Each project has separate .taskmaster directory BUT shares MySQL container
 - **Task ID scoping**: IDs are unique within tag scope only, NOT globally unique across tags
 - **File merge strategy**: Multiple task files merged at runtime with conflict detection, NOT at build time

@@ -38,20 +38,20 @@ curl -s http://localhost:8199/api/external/ports
       "project_id": 1,                   // Which project owns this port
       "port": 8199,                      // External port (host machine)
       "internal_port": 8000,             // Internal port (container)
-      "service_name": "taskmasterweb",   // Service identifier
+      "service_name": "atlas",   // Service identifier
       "description": "TaskMaster Web Interface",
       "protocol": "tcp",                 // Network protocol (tcp/udp)
       "created_at": "2025-08-28T13:14:03Z",
       "updated_at": "2025-08-28T13:14:03Z",
       "active": true,                    // Is this port active?
-      "project_name": "TaskMasterWeb",   // Human-readable project name
-      "project_slug": "taskmasterweb",   // URL-safe project identifier
+      "project_name": "Atlas",   // Human-readable project name
+      "project_slug": "atlas",   // URL-safe project identifier
       "project_details": {               // Complete project information
         "id": 1,
-        "slug": "taskmasterweb",
-        "name": "TaskMasterWeb",
-        "path": "/projects/taskmasterweb",
-        "task_file_path": "/projects/taskmasterweb/.taskmaster/tasks/tasks.json",
+        "slug": "atlas",
+        "name": "Atlas",
+        "path": "/projects/atlas",
+        "task_file_path": "/projects/atlas/.taskmaster/tasks/tasks.json",
         "description": "Main TaskMaster Web project",
         "prod_url": null,
         "dev_url": null,
@@ -114,11 +114,11 @@ curl -X POST http://localhost:8199/api/external/ports \
     "created_at": "2025-08-28T14:15:00Z",
     "updated_at": "2025-08-28T14:15:00Z",
     "active": true,
-    "project_name": "TaskMasterWeb",
-    "project_slug": "taskmasterweb",
+    "project_name": "Atlas",
+    "project_slug": "atlas",
     "project_details": { /* full project details */ }
   },
-  "message": "Port 5432 created successfully for project 'TaskMasterWeb'"
+  "message": "Port 5432 created successfully for project 'Atlas'"
 }
 ```
 
@@ -284,7 +284,7 @@ curl -X POST http://localhost:8199/api/external/ports \
 ### Check API Health
 ```bash
 curl http://localhost:8199/health
-# Expected: {"ok":true,"message":"taskmasterweb is alive"}
+# Expected: {"ok":true,"message":"atlas is alive"}
 ```
 
 ### View All Registered Ports
@@ -309,7 +309,7 @@ Common errors and solutions:
 | 404 | Project not found | Verify project_id exists using /api/projects |
 | 409 | Port conflict | Choose a different port number |
 | 422 | Invalid data | Check required fields and data types |
-| 500 | Server error | Check Docker logs: `docker logs taskmasterweb` |
+| 500 | Server error | Check Docker logs: `docker logs atlas` |
 
 ## Summary
 

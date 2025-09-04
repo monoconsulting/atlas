@@ -22,9 +22,9 @@
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
-      "Read(/E:\\e\\projects\\taskmasterweb/**)",
+      "Read(/E:\\e\\projects\\atlas/**)",
       "Bash(taskkill:*)",
-      "Read(/E:\\e\\projects\\taskmasterweb/**)",
+      "Read(/E:\\e\\projects\\atlas/**)",
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
@@ -53,7 +53,13 @@
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
       "Read(/E:\\e\\projects/**)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Read(/E:\\projects\\atlas/**)",
+      "Read(/E:\\projects\\atlas/**)",
+      "Read(/E:\\projects\\atlas/**)",
+      "Read(/E:\\projects\\atlas\\web/**)",
+      "Read(/E:\\projects\\atlas\\web/**)",
+      "Read(/E:\\projects\\atlas\\app/**)"
     ],
     "deny": [],
     "ask": []

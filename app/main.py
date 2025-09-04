@@ -1,7 +1,18 @@
 from __future__ import annotations
 import os
 import time
-from fastapi import FastAPI, HTTPException, Depends
+import subprocess
+import json
+import re
+from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import Body
+from fastapi.encoders import jsonable_encoder
+from fastapi.routing import APIRouter
+from starlette.background import BackgroundTask
+import urllib.request
+import urllib.error
+import base64
+from pathlib import Path
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +20,7 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional, List, Dict, Any
 from sqlalchemy.orm import Session
 from .storage import TaskStorage
+from . import trace as tm_trace
 from .models import AddTaskRequest, AddSubTaskRequest, UpdateTaskRequest, UpdateSubTaskRequest
 from .database import (
     init_db, get_db,
@@ -19,8 +31,9 @@ from .database import (
     get_all_ports, get_port_by_id, get_ports_by_project,
     create_port, update_port, delete_port
 )
+from .sonarqube import SonarQubeManager
 
-app = FastAPI(title="taskmasterweb", version="1.5.2")
+app = FastAPI(title="atlas", version="1.5.2")
 storage = TaskStorage()
 
 # Add CORS middleware to allow frontend connections
@@ -39,10 +52,146 @@ if host_port:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    # Allow any localhost subdomain (e.g., atlas.localhost) with optional port
+    allow_origin_regex=r"^https?://([a-z0-9-]+\.)?localhost(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def trace_middleware(request: Request, call_next):
+    """Lightweight request tracing for generating sequence diagrams later."""
+    rid = f"req-{int(time.time()*1000)}-{os.getpid()}"
+    tm_trace.set_trace_id(rid)
+    tm_trace.log_event("request_start", method=request.method, path=str(request.url.path))
+    start = time.time()
+    try:
+        response = await call_next(request)
+        duration_ms = int((time.time() - start) * 1000)
+        tm_trace.log_event(
+            "request_end", method=request.method, path=str(request.url.path), status=getattr(response, "status_code", None), duration_ms=duration_ms
+        )
+        return response
+    finally:
+        tm_trace.set_trace_id(None)
+
+
+# ---- Traefik API proxy + dynamic config writing ----
+def _traefik_base() -> str:
+    return os.getenv("TRAEFIK_API_BASE", "http://gateway.localhost/api")
+
+
+def _traefik_auth_header() -> Optional[str]:
+    user = os.getenv("TRAEFIK_USERNAME")
+    pwd = os.getenv("TRAEFIK_PASSWORD")
+    if user and pwd:
+        token = base64.b64encode(f"{user}:{pwd}".encode("utf-8")).decode("ascii")
+        return f"Basic {token}"
+    return None
+
+
+def _http_get_json(url: str) -> Dict[str, Any]:
+    req = urllib.request.Request(url)
+    ah = _traefik_auth_header()
+    if ah:
+        req.add_header("Authorization", ah)
+    host_hdr = os.getenv("TRAEFIK_API_HOST_HEADER", os.getenv("TRAEFIK_HOST_HEADER", "gateway.localhost"))
+    if host_hdr:
+        req.add_header("Host", host_hdr)
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read().decode("utf-8", errors="ignore") or "{}")
+
+
+@app.get("/api/traefik/overview", response_class=JSONResponse)
+def traefik_overview() -> Dict[str, Any]:
+    base = _traefik_base()
+    try:
+        ov = _http_get_json(f"{base}/overview")
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Failed to reach Traefik: {e}")
+
+    counts = {"routes": 0, "services": 0, "middlewares": 0}
+    try:
+        routers = _http_get_json(f"{base}/http/routers")
+        counts["routes"] = len(routers) if isinstance(routers, list) else 0
+    except Exception:
+        pass
+    try:
+        services = _http_get_json(f"{base}/http/services")
+        counts["services"] = len(services) if isinstance(services, list) else 0
+    except Exception:
+        pass
+    try:
+        mws = _http_get_json(f"{base}/http/middlewares")
+        counts["middlewares"] = len(mws) if isinstance(mws, list) else 0
+    except Exception:
+        pass
+
+    return {"ok": True, "base": base, "overview": ov, "counts": counts}
+
+
+@app.get("/api/traefik/http/{kind}", response_class=JSONResponse)
+def traefik_http_list(kind: str) -> Dict[str, Any]:
+    if kind not in {"routers", "services", "middlewares"}:
+        raise HTTPException(status_code=400, detail="invalid kind")
+    base = _traefik_base()
+    try:
+        data = _http_get_json(f"{base}/http/{kind}")
+        return {"ok": True, "data": data}
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Traefik error: {e}")
+
+
+@app.post("/api/traefik/routes", response_class=JSONResponse)
+def traefik_add_route(payload: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
+    """Persist a dynamic route config file for Traefik file provider.
+    Note: Traefik API is read-only. This writes a file that Traefik can pick up if configured.
+    Env: TRAEFIK_DYNAMIC_DIR (default ./traefik/dynamic)
+    """
+    name = payload.get("name")
+    host = payload.get("host")
+    service_url = payload.get("service_url")
+    entrypoint = payload.get("entrypoint", "web")
+    middlewares = payload.get("middlewares", []) or []
+    tls = bool(payload.get("tls", False))
+
+    if not name or not host or not service_url:
+        raise HTTPException(status_code=400, detail="name, host, service_url are required")
+
+    svc_name = f"{name}-svc"
+    lines = [
+        "http:",
+        "  routers:",
+        f"    {name}:",
+        f"      rule: \"Host(`{host}`)\"",
+        f"      entryPoints:",
+        f"        - {entrypoint}",
+        f"      service: {svc_name}",
+    ]
+    if middlewares:
+        lines.append("      middlewares:")
+        for m in middlewares:
+            lines.append(f"        - {m}")
+    if tls:
+        lines.append("      tls: true")
+    lines += [
+        "",
+        "  services:",
+        f"    {svc_name}:",
+        "      loadBalancer:",
+        "        servers:",
+        f"          - url: \"{service_url}\"",
+    ]
+    content = "\n".join(lines) + "\n"
+
+    dyn_dir = Path(os.getenv("TRAEFIK_DYNAMIC_DIR", "traefik/dynamic"))
+    dyn_dir.mkdir(parents=True, exist_ok=True)
+    out_file = dyn_dir / f"{name}.yml"
+    out_file.write_text(content, encoding="utf-8")
+
+    return {"ok": True, "file": str(out_file), "content": content}
 
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
@@ -123,7 +272,7 @@ class UpdateSubTaskModel(BaseModel):
 @app.get("/health", response_class=JSONResponse)
 def health() -> Dict[str, Any]:
     """Healthcheck endpoint."""
-    return {"ok": True, "message": "taskmasterweb is alive"}
+    return {"ok": True, "message": "atlas is alive"}
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -678,3 +827,371 @@ def update_project_subtask(project_slug: str, task_id: int, sub_id: int, payload
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     return {"ok": True, "data": updated}
+
+
+def get_mock_docker_data() -> List[Dict[str, Any]]:
+    """Return mock Docker container data for testing when Docker is not available."""
+    return [
+        {
+            'container_name': 'atlas',
+            'container_id': 'a1b2c3d4e5f6',
+            'image': 'atlas-atlas',
+            'external_port': 8199,
+            'internal_port': 8199,
+            'protocol': 'tcp',
+            'service_name': 'taskmaster-app',
+            'prod_url': None,
+            'dev_url': 'http://localhost:8199',
+            'description': 'Auto-scanned from atlas (atlas-atlas)'
+        },
+        {
+            'container_name': 'atlas_webserver',
+            'container_id': 'f6e5d4c3b2a1',
+            'image': 'atlas-webserver',
+            'external_port': 9652,
+            'internal_port': 8000,
+            'protocol': 'tcp',
+            'service_name': 'taskmaster-hub',
+            'prod_url': None,
+            'dev_url': 'http://localhost:9652',
+            'description': 'Auto-scanned from atlas_webserver (atlas-webserver)'
+        },
+        {
+            'container_name': 'atlas_mysql',
+            'container_id': '123456789abc',
+            'image': 'mysql:8.0',
+            'external_port': 33306,
+            'internal_port': 3306,
+            'protocol': 'tcp',
+            'service_name': 'mysql',
+            'prod_url': None,
+            'dev_url': None,
+            'description': 'Auto-scanned from atlas_mysql (mysql:8.0)'
+        },
+        {
+            'container_name': 'atlas_phpmyadmin',
+            'container_id': 'abc123456789',
+            'image': 'phpmyadmin:latest',
+            'external_port': 8080,
+            'internal_port': 80,
+            'protocol': 'tcp',
+            'service_name': 'phpmyadmin',
+            'prod_url': None,
+            'dev_url': 'http://localhost:8080',
+            'description': 'Auto-scanned from atlas_phpmyadmin (phpmyadmin:latest)'
+        }
+    ]
+
+
+def scan_docker_containers() -> List[Dict[str, Any]]:
+    """Scan Docker containers and extract port information."""
+    try:
+        # First try to detect if we're inside a container and Docker socket is mounted
+        docker_socket_exists = os.path.exists('/var/run/docker.sock')
+        docker_command = 'docker' if docker_socket_exists else None
+        
+        if not docker_command:
+            # Try to find docker command
+            try:
+                subprocess.run(['docker', '--version'], capture_output=True, check=True)
+                docker_command = 'docker'
+            except (FileNotFoundError, subprocess.CalledProcessError):
+                # If Docker is not available, return mock data for testing
+                return get_mock_docker_data()
+        
+        # Get all running containers
+        result = subprocess.run(
+            [docker_command, "ps", "--format", "json"],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        if result.returncode != 0:
+            raise Exception(f"Docker command failed: {result.stderr}")
+        
+        containers = []
+        for line in result.stdout.strip().split('\n'):
+            if line:
+                containers.append(json.loads(line))
+        
+        scanned_ports = []
+        
+        for container in containers:
+            container_name = container.get('Names', 'unknown')
+            container_id = container.get('ID', '')
+            ports_str = container.get('Ports', '')
+            image = container.get('Image', '')
+            
+            # Parse port mappings from Docker ps output
+            # Format: "0.0.0.0:8199->8199/tcp, 0.0.0.0:33306->3306/tcp"
+            if ports_str:
+                # Split by comma for multiple port mappings
+                port_mappings = [p.strip() for p in ports_str.split(',')]
+                
+                for port_mapping in port_mappings:
+                    # Extract external and internal ports
+                    # Pattern: 0.0.0.0:8199->8199/tcp or 8199/tcp
+                    if '->' in port_mapping:
+                        external_part, internal_part = port_mapping.split('->')
+                        
+                        # Extract external port (e.g., "0.0.0.0:8199" -> 8199)
+                        external_match = re.search(r':(\d+)$', external_part)
+                        external_port = int(external_match.group(1)) if external_match else None
+                        
+                        # Extract internal port (e.g., "8199/tcp" -> 8199)
+                        internal_match = re.search(r'^(\d+)/', internal_part)
+                        internal_port = int(internal_match.group(1)) if internal_match else None
+                        
+                        # Extract protocol (tcp/udp)
+                        protocol_match = re.search(r'/(\w+)$', internal_part)
+                        protocol = protocol_match.group(1) if protocol_match else 'tcp'
+                        
+                        if external_port and internal_port:
+                            # Determine service type and URLs
+                            service_name, prod_url, dev_url = determine_service_info(
+                                container_name, external_port, internal_port, image
+                            )
+                            
+                            scanned_ports.append({
+                                'container_name': container_name,
+                                'container_id': container_id[:12],  # Shortened ID
+                                'image': image,
+                                'external_port': external_port,
+                                'internal_port': internal_port,
+                                'protocol': protocol,
+                                'service_name': service_name,
+                                'prod_url': prod_url,
+                                'dev_url': dev_url,
+                                'description': f"Auto-scanned from {container_name} ({image})"
+                            })
+        
+        return scanned_ports
+        
+    except subprocess.TimeoutExpired:
+        raise Exception("Docker scan timeout - Docker may be unresponsive")
+    except FileNotFoundError:
+        raise Exception("Docker command not found - Docker may not be installed")
+    except Exception as e:
+        raise Exception(f"Docker scan failed: {str(e)}")
+
+
+def determine_service_info(container_name: str, external_port: int, internal_port: int, image: str) -> tuple[str, Optional[str], Optional[str]]:
+    """Determine service type and generate URLs based on container info."""
+    container_name = container_name.lower()
+    image = image.lower()
+    
+    # Determine service name based on port patterns and container info
+    service_name = "unknown"
+    prod_url = None
+    dev_url = None
+    
+    # Web services (common web ports)
+    if internal_port in [80, 443, 8080, 8000, 3000, 4200, 5000, 8199, 9652]:
+        service_name = "web"
+        base_url = f"http://localhost:{external_port}"
+        if external_port in [80, 443] or 'prod' in container_name:
+            prod_url = base_url
+        else:
+            dev_url = base_url
+    
+    # Database services
+    elif internal_port == 3306 or 'mysql' in container_name or 'mysql' in image:
+        service_name = "mysql"
+    elif internal_port == 5432 or 'postgres' in container_name or 'postgres' in image:
+        service_name = "postgresql"
+    elif internal_port == 6379 or 'redis' in container_name or 'redis' in image:
+        service_name = "redis"
+    elif internal_port == 27017 or 'mongo' in container_name or 'mongo' in image:
+        service_name = "mongodb"
+    
+    # API services
+    elif 'api' in container_name or internal_port in [8001, 8002, 8080, 9000]:
+        service_name = "api"
+        dev_url = f"http://localhost:{external_port}"
+    
+    # Development tools
+    elif 'phpmyadmin' in container_name or 'phpmyadmin' in image:
+        service_name = "phpmyadmin"
+        dev_url = f"http://localhost:{external_port}"
+    
+    # TaskMaster specific
+    elif 'taskmaster' in container_name:
+        if external_port == 8199:
+            service_name = "taskmaster-app"
+            dev_url = f"http://localhost:{external_port}"
+        elif external_port == 9652:
+            service_name = "taskmaster-hub"
+            dev_url = f"http://localhost:{external_port}"
+    
+    return service_name, prod_url, dev_url
+
+
+@app.post("/api/docker/scan", response_class=JSONResponse)
+def scan_docker_ports(db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Scan Docker containers and return discoverable port information."""
+    try:
+        scanned_ports = scan_docker_containers()
+        
+        return {
+            "ok": True,
+            "scanned_ports": scanned_ports,
+            "total_found": len(scanned_ports),
+            "message": f"Successfully scanned {len(scanned_ports)} port mappings from Docker containers"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Docker scan failed: {str(e)}")
+
+
+@app.post("/api/docker/import", response_class=JSONResponse)
+def import_docker_ports(project_id: Optional[int] = None, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Scan Docker containers and automatically import ports to the database."""
+    try:
+        scanned_ports = scan_docker_containers()
+        
+        if not scanned_ports:
+            return {
+                "ok": True,
+                "imported": 0,
+                "skipped": 0,
+                "message": "No Docker containers with port mappings found"
+            }
+        
+        imported_count = 0
+        skipped_count = 0
+        errors = []
+        
+        # If no specific project_id, try to find or create a default Docker project
+        if project_id is None:
+            docker_project = get_project_by_slug(db, "docker-scanned")
+            if not docker_project:
+                # Create a default project for Docker scanned ports
+                docker_project_data = ProjectCreate(
+                    slug="docker-scanned",
+                    name="Docker Scanned Containers",
+                    path="/projects/docker-scanned",
+                    description="Auto-discovered Docker container ports"
+                )
+                docker_project = create_project(db, docker_project_data)
+            project_id = docker_project.id
+        
+        # Import each scanned port
+        for port_info in scanned_ports:
+            try:
+                # Check if port already exists for this project
+                existing_ports = get_ports_by_project(db, project_id)
+                port_exists = any(p.port == port_info['external_port'] for p in existing_ports)
+                
+                if not port_exists:
+                    port_data = PortCreate(
+                        project_id=project_id,
+                        port=port_info['external_port'],
+                        internal_port=port_info['internal_port'],
+                        service_name=port_info['service_name'],
+                        protocol=port_info['protocol'],
+                        description=port_info['description']
+                    )
+                    create_port(db, port_data)
+                    imported_count += 1
+                else:
+                    skipped_count += 1
+                    
+            except Exception as e:
+                errors.append(f"Failed to import port {port_info['external_port']}: {str(e)}")
+                skipped_count += 1
+        
+        result = {
+            "ok": True,
+            "imported": imported_count,
+            "skipped": skipped_count,
+            "total_scanned": len(scanned_ports),
+            "project_id": project_id
+        }
+        
+        if errors:
+            result["errors"] = errors
+        
+        return result
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Docker import failed: {str(e)}")
+
+
+# ============================================================================
+# SonarQube Integration Endpoints
+# ============================================================================
+
+sonarqube = SonarQubeManager()
+
+@app.get("/api/sonarqube/status")
+async def get_sonarqube_status():
+    """Check SonarQube server status"""
+    return sonarqube.check_sonarqube_status()
+
+@app.post("/api/projects/{project_id}/analyze")
+async def run_code_analysis(project_id: int, db: Session = Depends(get_db)):
+    """Run SonarQube analysis for a project"""
+    # Get project details
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # Use container path directly - we're running inside Docker
+    project_path = project.path
+    if project_path.startswith("/projects/"):
+        # Use container path as-is
+        actual_path = project_path
+    else:
+        # Handle legacy paths by assuming they're in /projects
+        actual_path = f"/projects/{project.slug}"
+    
+    # Check if project path exists in container
+    if not os.path.exists(actual_path):
+        raise HTTPException(status_code=400, detail=f"Project path not found: {actual_path}")
+    
+    # Generate project key for SonarQube
+    project_key = f"tm-{project.slug}".replace("/", "").replace(" ", "-").lower()
+    
+    # Run analysis
+    result = sonarqube.run_analysis(actual_path, project_key, project.name)
+    
+    # Store analysis timestamp in database (optional enhancement)
+    # You could add a last_analysis column to Project model
+    
+    return result
+
+@app.get("/api/projects/{project_id}/sonarqube-metrics")
+async def get_project_sonarqube_metrics(project_id: int, db: Session = Depends(get_db)):
+    """Get SonarQube metrics for a project"""
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # Generate project key
+    project_key = f"tm-{project.slug}".replace("/", "").replace(" ", "-").lower()
+    
+    # Get metrics from SonarQube
+    metrics = sonarqube.get_project_metrics(project_key)
+    
+    # Add project info
+    metrics["project_name"] = project.name
+    metrics["project_slug"] = project.slug
+    metrics["sonarqube_url"] = sonarqube.get_project_url(project_key)
+    
+    return metrics
+
+@app.get("/api/projects/{project_id}/sonarqube-url")
+async def get_project_sonarqube_url(project_id: int, db: Session = Depends(get_db)):
+    """Get SonarQube dashboard URL for a project"""
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    project_key = f"tm-{project.slug}".replace("/", "").replace(" ", "-").lower()
+    
+    return {
+        "project_name": project.name,
+        "project_key": project_key,
+        "sonarqube_url": sonarqube.get_project_url(project_key)
+    }

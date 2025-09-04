@@ -1,11 +1,11 @@
 
-# TaskMasterWeb - Multi-Project Task Management Platform
+# Atlas - Multi-Project Task Management Platform
 
 A self-contained, portable FastAPI-based task management web UI designed to work with the `task-master-ai` framework. Supports multiple projects with custom URL routing and project-specific task storage.
 
 ## Features
 
-- **Multi-Project Support**: Manage multiple TaskMaster projects from a single interface
+- **Multi-Project Support**: Manage multiple Atlas projects from a single interface
 - **Custom URL Routing**: Access projects via custom URLs (e.g., `localhost:8199/project-slug`)
 - **Project Administration**: Full CRUD interface for managing projects
 - **Database Integration**: MySQL backend for project metadata storage
@@ -30,13 +30,13 @@ A self-contained, portable FastAPI-based task management web UI designed to work
 3) **Access Applications**:
    - **Development Hub**: `http://localhost:9652/` (auto-started)
    - **Admin Panel**: `http://localhost:9652/admin.html`
-   - **Main TaskMaster**: `http://localhost:8199/`
+   - **Main Atlas**: `http://localhost:8199/`
    - **Project-Specific**: `http://localhost:8199/{project-slug}`
 
 ## Multi-Project Architecture
 
 ### Project URL Routing
-- **Root URL**: `http://localhost:8199/` - Default TaskMaster interface
+- **Root URL**: `http://localhost:8199/` - Default Atlas interface
 - **Project URLs**: `http://localhost:8199/{slug}` - Project-specific interfaces
 - **API Endpoints**: Automatically routed to project-specific storage
 

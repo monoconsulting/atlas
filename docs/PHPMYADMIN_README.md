@@ -1,4 +1,4 @@
-phpMyAdmin for TaskmasterWeb
+phpMyAdmin for Atlas
 
 Access:
 - Open http://localhost:8085 in your browser to reach phpMyAdmin.

@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-08-29T12:40:43.904Z",
+      "updated": "2025-08-29T12:40:43.904Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -434,7 +439,58 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 20,
+        "title": "Enable Adding Projects Without Task Master Files",
+        "description": "Allow projects to be added to the system even if they don't have .taskmaster files. Show TaskMaster icon for projects that have TaskMaster enabled and provide initialization function for those that don't.",
+        "details": "- Modify project detection to allow projects without .taskmaster directories\n- Add visual indicator (TaskMaster icon) for projects with existing .taskmaster setup\n- Implement \"Add TaskMaster\" button/function for projects without TaskMaster\n- Update database schema if needed to track TaskMaster status per project\n- Ensure proper validation and error handling during TaskMaster initialization",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": [],
+        "labels": [],
+        "updated_at": "2025-08-29T12:40:10.442739Z"
+      },
+      {
+        "id": 21,
+        "title": "Add Navigation Links and Update Titles in Kanban Page",
+        "description": "Add navigation links to Atlas Development Hub and project page in the TaskMaster kanban interface. Update page title to show 'Atlas - PROJECTNAME - Task-Master-Web' format.",
+        "details": "- Add navigation links in the kanban interface:\n  - Link to Atlas Development Hub main page (localhost:9652)\n  - Link to the project's main page (localhost:8199/{project-slug})\n- Update page title format to: 'Atlas - PROJECTNAME - Task-Master-Web'\n- Ensure links are prominently placed and styled consistently\n- Update JavaScript modules to handle dynamic project name in title\n- Test navigation functionality across different project contexts",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Update Atlas Development Hub Interface",
+        "description": "Change 'TaskMasterHub' to 'Port Management' in the Atlas Development Hub main page and add link to the port list functionality.",
+        "details": "- Update Atlas Development Hub main page (localhost:9652):\n  - Change 'TaskMasterHub' text/label to 'Port Management'\n  - Add navigation link to port list page\n  - Ensure styling is consistent with existing interface\n  - Update any related documentation or labels\n- Test that the port management navigation works correctly\n- Verify the updated interface maintains usability and clarity",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "low",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Implement Docker Port Scanner for Port Management",
+        "description": "Add 'Scan Docker Ports' functionality to automatically discover and populate port information from running Docker containers, including container names, ports, and potential URL mappings.",
+        "details": "- Implement Docker port scanning functionality:\n  - Use Docker API or CLI to discover all running containers and their port mappings\n  - Extract container names, external ports, internal ports, and service information\n  - Automatically populate port list with discovered information\n  - Attempt to determine service types (web, mysql, api, etc.) from container names/ports\n  - Auto-populate prod_url and dev_url fields when possible (e.g., web services on standard ports)\n  - Handle common port patterns (3000=dev web, 80/443=prod web, 3306=mysql, etc.)\n- Add 'Scan Docker Ports' button to port management interface\n- Implement conflict resolution for existing vs discovered ports\n- Add validation and error handling for Docker connectivity issues\n- Ensure scanned data integrates properly with existing port management system",
+        "testStrategy": "",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-08-29T12:40:43.904Z",
+      "updated": "2025-08-29T12:48:02.335Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }
