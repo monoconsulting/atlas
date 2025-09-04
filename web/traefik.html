@@ -46,7 +46,7 @@
                 <div class="flex items-center">
                     <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse-slow mr-3"></div>
                     <span class="text-slate-300">Traefik Instance: </span>
-                    <span class="text-indigo-400 font-mono ml-2" id="traefikUrl">http://localhost:8080</span>
+                    <span class="text-indigo-400 font-mono ml-2" id="traefikUrl">http://localhost:8087</span>
                 </div>
                 <button onclick="refreshData(event)" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors">
                     Refresh Data
@@ -522,33 +522,48 @@
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">Name</label>
-                    <input id="routeName" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="myapp" />
+                    <label class="block text-sm text-slate-400 mb-1">Name *</label>
+                    <input id="routeName" 
+                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
+                           placeholder="myapp"
+                           title="Unique name for this route (e.g., myapp, api-gateway)" />
                 </div>
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">Host rule</label>
-                    <input id="routeHost" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="myapp.localhost" />
+                    <label class="block text-sm text-slate-400 mb-1">Host rule *</label>
+                    <input id="routeHost" 
+                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
+                           placeholder="myapp.localhost"
+                           title="Hostname to match requests (e.g., myapp.localhost, api.example.com)" />
                 </div>
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">Service URL</label>
-                    <input id="routeServiceUrl" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="http://app:8000" />
+                    <label class="block text-sm text-slate-400 mb-1">Service URL *</label>
+                    <input id="routeServiceUrl" 
+                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
+                           placeholder="http://host.docker.internal:3000"
+                           title="Backend service URL (e.g., http://host.docker.internal:3000, http://app:8000)" />
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Entrypoint</label>
-                        <select id="routeEntrypoint" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2">
+                        <select id="routeEntrypoint" 
+                                class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2"
+                                title="Traefik entrypoint to use - web for HTTP, websecure for HTTPS">
                             <option value="web">web (:80)</option>
                             <option value="websecure">websecure (:443)</option>
                         </select>
                     </div>
                     <div class="flex items-center mt-6">
-                        <input id="routeTls" type="checkbox" class="mr-2" />
+                        <input id="routeTls" type="checkbox" class="mr-2" 
+                               title="Enable TLS/SSL certificates for this route" />
                         <label for="routeTls" class="text-sm text-slate-400">Enable TLS</label>
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm text-slate-400 mb-1">Middlewares (comma separated)</label>
-                    <input id="routeMiddlewares" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" placeholder="auth, compress" />
+                    <input id="routeMiddlewares" 
+                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
+                           placeholder="auth, compress, rate-limit"
+                           title="Available middlewares: auth (authentication), compress (gzip), rate-limit, cors, headers" />
                 </div>
             </div>
             <div class="flex justify-end gap-2 mt-6">
@@ -585,19 +600,36 @@
         async function refreshData(e) {
             if (e) e.stopPropagation();
             try {
-                const res = await fetch(`${API_BASE}/api/traefik/overview`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const res = await fetch(`http://localhost:8199/api/traefik/overview`, {
+                    credentials: 'include'
+                });
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+                
                 const data = await res.json();
-                document.getElementById('traefikUrl').textContent = data.base.replace('/api','');
-                document.getElementById('activeRoutes').textContent = data.counts.routes;
-                document.getElementById('totalServices').textContent = data.counts.services;
-                document.getElementById('sslCerts').textContent = 0; // not from API in CE
-                const mwEl = document.getElementById('middlewares'); if(mwEl) mwEl.textContent = data.counts.middlewares ?? 0;
-                showNotification('Traefik data refreshed');
+                
+                if (!data.ok) {
+                    throw new Error(data.detail || 'Failed to get Traefik overview');
+                }
+                
+                // Update UI with real data
+                const baseUrl = data.base ? data.base.replace('/api','') : 'http://localhost:8087';
+                document.getElementById('traefikUrl').textContent = baseUrl;
+                document.getElementById('activeRoutes').textContent = data.counts.routes || 0;
+                document.getElementById('totalServices').textContent = data.counts.services || 0;
+                document.getElementById('sslCerts').textContent = data.counts.certificates || 0;
+                const mwEl = document.getElementById('middlewares'); 
+                if(mwEl) mwEl.textContent = data.counts.middlewares || 0;
+                
+                showNotification('Traefik data refreshed', 'success');
+                
                 // Refresh routers list as well
                 await loadRouters();
             } catch (err) {
-                showNotification(`Failed to refresh: ${err.message || err}`);
+                console.error('Refresh error:', err);
+                showNotification(`Failed to refresh: ${err.message || err}`, 'error');
             }
         }
         
@@ -611,15 +643,45 @@
             const entrypoint = document.getElementById('routeEntrypoint').value;
             const tls = document.getElementById('routeTls').checked;
             const middlewares = document.getElementById('routeMiddlewares').value.split(',').map(s=>s.trim()).filter(Boolean);
-            if(!name || !host || !service_url){ showNotification('Name, Host and Service URL are required'); return; }
+            
+            if(!name || !host || !service_url){ 
+                showNotification('Name, Host and Service URL are required', 'error'); 
+                return; 
+            }
+            
             try{
-                const res = await fetch(`${API_BASE}/api/traefik/routes`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, host, service_url, entrypoint, middlewares, tls}) });
+                const res = await fetch(`http://localhost:8199/api/traefik/routes`, { 
+                    method:'POST', 
+                    headers:{'Content-Type':'application/json'},
+                    credentials: 'include',
+                    body: JSON.stringify({name, host, service_url, entrypoint, middlewares, tls}) 
+                });
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${errorText}`);
+                }
+                
                 const data = await res.json();
-                if(!res.ok || !data.ok){ throw new Error(data.detail || 'Failed'); }
-                showNotification(`Route saved to ${data.file}`);
+                if(!data.ok){ 
+                    throw new Error(data.detail || data.message || 'Failed to create route'); 
+                }
+                
+                showNotification(`Route saved to ${data.file}`, 'success');
                 closeAddRouteModal();
                 await loadRouters();
-            }catch(err){ showNotification(`Error: ${err.message || err}`); }
+                
+                // Clear the form
+                document.getElementById('routeName').value = '';
+                document.getElementById('routeHost').value = '';
+                document.getElementById('routeServiceUrl').value = '';
+                document.getElementById('routeMiddlewares').value = '';
+                document.getElementById('routeTls').checked = false;
+                
+            }catch(err){ 
+                console.error('Create route error:', err);
+                showNotification(`Error: ${err.message || err}`, 'error'); 
+            }
         }
 
         // Quick Map: create a simple host → local port route
@@ -649,10 +711,28 @@
             list.innerHTML = '<div class="text-slate-400">Scanning containers…</div>';
             box.classList.remove('hidden');
             try{
-                const res = await fetch(`${API_BASE}/api/docker/scan`, { method: 'POST', headers: {'Content-Type':'application/json'} });
+                const res = await fetch(`http://localhost:8199/api/docker/scan`, { 
+                    method: 'POST', 
+                    headers: {'Content-Type':'application/json'},
+                    credentials: 'include'
+                });
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+                
                 const data = await res.json();
+                
+                if (!data.ok) {
+                    throw new Error(data.detail || data.message || 'Scan failed');
+                }
+                
                 const rows = Array.isArray(data.scanned_ports) ? data.scanned_ports : [];
-                if(rows.length === 0){ list.innerHTML = '<div class="text-slate-500">No containers with ports found</div>'; return; }
+                if(rows.length === 0){ 
+                    list.innerHTML = '<div class="text-slate-500">No containers with ports found</div>'; 
+                    return; 
+                }
+                
                 list.innerHTML = '';
                 rows.forEach(row => {
                     const suggestedHost = `${(row.container_name || 'service').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.localhost`;
@@ -669,7 +749,10 @@
                         </div>`;
                     list.appendChild(card);
                 });
-            }catch(err){ list.innerHTML = `<div class=\"text-red-400\">Scan failed: ${err.message || err}</div>`; }
+            } catch(err) { 
+                console.error('Docker scan error:', err);
+                list.innerHTML = `<div class="text-red-400">Scan failed: ${err.message || err}</div>`; 
+            }
         }
 
         async function createSuggestedRoute(host, port){
@@ -712,50 +795,117 @@
             showNotification('Configuration saved successfully');
         }
         
-        function showNotification(message) {
+        function showNotification(message, type = 'info') {
             // Create notification element
             const notification = document.createElement('div');
-            notification.className = 'fixed bottom-4 right-4 bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse';
+            let bgColor = 'bg-indigo-600';
+            
+            switch(type) {
+                case 'success':
+                    bgColor = 'bg-green-600';
+                    break;
+                case 'error':
+                    bgColor = 'bg-red-600';
+                    break;
+                case 'warning':
+                    bgColor = 'bg-yellow-600';
+                    break;
+                default:
+                    bgColor = 'bg-indigo-600';
+            }
+            
+            notification.className = `fixed bottom-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce`;
             notification.textContent = message;
             
             // Add to body
             document.body.appendChild(notification);
             
-            // Remove after 3 seconds
+            // Remove after 4 seconds for errors, 3 seconds for others
+            const timeout = type === 'error' ? 4000 : 3000;
             setTimeout(() => {
                 notification.remove();
-            }, 3000);
+            }, timeout);
         }
         
         async function loadRouters(){
             try{
-                const res = await fetch(`${API_BASE}/api/traefik/http/routers`);
-                if(!res.ok) return;
+                const res = await fetch(`http://localhost:8199/api/traefik/http/routers`, {
+                    credentials: 'include'
+                });
+                
+                if(!res.ok) {
+                    console.warn('Failed to load routers:', res.status);
+                    return;
+                }
+                
                 const json = await res.json();
                 const rows = Array.isArray(json.data) ? json.data : [];
                 const tbody = document.getElementById('routesTable');
+                
                 if(!tbody) return;
+                
                 tbody.innerHTML = '';
+                
+                if (rows.length === 0) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td colspan="6" class="py-8 px-4 text-center text-slate-500">
+                            No routes found. Create your first route above or check Traefik configuration.
+                        </td>`;
+                    tbody.appendChild(tr);
+                    return;
+                }
+                
                 rows.forEach(r => {
                     const name = r.name || r.router || '(unnamed)';
                     const rule = r.rule || (r.matcher || '');
                     const service = r.service || (r.using || '');
+                    const status = r.status || 'active';
                     const mws = (r.middlewares || []).map(m => typeof m === 'string' ? m : (m.name || '')).filter(Boolean);
+                    
+                    // Determine status styling
+                    let statusClass = 'bg-green-900/50 text-green-400';
+                    let statusText = 'Active';
+                    
+                    if (status.toLowerCase().includes('error')) {
+                        statusClass = 'bg-red-900/50 text-red-400';
+                        statusText = 'Error';
+                    } else if (status.toLowerCase().includes('warning')) {
+                        statusClass = 'bg-yellow-900/50 text-yellow-400';
+                        statusText = 'Warning';
+                    }
+                    
                     const tr = document.createElement('tr');
                     tr.className = 'border-b border-slate-800 hover:bg-slate-800/50';
                     tr.innerHTML = `
                         <td class="py-3 px-4 font-mono text-sm text-indigo-400">${name}</td>
                         <td class="py-3 px-4 text-sm">${rule}</td>
                         <td class="py-3 px-4 text-sm">${service}</td>
-                        <td class="py-3 px-4">${mws.map(x=>`<span class="bg-slate-800 px-2 py-1 rounded text-xs mr-1">${x}</span>`).join('')}</td>
-                        <td class="py-3 px-4"><span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span></td>
+                        <td class="py-3 px-4">
+                            ${mws.map(x=>`<span class="bg-slate-800 px-2 py-1 rounded text-xs mr-1">${x}</span>`).join('') || 
+                              '<span class="text-slate-500 text-xs">None</span>'}
+                        </td>
+                        <td class="py-3 px-4">
+                            <span class="${statusClass} px-2 py-1 rounded text-xs">${statusText}</span>
+                        </td>
                         <td class="py-3 px-4 text-right">
                             <button onclick="editRoute('${name}')" class="text-indigo-400 hover:text-indigo-300 mr-2">Edit</button>
                             <button onclick="deleteRoute('${name}')" class="text-red-400 hover:text-red-300">Delete</button>
                         </td>`;
                     tbody.appendChild(tr);
                 });
-            }catch(err){ /* silent */ }
+            }catch(err){ 
+                console.error('Failed to load routers:', err);
+                const tbody = document.getElementById('routesTable');
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="py-8 px-4 text-center text-red-400">
+                                Failed to load routes. Check Traefik connection.
+                            </td>
+                        </tr>`;
+                }
+            }
         }
 
         // Kick initial refresh after load

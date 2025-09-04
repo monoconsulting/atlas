@@ -41,18 +41,22 @@ origins = [
     "http://localhost:9652", 
     "http://127.0.0.1:9652", 
     "http://localhost:8199", 
-    "http://127.0.0.1:8199"
+    "http://127.0.0.1:8199",
+    "http://atlas.localhost",
+    "http://atlas.localhost:9652",
+    "http://atlas.localhost:8199"
 ]
 
 host_port = os.getenv("HOST_PORT")
 if host_port:
     origins.append(f"http://localhost:{host_port}")
     origins.append(f"http://127.0.0.1:{host_port}")
+    origins.append(f"http://atlas.localhost:{host_port}")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    # Allow any localhost subdomain (e.g., atlas.localhost) with optional port
+    # Allow any localhost subdomain (e.g., atlas.localhost, *.localhost) with optional port
     allow_origin_regex=r"^https?://([a-z0-9-]+\.)?localhost(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],

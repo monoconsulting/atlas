@@ -485,11 +485,153 @@
         "dependencies": [],
         "priority": "high",
         "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Fix Traefik port configuration from 8080 to 8087 to avoid phpMyAdmin conflicts",
+        "description": "Update Traefik configuration in E:\\traefik directory to use port 8088 instead of 8080 to prevent conflicts with phpMyAdmin services running on port 8080 in other projects. Task completed successfully with port 8088 chosen due to 8087 conflict.",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "medium",
+        "details": "COMPLETED: Successfully updated Traefik configuration from port 8080 to port 8088 (changed from original plan of 8087 due to port availability).\n\nCompleted actions:\n1. Updated docker-compose.yml port mapping from 8080:8080 to 8088:8080\n2. Updated README.md documentation to reflect new port 8088\n3. Updated CLAUDE.md documentation with new port configuration\n4. Verified Traefik starts successfully on port 8088\n5. Confirmed port 8080 is now free for phpMyAdmin use in other projects\n6. All Playwright tests passing (3/3)\n\nNote: Port 8088 was selected instead of originally planned 8087 due to port conflict discovery during implementation.",
+        "testStrategy": "COMPLETED: All tests successfully passed.\n\n✅ Verified Traefik starts successfully on port 8088 without errors\n✅ Confirmed port 8080 is now free and available for phpMyAdmin services\n✅ Verified all Traefik routing and load balancing functionality works on new port\n✅ All Playwright tests pass (3/3)\n✅ Documentation updated in README.md and CLAUDE.md\n✅ No port conflicts confirmed\n\nTest results: 100% success rate with comprehensive verification of port change implementation.",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Add support for atlas.localhost domain routing in Atlas application alongside localhost:9652",
+        "description": "Implement domain-based routing to allow Atlas application to be accessed via atlas.localhost in addition to the existing localhost:9652 port-based access.",
+        "details": "1. Update Docker Compose configuration to expose Atlas application on port 80 for domain routing\n2. Add Traefik routing rules to handle atlas.localhost domain requests\n3. Configure DNS resolution for atlas.localhost (either through hosts file modification or local DNS setup)\n4. Update Traefik labels in Atlas service to include domain-based routing alongside existing port-based routing\n5. Ensure both localhost:9652 and atlas.localhost access methods work simultaneously\n6. Update any hardcoded localhost:9652 references in the codebase to support both access methods\n7. Configure SSL/TLS support for atlas.localhost if needed\n8. Update environment variables and configuration files to support dual access patterns\n9. Test cross-origin resource sharing (CORS) settings for domain-based access\n10. Update documentation to reflect both access methods",
+        "testStrategy": "1. Verify atlas.localhost resolves correctly in browser and loads Atlas application\n2. Test that localhost:9652 continues to work as before\n3. Verify all Atlas functionality works identically on both access methods\n4. Test navigation between different Atlas sections using domain-based routing\n5. Confirm API calls work correctly from atlas.localhost interface\n6. Test port management and project administration features via domain access\n7. Verify SSL certificate validation if HTTPS is configured\n8. Test browser bookmark functionality for atlas.localhost URLs\n9. Confirm no CORS errors when accessing via domain routing\n10. Verify Docker container logs show no routing conflicts or errors",
+        "status": "pending",
+        "dependencies": [
+          24
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Fix missing service status indicators on index page",
+        "description": "Implement small green/red lights (no circles around) to show if services are up or down on the index page with visual status indicators.",
+        "details": "1. Add service status indicator HTML elements to index.html:\n   - Create status indicator containers with data-testid attributes for each service\n   - Implement small LED-style lights using CSS (green for up, red for down)\n   - Position indicators appropriately in the interface without circular backgrounds\n   - Ensure indicators are visually clear and accessible\n\n2. Implement service status checking logic in JavaScript:\n   - Create serviceStatus.js module or extend existing API module\n   - Add health check endpoints for each monitored service\n   - Implement periodic status polling (every 30 seconds)\n   - Handle timeout scenarios and connection failures\n   - Update UI indicators based on service responses\n\n3. Add CSS styling for status indicators:\n   - Create LED-style status lights with CSS (rectangular or square shapes)\n   - Use green (#00ff00) for 'up' status and red (#ff0000) for 'down' status\n   - Add subtle animations or transitions for status changes\n   - Ensure indicators work across different screen sizes\n\n4. Integrate with existing Atlas architecture:\n   - Update state.js to manage service status state\n   - Add service status rendering functions to render.js\n   - Include status indicators in main.js initialization\n   - Maintain consistency with existing Atlas theming",
+        "testStrategy": "1. Create comprehensive Playwright test suite with snapshot and video verification:\n   - Test service status indicator visibility and positioning on page load\n   - Verify green lights display for healthy services and red lights for unavailable services\n   - Test status polling functionality and real-time updates\n   - Capture visual snapshots of both up and down states for regression testing\n   - Record video evidence of status transitions and polling behavior\n\n2. Test service availability scenarios:\n   - Mock service endpoints to simulate up/down states\n   - Verify indicators update correctly when services change status\n   - Test timeout handling and error scenarios\n   - Validate accessibility of status indicators for screen readers\n\n3. Cross-browser compatibility testing:\n   - Test status indicators render correctly in Chrome, Firefox, Safari\n   - Verify CSS animations work consistently across browsers\n   - Test responsive behavior on different screen sizes",
+        "status": "pending",
+        "dependencies": [
+          5,
+          7,
+          8
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Fix non-functional Refresh data button in Traefik Management Console",
+        "description": "Repair the broken refresh button functionality in the Traefik Management Console to properly reload data from the server and update the UI display.",
+        "details": "1. Investigate the current refresh button implementation in the Traefik Management Console:\n   - Locate the refresh button in the HTML structure and examine its event handlers\n   - Check JavaScript functions associated with the refresh action\n   - Identify why the button is not triggering data reload or UI updates\n\n2. Fix the refresh button functionality:\n   - Ensure the button properly calls the data fetching functions\n   - Verify API endpoints are correctly invoked when refresh is clicked\n   - Update the UI components to reflect refreshed data\n   - Handle loading states and error conditions during refresh operations\n\n3. Implement proper state management for refresh operations:\n   - Show loading indicator during refresh process\n   - Clear cached data before fetching fresh data\n   - Update all relevant UI components with new data\n   - Ensure refresh works for all data sections (containers, services, ports, etc.)\n\n4. Test refresh functionality across different scenarios:\n   - Test refresh with no data changes\n   - Test refresh after container/service changes\n   - Verify refresh works when network conditions vary\n   - Ensure refresh button remains responsive after multiple clicks",
+        "testStrategy": "1. Create comprehensive Playwright test suite for refresh button functionality:\n   - Test that refresh button is visible and clickable\n   - Verify data reloads when refresh button is clicked\n   - Test loading states during refresh operations\n   - Validate UI updates reflect fresh data after refresh\n\n2. Implement snapshot and video verification:\n   - Capture before/after snapshots of UI state during refresh\n   - Record video of complete refresh workflow\n   - Compare snapshots to verify data changes are reflected\n   - Validate loading indicators appear and disappear correctly\n\n3. Test edge cases and error scenarios:\n   - Test refresh when backend services are unavailable\n   - Verify refresh works after page has been idle\n   - Test rapid successive refresh button clicks\n   - Validate refresh functionality across different browser states\n\n4. Verify integration with existing functionality:\n   - Ensure refresh doesn't break other console features\n   - Test refresh in combination with filtering and searching\n   - Validate refresh maintains user selections and UI state where appropriate",
+        "status": "pending",
+        "dependencies": [
+          24,
+          25
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Fix non-functional Create route button in Traefik Management Console with Playwright test verification",
+        "description": "Repair the broken Create route button functionality in the Traefik Management Console that currently does nothing when pressed, and implement comprehensive Playwright test with snapshot and video verification.",
+        "details": "1. Investigate the current Create route button implementation in the Traefik Management Console:\n   - Locate the Create route button in the HTML structure and examine its event handlers\n   - Check JavaScript functions associated with the create route action\n   - Identify why the button is not triggering route creation or form display\n   - Examine API endpoints that should be called for route creation\n\n2. Fix the Create route button functionality:\n   - Ensure the button properly triggers route creation modal or form display\n   - Verify API endpoints are correctly invoked when create button is clicked\n   - Fix any JavaScript errors preventing button functionality\n   - Implement proper form validation and submission logic\n   - Add loading states and user feedback during route creation\n\n3. Test the repaired functionality:\n   - Verify button click opens route creation interface\n   - Test form submission creates routes successfully\n   - Validate UI updates reflect new routes after creation\n   - Check error handling for invalid route configurations\n\n4. Implement comprehensive Playwright test suite:\n   - Create headless test that clicks Create route button\n   - Verify route creation modal/form opens correctly\n   - Test complete route creation workflow with form submission\n   - Implement snapshot testing to capture UI state changes\n   - Add video recording for visual verification of button functionality\n   - Include assertions for successful route creation and UI updates",
+        "testStrategy": "1. Create comprehensive Playwright test suite for Create route button functionality:\n   - Test that Create route button is visible and clickable\n   - Verify route creation modal/form opens when button is clicked\n   - Test loading states during route creation operations\n   - Validate UI updates reflect new routes after creation\n   - Test error handling for invalid route configurations\n\n2. Implement snapshot and video verification:\n   - Take screenshots before and after button click to verify UI changes\n   - Record video of complete route creation workflow\n   - Create visual regression tests using Playwright's screenshot comparison\n   - Verify modal appearance, form fields, and success messages\n\n3. Test edge cases and error scenarios:\n   - Test button behavior with invalid form data\n   - Verify proper error messages are displayed\n   - Test button functionality under different browser conditions\n   - Validate accessibility and keyboard navigation support\n\n4. Performance and reliability testing:\n   - Run tests in headless mode with artifact collection\n   - Implement test retry logic for flaky scenarios\n   - Verify test passes consistently with 100% success rate\n   - Generate detailed test reports with screenshots and videos",
+        "status": "pending",
+        "dependencies": [
+          24,
+          25,
+          27
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "Fix Docker scan function that fails with Gateway Timeout JSON parse error when using Scan Docker -> Propose",
+        "description": "Replace the broken Docker port scanning functionality that currently fails with Gateway Timeout and JSON parse errors with proper error handling and robust JSON response processing.",
+        "details": "1. Investigate current Docker scan implementation in the port management system:\n   - Locate the 'Scan Docker -> Propose' button functionality\n   - Identify the API endpoint handling Docker container scanning\n   - Examine the JSON parsing logic that's currently failing with Gateway Timeout errors\n   - Review Docker API integration and timeout configurations\n\n2. Implement proper error handling for Docker scanning:\n   - Add comprehensive try-catch blocks around Docker API calls\n   - Implement proper timeout handling with configurable timeout values\n   - Add graceful degradation when Docker daemon is unreachable\n   - Create user-friendly error messages for different failure scenarios\n\n3. Fix JSON response processing:\n   - Implement robust JSON parsing with validation\n   - Add response structure verification before processing\n   - Handle malformed or incomplete JSON responses gracefully\n   - Add fallback mechanisms when Docker API returns unexpected data\n\n4. Enhance Docker container discovery logic:\n   - Optimize Docker API queries to prevent timeouts\n   - Implement pagination for large numbers of containers\n   - Add filtering to focus on relevant containers with exposed ports\n   - Cache results to reduce repeated API calls\n\n5. Update UI feedback and loading states:\n   - Add proper loading indicators during scan operations\n   - Implement progress feedback for long-running scans\n   - Display clear error messages when scans fail\n   - Add retry functionality for failed scan attempts",
+        "testStrategy": "1. Create comprehensive Playwright test suite for Docker scan functionality:\n   - Test successful Docker scan with running containers and verify port population\n   - Test Docker scan behavior when Docker daemon is unavailable\n   - Test scan timeout handling with slow Docker responses\n   - Verify proper error messages display for different failure scenarios\n\n2. Implement snapshot and video verification:\n   - Capture before/after snapshots of port management interface during scan\n   - Record full test execution videos showing scan process and results\n   - Create visual regression tests for error state displays\n   - Document test artifacts in /web/test-reports directory\n\n3. Test error handling scenarios:\n   - Simulate Gateway Timeout errors and verify graceful handling\n   - Test JSON parse errors with malformed Docker API responses\n   - Verify scan functionality with various container configurations\n   - Test scan cancellation and retry mechanisms\n\n4. Validate integration with existing port management:\n   - Ensure scanned ports integrate correctly with manual port entries\n   - Test port conflict detection and resolution\n   - Verify port data persistence after successful scans\n   - Test UI updates and refresh functionality after scan completion",
+        "status": "pending",
+        "dependencies": [
+          23,
+          2
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "Add onmouseover tooltips with examples and explanations for all Add route form fields in Traefik Management Console",
+        "description": "Implement comprehensive tooltip system for all form fields in the Traefik Management Console Add route form, providing detailed explanations, examples, and middleware options documentation to improve user experience.",
+        "details": "1. Implement tooltip system for Add route form fields:\n   - Create tooltip CSS styling with dark background and light text for readability\n   - Add tooltip container elements with proper positioning (absolute/relative)\n   - Implement JavaScript tooltip show/hide functionality on mouseover/mouseout events\n   - Ensure tooltips are responsive and don't overflow viewport boundaries\n\n2. Add comprehensive tooltips for core routing fields:\n   - Route Name: Explain naming conventions and provide examples (e.g., 'api-service', 'frontend-app')\n   - Host/Domain: Explain domain routing with examples (e.g., 'api.example.com', '*.subdomain.com')\n   - Path: Explain path matching with examples (e.g., '/api/v1', '/admin/{path:.*}')\n   - Service URL: Explain backend service configuration with examples (e.g., 'http://api:3000', 'https://backend.local:8080')\n   - Port: Explain port configuration and common ports (80, 443, 8080, 3000)\n\n3. Add middleware options tooltips:\n   - Authentication middleware: Explain BasicAuth, ForwardAuth, OAuth with configuration examples\n   - Rate limiting: Explain request limiting with examples of rate limit configurations\n   - CORS: Explain Cross-Origin Resource Sharing settings with header examples\n   - Compression: Explain gzip compression benefits and when to use\n   - SSL/TLS: Explain certificate management and redirect options\n   - Load balancing: Explain different load balancing strategies (round-robin, least-connections)\n\n4. Implement advanced tooltip features:\n   - Add copy-to-clipboard functionality for example configurations\n   - Include links to official Traefik documentation for detailed middleware options\n   - Add warning tooltips for potentially dangerous configurations\n   - Implement tooltip delay (300ms) to prevent accidental triggers\n   - Add keyboard accessibility (show tooltip on focus for screen readers)",
+        "testStrategy": "1. Create comprehensive Playwright test suite with snapshot and video verification:\n   - Test tooltip visibility and positioning for all form fields on mouseover\n   - Verify tooltip content accuracy and completeness for each field type\n   - Test tooltip hiding functionality on mouseout and when clicking elsewhere\n   - Validate responsive tooltip behavior across different screen sizes\n   - Test keyboard accessibility with tab navigation and focus events\n\n2. Test tooltip content and examples:\n   - Verify all examples provided in tooltips are valid Traefik configurations\n   - Test copy-to-clipboard functionality for example snippets\n   - Validate that tooltip links to Traefik documentation are correct and accessible\n   - Test tooltip content updates when form context changes\n\n3. Test tooltip performance and user experience:\n   - Verify tooltip show/hide delays work correctly (300ms delay)\n   - Test tooltip positioning edge cases (near viewport boundaries)\n   - Validate tooltip z-index stacking and overlay behavior\n   - Test tooltip functionality with form validation states and error messages\n   - Record video evidence of complete tooltip workflow and user interactions\n\n4. Cross-browser compatibility testing:\n   - Test tooltip functionality in Chromium (headless Playwright)\n   - Verify tooltip CSS styling renders consistently\n   - Test tooltip JavaScript functionality with different viewport sizes\n   - Validate tooltip accessibility features with screen reader simulation",
+        "status": "pending",
+        "dependencies": [
+          24,
+          25,
+          28
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 31,
+        "title": "Add mandatory field indicators (stars) to Add route form in Traefik Management Console",
+        "description": "Implement visual mandatory field indicators (asterisk symbols) for required fields in the Traefik Management Console Add route form to improve user experience and form validation clarity.",
+        "details": "1. Identify required fields in the Add route form:\n   - Locate all mandatory fields in the Traefik route creation form (Route Name, Host/Domain, Target URL/Port, etc.)\n   - Review form validation logic to determine which fields are actually required\n   - Check backend API requirements to ensure frontend matches server-side validation\n\n2. Implement visual mandatory field indicators:\n   - Add red asterisk (*) symbols next to required field labels using CSS styling\n   - Position asterisks consistently (typically after the field label text)\n   - Ensure asterisks are visually distinct with red color (#dc2626 or similar)\n   - Add appropriate spacing and typography for professional appearance\n\n3. Update form styling and accessibility:\n   - Add aria-required=\"true\" attributes to mandatory form inputs for screen reader support\n   - Ensure asterisks are included in screen reader announcements\n   - Style asterisks with consistent font-weight and color across all required fields\n   - Test visual contrast ratios for accessibility compliance\n\n4. Implement form validation feedback:\n   - Enhance existing validation to clearly identify missing required fields\n   - Show validation errors with reference to asterisk-marked required fields\n   - Ensure error messages are contextually relevant to mandatory field indicators",
+        "testStrategy": "1. Create comprehensive Playwright test suite with headless execution:\n   - Test that all required fields display red asterisk indicators correctly\n   - Verify asterisk positioning and styling consistency across all mandatory fields\n   - Test form submission with missing required fields shows appropriate validation errors\n   - Validate accessibility attributes (aria-required) are present on mandatory fields\n\n2. Visual regression testing with snapshots:\n   - Capture full-page screenshots of the Add route form showing all mandatory field indicators\n   - Take focused snapshots of individual required fields with asterisk styling\n   - Compare snapshots before and after implementation to verify visual changes\n   - Test responsive behavior of asterisk indicators across different screen sizes\n\n3. Video verification testing:\n   - Record complete form interaction workflow including mandatory field validation\n   - Capture user journey from form load through required field identification to successful submission\n   - Verify video shows clear visual distinction between required and optional fields\n   - Document test execution with artifacts saved to /web/test-reports directory",
+        "status": "pending",
+        "dependencies": [
+          24,
+          28
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 32,
+        "title": "Ensure consistent naming between modal fields and list columns in Traefik Management Console",
+        "description": "Standardize field names between the Add route modal form and the routes list column headers to maintain UI consistency. Implement comprehensive testing with headless Playwright snapshots and video verification.",
+        "details": "1. Audit current field naming inconsistencies:\n   - Compare field labels in the Add route modal form with column headers in the routes list table\n   - Document all naming mismatches (e.g., 'Route Name' vs 'Name', 'Host/Domain' vs 'Host', 'Target URL/Port' vs 'Target')\n   - Create mapping of current inconsistent naming patterns\n   - Review backend API field names to ensure consistency across frontend and backend\n\n2. Standardize field naming conventions:\n   - Choose consistent naming pattern (prefer shorter, clearer labels where appropriate)\n   - Update modal form field labels to match chosen convention\n   - Update routes list column headers to match chosen convention\n   - Ensure field IDs and data attributes remain consistent with backend expectations\n   - Update any related CSS classes or JavaScript selectors that reference field names\n\n3. Update form validation and data processing:\n   - Verify form validation messages use consistent field names\n   - Update JavaScript functions that reference field names or DOM elements\n   - Ensure API request/response handling maintains correct field mapping\n   - Test that form submission and data display work correctly after naming changes\n\n4. Implement comprehensive UI consistency checks:\n   - Add validation to ensure modal field names exactly match list column headers\n   - Create helper functions to maintain naming consistency in future updates\n   - Document the standardized naming conventions for future development reference",
+        "testStrategy": "1. Create comprehensive Playwright test suite with headless execution and full verification:\n   - Take before and after snapshots of both Add route modal and routes list to visually verify naming consistency\n   - Record video of complete workflow: opening modal, viewing field labels, closing modal, checking list headers\n   - Test that every field label in Add route modal has exact matching column header in routes list\n   - Verify no broken functionality after field name changes (form submission, validation, data display)\n\n2. Implement automated consistency validation:\n   - Create test that programmatically compares modal field labels with list column headers\n   - Test that form data properly maps to list display after route creation\n   - Verify tooltip text and validation messages use consistent field terminology\n   - Test accessibility labels and screen reader compatibility with new field names\n\n3. Cross-browser and responsive testing:\n   - Test naming consistency across different viewport sizes and screen resolutions\n   - Verify field label truncation behavior maintains readability\n   - Test that naming changes don't break mobile responsive layout\n   - Generate comprehensive test report with snapshots, videos, and pass/fail metrics",
+        "status": "pending",
+        "dependencies": [
+          28,
+          30,
+          31
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 33,
+        "title": "Replace mock data with real Traefik API integration in Management Console",
+        "description": "Replace all mock data in the Traefik Management Console with actual Traefik API connections for HTTP Routes, Services, Middlewares, and Certificates tabs, implementing proper API endpoints and error handling.",
+        "details": "1. Remove mock data from Traefik Management Console:\n   - Identify and remove all hardcoded mock data arrays for routes, services, middlewares, and certificates\n   - Clean up mock data generation functions and placeholder content\n   - Remove any temporary data structures used for UI development\n\n2. Implement Traefik API integration:\n   - Research Traefik REST API endpoints for routes (/api/http/routers), services (/api/http/services), middlewares (/api/http/middlewares), and certificates (/api/rawdata)\n   - Create API client module with proper authentication and base URL configuration\n   - Implement async functions for fetching real data from Traefik API endpoints\n   - Add proper error handling for network failures, authentication issues, and malformed responses\n\n3. Connect real data to UI components:\n   - Update routes tab to display actual HTTP routers from Traefik API\n   - Connect services tab to real Traefik services data with health status indicators\n   - Implement middlewares tab with actual middleware configurations and chaining information\n   - Connect certificates tab to real TLS certificate data including expiration dates and domains\n\n4. Implement data refresh and polling:\n   - Add refresh buttons for each tab to manually reload data\n   - Implement periodic polling for real-time updates of Traefik configuration changes\n   - Add loading states and skeleton UI during API calls\n\n5. Handle API errors gracefully:\n   - Implement fallback UI for when Traefik API is unavailable\n   - Add user-friendly error messages for different failure scenarios\n   - Provide retry mechanisms for failed API calls",
+        "testStrategy": "1. Create comprehensive Playwright test suite with headless execution:\n   - Test successful data loading from real Traefik API endpoints for all four tabs\n   - Verify correct data display format and structure matches Traefik API response schema\n   - Test error handling when Traefik API is unavailable or returns errors\n\n2. Implement snapshot and video verification:\n   - Take before/after snapshots of each tab showing transition from mock to real data\n   - Record video of complete workflow: loading each tab, refreshing data, handling errors\n   - Verify no mock data artifacts remain in the UI or console logs\n\n3. API integration testing:\n   - Test API connectivity with both valid and invalid Traefik configurations\n   - Verify proper authentication and authorization handling\n   - Test data refresh functionality and real-time updates\n\n4. Cross-tab consistency testing:\n   - Verify data relationships between routes, services, and middlewares are correctly displayed\n   - Test that certificate data matches domains configured in routes\n   - Confirm refresh operations update all related data consistently",
+        "status": "pending",
+        "dependencies": [
+          24,
+          30,
+          31,
+          32
+        ],
+        "priority": "medium",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-08-29T12:40:43.904Z",
-      "updated": "2025-08-29T12:48:02.335Z",
+      "updated": "2025-09-04T15:03:04.576Z",
       "description": "Tasks for atlas context"
     }
   }
