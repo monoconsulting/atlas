@@ -2,8 +2,8 @@
   "master": {
     "tasks": [],
     "metadata": {
-      "created": "2025-09-05T05:09:56.799Z",
-      "updated": "2025-09-05T05:09:56.799Z",
+      "created": "2025-09-05T06:35:02.484Z",
+      "updated": "2025-09-05T06:35:02.484Z",
       "description": "Tasks for master context"
     }
   },
@@ -719,11 +719,30 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 38,
+        "title": "Default sorting should be TMID DESC",
+        "description": "Change the sortorder so its sorting DESC on Taskmaster id in kanban.",
+        "priority": "medium",
+        "status": "review",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-05T06:24:49.061338Z",
+        "updated_at": "2025-09-05T06:24:49.061351Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ],
     "metadata": {
-      "created": "2025-09-05T05:09:56.799Z",
-      "updated": "2025-09-05T05:40:11.793Z",
+      "created": "2025-09-05T06:35:02.484Z",
+      "updated": "2025-09-05T06:35:02.487Z",
       "description": "Tasks for atlas context"
     }
   }

@@ -42,7 +42,7 @@ const state = {
     // Sorting state
     sorting: {
         by: 'id',
-        order: 'asc'
+        order: 'desc'
     },
     
     // UI state

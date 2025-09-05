@@ -49,6 +49,9 @@ async function initialize() {
         // Setup state listeners
         setupStateListeners();
         
+        // Initialize sorting from HTML dropdown
+        handleSortingChange();
+        
         render.hideSpinner();
         
     } catch (error) {
