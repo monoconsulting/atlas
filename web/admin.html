@@ -546,7 +546,10 @@
             const grid = document.getElementById('projectsGrid');
             const emptyState = document.getElementById('emptyState');
             
-            if (projects.length === 0) {
+            // Filter out inactive projects (disabled projects should be hidden from admin interface)
+            const activeProjects = projects.filter(project => project.active !== false);
+            
+            if (activeProjects.length === 0) {
                 grid.innerHTML = '';
                 emptyState.classList.remove('hidden');
                 return;
@@ -554,7 +557,7 @@
             
             emptyState.classList.add('hidden');
             
-            grid.innerHTML = projects.map(project => {
+            grid.innerHTML = activeProjects.map(project => {
                 const isBackendOrigin = location.hostname === 'localhost' && location.port === '8199';
                 const openUrl = isBackendOrigin ? `/${escapeHtml(project.slug)}` : `http://localhost:8199/${escapeHtml(project.slug)}`;
                 return `
