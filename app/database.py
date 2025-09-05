@@ -260,6 +260,11 @@ def get_project_by_id(db, project_id: int) -> Optional[Project]:
     return db.query(Project).filter(Project.id == project_id, Project.active == True).first()
 
 
+def get_project_by_id_any_status(db, project_id: int) -> Optional[Project]:
+    """Get project by ID regardless of active status."""
+    return db.query(Project).filter(Project.id == project_id).first()
+
+
 def get_all_projects(db) -> list[Project]:
     """Get all projects, including inactive (for admin visibility)."""
     # Admin needs to see disabled projects too; filter by active only where required elsewhere
@@ -288,7 +293,7 @@ def create_project(db, project: ProjectCreate) -> Project:
 
 def update_project(db, project_id: int, project_update: ProjectUpdate) -> Optional[Project]:
     """Update an existing project."""
-    db_project = get_project_by_id(db, project_id)
+    db_project = get_project_by_id_any_status(db, project_id)
     if not db_project:
         return None
     

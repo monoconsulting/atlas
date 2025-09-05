@@ -26,7 +26,7 @@ from .database import (
     init_db, get_db,
     Project, ProjectCreate, ProjectUpdate, ProjectResponse,
     Port, PortCreate, PortUpdate, PortResponse,
-    get_all_projects, get_project_by_slug, get_project_by_id,
+    get_all_projects, get_project_by_slug, get_project_by_id, get_project_by_id_any_status,
     create_project, update_project, delete_project,
     get_all_ports, get_port_by_id, get_ports_by_project,
     create_port, update_port, delete_port
