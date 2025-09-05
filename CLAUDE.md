@@ -3,6 +3,14 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Important rules
+-  Before starting the work you must have an assigned taskmaster id. You don't have permission to start to work without it.
+- Before starting to work you must first make sure that you are on dev branch. If not. You must make sure that you commit and merge and push the previous work done. You are not allowed to leave it dirty and messy. 
+- NEVER use main. You have no permission to use it without explicit orders.
+- When dev is clean create a new branch with the name TMID-Description - example TM131-upload-issues-central
+- Read your task and set up your test before starting the work
+- Start working. When you are done run the test as specified above
+- If test is 100% you have success and must report to me. You are not allowed to close a task without my permission.
+- When I say you can close, close task. Commit, merge, push. You must always leave the git CLEAN and nice.
 - You must always update CLAUDE.md, and create an ADR if necessary.
 - You must always do a full test of all functions you supplied and get a 100% result. The test result must be stored in /web/test-reports, and /web/test-results.html must always be updated using the existing structure.
 - You must always work on a task in task-master. No other todo list are ok.
