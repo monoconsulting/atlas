@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-05T05:09:56.799Z",
+      "updated": "2025-09-05T05:09:56.799Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -701,7 +706,7 @@
         "title": "Populate from Selecting task-file",
         "description": "When a project is added in admin.html using selecting task-file the following fields in the modal should be updated\n- Title - name of the folder \n- slug - create a slug from folder name that works\n- project path\n- task file\n- urls for web gui (check ports that are used in docker ps and see if they have an interface mathing)",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -715,6 +720,11 @@
         "extra": {},
         "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-05T05:09:56.799Z",
+      "updated": "2025-09-05T05:40:11.793Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }

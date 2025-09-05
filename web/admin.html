@@ -508,19 +508,23 @@
         }
 
         function updateSlugPreview() {
-            let slug = document.getElementById('projectSlug').value || 'your-slug';
-            // Remove any leading slashes to prevent URL issues
-            slug = slug.replace(/^\/+/, '');
-            // Update the input field if we removed leading slashes
-            if (document.getElementById('projectSlug').value !== slug) {
-                document.getElementById('projectSlug').value = slug;
+            let inputSlug = document.getElementById('projectSlug').value;
+            // Remove any leading slashes from the input to prevent URL issues
+            let cleanSlug = inputSlug.replace(/^\/+/, '');
+            
+            // Update the input field only if we removed leading slashes
+            if (inputSlug !== cleanSlug) {
+                document.getElementById('projectSlug').value = cleanSlug;
             }
-            document.getElementById('slugPreview').textContent = slug;
+            
+            // For preview, show 'your-slug' if empty, but don't set it in the input field
+            let previewSlug = cleanSlug || 'your-slug';
+            document.getElementById('slugPreview').textContent = previewSlug;
         }
 
         async function loadProjects() {
             try {
-                const response = await fetch(`/api/projects`);
+                const response = await fetch(`http://localhost:8199/api/projects`);
                 const data = await response.json();
                 
                 if (data.ok) {
@@ -679,13 +683,13 @@
             try {
                 let response;
                 if (editingProjectId) {
-                    response = await fetch(`/api/projects/${editingProjectId}`, {
+                    response = await fetch(`http://localhost:8199/api/projects/${editingProjectId}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
                     });
                 } else {
-                    response = await fetch(`/api/projects`, {
+                    response = await fetch(`http://localhost:8199/api/projects`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
@@ -722,7 +726,7 @@
             }
 
             try {
-                const response = await fetch(`/api/projects/${projectId}`, {
+                const response = await fetch(`http://localhost:8199/api/projects/${projectId}`, {
                     method: 'DELETE'
                 });
 
@@ -748,7 +752,7 @@
             }
 
             try {
-                const response = await fetch(`/api/projects/${projectId}`, {
+                const response = await fetch(`http://localhost:8199/api/projects/${projectId}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ active: false })
@@ -820,7 +824,7 @@
             document.getElementById('fileSelectorModal').classList.add('hidden');
         }
         
-        function confirmFileSelection() {
+        async function confirmFileSelection() {
             if (selectedTaskFile) {
                 // Set the task file path in the form
                 document.getElementById('taskFilePath').value = selectedTaskFile;
@@ -834,10 +838,37 @@
                     projectRoot = selectedTaskFile.substring(0, selectedTaskFile.lastIndexOf('/'));
                 }
                 
-                // Also update the project path field if it's empty or if we're selecting a taskfile
-                if (!document.getElementById('projectPath').value || document.getElementById('projectPath').value === '/projects') {
-                    document.getElementById('projectPath').value = projectRoot;
+                // Update the project path field
+                document.getElementById('projectPath').value = projectRoot;
+                
+                // Extract folder name from project root path for auto-population
+                const folderName = projectRoot.split('/').pop() || '';
+                
+                // Auto-populate Title field if it's empty
+                if (!document.getElementById('projectName').value.trim()) {
+                    // Convert folder name to a readable title
+                    const title = folderName
+                        .replace(/[-_]/g, ' ')  // Replace hyphens and underscores with spaces
+                        .replace(/\b\w/g, l => l.toUpperCase())  // Capitalize first letter of each word
+                        .trim();
+                    document.getElementById('projectName').value = title;
                 }
+                
+                // Auto-populate Slug field if it's empty
+                const currentSlug = document.getElementById('projectSlug').value.trim();
+                if (!currentSlug) {
+                    // Create a URL-safe slug from folder name
+                    const slug = folderName
+                        .toLowerCase()
+                        .replace(/[^a-z0-9-_]/g, '-')  // Replace non-alphanumeric chars with hyphens
+                        .replace(/--+/g, '-')  // Replace multiple hyphens with single hyphen
+                        .replace(/^-|-$/g, '');  // Remove leading/trailing hyphens
+                    document.getElementById('projectSlug').value = slug;
+                    updateSlugPreview();
+                }
+                
+                // Auto-detect and populate URLs by scanning Docker ports
+                await autoDetectProjectUrls(folderName);
                 
                 closeFileSelector();
             }
@@ -845,7 +876,7 @@
         
         async function loadFileBrowser(path) {
             try {
-                const response = await fetch(`/api/browse-files?path=${encodeURIComponent(path)}`);
+                const response = await fetch(`http://localhost:8199/api/browse-files?path=${encodeURIComponent(path)}`);
                 const data = await response.json();
                 
                 if (data.ok) {
@@ -958,7 +989,7 @@
         async function loadPorts() {
             try {
                 console.log('Attempting to load ports from:', `/ports`);
-                const response = await fetch(`/api/ports`);
+                const response = await fetch(`http://localhost:8199/api/ports`);
                 console.log('Ports API response status:', response.status);
                 
                 if (!response.ok) {
@@ -1133,13 +1164,13 @@
             try {
                 let response;
                 if (editingPortId) {
-                    response = await fetch(`/api/ports/${editingPortId}`, {
+                    response = await fetch(`http://localhost:8199/api/ports/${editingPortId}`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
                     });
                 } else {
-                    response = await fetch(`/api/ports`, {
+                    response = await fetch(`http://localhost:8199/api/ports`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(formData)
@@ -1173,7 +1204,7 @@
             
             if (confirm(`Are you sure you want to delete port ${port.port}${port.service_name ? ` (${port.service_name})` : ''}?`)) {
                 try {
-                    const response = await fetch(`/api/ports/${portId}`, {
+                    const response = await fetch(`http://localhost:8199/api/ports/${portId}`, {
                         method: 'DELETE'
                     });
                     
@@ -1200,6 +1231,111 @@
             document.getElementById('selectedFilePath').value = path;
             document.getElementById('confirmFileSelection').disabled = false;
         }
+        
+        async function autoDetectProjectUrls(folderName) {
+            if (!folderName) return;
+            
+            try {
+                // Scan Docker containers for port mappings
+                const response = await fetch('/api/docker/scan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    console.log('Docker scan not available or failed');
+                    return;
+                }
+                
+                const result = await response.json();
+                
+                if (result.ok && result.scanned_ports && result.scanned_ports.length > 0) {
+                    // Look for containers that might match this project
+                    const matchingContainers = result.scanned_ports.filter(port => {
+                        const containerName = port.container_name.toLowerCase();
+                        const projectName = folderName.toLowerCase();
+                        
+                        // Check if container name contains project name or vice versa
+                        return containerName.includes(projectName) || 
+                               projectName.includes(containerName) ||
+                               containerName.includes(projectName.replace(/[-_]/g, ''));
+                    });
+                    
+                    if (matchingContainers.length > 0) {
+                        // Auto-populate URLs based on found containers
+                        autoPopulateUrlsFromContainers(matchingContainers, folderName);
+                    } else {
+                        // If no direct matches, try to detect common web ports
+                        autoDetectCommonWebServices(result.scanned_ports, folderName);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error during Docker port auto-detection:', error);
+                // Silently continue - this is an optional feature
+            }
+        }
+        
+        function autoPopulateUrlsFromContainers(containers, folderName) {
+            // Look for web services (common web ports)
+            const webPorts = [80, 443, 3000, 3001, 4200, 5000, 8000, 8080, 8443, 9000];
+            const phpMyAdminPorts = [8080, 8081, 8082];
+            
+            containers.forEach(container => {
+                const port = container.external_port;
+                const serviceName = container.service_name.toLowerCase();
+                
+                // Auto-populate development URL for web services
+                if (webPorts.includes(port) && !document.getElementById('devUrl').value) {
+                    document.getElementById('devUrl').value = `http://localhost:${port}`;
+                }
+                
+                // Auto-populate production URL if it looks like a production service
+                if ((port === 80 || port === 443) && serviceName.includes('prod') && !document.getElementById('prodUrl').value) {
+                    const protocol = port === 443 ? 'https' : 'http';
+                    document.getElementById('prodUrl').value = `${protocol}://localhost:${port}`;
+                }
+                
+                // Auto-populate phpMyAdmin URL
+                if (phpMyAdminPorts.includes(port) && 
+                    (serviceName.includes('phpmyadmin') || serviceName.includes('mysql')) && 
+                    !document.getElementById('phpmyadminUrl').value) {
+                    document.getElementById('phpmyadminUrl').value = `http://localhost:${port}`;
+                }
+                
+                // Auto-populate docs URL for documentation services
+                if ((serviceName.includes('doc') || serviceName.includes('swagger') || 
+                     serviceName.includes('api-doc')) && !document.getElementById('docsUrl').value) {
+                    document.getElementById('docsUrl').value = `http://localhost:${port}`;
+                }
+            });
+        }
+        
+        function autoDetectCommonWebServices(allContainers, folderName) {
+            // If no direct container matches, look for common patterns that might be related
+            const commonWebPorts = [3000, 3001, 4200, 5000, 8000, 8080, 9000];
+            
+            // Find the first web service port and suggest it as dev URL
+            const webContainer = allContainers.find(container => 
+                commonWebPorts.includes(container.external_port)
+            );
+            
+            if (webContainer && !document.getElementById('devUrl').value) {
+                document.getElementById('devUrl').value = `http://localhost:${webContainer.external_port}`;
+            }
+            
+            // Look for phpMyAdmin services
+            const phpMyAdminContainer = allContainers.find(container =>
+                container.service_name.toLowerCase().includes('phpmyadmin') ||
+                (container.external_port === 8080 && container.service_name.toLowerCase().includes('mysql'))
+            );
+            
+            if (phpMyAdminContainer && !document.getElementById('phpmyadminUrl').value) {
+                document.getElementById('phpmyadminUrl').value = `http://localhost:${phpMyAdminContainer.external_port}`;
+            }
+        }
 
         async function scanDockerPorts() {
             const scanBtn = document.getElementById('scanDockerBtn');
@@ -1211,7 +1347,7 @@
                 scanBtn.disabled = true;
                 
                 // Call the Docker scan API
-                const response = await fetch(`/api/docker/scan`, {
+                const response = await fetch(`http://localhost:8199/api/docker/scan`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1251,7 +1387,7 @@
 
         async function importDockerPorts() {
             try {
-                const response = await fetch(`/api/docker/import`, {
+                const response = await fetch(`http://localhost:8199/api/docker/import`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1282,7 +1418,7 @@
         
         async function checkSonarQubeStatus() {
             try {
-                const response = await fetch(`/api/sonarqube/status`);
+                const response = await fetch(`http://localhost:8199/api/sonarqube/status`);
                 const status = await response.json();
                 return status;
             } catch (error) {
@@ -1310,7 +1446,7 @@
             metricsDiv.innerHTML = '<div class="text-slate-500">Running code analysis, this may take a few minutes...</div>';
             
             try {
-                const response = await fetch(`/api/projects/${projectId}/analyze`, {
+                const response = await fetch(`http://localhost:8199/api/projects/${projectId}/analyze`, {
                     method: 'POST'
                 });
                 
@@ -1336,7 +1472,7 @@
             const statusDiv = document.getElementById(`sonar-status-${projectId}`);
             
             try {
-                const response = await fetch(`/api/projects/${projectId}/sonarqube-metrics`);
+                const response = await fetch(`http://localhost:8199/api/projects/${projectId}/sonarqube-metrics`);
                 const metrics = await response.json();
                 
                 if (metrics.error) {
@@ -1392,7 +1528,7 @@
         async function viewAnalysisResults(projectId) {
             // First get the SonarQube URL
             try {
-                const response = await fetch(`/api/projects/${projectId}/sonarqube-url`);
+                const response = await fetch(`http://localhost:8199/api/projects/${projectId}/sonarqube-url`);
                 const data = await response.json();
                 
                 // Open results page with project info
