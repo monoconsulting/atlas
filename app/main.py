@@ -700,8 +700,8 @@ def serve_project(project_slug: str, db: Session = Depends(get_db)) -> HTMLRespo
     
     # Replace the title tag and project info with the actual project data
     html_content = html_content.replace(
-        "<title>TM-Atlas - Loading...</title>",
-        f"<title>TM-{project.name}</title>"
+        "<title>Atlas-TM - Loading...</title>",
+        f"<title>{project.name}-TM</title>"
     )
     html_content = html_content.replace(
         "TaskMaster AI — Development Hub",
