@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - When dev is clean create a new branch with the name TMID-Description - example TM131-upload-issues-central
 - Read your task and set up your test before starting the work
 - Start working. When you are done run the test as specified above
-- If test is 100% you have success and must report to me. You are not allowed to close a task without my permission.
+- If test is 100% you have success, then you must always do a rebuild and must report to me. You are not allowed to close a task without my permission.
 - When I say you can close, close task. Commit, merge, push. You must always leave the git CLEAN and nice.
 - You must always update CLAUDE.md, and create an ADR if necessary.
 - You must always do a full test of all functions you supplied and get a 100% result. The test result must be stored in /web/test-reports, and /web/test-results.html must always be updated using the existing structure.
