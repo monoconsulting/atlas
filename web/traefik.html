@@ -522,55 +522,104 @@
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">Name *</label>
+                    <label class="block text-sm text-slate-300 mb-1">Name *</label>
                     <input id="routeName" 
-                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
-                           placeholder="myapp"
-                           title="Unique name for this route (e.g., myapp, api-gateway)" />
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="myapp" />
                 </div>
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">Host rule *</label>
+                    <label class="block text-sm text-slate-300 mb-1">Host rule *</label>
                     <input id="routeHost" 
-                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
-                           placeholder="myapp.localhost"
-                           title="Hostname to match requests (e.g., myapp.localhost, api.example.com)" />
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="myapp.localhost" />
                 </div>
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">Service URL *</label>
+                    <label class="block text-sm text-slate-300 mb-1">Service URL *</label>
                     <input id="routeServiceUrl" 
-                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
-                           placeholder="http://host.docker.internal:3000"
-                           title="Backend service URL (e.g., http://host.docker.internal:3000, http://app:8000)" />
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="http://host.docker.internal:3000" />
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm text-slate-400 mb-1">Entrypoint</label>
+                        <label class="block text-sm text-slate-300 mb-1">Entrypoint</label>
                         <select id="routeEntrypoint" 
-                                class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2"
+                                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100"
                                 title="Traefik entrypoint to use - web for HTTP, websecure for HTTPS">
                             <option value="web">web (:80)</option>
                             <option value="websecure">websecure (:443)</option>
                         </select>
                     </div>
-                    <div class="flex items-center mt-6">
-                        <input id="routeTls" type="checkbox" class="mr-2" 
-                               title="Enable TLS/SSL certificates for this route" />
-                        <label for="routeTls" class="text-sm text-slate-400">Enable TLS</label>
+                    <div class="flex items-center">
+                        <input id="routeTls" type="checkbox" class="w-4 h-4 mr-2" />
+                        <label class="text-sm text-slate-300">Enable TLS</label>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm text-slate-400 mb-1">Middlewares (comma separated)</label>
+                    <label class="block text-sm text-slate-300 mb-1">Middlewares</label>
                     <input id="routeMiddlewares" 
-                           class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2" 
-                           placeholder="auth, compress, rate-limit"
-                           title="Available middlewares: auth (authentication), compress (gzip), rate-limit, cors, headers" />
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="rate-limit, auth (comma-separated)" />
                 </div>
             </div>
             <div class="flex justify-end gap-2 mt-6">
-                <button class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded" onclick="closeAddRouteModal(event)">Cancel</button>
-                <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded" onclick="submitAddRoute(event)">Save</button>
+                <button class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition-colors" onclick="closeAddRouteModal(event)">Cancel</button>
+                <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg transition-colors" onclick="submitAddRoute(event)">Save</button>
             </div>
             <p class="text-xs text-slate-500 mt-3">Note: Traefik API is read-only; this writes a dynamic file Traefik can load if configured.</p>
+        </div>
+    </div>
+
+    <!-- Edit Route Modal -->
+    <div id="editRouteModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50" onclick="closeEditRouteModal()">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 w-full max-w-lg" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-slate-200">Edit HTTP Route</h3>
+                <button class="text-slate-400 hover:text-slate-200" onclick="closeEditRouteModal(event)">✕</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Name *</label>
+                    <input id="editRouteName" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="myapp" />
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Host rule *</label>
+                    <input id="editRouteHost" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="myapp.localhost" />
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Service URL *</label>
+                    <input id="editRouteServiceUrl" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="http://host.docker.internal:3000" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-slate-300 mb-1">Entrypoint</label>
+                        <select id="editRouteEntrypoint" 
+                                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100">
+                            <option value="web">web</option>
+                            <option value="websecure">websecure</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="editRouteTls" type="checkbox" class="w-4 h-4 mr-2">
+                        <label class="text-sm text-slate-300">Enable TLS</label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1">Middlewares</label>
+                    <input id="editRouteMiddlewares" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100" 
+                           placeholder="rate-limit, auth (comma-separated)" />
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition-colors" onclick="closeEditRouteModal(event)">Cancel</button>
+                <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg transition-colors" onclick="submitEditRoute(event)">Update Route</button>
+            </div>
         </div>
     </div>
 
@@ -635,6 +684,9 @@
         
         function openAddRouteModal(e){ if(e) e.stopPropagation(); document.getElementById('addRouteModal').classList.remove('hidden'); document.getElementById('addRouteModal').classList.add('flex'); }
         function closeAddRouteModal(e){ if(e) e.stopPropagation(); const m=document.getElementById('addRouteModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
+        
+        function openEditRouteModal(e){ if(e) e.stopPropagation(); document.getElementById('editRouteModal').classList.remove('hidden'); document.getElementById('editRouteModal').classList.add('flex'); }
+        function closeEditRouteModal(e){ if(e) e.stopPropagation(); const m=document.getElementById('editRouteModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
         async function submitAddRoute(e){
             if(e) e.stopPropagation();
             const name = document.getElementById('routeName').value.trim();
@@ -680,6 +732,57 @@
                 
             }catch(err){ 
                 console.error('Create route error:', err);
+                showNotification(`Error: ${err.message || err}`, 'error'); 
+            }
+        }
+        
+        async function submitEditRoute(e){
+            if(e) e.stopPropagation();
+            const name = document.getElementById('editRouteName').value.trim();
+            const host = document.getElementById('editRouteHost').value.trim();
+            const service_url = document.getElementById('editRouteServiceUrl').value.trim();
+            const entrypoint = document.getElementById('editRouteEntrypoint').value;
+            const tls = document.getElementById('editRouteTls').checked;
+            const middlewares = document.getElementById('editRouteMiddlewares').value.split(',').map(s=>s.trim()).filter(Boolean);
+            const originalName = window.editingRouteName;
+            
+            if(!name || !host || !service_url){ 
+                showNotification('Name, Host and Service URL are required', 'error'); 
+                return; 
+            }
+            
+            try{
+                const res = await fetch(`http://localhost:8199/api/traefik/routes/${originalName}`, { 
+                    method:'PUT', 
+                    headers:{'Content-Type':'application/json'},
+                    credentials: 'include',
+                    body: JSON.stringify({name, host, service_url, entrypoint, middlewares, tls}) 
+                });
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    let errorMsg;
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMsg = errorData.detail || errorData.message || 'Failed to update route';
+                    } catch {
+                        errorMsg = `HTTP ${res.status}: ${errorText || res.statusText}`;
+                    }
+                    throw new Error(errorMsg);
+                }
+                
+                const data = await res.json();
+                showNotification(data.message || `Route '${name}' updated successfully`, 'success');
+                closeEditRouteModal();
+                await loadRouters();
+                
+                // Refresh page after successful edit
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+                
+            }catch(err){ 
+                console.error('Update route error:', err);
                 showNotification(`Error: ${err.message || err}`, 'error'); 
             }
         }
@@ -729,6 +832,11 @@
                 document.getElementById('qmHost').value = '';
                 document.getElementById('qmPort').value = '';
                 document.getElementById('qmTls').checked = false;
+                
+                // Refresh page after successful quickmap to ensure UI is fully updated
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
                 
             }catch(err){ 
                 console.error('Quick map error:', err);
@@ -782,6 +890,17 @@
                         </div>`;
                     list.appendChild(card);
                 });
+                
+                // Add refresh page button after scan results
+                if (rows.length > 0) {
+                    const refreshCard = document.createElement('div');
+                    refreshCard.className = 'mt-4 text-center';
+                    refreshCard.innerHTML = `
+                        <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm transition-colors" onclick="window.location.reload()">
+                            🔄 Refresh Page to See All Changes
+                        </button>`;
+                    list.appendChild(refreshCard);
+                }
             } catch(err) { 
                 console.error('Docker scan error:', err);
                 list.innerHTML = `<div class="text-red-400">Scan failed: ${err.message || err}</div>`; 
@@ -826,23 +945,93 @@
             }
         }
         
-        function editRoute(name) {
-            // For now, just show a notification
-            // TODO: Implement actual edit functionality with a modal
-            showNotification(`Edit functionality for '${name}' coming soon`, 'info');
+        async function editRoute(name) {
+            try {
+                // Get current routes to find the route data
+                const res = await fetch(`http://localhost:8199/api/traefik/http/routers`, {
+                    credentials: 'include'
+                });
+                
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch routes: ${res.status}`);
+                }
+                
+                const json = await res.json();
+                const routes = Array.isArray(json.data) ? json.data : [];
+                const route = routes.find(r => r.name === name);
+                
+                if (!route) {
+                    throw new Error(`Route '${name}' not found`);
+                }
+                
+                // Parse the route data to populate the form
+                const routeName = name.replace('@file', '').replace('@docker', '');
+                let host = route.rule || '';
+                
+                // Extract hostname from Host(`hostname`) rule
+                const hostMatch = host.match(/Host\(`([^`]+)`\)/);
+                if (hostMatch) {
+                    host = hostMatch[1];
+                }
+                
+                // Store original route name for update API call
+                window.editingRouteName = routeName;
+                
+                // Populate form fields
+                document.getElementById('editRouteName').value = routeName;
+                document.getElementById('editRouteHost').value = host;
+                document.getElementById('editRouteServiceUrl').value = 'http://host.docker.internal:9652'; // Default
+                document.getElementById('editRouteEntrypoint').value = 'web';
+                document.getElementById('editRouteTls').checked = false;
+                document.getElementById('editRouteMiddlewares').value = '';
+                
+                // Show modal
+                openEditRouteModal();
+                
+            } catch (err) {
+                console.error('Edit route error:', err);
+                showNotification(`Error loading route for editing: ${err.message || err}`, 'error');
+            }
         }
         
         async function deleteRoute(name) {
-            if (confirm(`Are you sure you want to delete route: ${name}?`)) {
-                try {
-                    // Note: Traefik API is read-only, so this would need to delete the dynamic file
-                    // For now, just show a message
-                    showNotification(`Delete functionality for '${name}' coming soon`, 'info');
-                    // TODO: Implement actual delete via file removal
-                } catch (err) {
-                    console.error('Delete route error:', err);
-                    showNotification(`Error deleting route: ${err.message || err}`, 'error');
+            if (!confirm(`Are you sure you want to delete route: ${name}?`)) {
+                return;
+            }
+            
+            try {
+                // Extract route name without provider suffix
+                const routeName = name.replace('@file', '').replace('@docker', '');
+                
+                const res = await fetch(`http://localhost:8199/api/traefik/routes/${routeName}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    let errorMsg;
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMsg = errorData.detail || errorData.message || 'Failed to delete route';
+                    } catch {
+                        errorMsg = `HTTP ${res.status}: ${errorText || res.statusText}`;
+                    }
+                    throw new Error(errorMsg);
                 }
+                
+                const data = await res.json();
+                showNotification(data.message || `Route '${routeName}' deleted successfully`, 'success');
+                
+                // Refresh routes list and page
+                await loadRouters();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+                
+            } catch (err) {
+                console.error('Delete route error:', err);
+                showNotification(`Error deleting route: ${err.message || err}`, 'error');
             }
         }
         

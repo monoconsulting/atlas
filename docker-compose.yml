@@ -9,6 +9,7 @@ services:
       - "${HOST_PORT:-8194}:8000"
     volumes:
       - "${PROJECTS_HOST_DIR}:/projects"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     depends_on:
       - mysql
     restart: unless-stopped
@@ -18,6 +19,7 @@ services:
       - "traefik.http.services.atlas-api.loadbalancer.server.port=8000"
     networks:
       - web
+      - proxy
 
   webserver:
     build: .
@@ -37,6 +39,7 @@ services:
       - "traefik.http.services.atlas-hub.loadbalancer.server.port=9652"
     networks:
       - web
+      - proxy
 
   mysql:
     image: mysql:8.0
@@ -53,6 +56,7 @@ services:
     restart: unless-stopped
     networks:
       - web
+      - proxy
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -68,9 +72,12 @@ services:
     restart: unless-stopped
     networks:
       - web
+      - proxy
 
 networks:
   web:
+    external: true
+  proxy:
     external: true
 
 volumes:

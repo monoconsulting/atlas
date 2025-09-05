@@ -88,14 +88,9 @@ def _traefik_base() -> str:
     # First try the environment variable
     env_base = os.getenv("TRAEFIK_API_BASE")
     if env_base:
-        # If it's set to host.docker.internal, replace with actual Traefik endpoint
-        if "host.docker.internal" in env_base:
-            # Traefik dashboard is on port 8088 based on docker ps
-            return "http://localhost:8088/api"
         return env_base
-    # Default to common Traefik API endpoints
-    # Traefik dashboard is on port 8088 based on docker ps
-    return "http://localhost:8088/api"
+    # Default to gateway.localhost with authentication
+    return "http://gateway.localhost/api"
 
 
 def _traefik_auth_header() -> Optional[str]:
@@ -112,9 +107,8 @@ def _http_get_json(url: str) -> Dict[str, Any]:
     ah = _traefik_auth_header()
     if ah:
         req.add_header("Authorization", ah)
-    host_hdr = os.getenv("TRAEFIK_API_HOST_HEADER", os.getenv("TRAEFIK_HOST_HEADER", "gateway.localhost"))
-    if host_hdr:
-        req.add_header("Host", host_hdr)
+    # Always add Host header for proper Traefik routing
+    req.add_header("Host", "gateway.localhost")
     try:
         with urllib.request.urlopen(req, timeout=10) as resp:
             content = resp.read().decode("utf-8", errors="ignore")
@@ -122,11 +116,13 @@ def _http_get_json(url: str) -> Dict[str, Any]:
                 return {}
             return json.loads(content)
     except urllib.error.HTTPError as e:
-        raise HTTPException(status_code=e.code, detail=f"Traefik API error: {e.reason}")
+        raise HTTPException(status_code=e.code, detail=f"Traefik API error: {e.code} - {e.reason}")
     except urllib.error.URLError as e:
-        raise HTTPException(status_code=502, detail=f"Cannot connect to Traefik: {e.reason}")
+        raise HTTPException(status_code=502, detail=f"Traefik connection error: {e.reason}")
     except json.JSONDecodeError as e:
-        raise HTTPException(status_code=502, detail=f"Invalid JSON from Traefik: {e}")
+        raise HTTPException(status_code=502, detail=f"Invalid JSON response from Traefik: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error connecting to Traefik: {str(e)}")
 
 
 @app.get("/api/traefik/overview", response_class=JSONResponse)
@@ -230,6 +226,75 @@ def traefik_add_route(payload: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
     out_file.write_text(content, encoding="utf-8")
 
     return {"ok": True, "file": str(out_file), "content": content}
+
+
+@app.delete("/api/traefik/routes/{route_name}", response_class=JSONResponse)
+def traefik_delete_route(route_name: str) -> Dict[str, Any]:
+    """Delete a dynamic route config file from Traefik file provider."""
+    try:
+        dyn_dir = Path(os.getenv("TRAEFIK_DYNAMIC_DIR", "traefik/dynamic"))
+        route_file = dyn_dir / f"{route_name}.yml"
+        
+        if not route_file.exists():
+            raise HTTPException(status_code=404, detail=f"Route file '{route_name}.yml' not found")
+        
+        route_file.unlink()  # Delete the file
+        
+        return {"ok": True, "message": f"Route '{route_name}' deleted successfully", "file": str(route_file)}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete route: {str(e)}")
+
+
+@app.put("/api/traefik/routes/{route_name}", response_class=JSONResponse)
+def traefik_update_route(route_name: str, payload: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
+    """Update an existing dynamic route config file for Traefik file provider."""
+    name = payload.get("name", route_name)
+    host = payload.get("host")
+    service_url = payload.get("service_url")
+    entrypoint = payload.get("entrypoint", "web")
+    middlewares = payload.get("middlewares", [])
+    tls = payload.get("tls", False)
+
+    if not host or not service_url:
+        raise HTTPException(status_code=400, detail="Both 'host' and 'service_url' are required")
+
+    # Build the Traefik YAML config
+    content = f"""http:
+  routers:
+    {name}:
+      rule: "Host(`{host}`)"
+      entryPoints:
+        - {entrypoint}"""
+    
+    if tls:
+        content += f"\n      tls: true"
+    
+    if middlewares:
+        content += f"\n      middlewares:\n        - " + "\n        - ".join(middlewares)
+    
+    content += f"\n      service: {name}-svc\n\n  services:\n    {name}-svc:\n      loadBalancer:\n        servers:\n          - url: \"{service_url}\"\n"
+
+    try:
+        dyn_dir = Path(os.getenv("TRAEFIK_DYNAMIC_DIR", "traefik/dynamic"))
+        dyn_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Remove old file if name changed
+        if name != route_name:
+            old_file = dyn_dir / f"{route_name}.yml"
+            if old_file.exists():
+                old_file.unlink()
+        
+        out_file = dyn_dir / f"{name}.yml"
+        out_file.write_text(content, encoding="utf-8")
+
+        return {"ok": True, "file": str(out_file), "content": content, "message": f"Route '{name}' updated successfully"}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update route: {str(e)}")
+
 
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
