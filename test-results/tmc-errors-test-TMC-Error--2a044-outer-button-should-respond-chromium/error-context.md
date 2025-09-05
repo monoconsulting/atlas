@@ -1,0 +1,115 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - heading "Traefik Management Console" [level=1] [ref=e6]
+          - paragraph [ref=e7]: Reverse Proxy & Load Balancer Administration
+        - link "← Back to Hub" [ref=e8] [cursor=pointer]:
+          - /url: index.html
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e13]: "Traefik Instance:"
+        - generic [ref=e14]: http://localhost:8088
+      - button "Refresh Data" [ref=e15] [cursor=pointer]
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - 'heading "Quick Map: Hostname → Local Port" [level=2] [ref=e18]'
+        - generic [ref=e19]: Creates a simple HTTP router via file provider
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: Hostname
+          - textbox "e.g. transkriptprod.localhost" [ref=e23]
+        - generic [ref=e24]:
+          - generic [ref=e25]: Target Port
+          - spinbutton [ref=e26]
+        - generic [ref=e27]:
+          - generic [ref=e28]: Entrypoint
+          - combobox [ref=e29]:
+            - option "web" [selected]
+            - option "websecure"
+        - generic [ref=e30]:
+          - generic [ref=e31]: Use TLS
+          - generic [ref=e32]:
+            - checkbox [ref=e33]
+            - generic [ref=e34]: Enable TLS
+      - generic [ref=e35]:
+        - button "Create Route" [ref=e36] [cursor=pointer]
+        - button "Scan Docker → Propose" [ref=e37] [cursor=pointer]
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]: Active Routes
+          - img [ref=e42]
+        - generic [ref=e44]: "0"
+        - generic [ref=e45]: +3 from last hour
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: Total Services
+          - img [ref=e49]
+        - generic [ref=e51]: "0"
+        - generic [ref=e52]: All healthy
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: SSL Certificates
+          - img [ref=e56]
+        - generic [ref=e58]: "0"
+        - generic [ref=e59]: All valid
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: Middlewares
+          - img [ref=e63]
+        - generic [ref=e65]: "0"
+        - generic [ref=e66]: Active filters
+    - generic [ref=e67]:
+      - navigation [ref=e69]:
+        - button "HTTP Routes" [ref=e70] [cursor=pointer]
+        - button "Services" [ref=e71] [cursor=pointer]
+        - button "Middlewares" [ref=e72] [cursor=pointer]
+        - button "Certificates" [ref=e73] [cursor=pointer]
+        - button "Configuration" [ref=e74] [cursor=pointer]
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - heading "HTTP Routes Configuration" [level=2] [ref=e78]
+          - button "+ Add Route" [ref=e79] [cursor=pointer]
+        - table [ref=e81]:
+          - rowgroup [ref=e82]:
+            - row "Route Name Rule Service Middlewares Status Actions" [ref=e83]:
+              - cell "Route Name" [ref=e84]
+              - cell "Rule" [ref=e85]
+              - cell "Service" [ref=e86]
+              - cell "Middlewares" [ref=e87]
+              - cell "Status" [ref=e88]
+              - cell "Actions" [ref=e89]
+          - rowgroup [ref=e90]:
+            - 'row "api-gateway Host(`api.example.com`) backend-api@docker rate-limit auth Active Edit Delete" [ref=e91]':
+              - cell "api-gateway" [ref=e92]
+              - 'cell "Host(`api.example.com`)" [ref=e93]'
+              - cell "backend-api@docker" [ref=e94]
+              - cell "rate-limit auth" [ref=e95]:
+                - generic [ref=e96]: rate-limit
+                - generic [ref=e97]: auth
+              - cell "Active" [ref=e98]:
+                - generic [ref=e99]: Active
+              - cell "Edit Delete" [ref=e100]:
+                - button "Edit" [active] [ref=e101] [cursor=pointer]
+                - button "Delete" [ref=e102] [cursor=pointer]
+            - 'row "web-app Host(`app.example.com`) webapp@docker compress Active Edit Delete" [ref=e103]':
+              - cell "web-app" [ref=e104]
+              - 'cell "Host(`app.example.com`)" [ref=e105]'
+              - cell "webapp@docker" [ref=e106]
+              - cell "compress" [ref=e107]:
+                - generic [ref=e108]: compress
+              - cell "Active" [ref=e109]:
+                - generic [ref=e110]: Active
+              - cell "Edit Delete" [ref=e111]:
+                - button "Edit" [ref=e112] [cursor=pointer]
+                - button "Delete" [ref=e113] [cursor=pointer]
+    - contentinfo [ref=e114]:
+      - paragraph [ref=e115]: © 2025 Traefik Management Console - Atlas Development Hub
+  - generic [ref=e116]: Traefik data refreshed
+  - generic [ref=e117]: Edit functionality for 'api-gateway' coming soon
+```

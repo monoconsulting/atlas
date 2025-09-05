@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-05T08:30:41.812Z",
+      "updated": "2025-09-05T08:30:41.812Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -758,7 +763,7 @@
         "title": "Errors in TMC",
         "description": "Different errors in Traefik Managment Console see subtasks. Confirm the changes with short headless playwright tests for each function.",
         "priority": "medium",
-        "status": "todo",
+        "status": "in-progress",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -878,6 +883,11 @@
         "extra": {},
         "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-05T08:30:41.812Z",
+      "updated": "2025-09-05T08:30:41.814Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }

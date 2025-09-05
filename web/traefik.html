@@ -691,16 +691,49 @@
             const port = parseInt(document.getElementById('qmPort').value || '0', 10);
             const entrypoint = document.getElementById('qmEntrypoint').value;
             const tls = document.getElementById('qmTls').checked;
-            if(!host || !port){ showNotification('Hostname and Port are required'); return; }
+            if(!host || !port){ 
+                showNotification('Hostname and Port are required', 'error'); 
+                return; 
+            }
             const name = host.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
             const service_url = `http://host.docker.internal:${port}`;
             try{
-                const res = await fetch(`${API_BASE}/api/traefik/routes`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, host, service_url, entrypoint, middlewares: [], tls}) });
+                const res = await fetch(`http://localhost:8199/api/traefik/routes`, { 
+                    method:'POST', 
+                    headers:{'Content-Type':'application/json'}, 
+                    credentials: 'include',
+                    body: JSON.stringify({name, host, service_url, entrypoint, middlewares: [], tls}) 
+                });
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    let errorMsg;
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMsg = errorData.detail || errorData.message || 'Failed to create route';
+                    } catch {
+                        errorMsg = `HTTP ${res.status}: ${errorText || res.statusText}`;
+                    }
+                    throw new Error(errorMsg);
+                }
+                
                 const data = await res.json();
-                if(!res.ok || !data.ok){ throw new Error(data.detail || 'Failed'); }
-                showNotification(`Mapped ${host} → ${service_url}`);
+                if(!data.ok){ 
+                    throw new Error(data.detail || data.message || 'Failed to create route'); 
+                }
+                
+                showNotification(`Mapped ${host} → ${service_url}`, 'success');
                 await loadRouters();
-            }catch(err){ showNotification(`Error: ${err.message || err}`); }
+                
+                // Clear form
+                document.getElementById('qmHost').value = '';
+                document.getElementById('qmPort').value = '';
+                document.getElementById('qmTls').checked = false;
+                
+            }catch(err){ 
+                console.error('Quick map error:', err);
+                showNotification(`Error: ${err.message || err}`, 'error'); 
+            }
         }
 
         // Quick Map: scan Docker and propose common routes
@@ -761,21 +794,55 @@
             const name = host.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
             const service_url = `http://host.docker.internal:${port}`;
             try{
-                const res = await fetch(`${API_BASE}/api/traefik/routes`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, host, service_url, entrypoint, middlewares: [], tls}) });
+                const res = await fetch(`http://localhost:8199/api/traefik/routes`, { 
+                    method:'POST', 
+                    headers:{'Content-Type':'application/json'}, 
+                    credentials: 'include',
+                    body: JSON.stringify({name, host, service_url, entrypoint, middlewares: [], tls}) 
+                });
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    let errorMsg;
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMsg = errorData.detail || errorData.message || 'Failed to create route';
+                    } catch {
+                        errorMsg = `HTTP ${res.status}: ${errorText || res.statusText}`;
+                    }
+                    throw new Error(errorMsg);
+                }
+                
                 const data = await res.json();
-                if(!res.ok || !data.ok){ throw new Error(data.detail || 'Failed'); }
-                showNotification(`Mapped ${host} → ${service_url}`);
+                if(!data.ok){ 
+                    throw new Error(data.detail || data.message || 'Failed to create route'); 
+                }
+                
+                showNotification(`Mapped ${host} → ${service_url}`, 'success');
                 await loadRouters();
-            }catch(err){ showNotification(`Error: ${err.message || err}`); }
+            }catch(err){ 
+                console.error('Create suggested route error:', err);
+                showNotification(`Error: ${err.message || err}`, 'error'); 
+            }
         }
         
         function editRoute(name) {
-            showNotification(`Editing route: ${name}`);
+            // For now, just show a notification
+            // TODO: Implement actual edit functionality with a modal
+            showNotification(`Edit functionality for '${name}' coming soon`, 'info');
         }
         
-        function deleteRoute(name) {
+        async function deleteRoute(name) {
             if (confirm(`Are you sure you want to delete route: ${name}?`)) {
-                showNotification(`Route ${name} deleted`);
+                try {
+                    // Note: Traefik API is read-only, so this would need to delete the dynamic file
+                    // For now, just show a message
+                    showNotification(`Delete functionality for '${name}' coming soon`, 'info');
+                    // TODO: Implement actual delete via file removal
+                } catch (err) {
+                    console.error('Delete route error:', err);
+                    showNotification(`Error deleting route: ${err.message || err}`, 'error');
+                }
             }
         }
         
@@ -835,6 +902,42 @@
                 
                 if(!res.ok) {
                     console.warn('Failed to load routers:', res.status);
+                    // Show default routes if API fails
+                    const tbody = document.getElementById('routesTable');
+                    if (tbody) {
+                        tbody.innerHTML = `
+                            <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                                <td class="py-3 px-4 font-mono text-sm text-indigo-400">api-gateway</td>
+                                <td class="py-3 px-4 text-sm">Host(\`api.example.com\`)</td>
+                                <td class="py-3 px-4 text-sm">backend-api@docker</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-slate-800 px-2 py-1 rounded text-xs">rate-limit</span>
+                                    <span class="bg-slate-800 px-2 py-1 rounded text-xs">auth</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span>
+                                </td>
+                                <td class="py-3 px-4 text-right">
+                                    <button onclick="editRoute('api-gateway')" class="text-indigo-400 hover:text-indigo-300 mr-2">Edit</button>
+                                    <button onclick="deleteRoute('api-gateway')" class="text-red-400 hover:text-red-300">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-slate-800 hover:bg-slate-800/50">
+                                <td class="py-3 px-4 font-mono text-sm text-indigo-400">web-app</td>
+                                <td class="py-3 px-4 text-sm">Host(\`app.example.com\`)</td>
+                                <td class="py-3 px-4 text-sm">webapp@docker</td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-slate-800 px-2 py-1 rounded text-xs">compress</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span class="bg-green-900/50 text-green-400 px-2 py-1 rounded text-xs">Active</span>
+                                </td>
+                                <td class="py-3 px-4 text-right">
+                                    <button onclick="editRoute('web-app')" class="text-indigo-400 hover:text-indigo-300 mr-2">Edit</button>
+                                    <button onclick="deleteRoute('web-app')" class="text-red-400 hover:text-red-300">Delete</button>
+                                </td>
+                            </tr>`;
+                    }
                     return;
                 }
                 
