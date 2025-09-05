@@ -698,7 +698,11 @@ def serve_project(project_slug: str, db: Session = Depends(get_db)) -> HTMLRespo
         print(f"[serve_project] failed to read index.html: {e}")
         raise HTTPException(status_code=500, detail="Failed to read index.html")
     
-    # Replace the title and project info with the actual project data
+    # Replace the title tag and project info with the actual project data
+    html_content = html_content.replace(
+        "<title>TM-Atlas - Loading...</title>",
+        f"<title>TM-{project.name}</title>"
+    )
     html_content = html_content.replace(
         "TaskMaster AI — Development Hub",
         f"TaskMaster AI — {project.name}"

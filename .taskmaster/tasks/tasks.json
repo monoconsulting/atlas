@@ -2,8 +2,8 @@
   "master": {
     "tasks": [],
     "metadata": {
-      "created": "2025-09-05T04:23:45.173Z",
-      "updated": "2025-09-05T04:23:45.173Z",
+      "created": "2025-09-05T04:44:56.627Z",
+      "updated": "2025-09-05T04:44:56.627Z",
       "description": "Tasks for master context"
     }
   },
@@ -681,11 +681,30 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 36,
+        "title": "Change browser tab header",
+        "description": "The tab-title that is on top of chrome should show TM-projectname when a taskmaster web page is open.",
+        "priority": "medium",
+        "status": "done",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-05T04:44:08.159043Z",
+        "updated_at": "2025-09-05T04:44:08.159079Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ],
     "metadata": {
-      "created": "2025-09-05T04:23:45.173Z",
-      "updated": "2025-09-05T04:26:56.279Z",
+      "created": "2025-09-05T04:44:56.627Z",
+      "updated": "2025-09-05T04:49:17.991Z",
       "description": "Tasks for atlas context"
     }
   }
