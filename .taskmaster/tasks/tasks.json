@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-09-05T08:30:41.812Z",
-      "updated": "2025-09-05T08:30:41.812Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -763,14 +758,14 @@
         "title": "Errors in TMC",
         "description": "Different errors in Traefik Managment Console see subtasks. Confirm the changes with short headless playwright tests for each function.",
         "priority": "medium",
-        "status": "in-progress",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-05T08:27:11.102838Z",
-        "updated_at": "2025-09-05T08:29:26.594388Z",
+        "updated_at": "2025-09-05T11:40:16.228641Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -882,12 +877,26 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 41,
+        "title": "Port managment gone",
+        "description": "Port management is not possible to reach from index.html. Manage port should reach to a list of all ports with the posibilities to filter and also the possibility to reserv more ports",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-05T11:43:54.419390Z",
+        "updated_at": "2025-09-05T11:43:54.419450Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ],
-    "metadata": {
-      "created": "2025-09-05T08:30:41.812Z",
-      "updated": "2025-09-05T08:30:41.814Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
