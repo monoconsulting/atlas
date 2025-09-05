@@ -94,9 +94,8 @@
                     Monitor Docker containers, configure port mappings, and manage service URLs across projects.
                 </p>
                 <div class="flex gap-2">
-                    <a href="admin.html" 
-                       class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                       onclick="openPortManagement()">
+                    <a href="ports.html" 
+                       class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                         Manage Ports
                     </a>
                     <a href="http://localhost:8199" target="_blank" 
@@ -264,20 +263,6 @@
             document.getElementById('testFiles').textContent = '15';
             document.getElementById('coverage').textContent = '78%';
         }, 500);
-        
-        // Port Management Functions
-        function openPortManagement() {
-            // Open admin.html and switch to port management
-            const newWindow = window.open('admin.html', '_blank');
-            // Try to switch to port management after page loads
-            newWindow.addEventListener('load', () => {
-                try {
-                    newWindow.showPortManagement && newWindow.showPortManagement();
-                } catch (e) {
-                    console.log('Could not auto-switch to port management');
-                }
-            });
-        }
         
         // Services Status Functions
         const API_BASE = 'http://localhost:8199';

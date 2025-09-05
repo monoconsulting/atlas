@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Port Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617'
+                        }
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+    <script>
+        // Route relative "/api/..." calls to the backend on localhost:8199
+        (function () {
+            try {
+                const originalFetch = window.fetch.bind(window);
+                const isBackendOrigin = location.hostname === 'localhost' && location.port === '8199';
+                const API_BASE = isBackendOrigin ? location.origin : 'http://localhost:8199';
+
+                window.fetch = (input, init) => {
+                    try {
+                        if (typeof input === 'string' && input.startsWith('/api/')) {
+                            return originalFetch(API_BASE + input, init);
+                        } else if (input && typeof input === 'object' && 'url' in input && input.url && input.url.startsWith('/api/')) {
+                            const req = new Request(API_BASE + input.url, input);
+                            return originalFetch(req, init);
+                        }
+                    } catch (e) {
+                        // fall through to original fetch on any errors
+                    }
+                    return originalFetch(input, init);
+                };
+            } catch (e) {
+                console.warn('API base routing shim failed:', e);
+            }
+        })();
+    </script>
+
+    <div class="container mx-auto px-6 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2">
+                🔌 Port Management
+            </h1>
+            <p class="text-slate-400 text-lg">Manage Docker ports and service mappings across all projects</p>
+            <div class="flex justify-center gap-4 mt-6">
+                <a href="index.html" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors">
+                    ← Back to Hub
+                </a>
+                <a href="admin.html" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    Admin Panel
+                </a>
+            </div>
+        </header>
+
+        <!-- Action Buttons -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-8">
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button id="scanDockerBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    🐳 Scan Docker Ports
+                </button>
+                <button id="addPortBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    ➕ Add Port
+                </button>
+                <button id="reservePortBtn" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    📋 Reserve Port
+                </button>
+                <button onclick="loadPorts()" class="bg-slate-600 hover:bg-slate-500 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Port Filters -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold text-slate-200 mb-4">Filters & Search</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Search</label>
+                    <input type="text" id="portSearch" 
+                           class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Search ports, services...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Project</label>
+                    <select id="portProjectFilter" 
+                            class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">All Projects</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Protocol</label>
+                    <select id="portProtocolFilter" 
+                            class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">All Protocols</option>
+                        <option value="tcp">TCP</option>
+                        <option value="udp">UDP</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Sort By</label>
+                    <select id="portSortBy" 
+                            class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="port_asc">Port (Low to High)</option>
+                        <option value="port_desc">Port (High to Low)</option>
+                        <option value="service_name">Service Name</option>
+                        <option value="project_name">Project Name</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-4">
+                <button onclick="filterPorts()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    Apply Filters
+                </button>
+                <button onclick="clearFilters()" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg transition-colors">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Port Statistics -->
+        <div id="portStats" class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-8 hidden">
+            <h2 class="text-xl font-semibold text-slate-200 mb-4">Port Statistics</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-400" id="totalPorts">0</div>
+                    <div class="text-sm text-slate-400">Total Ports</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-green-400" id="tcpPorts">0</div>
+                    <div class="text-sm text-slate-400">TCP Ports</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-400" id="udpPorts">0</div>
+                    <div class="text-sm text-slate-400">UDP Ports</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-orange-400" id="reservedPorts">0</div>
+                    <div class="text-sm text-slate-400">Reserved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Port List -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg">
+            <div class="p-6 border-b border-slate-800">
+                <h2 class="text-xl font-semibold text-slate-200">Port Mappings</h2>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="p-8 text-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p class="text-slate-400">Loading ports...</p>
+            </div>
+
+            <!-- Port Table -->
+            <div id="portTable" class="hidden overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-800">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">External Port</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Internal Port</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Service</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Project</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Protocol</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Description</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="portsTableBody" class="divide-y divide-slate-800">
+                        <!-- Ports will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty Ports State -->
+            <div id="emptyPortsState" class="text-center py-16 hidden">
+                <div class="text-6xl mb-4">🔌</div>
+                <h3 class="text-lg font-semibold text-slate-300 mb-2">No Ports Found</h3>
+                <p class="text-slate-500 mb-6">Add ports to track your project's networking configuration.</p>
+                <button onclick="openAddPortModal()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium">
+                    Add First Port
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Port Modal -->
+    <div id="portModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-lg w-full max-w-md mx-4 max-h-screen overflow-y-auto">
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <h3 class="text-xl font-semibold text-slate-200" id="portModalTitle">Add New Port</h3>
+                <button id="closePortModal" class="text-slate-400 hover:text-slate-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <form id="portForm" class="space-y-4">
+                    <input type="hidden" id="portId">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Project</label>
+                        <select id="portProjectId" required 
+                                class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select Project</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">External Port</label>
+                        <input type="number" id="portNumber" required min="1" max="65535" 
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="8080">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Internal Port</label>
+                        <input type="number" id="portInternalNumber" min="1" max="65535" 
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="80 (optional)">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Service Name</label>
+                        <input type="text" id="portServiceName" 
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="web, api, mysql...">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Protocol</label>
+                        <select id="portProtocol" 
+                                class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="tcp">TCP</option>
+                            <option value="udp">UDP</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                        <textarea id="portDescription" rows="2" 
+                                  class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  placeholder="Brief description of this port mapping..."></textarea>
+                    </div>
+
+                    <div class="bg-slate-800 rounded-lg p-3">
+                        <h4 class="text-sm font-medium text-slate-300 mb-2">📋 Port Mapping Format</h4>
+                        <p class="text-xs text-slate-400 mb-2">
+                            For Docker port mappings like <span class="font-mono text-green-400">33306:3306</span>:
+                        </p>
+                        <ul class="text-xs text-slate-400 space-y-1">
+                            <li>• External Port: <span class="font-mono text-green-400">33306</span> (the port you access from outside)</li>
+                            <li>• Internal Port: <span class="font-mono text-green-400">3306</span> (the port inside the container)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors">
+                            Save Port
+                        </button>
+                        <button type="button" id="cancelPortBtn" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Port Reservation Modal -->
+    <div id="reservePortModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-lg w-full max-w-md mx-4">
+            <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                <h3 class="text-xl font-semibold text-slate-200">Reserve Port Range</h3>
+                <button id="closeReserveModal" class="text-slate-400 hover:text-slate-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <form id="reservePortForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Project</label>
+                        <select id="reserveProjectId" required 
+                                class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select Project</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Starting Port</label>
+                        <input type="number" id="reserveStartPort" required min="1" max="65535" 
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="8000">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Number of Ports</label>
+                        <input type="number" id="reservePortCount" required min="1" max="100" 
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="5">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Service Name Template</label>
+                        <input type="text" id="reserveServiceTemplate" 
+                               class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="service-{n}" value="reserved-{n}">
+                        <p class="text-xs text-slate-400 mt-1">Use {n} for port number in name</p>
+                    </div>
+                    
+                    <div class="bg-slate-800 rounded-lg p-3">
+                        <h4 class="text-sm font-medium text-slate-300 mb-2">📋 Port Reservation</h4>
+                        <p class="text-xs text-slate-400">
+                            Reserve a range of consecutive ports for your project. This prevents conflicts and helps organize port allocation.
+                        </p>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2 rounded-lg font-medium transition-colors">
+                            Reserve Ports
+                        </button>
+                        <button type="button" id="cancelReserveBtn" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed top-4 right-4 z-50 hidden">
+        <div class="bg-slate-800 border border-slate-700 rounded-lg p-4 shadow-lg">
+            <p id="notificationText" class="text-slate-200"></p>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let ports = [];
+        let allPorts = [];
+        let projects = [];
+        let editingPortId = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listeners
+            document.getElementById('scanDockerBtn').addEventListener('click', scanDockerPorts);
+            document.getElementById('addPortBtn').addEventListener('click', () => showPortModal());
+            document.getElementById('reservePortBtn').addEventListener('click', () => showReservePortModal());
+            document.getElementById('closePortModal').addEventListener('click', hidePortModal);
+            document.getElementById('cancelPortBtn').addEventListener('click', hidePortModal);
+            document.getElementById('portForm').addEventListener('submit', handlePortSubmit);
+            
+            document.getElementById('closeReserveModal').addEventListener('click', hideReservePortModal);
+            document.getElementById('cancelReserveBtn').addEventListener('click', hideReservePortModal);
+            document.getElementById('reservePortForm').addEventListener('submit', handleReservePortSubmit);
+
+            // Port filtering event listeners
+            document.getElementById('portSearch').addEventListener('input', filterPorts);
+            document.getElementById('portProjectFilter').addEventListener('change', filterPorts);
+            document.getElementById('portProtocolFilter').addEventListener('change', filterPorts);
+            document.getElementById('portSortBy').addEventListener('change', filterPorts);
+
+            // Close modals on backdrop click
+            document.getElementById('portModal').addEventListener('click', (e) => {
+                if (e.target.id === 'portModal') {
+                    hidePortModal();
+                }
+            });
+            
+            document.getElementById('reservePortModal').addEventListener('click', (e) => {
+                if (e.target.id === 'reservePortModal') {
+                    hideReservePortModal();
+                }
+            });
+
+            // Load data
+            loadProjects();
+            loadPorts();
+        });
+
+        // Utility functions
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            text.textContent = message;
+            notification.className = `fixed top-4 right-4 z-50 ${type === 'error' ? 'text-red-400' : 'text-green-400'}`;
+            notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Data loading functions
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/projects');
+                const data = await response.json();
+                
+                if (data.ok && data.projects) {
+                    projects = data.projects;
+                    populateProjectSelects();
+                } else {
+                    showNotification('Failed to load projects', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                showNotification('Error loading projects', 'error');
+            }
+        }
+
+        function populateProjectSelects() {
+            const selects = ['portProjectId', 'reserveProjectId'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Select Project</option>';
+                projects.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.id;
+                    option.textContent = `${project.name} (${project.slug})`;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        async function loadPorts() {
+            try {
+                document.getElementById('loadingState').classList.remove('hidden');
+                document.getElementById('portTable').classList.add('hidden');
+                document.getElementById('emptyPortsState').classList.add('hidden');
+                
+                const response = await fetch('/api/ports');
+                const data = await response.json();
+                
+                if (data.ok && data.ports) {
+                    allPorts = data.ports;
+                    ports = [...allPorts];
+                    renderPorts();
+                    populatePortProjectFilter();
+                    updatePortStats();
+                    document.getElementById('portStats').classList.remove('hidden');
+                } else {
+                    showNotification('Failed to load ports: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error loading ports:', error);
+                showNotification('Error connecting to ports API: ' + error.message, 'error');
+            } finally {
+                document.getElementById('loadingState').classList.add('hidden');
+            }
+        }
+
+        function updatePortStats() {
+            const total = allPorts.length;
+            const tcp = allPorts.filter(p => p.protocol === 'tcp').length;
+            const udp = allPorts.filter(p => p.protocol === 'udp').length;
+            const reserved = allPorts.filter(p => p.service_name && p.service_name.includes('reserved')).length;
+            
+            document.getElementById('totalPorts').textContent = total;
+            document.getElementById('tcpPorts').textContent = tcp;
+            document.getElementById('udpPorts').textContent = udp;
+            document.getElementById('reservedPorts').textContent = reserved;
+        }
+
+        function renderPorts() {
+            const tbody = document.getElementById('portsTableBody');
+            const emptyState = document.getElementById('emptyPortsState');
+            const portTable = document.getElementById('portTable');
+
+            if (ports.length === 0) {
+                portTable.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            portTable.classList.remove('hidden');
+
+            tbody.innerHTML = ports.map(port => `
+                <tr class="hover:bg-slate-800 transition-colors">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="font-mono text-green-400 font-medium">${port.port}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="font-mono text-blue-400">${port.internal_port || '-'}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="text-slate-300">${escapeHtml(port.service_name || '-')}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded font-mono">${escapeHtml(port.project_slug || '')}</span>
+                            <span class="text-slate-400 text-xs ml-2">${escapeHtml(port.project_name || '')}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="bg-slate-700 text-slate-300 text-xs px-2 py-1 rounded uppercase font-mono">${port.protocol}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="text-slate-400 text-sm truncate block">${escapeHtml(port.description || '-')}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex gap-2">
+                            <button onclick="editPort(${port.id})" class="text-slate-400 hover:text-purple-400 transition-colors" title="Edit Port">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="deletePort(${port.id})" class="text-slate-400 hover:text-red-400 transition-colors" title="Delete Port">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function populatePortProjectFilter() {
+            const select = document.getElementById('portProjectFilter');
+            const uniqueProjects = [...new Set(allPorts.map(port => port.project_name).filter(Boolean))];
+            
+            select.innerHTML = '<option value="">All Projects</option>';
+            uniqueProjects.forEach(projectName => {
+                const option = document.createElement('option');
+                option.value = projectName;
+                option.textContent = projectName;
+                select.appendChild(option);
+            });
+        }
+
+        // Filtering functions
+        function filterPorts() {
+            const searchTerm = document.getElementById('portSearch').value.toLowerCase();
+            const projectFilter = document.getElementById('portProjectFilter').value;
+            const protocolFilter = document.getElementById('portProtocolFilter').value;
+            const sortBy = document.getElementById('portSortBy').value;
+
+            let filtered = allPorts.filter(port => {
+                const matchesSearch = !searchTerm || 
+                    port.port.toString().includes(searchTerm) ||
+                    (port.service_name && port.service_name.toLowerCase().includes(searchTerm)) ||
+                    (port.project_name && port.project_name.toLowerCase().includes(searchTerm)) ||
+                    (port.description && port.description.toLowerCase().includes(searchTerm));
+
+                const matchesProject = !projectFilter || port.project_name === projectFilter;
+                const matchesProtocol = !protocolFilter || port.protocol === protocolFilter;
+
+                return matchesSearch && matchesProject && matchesProtocol;
+            });
+
+            // Sort filtered results
+            filtered.sort((a, b) => {
+                switch (sortBy) {
+                    case 'port_asc':
+                        return a.port - b.port;
+                    case 'port_desc':
+                        return b.port - a.port;
+                    case 'service_name':
+                        return (a.service_name || '').localeCompare(b.service_name || '');
+                    case 'project_name':
+                        return (a.project_name || '').localeCompare(b.project_name || '');
+                    default:
+                        return a.port - b.port;
+                }
+            });
+
+            ports = filtered;
+            renderPorts();
+        }
+
+        function clearFilters() {
+            document.getElementById('portSearch').value = '';
+            document.getElementById('portProjectFilter').value = '';
+            document.getElementById('portProtocolFilter').value = '';
+            document.getElementById('portSortBy').value = 'port_asc';
+            filterPorts();
+        }
+
+        // Modal functions
+        function showPortModal(port = null) {
+            editingPortId = port ? port.id : null;
+
+            if (port) {
+                document.getElementById('portModalTitle').textContent = 'Edit Port';
+                document.getElementById('portId').value = port.id;
+                document.getElementById('portProjectId').value = port.project_id;
+                document.getElementById('portNumber').value = port.port;
+                document.getElementById('portInternalNumber').value = port.internal_port || '';
+                document.getElementById('portServiceName').value = port.service_name || '';
+                document.getElementById('portProtocol').value = port.protocol;
+                document.getElementById('portDescription').value = port.description || '';
+            } else {
+                document.getElementById('portModalTitle').textContent = 'Add New Port';
+                document.getElementById('portForm').reset();
+                document.getElementById('portId').value = '';
+            }
+
+            document.getElementById('portModal').classList.remove('hidden');
+        }
+
+        function hidePortModal() {
+            document.getElementById('portModal').classList.add('hidden');
+            editingPortId = null;
+        }
+
+        function showReservePortModal() {
+            document.getElementById('reservePortModal').classList.remove('hidden');
+        }
+
+        function hideReservePortModal() {
+            document.getElementById('reservePortModal').classList.add('hidden');
+        }
+
+        // Form submission functions
+        async function handlePortSubmit(e) {
+            e.preventDefault();
+            
+            const portData = {
+                project_id: parseInt(document.getElementById('portProjectId').value),
+                port: parseInt(document.getElementById('portNumber').value),
+                internal_port: document.getElementById('portInternalNumber').value ? parseInt(document.getElementById('portInternalNumber').value) : null,
+                service_name: document.getElementById('portServiceName').value || null,
+                protocol: document.getElementById('portProtocol').value,
+                description: document.getElementById('portDescription').value || null
+            };
+
+            try {
+                let response;
+                if (editingPortId) {
+                    response = await fetch(`/api/ports/${editingPortId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(portData)
+                    });
+                } else {
+                    response = await fetch('/api/ports', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(portData)
+                    });
+                }
+
+                const result = await response.json();
+                if (result.ok) {
+                    hidePortModal();
+                    loadPorts();
+                    showNotification(editingPortId ? 'Port updated successfully' : 'Port created successfully');
+                } else {
+                    const error = await response.json();
+                    showNotification(error.detail || 'Failed to save port', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving port:', error);
+                showNotification('Error saving port', 'error');
+            }
+        }
+
+        async function handleReservePortSubmit(e) {
+            e.preventDefault();
+            
+            const projectId = parseInt(document.getElementById('reserveProjectId').value);
+            const startPort = parseInt(document.getElementById('reserveStartPort').value);
+            const portCount = parseInt(document.getElementById('reservePortCount').value);
+            const serviceTemplate = document.getElementById('reserveServiceTemplate').value || 'reserved-{n}';
+
+            try {
+                const promises = [];
+                for (let i = 0; i < portCount; i++) {
+                    const port = startPort + i;
+                    const serviceName = serviceTemplate.replace('{n}', port.toString());
+                    
+                    const portData = {
+                        project_id: projectId,
+                        port: port,
+                        service_name: serviceName,
+                        protocol: 'tcp',
+                        description: `Reserved port ${port} for future use`
+                    };
+                    
+                    promises.push(
+                        fetch('/api/ports', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(portData)
+                        })
+                    );
+                }
+
+                const results = await Promise.allSettled(promises);
+                const successful = results.filter(r => r.status === 'fulfilled' && r.value.ok).length;
+                const failed = results.length - successful;
+
+                hideReservePortModal();
+                loadPorts();
+                
+                if (failed === 0) {
+                    showNotification(`Successfully reserved ${successful} ports`);
+                } else {
+                    showNotification(`Reserved ${successful} ports, ${failed} failed (may already exist)`, 'error');
+                }
+            } catch (error) {
+                console.error('Error reserving ports:', error);
+                showNotification('Error reserving ports', 'error');
+            }
+        }
+
+        // Port actions
+        function editPort(portId) {
+            const port = allPorts.find(p => p.id === portId);
+            if (port) {
+                showPortModal(port);
+            }
+        }
+
+        async function deletePort(portId) {
+            const port = allPorts.find(p => p.id === portId);
+            if (!port) return;
+
+            if (confirm(`Are you sure you want to delete port ${port.port}${port.service_name ? ` (${port.service_name})` : ''}?`)) {
+                try {
+                    const response = await fetch(`/api/ports/${portId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        loadPorts();
+                        showNotification('Port deleted successfully');
+                    } else {
+                        const error = await response.json();
+                        showNotification(error.detail || 'Failed to delete port', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting port:', error);
+                    showNotification('Error deleting port', 'error');
+                }
+            }
+        }
+
+        function openAddPortModal() {
+            showPortModal();
+        }
+
+        // Docker scanning functionality
+        async function scanDockerPorts() {
+            try {
+                showNotification('Scanning Docker containers and saving to database...', 'info');
+                
+                // Directly call import API which scans and saves in one step
+                const response = await fetch('/api/docker/import', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    const imported = result.imported || 0;
+                    const skipped = result.skipped || 0;
+                    const total = imported + skipped;
+                    
+                    if (total === 0) {
+                        showNotification('No Docker containers with port mappings found.', 'info');
+                    } else {
+                        const importedText = imported > 0 ? `${imported} new port${imported !== 1 ? 's' : ''} imported` : '';
+                        const skippedText = skipped > 0 ? `${skipped} port${skipped !== 1 ? 's' : ''} already existed` : '';
+                        const parts = [importedText, skippedText].filter(Boolean);
+                        
+                        showNotification(`Scan complete: ${parts.join(', ')}.`);
+                        
+                        // Reload ports to show the new ones
+                        await loadPorts();
+                    }
+                } else {
+                    throw new Error(result.detail || 'Scan failed');
+                }
+            } catch (error) {
+                console.error('Docker scan error:', error);
+                showNotification(`Failed to scan Docker ports: ${error.message}`, 'error');
+            }
+        }
+
+        async function importDockerPorts() {
+            try {
+                const response = await fetch('/api/docker/import', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.ok) {
+                    showNotification(`Successfully imported ${result.imported} port${result.imported !== 1 ? 's' : ''}. ` +
+                          `${result.skipped} port${result.skipped !== 1 ? 's' : ''} skipped (already exist).`);
+
+                    await loadPorts();
+                } else {
+                    throw new Error(result.detail || 'Import failed');
+                }
+            } catch (error) {
+                console.error('Docker import error:', error);
+                showNotification(`Failed to import Docker ports: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
