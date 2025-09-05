@@ -44,12 +44,10 @@
                     Refresh
                 </button>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4" id="servicesGrid">
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-gray-600 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                        <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
-                    </div>
-                    <div class="text-xs text-slate-400">Loading...</div>
+            <div class="flex flex-wrap justify-center gap-4" id="servicesGrid">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-gray-400 animate-pulse"></div>
+                    <span class="text-sm text-slate-400">Loading services...</span>
                 </div>
             </div>
         </div>
@@ -304,92 +302,80 @@
         
         async function refreshServices() {
             try {
-                // Get all ports from API
-                const response = await fetch(`${API_BASE}/api/ports`);
-                const data = await response.json();
+                // Define actual running services based on Docker ps output
+                const services = [
+                    { name: 'Atlas', port: 8199, url: 'http://localhost:8199/health' },
+                    { name: 'Web Hub', port: 9652, url: 'http://localhost:9652' },
+                    { name: 'Traefik', port: 8088, url: 'http://localhost:8088/api/rawdata' },
+                    { name: 'Atlas phpMyAdmin', port: 8086, url: 'http://localhost:8086' },
+                    { name: 'Homepage', port: 3027, url: 'http://localhost:3027' },
+                    { name: 'Transkript Frontend', port: 3000, url: 'http://localhost:3000' },
+                    { name: 'Transkript Frontend Dev', port: 3002, url: 'http://localhost:3002' },
+                    { name: 'Transkript Backend', port: 8001, url: 'http://localhost:8001' },
+                    { name: 'Transkript Backend Dev', port: 8002, url: 'http://localhost:8002' },
+                    { name: 'Transkript Media Player', port: 5555, url: 'http://localhost:5555' },
+                    { name: 'Transkript Docs', port: 9000, url: 'http://localhost:9000' },
+                    { name: 'Transkript Docs Dev', port: 9001, url: 'http://localhost:9001' },
+                    { name: 'Transkript phpMyAdmin', port: 8080, url: 'http://localhost:8080' },
+                    { name: 'Transkript phpMyAdmin Dev', port: 8082, url: 'http://localhost:8082' },
+                    { name: 'Tierp API', port: 8085, url: 'http://localhost:8085' },
+                    { name: 'Tierp Web', port: 8079, url: 'http://localhost:8079' },
+                    { name: 'Tierp Worker', port: 5000, url: 'http://localhost:5000' },
+                    { name: 'N8N', port: 5678, url: 'http://localhost:5678' },
+                    { name: 'SonarQube', port: 9010, url: 'http://localhost:9010' },
+                    { name: 'PlantUML', port: 8010, url: 'http://localhost:8010' },
+                    { name: 'Mind Web', port: 8004, url: 'http://localhost:8004' },
+                    { name: 'Mind phpMyAdmin', port: 8087, url: 'http://localhost:8087' },
+                    { name: 'LogRefine Frontend', port: 3104, url: 'http://localhost:3104' },
+                    { name: 'LogRefine API', port: 8003, url: 'http://localhost:8003' },
+                    { name: 'LogRefine phpMyAdmin', port: 8090, url: 'http://localhost:8090' },
+                    { name: 'KBW Small', port: 9301, url: 'http://localhost:9301' },
+                    { name: 'KBW Medium', port: 9302, url: 'http://localhost:9302' },
+                    { name: 'KBW Large', port: 9303, url: 'http://localhost:9303' },
+                ];
                 
-                if (!data.ok) {
-                    throw new Error('Failed to load ports');
-                }
-                
-                const ports = data.ports;
                 const servicesGrid = document.getElementById('servicesGrid');
                 servicesGrid.innerHTML = '';
                 
-                // Group services by project for better organization
-                const servicesByProject = {};
-                const importantServices = [];
-                
-                // Define important services to always show
-                const criticalPorts = [80, 443, 8199, 9652, 8086, 3000, 8001];
-                const webPorts = [80, 443, 3000, 3002, 3104, 8004, 8079, 8199, 9000, 9001];
-                
-                ports.forEach(port => {
-                    const isWeb = webPorts.includes(port.port);
-                    const isCritical = criticalPorts.includes(port.port);
-                    
-                    if (isCritical || isWeb) {
-                        importantServices.push({
-                            ...port,
-                            isWeb,
-                            isCritical,
-                            url: `http://localhost:${port.port}`
-                        });
-                    }
-                });
-                
-                // Sort by importance and port number
-                importantServices.sort((a, b) => {
-                    if (a.isCritical && !b.isCritical) return -1;
-                    if (!a.isCritical && b.isCritical) return 1;
-                    return a.port - b.port;
-                });
-                
-                // Limit to max 12 services for display
-                const servicesToShow = importantServices.slice(0, 12);
-                
-                // Check each service and create status indicators
-                const statusPromises = servicesToShow.map(async (service) => {
+                // Check each service and create simple status indicators
+                for (const service of services) {
                     const isHealthy = await checkServiceHealth(service.url);
                     
                     const serviceDiv = document.createElement('div');
-                    serviceDiv.className = 'text-center cursor-pointer hover:opacity-80 transition-opacity';
-                    serviceDiv.onclick = () => window.open(service.url, '_blank');
+                    serviceDiv.className = 'flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity';
+                    serviceDiv.onclick = () => window.open(`http://localhost:${service.port}`, '_blank');
                     
-                    const statusColor = isHealthy ? 'bg-green-500' : 'bg-red-500';
-                    const bgColor = service.isCritical ? 'bg-blue-600' : 'bg-slate-600';
+                    const lightColor = isHealthy ? 'bg-green-400' : 'bg-red-400';
                     
                     serviceDiv.innerHTML = `
-                        <div class="w-12 h-12 ${bgColor} rounded-lg mx-auto mb-2 flex items-center justify-center relative">
-                            <div class="w-4 h-4 ${statusColor} rounded-sm"></div>
-                            <div class="absolute -bottom-1 -right-1 text-xs bg-slate-800 text-white px-1 rounded">
-                                ${service.port}
-                            </div>
-                        </div>
-                        <div class="text-xs text-slate-300 truncate" title="${service.service_name} (${service.project_name})">
-                            ${service.service_name}
-                        </div>
+                        <div class="w-2 h-2 ${lightColor} rounded-sm"></div>
+                        <span class="text-sm ${isHealthy ? 'text-slate-300' : 'text-slate-500'}">${service.name}</span>
+                        <span class="text-xs text-slate-500">:${service.port}</span>
                     `;
                     
-                    return serviceDiv;
-                });
+                    servicesGrid.appendChild(serviceDiv);
+                }
                 
-                // Wait for all status checks and add to grid
-                const serviceElements = await Promise.all(statusPromises);
-                serviceElements.forEach(element => servicesGrid.appendChild(element));
+                // Add summary count - separate div to keep it right-aligned
+                const healthyCount = servicesGrid.querySelectorAll('.bg-green-400').length;
+                const totalCount = services.length;
                 
-                // Add summary
-                const healthyCount = serviceElements.filter(el => 
-                    el.querySelector('.bg-green-500')).length;
+                const summaryDiv = document.createElement('div');
+                summaryDiv.className = 'w-full flex justify-end mt-2';
+                summaryDiv.innerHTML = `
+                    <span class="text-sm text-slate-400">${healthyCount}/${totalCount} online</span>
+                `;
+                servicesGrid.appendChild(summaryDiv);
                 
-                console.log(`Services status: ${healthyCount}/${serviceElements.length} healthy`);
+                console.log(`Services status: ${healthyCount}/${totalCount} healthy`);
                 
             } catch (error) {
                 console.error('Error refreshing services:', error);
                 const servicesGrid = document.getElementById('servicesGrid');
                 servicesGrid.innerHTML = `
-                    <div class="col-span-full text-center text-red-400">
-                        Failed to load services status
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-red-400"></div>
+                        <span class="text-sm text-red-400">Failed to load services</span>
                     </div>
                 `;
             }

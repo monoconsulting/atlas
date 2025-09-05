@@ -2,8 +2,8 @@
   "master": {
     "tasks": [],
     "metadata": {
-      "created": "2025-08-29T12:40:43.904Z",
-      "updated": "2025-08-29T12:40:43.904Z",
+      "created": "2025-09-05T04:23:45.173Z",
+      "updated": "2025-09-05T04:23:45.173Z",
       "description": "Tasks for master context"
     }
   },
@@ -627,11 +627,65 @@
         ],
         "priority": "medium",
         "subtasks": []
+      },
+      {
+        "id": 34,
+        "title": "Services not working",
+        "description": "Endast 2 tjänster lyser gröna. Atlas och Web Hub. Undersök varför alla andra visar fel. Om ett projekt finns registrerat i atlas så ska dess tjänster visas på listan och därefter ska det pollas var femte sekund för att e som de svarar.",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-05T03:50:22.056713Z",
+        "updated_at": "2025-09-05T03:50:22.056768Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
+      },
+      {
+        "id": 35,
+        "title": "Admin Panel",
+        "description": "Several issues on this one. Check the subtasks.",
+        "priority": "medium",
+        "status": "done",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-05T04:14:02.982409Z",
+        "updated_at": "2025-09-05T04:22:37.066662Z",
+        "tag": "atlas",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Database is not being used",
+            "description": "When a project is added used + Select Taskfile or just entering data in the modal Add new project - this must be stored in the database. All fields should be available in the projects table. If a field doesnt exist in the table add this to the table and the schema and update information in /docs/SYSTEMDOCS",
+            "status": "done",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-05T04:14:03.015402Z",
+            "updated_at": "2025-09-05T04:15:40.313823Z",
+            "extra": {}
+          }
+        ],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ],
     "metadata": {
-      "created": "2025-08-29T12:40:43.904Z",
-      "updated": "2025-09-04T15:03:04.576Z",
+      "created": "2025-09-05T04:23:45.173Z",
+      "updated": "2025-09-05T04:26:56.279Z",
       "description": "Tasks for atlas context"
     }
   }

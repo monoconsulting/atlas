@@ -550,7 +550,10 @@
             
             emptyState.classList.add('hidden');
             
-            grid.innerHTML = projects.map(project => `
+            grid.innerHTML = projects.map(project => {
+                const isBackendOrigin = location.hostname === 'localhost' && location.port === '8199';
+                const openUrl = isBackendOrigin ? `/${escapeHtml(project.slug)}` : `http://localhost:8199/${escapeHtml(project.slug)}`;
+                return `
                 <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 hover:border-slate-700 transition-colors">
                     <div class="flex items-start justify-between mb-4">
                         <div>
@@ -584,7 +587,7 @@
                     </div>
                     
                     <div class="flex gap-2 mb-3">
-                        <a href="/${escapeHtml(project.slug)}" target="_blank" 
+                        <a href="${openUrl}" target="_blank" 
                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors text-center">
                             Open Project
                         </a>
@@ -614,7 +617,7 @@
                         <div id="sonar-metrics-${project.id}" class="mt-2 text-xs"></div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function updateStats() {

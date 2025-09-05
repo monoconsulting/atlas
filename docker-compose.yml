@@ -14,8 +14,8 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.atlas.rule=Host(`atlas.localhost`)"
-      - "traefik.http.services.atlas.loadbalancer.server.port=8000"
+      - "traefik.http.routers.atlas-api.rule=Host(`api.atlas.localhost`)"
+      - "traefik.http.services.atlas-api.loadbalancer.server.port=8000"
     networks:
       - web
 
@@ -31,6 +31,12 @@ services:
     restart: unless-stopped
     depends_on:
       - atlas
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.atlas-hub.rule=Host(`atlas.localhost`)"
+      - "traefik.http.services.atlas-hub.loadbalancer.server.port=9652"
+    networks:
+      - web
 
   mysql:
     image: mysql:8.0

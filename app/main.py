@@ -288,6 +288,9 @@ def index() -> HTMLResponse:
     return HTMLResponse(open(index_path, "r", encoding="utf-8").read())
 
 
+# Project-specific HTML is served by serve_project() further below.
+
+
 @app.get("/info", response_class=JSONResponse)
 def info() -> Dict[str, Any]:
     """Return storage/config info and inferred project name."""

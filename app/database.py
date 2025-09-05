@@ -261,8 +261,9 @@ def get_project_by_id(db, project_id: int) -> Optional[Project]:
 
 
 def get_all_projects(db) -> list[Project]:
-    """Get all active projects."""
-    return db.query(Project).filter(Project.active == True).all()
+    """Get all projects, including inactive (for admin visibility)."""
+    # Admin needs to see disabled projects too; filter by active only where required elsewhere
+    return db.query(Project).order_by(Project.name.asc()).all()
 
 
 def create_project(db, project: ProjectCreate) -> Project:
