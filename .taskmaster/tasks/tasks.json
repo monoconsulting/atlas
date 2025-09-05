@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-09-05T06:35:02.484Z",
-      "updated": "2025-09-05T06:35:02.484Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -738,12 +733,26 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 39,
+        "title": "Editing task - create subtask not working",
+        "description": "When editing a task it is not possible to add more subtasks. Investigate the functionality from create tasks - it wokring ther.",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-05T06:42:32.973759Z",
+        "updated_at": "2025-09-05T06:42:32.973773Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ],
-    "metadata": {
-      "created": "2025-09-05T06:35:02.484Z",
-      "updated": "2025-09-05T06:35:02.487Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
