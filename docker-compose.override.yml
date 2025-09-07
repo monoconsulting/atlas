@@ -26,7 +26,6 @@ services:
 
   # PostgreSQL backing DB for SonarQube
   sonarqube_db:
-    profiles: ["extras"]
     image: postgres:16-alpine
     container_name: ${SONAR_DB_CONTAINER_NAME:-atlas_sonar_db}
     environment:
@@ -44,7 +43,6 @@ services:
 
   # SonarQube Server (Community LTS)
   sonarqube:
-    profiles: ["extras"]
     image: sonarqube:community
     container_name: ${SONARQUBE_CONTAINER_NAME:-atlas_sonarqube}
     depends_on:
@@ -63,7 +61,7 @@ services:
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:9000/api/system/health | grep -q '\"health\":\"GREEN\"'"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9000/api/system/status | grep -q '\"status\":\"UP\"'"]
       interval: 30s
       timeout: 10s
       retries: 20
@@ -71,7 +69,6 @@ services:
 
   # PlantUML server (Jetty)
   plantuml:
-    profiles: ["extras"]
     image: plantuml/plantuml-server:jetty-v1.2025.2
     container_name: ${PLANTUML_CONTAINER_NAME:-atlas_plantuml}
     ports:
