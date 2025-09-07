@@ -150,6 +150,30 @@ export function renderTaskCard(task) {
             ` : ''}
             ${renderSubtasksPreview(task)}
             
+            <!-- Status Change Badges -->
+            <div class="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button class="px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                        onclick="event.stopPropagation(); window.changeTaskStatus && window.changeTaskStatus(${task.id}, 'done')"
+                        title="Mark as Done">
+                    Done
+                </button>
+                <button class="px-2 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
+                        onclick="event.stopPropagation(); window.changeTaskStatus && window.changeTaskStatus(${task.id}, 'todo')"
+                        title="Mark as Todo">
+                    Todo
+                </button>
+                <button class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                        onclick="event.stopPropagation(); window.changeTaskStatus && window.changeTaskStatus(${task.id}, 'in-progress')"
+                        title="Mark as In Progress">
+                    In Progress
+                </button>
+                <button class="px-2 py-1 text-xs bg-red-700 hover:bg-red-800 text-white rounded transition-colors"
+                        onclick="event.stopPropagation(); window.changeTaskStatus && window.changeTaskStatus(${task.id}, 'cancelled')"
+                        title="Mark as Cancelled">
+                    Cancelled
+                </button>
+            </div>
+            
             <!-- Delete Button -->
             <button class="absolute bottom-2 right-2 p-1 text-slate-500 hover:text-red-400 hover:bg-slate-700 rounded transition-colors opacity-0 group-hover:opacity-100"
                     onclick="event.stopPropagation(); window.deleteTask && window.deleteTask(${task.id})"

@@ -11,6 +11,7 @@ import * as render from './render.js';
 // Global references for HTML onclick handlers
 window.openEditModal = openEditModal;
 window.deleteTask = deleteTask;
+window.changeTaskStatus = changeTaskStatus;
 
 /**
  * Detect project slug from URL path
@@ -498,6 +499,38 @@ async function deleteTask(taskId) {
 }
 
 /**
+ * Change task status via badge click
+ * @param {number} taskId - Task ID to update
+ * @param {string} newStatus - New status to set
+ */
+async function changeTaskStatus(taskId, newStatus) {
+    try {
+        // Show temporary feedback
+        render.showSpinner(`Updating task ${taskId} to ${newStatus}...`);
+        
+        const result = await api.updateTask(taskId, { status: newStatus });
+        
+        if (result.ok) {
+            await loadTasks(); // Refresh tasks to show updated status
+            render.hideSpinner();
+            
+            // Show success message
+            const statusLabels = {
+                'done': 'Done',
+                'todo': 'Todo',
+                'in-progress': 'In Progress',
+                'cancelled': 'Cancelled'
+            };
+            render.showSuccess(`Task #${taskId} marked as ${statusLabels[newStatus] || newStatus}`);
+        }
+    } catch (error) {
+        console.error('Failed to update task status:', error);
+        render.hideSpinner();
+        render.showError('Failed to update task status', error.type || 'server');
+    }
+}
+
+/**
  * Add a new subtask row to the modal
  */
 function addSubtask() {
@@ -834,4 +867,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for debugging
-export { initialize, loadTasks, openEditModal, deleteTask };
+export { initialize, loadTasks, openEditModal, deleteTask, changeTaskStatus };
