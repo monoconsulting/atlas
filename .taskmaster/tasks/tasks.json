@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-07T18:48:37.124Z",
+      "updated": "2025-09-07T18:48:37.124Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -278,7 +283,7 @@
       {
         "id": 12,
         "title": "Data-TestIDs Wiring - Add all exact data-testid attributes from Rules, verify they exist in DOM after load",
-        "description": "Add comprehensive data-testid attributes to all interactive elements following established naming conventions and verify DOM presence after page load for testing framework integration.",
+        "description": "Add comprehensive data-testid attributes to all interactive elements following established naming conventions and verify DOM presence after page load for testing framework integration!",
         "details": "1. Add data-testid attributes to all interactive elements in index.html:\n   - Task cards: data-testid=\"task-card-{id}\"\n   - Action buttons: data-testid=\"btn-{action}\" (e.g., btn-create-task, btn-save, btn-cancel)\n   - Form inputs: data-testid=\"input-{field}\" (e.g., input-title, input-description)\n   - Modal elements: data-testid=\"modal-{type}\" (e.g., modal-create-task, modal-edit-task)\n   - Subtask rows: data-testid=\"subtask-row-{index}\"\n   - Filter controls: data-testid=\"filter-{type}\" (e.g., filter-status, filter-priority)\n   - Loading spinners: data-testid=\"loading-spinner-{context}\"\n   - Error banners: data-testid=\"error-banner-{type}\"\n\n2. Create verification function in main.js:\n   - Implement verifyTestIds() function that checks DOM for all expected data-testid attributes\n   - Add console logging for missing or duplicate test IDs\n   - Include validation for dynamically generated elements (task cards, subtask rows)\n   - Call verification function after initial page load and after dynamic content updates\n\n3. Establish data-testid naming rules document:\n   - Create consistent naming convention guidelines\n   - Document all current data-testid patterns and usage\n   - Include examples for future element additions\n   - Ensure compatibility with Playwright test selectors",
         "testStrategy": "1. Verify all static elements have appropriate data-testid attributes by inspecting DOM elements in browser developer tools\n2. Confirm dynamically generated elements (task cards, subtask rows) receive correct data-testid values with proper ID/index substitution\n3. Test verification function successfully identifies all expected data-testid attributes and logs any missing elements\n4. Validate data-testid attributes remain present after all dynamic operations (task creation, editing, deletion, filtering)\n5. Use browser console to run document.querySelectorAll('[data-testid]') and confirm comprehensive coverage of interactive elements\n6. Test that all data-testid values follow established naming conventions and are unique within their context",
         "status": "pending",
@@ -288,7 +293,9 @@
           9
         ],
         "priority": "medium",
-        "subtasks": []
+        "subtasks": [],
+        "labels": [],
+        "updated_at": "2025-09-07T18:46:53.660859Z"
       },
       {
         "id": 13,
@@ -630,7 +637,7 @@
         "description": "Replace all mock data in the Traefik Management Console with actual Traefik API connections for HTTP Routes, Services, Middlewares, and Certificates tabs, implementing proper API endpoints and error handling.",
         "details": "1. Remove mock data from Traefik Management Console:\n   - Identify and remove all hardcoded mock data arrays for routes, services, middlewares, and certificates\n   - Clean up mock data generation functions and placeholder content\n   - Remove any temporary data structures used for UI development\n\n2. Implement Traefik API integration:\n   - Research Traefik REST API endpoints for routes (/api/http/routers), services (/api/http/services), middlewares (/api/http/middlewares), and certificates (/api/rawdata)\n   - Create API client module with proper authentication and base URL configuration\n   - Implement async functions for fetching real data from Traefik API endpoints\n   - Add proper error handling for network failures, authentication issues, and malformed responses\n\n3. Connect real data to UI components:\n   - Update routes tab to display actual HTTP routers from Traefik API\n   - Connect services tab to real Traefik services data with health status indicators\n   - Implement middlewares tab with actual middleware configurations and chaining information\n   - Connect certificates tab to real TLS certificate data including expiration dates and domains\n\n4. Implement data refresh and polling:\n   - Add refresh buttons for each tab to manually reload data\n   - Implement periodic polling for real-time updates of Traefik configuration changes\n   - Add loading states and skeleton UI during API calls\n\n5. Handle API errors gracefully:\n   - Implement fallback UI for when Traefik API is unavailable\n   - Add user-friendly error messages for different failure scenarios\n   - Provide retry mechanisms for failed API calls",
         "testStrategy": "1. Create comprehensive Playwright test suite with headless execution:\n   - Test successful data loading from real Traefik API endpoints for all four tabs\n   - Verify correct data display format and structure matches Traefik API response schema\n   - Test error handling when Traefik API is unavailable or returns errors\n\n2. Implement snapshot and video verification:\n   - Take before/after snapshots of each tab showing transition from mock to real data\n   - Record video of complete workflow: loading each tab, refreshing data, handling errors\n   - Verify no mock data artifacts remain in the UI or console logs\n\n3. API integration testing:\n   - Test API connectivity with both valid and invalid Traefik configurations\n   - Verify proper authentication and authorization handling\n   - Test data refresh functionality and real-time updates\n\n4. Cross-tab consistency testing:\n   - Verify data relationships between routes, services, and middlewares are correctly displayed\n   - Test that certificate data matches domains configured in routes\n   - Confirm refresh operations update all related data consistently",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           24,
           30,
@@ -638,7 +645,8 @@
           32
         ],
         "priority": "medium",
-        "subtasks": []
+        "subtasks": [],
+        "updated_at": "2025-09-07T18:25:17.833999Z"
       },
       {
         "id": 34,
@@ -919,14 +927,14 @@
         "title": "Test Task for Subtask Editing",
         "description": "This task will be used to test adding subtasks in edit mode",
         "priority": "medium",
-        "status": "todo",
+        "status": "cancelled",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-07T14:46:01.298801Z",
-        "updated_at": "2025-09-07T14:46:01.298819Z",
+        "updated_at": "2025-09-07T18:46:31.244279Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
@@ -938,14 +946,14 @@
         "title": "Test Task for Subtask Editing",
         "description": "This task will be used to test adding subtasks in edit mode",
         "priority": "medium",
-        "status": "todo",
+        "status": "cancelled",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-07T14:46:01.361268Z",
-        "updated_at": "2025-09-07T14:46:01.361286Z",
+        "updated_at": "2025-09-07T18:46:33.003863Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
@@ -957,14 +965,14 @@
         "title": "Test Task for Subtask Editing",
         "description": "This task will be used to test adding subtasks in edit mode",
         "priority": "medium",
-        "status": "todo",
+        "status": "cancelled",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-07T14:46:02.705346Z",
-        "updated_at": "2025-09-07T14:46:02.705364Z",
+        "updated_at": "2025-09-07T18:46:34.864172Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
@@ -976,14 +984,14 @@
         "title": "Test Task for Subtask Editing",
         "description": "This task will be used to test adding subtasks in edit mode",
         "priority": "medium",
-        "status": "todo",
+        "status": "cancelled",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-07T14:46:05.588463Z",
-        "updated_at": "2025-09-07T15:00:57.016632Z",
+        "updated_at": "2025-09-07T18:46:28.484061Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1011,14 +1019,14 @@
         "title": "Test Task for Subtask Editing",
         "description": "This task will be used to test adding subtasks in edit mode",
         "priority": "medium",
-        "status": "todo",
+        "status": "cancelled",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-07T14:46:07.352138Z",
-        "updated_at": "2025-09-07T14:58:27.796465Z",
+        "updated_at": "2025-09-07T18:46:36.255269Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
@@ -1068,7 +1076,7 @@
         "title": "Card interface",
         "description": "Adjust the interface on the cards",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1082,7 +1090,7 @@
             "id": 1,
             "title": "Badge \"Done\"",
             "description": "Put a green badge on all cards saying \"Done\". When this is pressed the card should immedeately change status to done",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1097,7 +1105,7 @@
             "id": 2,
             "title": "Badge \"Todo\"",
             "description": "Put a light blue badge on all cards saying \"Todo\". When this is pressed the card should immedeately change status to Todo",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1112,7 +1120,7 @@
             "id": 3,
             "title": "Badge \"In Progress\"",
             "description": "Put a Red badge on the cards saying \"In progress\". When this is pressed the status should be set to in progress",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1127,7 +1135,7 @@
             "id": 4,
             "title": "Badge \"Cancelled\"",
             "description": "Put a Red badge on the cards saying \"Cancelled\". When this is pressed the status should be set to Cancelled",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1142,7 +1150,31 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 50,
+        "title": "Sortorder changes after updating",
+        "description": "After saving or updating a task the sortorder changes to ASC but it still says DESC in dropdown. Fix so it stays.",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T18:47:42.003322Z",
+        "updated_at": "2025-09-07T18:47:42.003333Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-07T18:48:37.124Z",
+      "updated": "2025-09-07T18:48:37.125Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }
