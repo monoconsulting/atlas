@@ -276,7 +276,13 @@ function openTaskModal(mode = 'create', task = null) {
     if (!modal || !modalTitle || !form) return;
     
     // Set modal title
-    modalTitle.textContent = mode === 'create' ? 'Create New Task' : 'Edit Task';
+    if (mode === 'create') {
+        modalTitle.textContent = 'Create New Task';
+    } else if (mode === 'edit' && task) {
+        modalTitle.textContent = `Edit task: TM${task.id}`;
+    } else {
+        modalTitle.textContent = 'Edit Task';
+    }
     
     // Reset form
     form.reset();
@@ -396,8 +402,14 @@ async function handleTaskSubmit(event) {
         if (mode === 'create') {
             result = await api.createTask(taskData);
             
-            // If task created successfully, create subtasks
+            // If task created successfully, update modal title and create subtasks
             if (result.ok && result.data && result.data.id) {
+                // Update modal title to show the new task ID
+                const modalTitle = document.getElementById('modalTitle');
+                if (modalTitle) {
+                    modalTitle.textContent = `Create Task: TM${result.data.id}`;
+                }
+                
                 await createSubtasksFromModal(result.data.id);
             }
         } else {

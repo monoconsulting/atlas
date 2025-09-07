@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-07T15:23:58.132Z",
+      "updated": "2025-09-07T15:23:58.132Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -1030,7 +1035,7 @@
         "title": "Add task id so its visible in the modal",
         "description": "I want the task edit to be visible in the modal at the top so it should look \"Edit task: TM123\" where TM123 is task ID. As soon as the data is saved in the db or json i want it to update the create task also so it gets Create Task: TM123. I think it saves when the first subtask is added.",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1043,7 +1048,31 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 48,
+        "title": "Test Modal Title Task",
+        "description": "Testing task ID visibility in modal",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T15:13:45.314557Z",
+        "updated_at": "2025-09-07T15:13:45.314572Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-07T15:23:58.132Z",
+      "updated": "2025-09-07T15:23:58.133Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }
