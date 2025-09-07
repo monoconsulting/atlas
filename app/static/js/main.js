@@ -305,6 +305,19 @@ function openTaskModal(mode = 'create', task = null) {
         
         // Clear subtasks
         clearSubtasks();
+        
+        // Restore the original add subtask event listener for create mode
+        const addSubtaskBtn = document.getElementById('addSubtaskBtn');
+        if (addSubtaskBtn) {
+            // Remove any existing listener to avoid duplicates
+            addSubtaskBtn.replaceWith(addSubtaskBtn.cloneNode(true));
+            const newBtn = document.getElementById('addSubtaskBtn');
+            newBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addSubtask();
+            });
+        }
     }
     
     // Show modal
@@ -509,6 +522,141 @@ function addSubtask() {
 }
 
 /**
+ * Add a new subtask for edit mode (saves immediately)
+ * @param {number} taskId - Parent task ID
+ */
+async function addSubtaskForEditMode(taskId) {
+    const subtasksList = document.getElementById('subtasksList');
+    if (!subtasksList) return;
+    
+    // Check current subtask count (including existing ones)
+    const currentSubtasks = subtasksList.querySelectorAll('[data-testid^="subtask-row-"]');
+    const newSubtaskRows = subtasksList.querySelectorAll('[data-new-subtask="true"]');
+    
+    if (currentSubtasks.length >= 8) {
+        render.showError('Maximum 8 subtasks per task');
+        return;
+    }
+    
+    // Create new subtask row
+    const subtaskRow = document.createElement('div');
+    subtaskRow.setAttribute('data-testid', `subtask-row-${currentSubtasks.length + 1}`);
+    subtaskRow.setAttribute('data-new-subtask', 'true');
+    subtaskRow.className = 'bg-slate-900 border border-slate-800 rounded p-4 space-y-3';
+    
+    // Create form for new subtask
+    const subtaskHTML = `
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-400 font-mono">New Subtask</span>
+                <button type="button" class="text-red-400 hover:text-red-300 remove-new-subtask-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <input type="text" 
+                    data-field="title" 
+                    placeholder="Subtask title *" 
+                    class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100 placeholder-slate-500 new-subtask-title">
+                <select data-field="priority" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <textarea 
+                data-field="description" 
+                placeholder="Description" 
+                rows="2" 
+                class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100 placeholder-slate-500 resize-none"></textarea>
+            <div class="flex gap-2">
+                <select data-field="status" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100">
+                    <option value="pending">Backlog</option>
+                    <option value="todo" selected>Todo</option>
+                    <option value="in-progress">In progress</option>
+                    <option value="review">Review</option>
+                    <option value="done">Done</option>
+                    <option value="deferred">Deferred</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <button type="button" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded save-new-subtask-btn">
+                    Save Subtask
+                </button>
+            </div>
+        </div>
+    `;
+    
+    subtaskRow.innerHTML = subtaskHTML;
+    
+    // Add event handlers
+    const removeBtn = subtaskRow.querySelector('.remove-new-subtask-btn');
+    removeBtn?.addEventListener('click', () => {
+        subtaskRow.remove();
+        updateSubtaskTestIds();
+    });
+    
+    const saveBtn = subtaskRow.querySelector('.save-new-subtask-btn');
+    saveBtn?.addEventListener('click', async () => {
+        const titleInput = subtaskRow.querySelector('[data-field="title"]');
+        const descInput = subtaskRow.querySelector('[data-field="description"]');
+        const prioritySelect = subtaskRow.querySelector('[data-field="priority"]');
+        const statusSelect = subtaskRow.querySelector('[data-field="status"]');
+        
+        if (!titleInput.value.trim()) {
+            render.showError('Subtask title is required');
+            return;
+        }
+        
+        try {
+            render.setButtonLoading(saveBtn, true, 'Saving...');
+            
+            const subtaskData = {
+                title: titleInput.value.trim(),
+                description: descInput.value.trim() || '',
+                priority: prioritySelect.value || 'medium',
+                status: statusSelect.value || 'todo'
+            };
+            
+            const result = await api.createSubtask(taskId, subtaskData);
+            
+            if (result.ok) {
+                // Refresh the task data
+                await loadTasks();
+                
+                // Reload the task to get updated subtasks
+                const updatedTask = state.getTaskById(taskId);
+                if (updatedTask) {
+                    populateSubtasks(updatedTask);
+                }
+                
+                render.showSuccess('Subtask added successfully');
+            }
+        } catch (error) {
+            console.error('Failed to create subtask:', error);
+            render.showError('Failed to create subtask');
+        } finally {
+            render.setButtonLoading(saveBtn, false);
+        }
+    });
+    
+    subtasksList.appendChild(subtaskRow);
+    
+    // Remove "no subtasks" message if it exists
+    const noSubtasksMsg = subtasksList.querySelector('.text-slate-500.italic');
+    if (noSubtasksMsg) {
+        noSubtasksMsg.remove();
+    }
+    
+    // Focus on the title input
+    const titleInput = subtaskRow.querySelector('.new-subtask-title');
+    if (titleInput) {
+        titleInput.focus();
+    }
+}
+
+/**
  * Update subtask data-testid attributes after removal
  */
 function updateSubtaskTestIds() {
@@ -536,13 +684,25 @@ function populateSubtasks(task) {
     
     if (task.subtasks.length === 0) {
         subtasksList.innerHTML = '<p class="text-sm text-slate-500 italic">No subtasks yet</p>';
-        return;
+    } else {
+        subtasksList.innerHTML = render.renderSubtaskRows(task.subtasks, task.id);
     }
-    
-    subtasksList.innerHTML = render.renderSubtaskRows(task.subtasks, task.id);
     
     // Setup subtask event listeners
     setupSubtaskEventListeners(task.id);
+    
+    // Re-attach the add subtask button handler for edit mode
+    const addSubtaskBtn = document.getElementById('addSubtaskBtn');
+    if (addSubtaskBtn) {
+        // Remove any existing listener to avoid duplicates
+        addSubtaskBtn.replaceWith(addSubtaskBtn.cloneNode(true));
+        const newBtn = document.getElementById('addSubtaskBtn');
+        newBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            addSubtaskForEditMode(task.id);
+        });
+    }
 }
 
 /**
