@@ -168,6 +168,10 @@ export function setTasks(tasks) {
     
     state.allTasks = normalizedTasks;
     state.tasks = [...normalizedTasks]; // Initially unfiltered
+    
+    // Apply current filters and sorting to new tasks
+    applyCurrentFilters();
+    
     notify('tasks-changed', normalizedTasks);
 }
 

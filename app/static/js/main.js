@@ -235,7 +235,7 @@ function handleFilterChange() {
  * Handle sorting changes
  */
 function handleSortingChange() {
-    const sortingValue = document.getElementById('filterSorting')?.value || 'id-asc';
+    const sortingValue = document.getElementById('filterSorting')?.value || 'id-desc';
     const [by, order] = sortingValue.split('-');
     
     state.setSorting(by, order);
