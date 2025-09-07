@@ -455,10 +455,46 @@ class TaskStorage:
             return updated
 
     def info(self) -> Dict[str, Any]:
+        print("=== STORAGE INFO CALLED ===")
+        
+        # Start with fallback project name
         project_name = os.getenv("PROJECT_NAME")
         if not project_name:
             parent = self.base_dir.parent
             project_name = parent.name if parent.exists() else "workspace"
+            print(f"=== USING DEFAULT PROJECT_NAME: {project_name} ===")
+        else:
+            print(f"=== USING ENV PROJECT_NAME: {project_name} ===")
+        
+        # ALWAYS try to override with database project name using path matching
+        try:
+            from .database import get_db, get_all_projects
+            base_dir_str = str(self.base_dir)
+            print(f"[info] base_dir_str: {base_dir_str}")
+            if '/projects/' in base_dir_str and '/.taskmaster' in base_dir_str:
+                # Extract the project path (without /.taskmaster)
+                project_path = base_dir_str.split('/.taskmaster')[0]
+                print(f"[info] Extracted project_path: {project_path}")
+                db_gen = get_db()
+                db = next(db_gen)
+                try:
+                    projects = get_all_projects(db)
+                    print(f"[info] Found {len(projects)} projects in database")
+                    for project in projects:
+                        print(f"[info] Checking project {project.slug}: path={project.path}")
+                        if project.path and project.path == project_path:
+                            print(f"[info] MATCH! Overriding project_name from '{project_name}' to '{project.name}'")
+                            project_name = project.name
+                            break
+                    else:
+                        print(f"[info] No database project found for path: {project_path}")
+                finally:
+                    db.close()
+            else:
+                print(f"[info] Path doesn't match expected pattern: {base_dir_str}")
+        except Exception as e:
+            print(f"[info] Exception during database override: {e}")
+            pass  # Fallback to existing project_name
         
         # Get information about all task files
         task_files_info = []

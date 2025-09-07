@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-09-05T12:02:26.482Z",
-      "updated": "2025-09-05T12:02:26.482Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -751,7 +746,7 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-05T06:42:32.973759Z",
-        "updated_at": "2025-09-05T06:42:32.973773Z",
+        "updated_at": "2025-09-07T09:02:34.766541Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
@@ -902,11 +897,6 @@
         "extra": {},
         "relations": []
       }
-    ],
-    "metadata": {
-      "created": "2025-09-05T12:02:26.482Z",
-      "updated": "2025-09-05T12:02:26.484Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
