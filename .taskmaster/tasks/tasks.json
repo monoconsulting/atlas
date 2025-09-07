@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-09-07T15:02:46.387Z",
-      "updated": "2025-09-07T15:02:46.387Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -353,14 +348,14 @@
         "title": "Task 2 Path Verification",
         "description": "Test task creation with corrected container paths",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-28T09:27:57.200124Z",
-        "updated_at": "2025-08-28T09:27:57.200168Z",
+        "updated_at": "2025-09-07T15:06:23.527660Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
@@ -391,14 +386,14 @@
         "title": "t",
         "description": "t",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-28T12:39:39.619600Z",
-        "updated_at": "2025-09-07T15:01:15.253519Z",
+        "updated_at": "2025-09-07T15:06:27.725556Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -505,12 +500,14 @@
         "id": 24,
         "title": "Fix Traefik port configuration from 8080 to 8087 to avoid phpMyAdmin conflicts",
         "description": "Update Traefik configuration in E:\\traefik directory to use port 8088 instead of 8080 to prevent conflicts with phpMyAdmin services running on port 8080 in other projects. Task completed successfully with port 8088 chosen due to 8087 conflict.",
-        "status": "in-progress",
+        "status": "done",
         "dependencies": [],
         "priority": "medium",
         "details": "COMPLETED: Successfully updated Traefik configuration from port 8080 to port 8088 (changed from original plan of 8087 due to port availability).\n\nCompleted actions:\n1. Updated docker-compose.yml port mapping from 8080:8080 to 8088:8080\n2. Updated README.md documentation to reflect new port 8088\n3. Updated CLAUDE.md documentation with new port configuration\n4. Verified Traefik starts successfully on port 8088\n5. Confirmed port 8080 is now free for phpMyAdmin use in other projects\n6. All Playwright tests passing (3/3)\n\nNote: Port 8088 was selected instead of originally planned 8087 due to port conflict discovery during implementation.",
         "testStrategy": "COMPLETED: All tests successfully passed.\n\n✅ Verified Traefik starts successfully on port 8088 without errors\n✅ Confirmed port 8080 is now free and available for phpMyAdmin services\n✅ Verified all Traefik routing and load balancing functionality works on new port\n✅ All Playwright tests pass (3/3)\n✅ Documentation updated in README.md and CLAUDE.md\n✅ No port conflicts confirmed\n\nTest results: 100% success rate with comprehensive verification of port change implementation.",
-        "subtasks": []
+        "subtasks": [],
+        "labels": [],
+        "updated_at": "2025-09-07T15:06:17.692726Z"
       },
       {
         "id": 25,
@@ -1027,12 +1024,26 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 47,
+        "title": "Add task id so its visible in the modal",
+        "description": "I want the task edit to be visible in the modal at the top so it should look \"Edit task: TM123\" where TM123 is task ID. As soon as the data is saved in the db or json i want it to update the create task also so it gets Create Task: TM123. I think it saves when the first subtask is added.",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T15:08:18.365776Z",
+        "updated_at": "2025-09-07T15:08:18.365787Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ],
-    "metadata": {
-      "created": "2025-09-07T15:02:46.387Z",
-      "updated": "2025-09-07T15:02:46.388Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
