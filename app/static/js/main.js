@@ -71,11 +71,14 @@ async function loadProjectInfo() {
             const projectName = response.data.project_name || response.data.projectName || 'Unknown Project';
             state.setProjectName(projectName);
             
-            // Update project name in header
+            // Update project name in header and document title
             const projectNameElement = document.getElementById('projectName');
             if (projectNameElement) {
                 projectNameElement.textContent = projectName;
             }
+            
+            // Update browser tab title
+            document.title = `${projectName} - Atlas TaskMaster`;
         }
     } catch (error) {
         console.error('Failed to load project info:', error);
