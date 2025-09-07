@@ -1,12 +1,14 @@
 ---
 date created: 2025-09-07 11:33:37
-date modified: 2025-09-07 15:55:36
+date modified: 2025-09-07 21:14:23
 title: GIT_END
 version: 1.1
 ---
 
 # GIT_END
 ## GIT_END: Merging a feature branch into dev - 100% Bomb-proof
+## IMPORTANT!!##
+**Every step in this guide MUST be reported back with the report status after each step!"
 
 ```
 Version: 1.0
@@ -31,6 +33,8 @@ git status
 
 The result **MUST** be `working tree clean`. If not, commit your final changes:
 
+Report: "Working Tree Clean"
+
 Bash
 
 ```
@@ -38,7 +42,7 @@ git add .
 git commit -m "Final commit for TMXXX"
 ```
 
-
+Report: "Step 1: Final Commit Made"
 
 ## Step 2: Update your feature branch with the latest from `dev`
 
@@ -61,7 +65,7 @@ git add .
 git commit -m "Resolved merge conflict with latest dev"
 ```
 
-
+Report: "Step 2: Pull ok"
 
 ## Step 3: Create a safety tag
 
@@ -76,7 +80,7 @@ Bash
 git tag TMXXX
 ```
 
-
+Report:"Step 3: Safety Tag Created"
 
 ## Step 4: Switch to `dev` and prepare for the merge
 
@@ -91,7 +95,7 @@ git checkout dev
 git pull origin dev # Double-check that dev is up-to-date
 ```
 
-
+Report "Step 4: Dev Checkout OK"
 
 ## Step 5: Execute the bomb-proof merge
 
@@ -111,7 +115,7 @@ git merge --no-ff --no-squash TMXXX-description
 
 Git will now open a text editor for you to write a merge message. The default message is usually fine. Save and close.
 
-
+Report: "Step 5: Bomb-proof merge OK"
 
 ## Step 6: Push everything to GitHub (Extremely important!)
 
@@ -136,7 +140,7 @@ Now you must push both the updated `dev` branch AND your new tag to the server.
    git push origin TMXXX
    ```
 
-
+Report "Step 6: Push OK"
 
 ## Step 7: Verification
 
