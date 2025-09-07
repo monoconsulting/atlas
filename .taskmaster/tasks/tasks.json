@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-07T15:02:46.387Z",
+      "updated": "2025-09-07T15:02:46.387Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -393,7 +398,7 @@
         "labels": [],
         "dependencies": [],
         "created_at": "2025-08-28T12:39:39.619600Z",
-        "updated_at": "2025-08-28T12:39:39.619615Z",
+        "updated_at": "2025-09-07T15:01:15.253519Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -409,6 +414,21 @@
             "dependencies": [],
             "created_at": "2025-08-28T12:39:39.696361Z",
             "updated_at": "2025-08-28T12:39:39.696375Z",
+            "extra": {}
+          },
+          {
+            "id": 2,
+            "title": "ASDFASDF",
+            "description": "ASDFASDF",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-07T15:01:13.576604Z",
+            "updated_at": "2025-09-07T15:01:13.576617Z",
             "extra": {}
           }
         ],
@@ -739,14 +759,14 @@
         "title": "Editing task - create subtask not working",
         "description": "When editing a task it is not possible to add more subtasks. Investigate the functionality from create tasks - it wokring ther.",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-05T06:42:32.973759Z",
-        "updated_at": "2025-09-07T14:36:31.393648Z",
+        "updated_at": "2025-09-07T14:58:20.513447Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
@@ -896,7 +916,123 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 42,
+        "title": "Test Task for Subtask Editing",
+        "description": "This task will be used to test adding subtasks in edit mode",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T14:46:01.298801Z",
+        "updated_at": "2025-09-07T14:46:01.298819Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
+      },
+      {
+        "id": 43,
+        "title": "Test Task for Subtask Editing",
+        "description": "This task will be used to test adding subtasks in edit mode",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T14:46:01.361268Z",
+        "updated_at": "2025-09-07T14:46:01.361286Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
+      },
+      {
+        "id": 44,
+        "title": "Test Task for Subtask Editing",
+        "description": "This task will be used to test adding subtasks in edit mode",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T14:46:02.705346Z",
+        "updated_at": "2025-09-07T14:46:02.705364Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
+      },
+      {
+        "id": 45,
+        "title": "Test Task for Subtask Editing",
+        "description": "This task will be used to test adding subtasks in edit mode",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T14:46:05.588463Z",
+        "updated_at": "2025-09-07T15:00:57.016632Z",
+        "tag": "atlas",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "rwar",
+            "description": "ASDasd",
+            "status": "done",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-07T15:00:52.441761Z",
+            "updated_at": "2025-09-07T15:00:56.451019Z",
+            "extra": {}
+          }
+        ],
+        "deleted": false,
+        "extra": {},
+        "relations": []
+      },
+      {
+        "id": 46,
+        "title": "Test Task for Subtask Editing",
+        "description": "This task will be used to test adding subtasks in edit mode",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T14:46:07.352138Z",
+        "updated_at": "2025-09-07T14:58:27.796465Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-07T15:02:46.387Z",
+      "updated": "2025-09-07T15:02:46.388Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }
