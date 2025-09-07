@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-07T19:39:33.296Z",
+      "updated": "2025-09-07T19:39:33.296Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -1151,7 +1156,7 @@
         "title": "Sortorder changes after updating",
         "description": "After saving or updating a task the sortorder changes to ASC but it still says DESC in dropdown. Fix so it stays.",
         "priority": "medium",
-        "status": "todo",
+        "status": "in-progress",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1165,6 +1170,11 @@
         "extra": {},
         "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-07T19:39:33.296Z",
+      "updated": "2025-09-07T19:39:33.302Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }
