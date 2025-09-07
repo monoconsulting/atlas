@@ -59,7 +59,8 @@
       "Read(/E:\\projects\\atlas/**)",
       "Read(/E:\\projects\\atlas\\web/**)",
       "Read(/E:\\projects\\atlas\\web/**)",
-      "Read(/E:\\projects\\atlas\\app/**)"
+      "Read(/E:\\projects\\atlas\\app/**)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": []
