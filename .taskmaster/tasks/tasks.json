@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-09-07T15:23:58.132Z",
-      "updated": "2025-09-07T15:23:58.132Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -1054,25 +1049,100 @@
         "title": "Test Modal Title Task",
         "description": "Testing task ID visibility in modal",
         "priority": "medium",
-        "status": "todo",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-07T15:13:45.314557Z",
-        "updated_at": "2025-09-07T15:13:45.314572Z",
+        "updated_at": "2025-09-07T17:55:50.700657Z",
         "tag": "atlas",
         "subtasks": [],
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 49,
+        "title": "Card interface",
+        "description": "Adjust the interface on the cards",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-07T18:00:05.633349Z",
+        "updated_at": "2025-09-07T18:00:05.633399Z",
+        "tag": "atlas",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Badge \"Done\"",
+            "description": "Put a green badge on all cards saying \"Done\". When this is pressed the card should immedeately change status to done",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-07T18:00:05.717660Z",
+            "updated_at": "2025-09-07T18:00:05.717672Z",
+            "extra": {}
+          },
+          {
+            "id": 2,
+            "title": "Badge \"Todo\"",
+            "description": "Put a light blue badge on all cards saying \"Todo\". When this is pressed the card should immedeately change status to Todo",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-07T18:00:05.794853Z",
+            "updated_at": "2025-09-07T18:00:05.794864Z",
+            "extra": {}
+          },
+          {
+            "id": 3,
+            "title": "Badge \"In Progress\"",
+            "description": "Put a Red badge on the cards saying \"In progress\". When this is pressed the status should be set to in progress",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-07T18:00:06.064740Z",
+            "updated_at": "2025-09-07T18:00:06.064750Z",
+            "extra": {}
+          },
+          {
+            "id": 4,
+            "title": "Badge \"Cancelled\"",
+            "description": "Put a Red badge on the cards saying \"Cancelled\". When this is pressed the status should be set to Cancelled",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-07T18:00:06.099634Z",
+            "updated_at": "2025-09-07T18:00:06.099642Z",
+            "extra": {}
+          }
+        ],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
-    ],
-    "metadata": {
-      "created": "2025-09-07T15:23:58.132Z",
-      "updated": "2025-09-07T15:23:58.133Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
