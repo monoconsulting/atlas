@@ -1177,6 +1177,71 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 51,
+        "title": "Lägg till funktioner i projektkorten",
+        "description": "Fixa till med projektpanelerna",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-08T14:32:12.519230Z",
+        "updated_at": "2025-09-08T14:32:53.168475Z",
+        "tag": "atlas",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Byt namn på knapp",
+            "description": "Byt namn på den stora blå knappen \"Open project\" till Atlas TM.",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-08T14:32:12.558766Z",
+            "updated_at": "2025-09-08T14:32:45.858749Z",
+            "extra": {}
+          },
+          {
+            "id": 2,
+            "title": "Lägg till knapp \"Edit project\"",
+            "description": "Lägg till knapp \"Edit project\" då ska Add project modalen komma upp med förifyllda värden på så projektet kan redigeras",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-08T14:32:12.640973Z",
+            "updated_at": "2025-09-08T14:32:52.952164Z",
+            "extra": {}
+          },
+          {
+            "id": 3,
+            "title": "Lägg upp länkar till frontend och docs på varje kort",
+            "description": "Lägg till länkarna för frontend och docs på kortet så de är klickbara. Du kan lägga ikoner en bok för docs och en webikon för frontend",
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-08T14:32:12.728157Z",
+            "updated_at": "2025-09-08T14:32:12.728173Z",
+            "extra": {}
+          }
+        ],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ]
   }
