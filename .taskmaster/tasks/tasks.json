@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-08T07:48:36.142Z",
+      "updated": "2025-09-08T07:48:36.142Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -613,7 +618,7 @@
       },
       {
         "id": 32,
-        "title": "Ensure consistent naming between modal fields and list columns in Traefik Management Console",
+        "title": "Updated task title - TM50 Test",
         "description": "Standardize field names between the Add route modal form and the routes list column headers to maintain UI consistency. Implement comprehensive testing with headless Playwright snapshots and video verification.",
         "details": "1. Audit current field naming inconsistencies:\n   - Compare field labels in the Add route modal form with column headers in the routes list table\n   - Document all naming mismatches (e.g., 'Route Name' vs 'Name', 'Host/Domain' vs 'Host', 'Target URL/Port' vs 'Target')\n   - Create mapping of current inconsistent naming patterns\n   - Review backend API field names to ensure consistency across frontend and backend\n\n2. Standardize field naming conventions:\n   - Choose consistent naming pattern (prefer shorter, clearer labels where appropriate)\n   - Update modal form field labels to match chosen convention\n   - Update routes list column headers to match chosen convention\n   - Ensure field IDs and data attributes remain consistent with backend expectations\n   - Update any related CSS classes or JavaScript selectors that reference field names\n\n3. Update form validation and data processing:\n   - Verify form validation messages use consistent field names\n   - Update JavaScript functions that reference field names or DOM elements\n   - Ensure API request/response handling maintains correct field mapping\n   - Test that form submission and data display work correctly after naming changes\n\n4. Implement comprehensive UI consistency checks:\n   - Add validation to ensure modal field names exactly match list column headers\n   - Create helper functions to maintain naming consistency in future updates\n   - Document the standardized naming conventions for future development reference",
         "testStrategy": "1. Create comprehensive Playwright test suite with headless execution and full verification:\n   - Take before and after snapshots of both Add route modal and routes list to visually verify naming consistency\n   - Record video of complete workflow: opening modal, viewing field labels, closing modal, checking list headers\n   - Test that every field label in Add route modal has exact matching column header in routes list\n   - Verify no broken functionality after field name changes (form submission, validation, data display)\n\n2. Implement automated consistency validation:\n   - Create test that programmatically compares modal field labels with list column headers\n   - Test that form data properly maps to list display after route creation\n   - Verify tooltip text and validation messages use consistent field terminology\n   - Test accessibility labels and screen reader compatibility with new field names\n\n3. Cross-browser and responsive testing:\n   - Test naming consistency across different viewport sizes and screen resolutions\n   - Verify field label truncation behavior maintains readability\n   - Test that naming changes don't break mobile responsive layout\n   - Generate comprehensive test report with snapshots, videos, and pass/fail metrics",
@@ -624,7 +629,9 @@
           31
         ],
         "priority": "medium",
-        "subtasks": []
+        "subtasks": [],
+        "labels": [],
+        "updated_at": "2025-09-08T07:48:24.122546Z"
       },
       {
         "id": 33,
@@ -1151,7 +1158,7 @@
         "title": "Sortorder changes after updating",
         "description": "After saving or updating a task the sortorder changes to ASC but it still says DESC in dropdown. Fix so it stays.",
         "priority": "medium",
-        "status": "todo",
+        "status": "review",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1165,6 +1172,11 @@
         "extra": {},
         "relations": []
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-08T07:48:36.142Z",
+      "updated": "2025-09-08T07:48:36.144Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }

@@ -1,6 +1,6 @@
 ---
 date created: 2025-09-07 11:33:37
-date modified: 2025-09-07 21:14:23
+date modified: 2025-09-07 21:43:01
 title: GIT_END
 version: 1.1
 ---
@@ -57,7 +57,7 @@ git pull origin dev
 ```
 
 If any merge conflicts arise, you resolve them now, in your own branch. This keeps the `dev` branch completely clean from conflict resolution. Once the conflicts are resolved, create a commit:
-
+**IMPORTANT!! GIT ADD . MUST BE USED!!!!!**
 Bash
 
 ```

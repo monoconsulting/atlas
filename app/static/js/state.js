@@ -167,8 +167,9 @@ export function setTasks(tasks) {
         }));
     
     state.allTasks = normalizedTasks;
-    state.tasks = [...normalizedTasks]; // Initially unfiltered
-    notify('tasks-changed', normalizedTasks);
+    // Apply current filters and sorting after setting the tasks
+    applyCurrentFilters();
+    notify('tasks-changed', state.tasks);
 }
 
 /**
