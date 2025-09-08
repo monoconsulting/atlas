@@ -120,6 +120,14 @@ function updateUI() {
     
     // Update tag filter options
     updateTagFilterOptions();
+    
+    // Preserve sorting dropdown value
+    const currentSorting = state.getSorting();
+    const sortingSelect = document.getElementById('filterSorting');
+    if (sortingSelect && currentSorting) {
+        const sortingValue = `${currentSorting.by}-${currentSorting.order}`;
+        sortingSelect.value = sortingValue;
+    }
 }
 
 /**
@@ -239,10 +247,14 @@ function handleFilterChange() {
  * Handle sorting changes
  */
 function handleSortingChange() {
-    const sortingValue = document.getElementById('filterSorting')?.value || 'id-asc';
-    const [by, order] = sortingValue.split('-');
+    const sortingSelect = document.getElementById('filterSorting');
+    if (!sortingSelect) return;
     
-    state.setSorting(by, order);
+    const sortingValue = sortingSelect.value;
+    if (sortingValue) {
+        const [by, order] = sortingValue.split('-');
+        state.setSorting(by, order);
+    }
 }
 
 /**
