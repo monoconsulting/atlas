@@ -1,0 +1,888 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - img [ref=e7]
+          - generic [ref=e9]:
+            - heading "Atlas" [level=1] [ref=e10]
+            - generic [ref=e11]:
+              - generic [ref=e12]: Atlas
+              - generic [ref=e13]: "- Taskmaster Web"
+        - generic [ref=e14]:
+          - link "Dev Hub" [ref=e15] [cursor=pointer]:
+            - /url: http://localhost:9652
+            - img [ref=e16] [cursor=pointer]
+            - text: Dev Hub
+          - link "Project" [ref=e18] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e19] [cursor=pointer]
+            - text: Project
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - text: "Backlog:"
+          - generic [ref=e23]: "0"
+        - generic [ref=e24]:
+          - text: "Todo:"
+          - generic [ref=e25]: "0"
+        - generic [ref=e26]:
+          - text: "In progress:"
+          - generic [ref=e27]: "0"
+        - generic [ref=e28]:
+          - text: "Review:"
+          - generic [ref=e29]: "0"
+        - generic [ref=e30]:
+          - text: "Done:"
+          - generic [ref=e31]: "0"
+        - generic [ref=e32]:
+          - text: "Deferred:"
+          - generic [ref=e33]: "0"
+        - generic [ref=e34]:
+          - text: "Cancelled:"
+          - generic [ref=e35]: "0"
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - button "Create New Task" [ref=e38]:
+        - img [ref=e39]
+        - text: Create New Task
+      - button "Create New Status" [ref=e41]:
+        - img [ref=e42]
+        - text: Create New Status
+      - button "Create New Tag" [ref=e44]:
+        - img [ref=e45]
+        - text: Create New Tag
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]: Status
+          - combobox [ref=e51]:
+            - option "All Status" [selected]
+            - option "Backlog"
+            - option "Todo"
+            - option "In progress"
+            - option "Review"
+            - option "Done"
+            - option "Deferred"
+            - option "Cancelled"
+        - generic [ref=e52]:
+          - generic [ref=e53]: Priority
+          - combobox [ref=e54]:
+            - option "All Priority" [selected]
+            - option "High"
+            - option "Medium"
+            - option "Low"
+        - generic [ref=e55]:
+          - generic [ref=e56]: Tags
+          - combobox [ref=e57]:
+            - option "All Tags" [selected]
+        - generic [ref=e58]:
+          - generic [ref=e59]: Sorting
+          - combobox [ref=e60]:
+            - option "ID ASC"
+            - option "ID DESC" [selected]
+            - option "Priority"
+            - option "Status"
+            - option "Title"
+        - generic [ref=e61]:
+          - generic [ref=e62]: Search
+          - textbox "Search tasks..." [ref=e63]
+      - button "Clear Filters" [ref=e65]:
+        - img [ref=e66]
+        - text: Clear Filters
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e71]:
+          - heading "Backlog" [level=2] [ref=e72]: Backlog
+          - generic [ref=e74]: "13"
+        - generic [ref=e75]:
+          - generic [ref=e76] [cursor=pointer]:
+            - generic [ref=e77] [cursor=pointer]:
+              - generic [ref=e78] [cursor=pointer]: "#32"
+              - generic [ref=e79] [cursor=pointer]: medium
+            - heading "Updated task title - TM50 Test" [level=3] [ref=e80] [cursor=pointer]
+            - paragraph [ref=e81] [cursor=pointer]: Standardize field names between the Add route modal form and the routes list column headers to maintain UI consistency. Implement comprehensive testing with headless Playwright snapshots and video verification.
+            - generic [ref=e82] [cursor=pointer]:
+              - button "Done" [ref=e83]
+              - button "Todo" [ref=e84]
+              - button "In Progress" [ref=e85]
+              - button "Cancelled" [ref=e86]
+            - button "Delete task" [ref=e87]:
+              - img [ref=e88]
+          - generic [ref=e90] [cursor=pointer]:
+            - generic [ref=e91] [cursor=pointer]:
+              - generic [ref=e92] [cursor=pointer]: "#31"
+              - generic [ref=e93] [cursor=pointer]: medium
+            - heading "Add mandatory field indicators (stars) to Add route form in Traefik Management Console" [level=3] [ref=e94] [cursor=pointer]
+            - paragraph [ref=e95] [cursor=pointer]: Implement visual mandatory field indicators (asterisk symbols) for required fields in the Traefik Management Console Add route form to improve user experience and form validation clarity.
+            - generic [ref=e96] [cursor=pointer]:
+              - button "Done" [ref=e97]
+              - button "Todo" [ref=e98]
+              - button "In Progress" [ref=e99]
+              - button "Cancelled" [ref=e100]
+            - button "Delete task" [ref=e101]:
+              - img [ref=e102]
+          - generic [ref=e104] [cursor=pointer]:
+            - generic [ref=e105] [cursor=pointer]:
+              - generic [ref=e106] [cursor=pointer]: "#30"
+              - generic [ref=e107] [cursor=pointer]: medium
+            - heading "Add onmouseover tooltips with examples and explanations for all Add route form fields in Traefik Management Console" [level=3] [ref=e108] [cursor=pointer]
+            - paragraph [ref=e109] [cursor=pointer]: Implement comprehensive tooltip system for all form fields in the Traefik Management Console Add route form, providing detailed explanations, examples, and middleware options documentation to improve user experience.
+            - generic [ref=e110] [cursor=pointer]:
+              - button "Done" [ref=e111]
+              - button "Todo" [ref=e112]
+              - button "In Progress" [ref=e113]
+              - button "Cancelled" [ref=e114]
+            - button "Delete task" [ref=e115]:
+              - img [ref=e116]
+          - generic [ref=e118] [cursor=pointer]:
+            - generic [ref=e119] [cursor=pointer]:
+              - generic [ref=e120] [cursor=pointer]: "#29"
+              - generic [ref=e121] [cursor=pointer]: medium
+            - heading "Fix Docker scan function that fails with Gateway Timeout JSON parse error when using Scan Docker -> Propose" [level=3] [ref=e122] [cursor=pointer]
+            - paragraph [ref=e123] [cursor=pointer]: Replace the broken Docker port scanning functionality that currently fails with Gateway Timeout and JSON parse errors with proper error handling and robust JSON response processing.
+            - generic [ref=e124] [cursor=pointer]:
+              - button "Done" [ref=e125]
+              - button "Todo" [ref=e126]
+              - button "In Progress" [ref=e127]
+              - button "Cancelled" [ref=e128]
+            - button "Delete task" [ref=e129]:
+              - img [ref=e130]
+          - generic [ref=e132] [cursor=pointer]:
+            - generic [ref=e133] [cursor=pointer]:
+              - generic [ref=e134] [cursor=pointer]: "#28"
+              - generic [ref=e135] [cursor=pointer]: medium
+            - heading "Fix non-functional Create route button in Traefik Management Console with Playwright test verification" [level=3] [ref=e136] [cursor=pointer]
+            - paragraph [ref=e137] [cursor=pointer]: Repair the broken Create route button functionality in the Traefik Management Console that currently does nothing when pressed, and implement comprehensive Playwright test with snapshot and video verification.
+            - generic [ref=e138] [cursor=pointer]:
+              - button "Done" [ref=e139]
+              - button "Todo" [ref=e140]
+              - button "In Progress" [ref=e141]
+              - button "Cancelled" [ref=e142]
+            - button "Delete task" [ref=e143]:
+              - img [ref=e144]
+          - generic [ref=e146] [cursor=pointer]:
+            - generic [ref=e147] [cursor=pointer]:
+              - generic [ref=e148] [cursor=pointer]: "#27"
+              - generic [ref=e149] [cursor=pointer]: medium
+            - heading "Fix non-functional Refresh data button in Traefik Management Console" [level=3] [ref=e150] [cursor=pointer]
+            - paragraph [ref=e151] [cursor=pointer]: Repair the broken refresh button functionality in the Traefik Management Console to properly reload data from the server and update the UI display.
+            - generic [ref=e152] [cursor=pointer]:
+              - button "Done" [ref=e153]
+              - button "Todo" [ref=e154]
+              - button "In Progress" [ref=e155]
+              - button "Cancelled" [ref=e156]
+            - button "Delete task" [ref=e157]:
+              - img [ref=e158]
+          - generic [ref=e160] [cursor=pointer]:
+            - generic [ref=e161] [cursor=pointer]:
+              - generic [ref=e162] [cursor=pointer]: "#26"
+              - generic [ref=e163] [cursor=pointer]: medium
+            - heading "Fix missing service status indicators on index page" [level=3] [ref=e164] [cursor=pointer]
+            - paragraph [ref=e165] [cursor=pointer]: Implement small green/red lights (no circles around) to show if services are up or down on the index page with visual status indicators.
+            - generic [ref=e166] [cursor=pointer]:
+              - button "Done" [ref=e167]
+              - button "Todo" [ref=e168]
+              - button "In Progress" [ref=e169]
+              - button "Cancelled" [ref=e170]
+            - button "Delete task" [ref=e171]:
+              - img [ref=e172]
+          - generic [ref=e174] [cursor=pointer]:
+            - generic [ref=e175] [cursor=pointer]:
+              - generic [ref=e176] [cursor=pointer]: "#25"
+              - generic [ref=e177] [cursor=pointer]: medium
+            - heading "Add support for atlas.localhost domain routing in Atlas application alongside localhost:9652" [level=3] [ref=e178] [cursor=pointer]
+            - paragraph [ref=e179] [cursor=pointer]: Implement domain-based routing to allow Atlas application to be accessed via atlas.localhost in addition to the existing localhost:9652 port-based access.
+            - generic [ref=e180] [cursor=pointer]:
+              - button "Done" [ref=e181]
+              - button "Todo" [ref=e182]
+              - button "In Progress" [ref=e183]
+              - button "Cancelled" [ref=e184]
+            - button "Delete task" [ref=e185]:
+              - img [ref=e186]
+          - generic [ref=e188] [cursor=pointer]:
+            - generic [ref=e189] [cursor=pointer]:
+              - generic [ref=e190] [cursor=pointer]: "#15"
+              - generic [ref=e191] [cursor=pointer]: high
+            - heading "Gate to Done - All UI criteria pass, Playwright 100% headless success, artifacts exist and linked, no test/data modifications" [level=3] [ref=e192] [cursor=pointer]
+            - paragraph [ref=e193] [cursor=pointer]: Final validation gate ensuring all UI criteria pass completely, Playwright achieves 100% success rate in headless mode, all test artifacts are properly generated and linked, and no unauthorized test or data modifications exist.
+            - generic [ref=e194] [cursor=pointer]:
+              - button "Done" [ref=e195]
+              - button "Todo" [ref=e196]
+              - button "In Progress" [ref=e197]
+              - button "Cancelled" [ref=e198]
+            - button "Delete task" [ref=e199]:
+              - img [ref=e200]
+          - generic [ref=e202] [cursor=pointer]:
+            - generic [ref=e203] [cursor=pointer]:
+              - generic [ref=e204] [cursor=pointer]: "#14"
+              - generic [ref=e205] [cursor=pointer]: high
+            - heading "Deliverables - New index.html and 4 JS modules, updated docker-compose.yml/.env, reports directory with HTML reports, VERIFICATION.md" [level=3] [ref=e206] [cursor=pointer]
+            - paragraph [ref=e207] [cursor=pointer]: Create final deliverables including new index.html with 4 JS modules integration, updated Docker configuration, comprehensive test reports directory, and verification documentation.
+            - generic [ref=e208] [cursor=pointer]:
+              - button "Done" [ref=e209]
+              - button "Todo" [ref=e210]
+              - button "In Progress" [ref=e211]
+              - button "Cancelled" [ref=e212]
+            - button "Delete task" [ref=e213]:
+              - img [ref=e214]
+          - generic [ref=e216] [cursor=pointer]:
+            - generic [ref=e217] [cursor=pointer]:
+              - generic [ref=e218] [cursor=pointer]: "#13"
+              - generic [ref=e219] [cursor=pointer]: high
+            - heading "Acceptance Verification - Comprehensive End-to-End Testing" [level=3] [ref=e220] [cursor=pointer]
+            - paragraph [ref=e221] [cursor=pointer]: Perform comprehensive acceptance testing by visiting project slug URLs, verifying header counters and column functionality, testing subtask creation and persistence, applying filters, and validating count accuracy across all features.
+            - generic [ref=e222] [cursor=pointer]:
+              - button "Done" [ref=e223]
+              - button "Todo" [ref=e224]
+              - button "In Progress" [ref=e225]
+              - button "Cancelled" [ref=e226]
+            - button "Delete task" [ref=e227]:
+              - img [ref=e228]
+          - generic [ref=e230] [cursor=pointer]:
+            - generic [ref=e231] [cursor=pointer]:
+              - generic [ref=e232] [cursor=pointer]: "#12"
+              - generic [ref=e233] [cursor=pointer]: medium
+            - heading "Data-TestIDs Wiring - Add all exact data-testid attributes from Rules, verify they exist in DOM after load" [level=3] [ref=e234] [cursor=pointer]
+            - paragraph [ref=e235] [cursor=pointer]: Add comprehensive data-testid attributes to all interactive elements following established naming conventions and verify DOM presence after page load for testing framework integration!
+            - generic [ref=e236] [cursor=pointer]:
+              - button "Done" [ref=e237]
+              - button "Todo" [ref=e238]
+              - button "In Progress" [ref=e239]
+              - button "Cancelled" [ref=e240]
+            - button "Delete task" [ref=e241]:
+              - img [ref=e242]
+          - generic [ref=e244] [cursor=pointer]:
+            - generic [ref=e245] [cursor=pointer]:
+              - generic [ref=e246] [cursor=pointer]: "#10"
+              - generic [ref=e247] [cursor=pointer]: medium
+            - heading "Legacy Removal & Verification" [level=3] [ref=e248] [cursor=pointer]
+            - paragraph [ref=e249] [cursor=pointer]: Remove all Advanced Filters markup/js, remove workspace strings, remove JSON browse controls, and confirm only 4 JS modules exist in the final codebase.
+            - generic [ref=e250] [cursor=pointer]:
+              - button "Done" [ref=e251]
+              - button "Todo" [ref=e252]
+              - button "In Progress" [ref=e253]
+              - button "Cancelled" [ref=e254]
+            - button "Delete task" [ref=e255]:
+              - img [ref=e256]
+      - generic [ref=e258]:
+        - generic [ref=e260]:
+          - heading "Todo" [level=2] [ref=e261]: Todo
+          - generic [ref=e263]: "1"
+        - generic [ref=e265] [cursor=pointer]:
+          - generic [ref=e266] [cursor=pointer]:
+            - generic [ref=e267] [cursor=pointer]: "#19"
+            - generic [ref=e268] [cursor=pointer]: medium
+          - heading "Add refresh button" [level=3] [ref=e269] [cursor=pointer]
+          - paragraph [ref=e270] [cursor=pointer]: Add a refresh button in the project page when searching for a tasks.json-file. Sometimes it is not updated so it is nice to have.
+          - generic [ref=e271] [cursor=pointer]:
+            - button "Done" [ref=e272]
+            - button "Todo" [ref=e273]
+            - button "In Progress" [ref=e274]
+            - button "Cancelled" [ref=e275]
+          - button "Delete task" [ref=e276]:
+            - img [ref=e277]
+      - generic [ref=e279]:
+        - generic [ref=e281]:
+          - heading "In progress" [level=2] [ref=e282]: In progress
+          - generic [ref=e284]: "1"
+        - generic [ref=e286] [cursor=pointer]:
+          - generic [ref=e287] [cursor=pointer]:
+            - generic [ref=e288] [cursor=pointer]: "#50"
+            - generic [ref=e289] [cursor=pointer]: medium
+          - heading "Sortorder changes after updating" [level=3] [ref=e290] [cursor=pointer]
+          - paragraph [ref=e291] [cursor=pointer]: After saving or updating a task the sortorder changes to ASC but it still says DESC in dropdown. Fix so it stays.
+          - generic [ref=e292] [cursor=pointer]:
+            - button "Done" [ref=e293]
+            - button "Todo" [ref=e294]
+            - button "In Progress" [ref=e295]
+            - button "Cancelled" [ref=e296]
+          - button "Delete task" [ref=e297]:
+            - img [ref=e298]
+      - generic [ref=e300]:
+        - generic [ref=e302]:
+          - heading "Review" [level=2] [ref=e303]: Review
+          - generic [ref=e305]: "0"
+        - generic [ref=e307]: No tasks
+      - generic [ref=e308]:
+        - generic [ref=e310]:
+          - heading "Done" [level=2] [ref=e311]: Done
+          - generic [ref=e313]: "29"
+        - generic [ref=e314]:
+          - generic [ref=e315] [cursor=pointer]:
+            - generic [ref=e316] [cursor=pointer]:
+              - generic [ref=e317] [cursor=pointer]: "#49"
+              - generic [ref=e318] [cursor=pointer]: medium
+            - heading "Card interface" [level=3] [ref=e319] [cursor=pointer]
+            - paragraph [ref=e320] [cursor=pointer]: Adjust the interface on the cards
+            - generic [ref=e321] [cursor=pointer]:
+              - generic [ref=e322] [cursor=pointer]: "📂 Subtasks (4):"
+              - generic "Badge" [ref=e323] [cursor=pointer]:
+                - generic [ref=e324] [cursor=pointer]: "1."
+                - text: Badge "Done"
+                - generic [ref=e325] [cursor=pointer]: (medium)
+                - text: ✓
+              - generic "Badge" [ref=e326] [cursor=pointer]:
+                - generic [ref=e327] [cursor=pointer]: "2."
+                - text: Badge "Todo"
+                - generic [ref=e328] [cursor=pointer]: (medium)
+                - text: ✓
+              - generic "Badge" [ref=e329] [cursor=pointer]:
+                - generic [ref=e330] [cursor=pointer]: "3."
+                - text: Badge "In Progress"
+                - generic [ref=e331] [cursor=pointer]: (medium)
+                - text: ✓
+              - generic [ref=e332] [cursor=pointer]: ...and 1 more
+            - generic [ref=e333] [cursor=pointer]:
+              - button "Done" [ref=e334]
+              - button "Todo" [ref=e335]
+              - button "In Progress" [ref=e336]
+              - button "Cancelled" [ref=e337]
+            - button "Delete task" [ref=e338]:
+              - img [ref=e339]
+          - generic [ref=e341] [cursor=pointer]:
+            - generic [ref=e342] [cursor=pointer]:
+              - generic [ref=e343] [cursor=pointer]: "#48"
+              - generic [ref=e344] [cursor=pointer]: medium
+            - heading "Test Modal Title Task" [level=3] [ref=e345] [cursor=pointer]
+            - paragraph [ref=e346] [cursor=pointer]: Testing task ID visibility in modal
+            - generic [ref=e347] [cursor=pointer]:
+              - button "Done" [ref=e348]
+              - button "Todo" [ref=e349]
+              - button "In Progress" [ref=e350]
+              - button "Cancelled" [ref=e351]
+            - button "Delete task" [ref=e352]:
+              - img [ref=e353]
+          - generic [ref=e355] [cursor=pointer]:
+            - generic [ref=e356] [cursor=pointer]:
+              - generic [ref=e357] [cursor=pointer]: "#47"
+              - generic [ref=e358] [cursor=pointer]: medium
+            - heading "Add task id so its visible in the modal" [level=3] [ref=e359] [cursor=pointer]
+            - paragraph [ref=e360] [cursor=pointer]: "I want the task edit to be visible in the modal at the top so it should look \"Edit task: TM123\" where TM123 is task ID. As soon as the data is saved in the db or json i want it to update the create task also so it gets Create Task: TM123. I think it saves when the first subtask is added."
+            - generic [ref=e361] [cursor=pointer]:
+              - button "Done" [ref=e362]
+              - button "Todo" [ref=e363]
+              - button "In Progress" [ref=e364]
+              - button "Cancelled" [ref=e365]
+            - button "Delete task" [ref=e366]:
+              - img [ref=e367]
+          - generic [ref=e369] [cursor=pointer]:
+            - generic [ref=e370] [cursor=pointer]:
+              - generic [ref=e371] [cursor=pointer]: "#41"
+              - generic [ref=e372] [cursor=pointer]: medium
+            - heading "Port managment gone" [level=3] [ref=e373] [cursor=pointer]
+            - paragraph [ref=e374] [cursor=pointer]: Port management is not possible to reach from index.html. Manage port should reach to a list of all ports with the posibilities to filter and also the possibility to reserv more ports
+            - generic [ref=e375] [cursor=pointer]:
+              - button "Done" [ref=e376]
+              - button "Todo" [ref=e377]
+              - button "In Progress" [ref=e378]
+              - button "Cancelled" [ref=e379]
+            - button "Delete task" [ref=e380]:
+              - img [ref=e381]
+          - generic [ref=e383] [cursor=pointer]:
+            - generic [ref=e384] [cursor=pointer]:
+              - generic [ref=e385] [cursor=pointer]: "#40"
+              - generic [ref=e386] [cursor=pointer]: medium
+            - heading "Errors in TMC" [level=3] [ref=e387] [cursor=pointer]
+            - paragraph [ref=e388] [cursor=pointer]: Different errors in Traefik Managment Console see subtasks. Confirm the changes with short headless playwright tests for each function.
+            - generic [ref=e389] [cursor=pointer]:
+              - generic [ref=e390] [cursor=pointer]: "📂 Subtasks (7):"
+              - generic "Refresh data" [ref=e391] [cursor=pointer]:
+                - generic [ref=e392] [cursor=pointer]: "1."
+                - text: Refresh data
+                - generic [ref=e393] [cursor=pointer]: (medium)
+              - generic "create quickmap - gives unexpected token json" [ref=e394] [cursor=pointer]:
+                - generic [ref=e395] [cursor=pointer]: "2."
+                - text: create quickmap - gives unexpe...
+                - generic [ref=e396] [cursor=pointer]: (medium)
+              - generic "Create rules from docker scan - unexpected json" [ref=e397] [cursor=pointer]:
+                - generic [ref=e398] [cursor=pointer]: "3."
+                - text: Create rules from docker scan ...
+                - generic [ref=e399] [cursor=pointer]: (medium)
+              - generic [ref=e400] [cursor=pointer]: ...and 4 more
+            - generic [ref=e401] [cursor=pointer]:
+              - button "Done" [ref=e402]
+              - button "Todo" [ref=e403]
+              - button "In Progress" [ref=e404]
+              - button "Cancelled" [ref=e405]
+            - button "Delete task" [ref=e406]:
+              - img [ref=e407]
+          - generic [ref=e409] [cursor=pointer]:
+            - generic [ref=e410] [cursor=pointer]:
+              - generic [ref=e411] [cursor=pointer]: "#39"
+              - generic [ref=e412] [cursor=pointer]: medium
+            - heading "Editing task - create subtask not working" [level=3] [ref=e413] [cursor=pointer]
+            - paragraph [ref=e414] [cursor=pointer]: When editing a task it is not possible to add more subtasks. Investigate the functionality from create tasks - it wokring ther.
+            - generic [ref=e415] [cursor=pointer]:
+              - button "Done" [ref=e416]
+              - button "Todo" [ref=e417]
+              - button "In Progress" [ref=e418]
+              - button "Cancelled" [ref=e419]
+            - button "Delete task" [ref=e420]:
+              - img [ref=e421]
+          - generic [ref=e423] [cursor=pointer]:
+            - generic [ref=e424] [cursor=pointer]:
+              - generic [ref=e425] [cursor=pointer]: "#38"
+              - generic [ref=e426] [cursor=pointer]: medium
+            - heading "Default sorting should be TMID DESC" [level=3] [ref=e427] [cursor=pointer]
+            - paragraph [ref=e428] [cursor=pointer]: Change the sortorder so its sorting DESC on Taskmaster id in kanban.
+            - generic [ref=e429] [cursor=pointer]:
+              - button "Done" [ref=e430]
+              - button "Todo" [ref=e431]
+              - button "In Progress" [ref=e432]
+              - button "Cancelled" [ref=e433]
+            - button "Delete task" [ref=e434]:
+              - img [ref=e435]
+          - generic [ref=e437] [cursor=pointer]:
+            - generic [ref=e438] [cursor=pointer]:
+              - generic [ref=e439] [cursor=pointer]: "#37"
+              - generic [ref=e440] [cursor=pointer]: medium
+            - heading "Populate from Selecting task-file" [level=3] [ref=e441] [cursor=pointer]
+            - paragraph [ref=e442] [cursor=pointer]: When a project is added in admin.html using selecting task-file the following fields in the modal should be updated - Title - name of the folder - slug - create a slug from folder name that works - project path - task file - urls for web gui (check ports that are used in docker ps and see if they have an interface mathing)
+            - generic [ref=e443] [cursor=pointer]:
+              - button "Done" [ref=e444]
+              - button "Todo" [ref=e445]
+              - button "In Progress" [ref=e446]
+              - button "Cancelled" [ref=e447]
+            - button "Delete task" [ref=e448]:
+              - img [ref=e449]
+          - generic [ref=e451] [cursor=pointer]:
+            - generic [ref=e452] [cursor=pointer]:
+              - generic [ref=e453] [cursor=pointer]: "#36"
+              - generic [ref=e454] [cursor=pointer]: medium
+            - heading "Change browser tab header" [level=3] [ref=e455] [cursor=pointer]
+            - paragraph [ref=e456] [cursor=pointer]: The tab-title that is on top of chrome should show TM-projectname when a taskmaster web page is open.
+            - generic [ref=e457] [cursor=pointer]:
+              - button "Done" [ref=e458]
+              - button "Todo" [ref=e459]
+              - button "In Progress" [ref=e460]
+              - button "Cancelled" [ref=e461]
+            - button "Delete task" [ref=e462]:
+              - img [ref=e463]
+          - generic [ref=e465] [cursor=pointer]:
+            - generic [ref=e466] [cursor=pointer]:
+              - generic [ref=e467] [cursor=pointer]: "#35"
+              - generic [ref=e468] [cursor=pointer]: medium
+            - heading "Admin Panel" [level=3] [ref=e469] [cursor=pointer]
+            - paragraph [ref=e470] [cursor=pointer]: Several issues on this one. Check the subtasks.
+            - generic [ref=e471] [cursor=pointer]:
+              - generic [ref=e472] [cursor=pointer]: "📂 Subtasks (1):"
+              - generic "Database is not being used" [ref=e473] [cursor=pointer]:
+                - generic [ref=e474] [cursor=pointer]: "1."
+                - text: Database is not being used
+                - generic [ref=e475] [cursor=pointer]: (medium)
+                - text: ✓
+            - generic [ref=e476] [cursor=pointer]:
+              - button "Done" [ref=e477]
+              - button "Todo" [ref=e478]
+              - button "In Progress" [ref=e479]
+              - button "Cancelled" [ref=e480]
+            - button "Delete task" [ref=e481]:
+              - img [ref=e482]
+          - generic [ref=e484] [cursor=pointer]:
+            - generic [ref=e485] [cursor=pointer]:
+              - generic [ref=e486] [cursor=pointer]: "#34"
+              - generic [ref=e487] [cursor=pointer]: medium
+            - heading "Services not working" [level=3] [ref=e488] [cursor=pointer]
+            - paragraph [ref=e489] [cursor=pointer]: Endast 2 tjänster lyser gröna. Atlas och Web Hub. Undersök varför alla andra visar fel. Om ett projekt finns registrerat i atlas så ska dess tjänster visas på listan och därefter ska det pollas var femte sekund för att e som de svarar.
+            - generic [ref=e490] [cursor=pointer]:
+              - button "Done" [ref=e491]
+              - button "Todo" [ref=e492]
+              - button "In Progress" [ref=e493]
+              - button "Cancelled" [ref=e494]
+            - button "Delete task" [ref=e495]:
+              - img [ref=e496]
+          - generic [ref=e498] [cursor=pointer]:
+            - generic [ref=e499] [cursor=pointer]:
+              - generic [ref=e500] [cursor=pointer]: "#33"
+              - generic [ref=e501] [cursor=pointer]: medium
+            - heading "Replace mock data with real Traefik API integration in Management Console" [level=3] [ref=e502] [cursor=pointer]
+            - paragraph [ref=e503] [cursor=pointer]: Replace all mock data in the Traefik Management Console with actual Traefik API connections for HTTP Routes, Services, Middlewares, and Certificates tabs, implementing proper API endpoints and error handling.
+            - generic [ref=e504] [cursor=pointer]:
+              - button "Done" [ref=e505]
+              - button "Todo" [ref=e506]
+              - button "In Progress" [ref=e507]
+              - button "Cancelled" [ref=e508]
+            - button "Delete task" [ref=e509]:
+              - img [ref=e510]
+          - generic [ref=e512] [cursor=pointer]:
+            - generic [ref=e513] [cursor=pointer]:
+              - generic [ref=e514] [cursor=pointer]: "#24"
+              - generic [ref=e515] [cursor=pointer]: medium
+            - heading "Fix Traefik port configuration from 8080 to 8087 to avoid phpMyAdmin conflicts" [level=3] [ref=e516] [cursor=pointer]
+            - paragraph [ref=e517] [cursor=pointer]: Update Traefik configuration in E:\traefik directory to use port 8088 instead of 8080 to prevent conflicts with phpMyAdmin services running on port 8080 in other projects. Task completed successfully with port 8088 chosen due to 8087 conflict.
+            - generic [ref=e518] [cursor=pointer]:
+              - button "Done" [ref=e519]
+              - button "Todo" [ref=e520]
+              - button "In Progress" [ref=e521]
+              - button "Cancelled" [ref=e522]
+            - button "Delete task" [ref=e523]:
+              - img [ref=e524]
+          - generic [ref=e526] [cursor=pointer]:
+            - generic [ref=e527] [cursor=pointer]:
+              - generic [ref=e528] [cursor=pointer]: "#23"
+              - generic [ref=e529] [cursor=pointer]: high
+            - heading "Implement Docker Port Scanner for Port Management" [level=3] [ref=e530] [cursor=pointer]
+            - paragraph [ref=e531] [cursor=pointer]: Add 'Scan Docker Ports' functionality to automatically discover and populate port information from running Docker containers, including container names, ports, and potential URL mappings.
+            - generic [ref=e532] [cursor=pointer]:
+              - button "Done" [ref=e533]
+              - button "Todo" [ref=e534]
+              - button "In Progress" [ref=e535]
+              - button "Cancelled" [ref=e536]
+            - button "Delete task" [ref=e537]:
+              - img [ref=e538]
+          - generic [ref=e540] [cursor=pointer]:
+            - generic [ref=e541] [cursor=pointer]:
+              - generic [ref=e542] [cursor=pointer]: "#22"
+              - generic [ref=e543] [cursor=pointer]: low
+            - heading "Update Atlas Development Hub Interface" [level=3] [ref=e544] [cursor=pointer]
+            - paragraph [ref=e545] [cursor=pointer]: Change 'TaskMasterHub' to 'Port Management' in the Atlas Development Hub main page and add link to the port list functionality.
+            - generic [ref=e546] [cursor=pointer]:
+              - button "Done" [ref=e547]
+              - button "Todo" [ref=e548]
+              - button "In Progress" [ref=e549]
+              - button "Cancelled" [ref=e550]
+            - button "Delete task" [ref=e551]:
+              - img [ref=e552]
+          - generic [ref=e554] [cursor=pointer]:
+            - generic [ref=e555] [cursor=pointer]:
+              - generic [ref=e556] [cursor=pointer]: "#21"
+              - generic [ref=e557] [cursor=pointer]: medium
+            - heading "Add Navigation Links and Update Titles in Kanban Page" [level=3] [ref=e558] [cursor=pointer]
+            - paragraph [ref=e559] [cursor=pointer]: Add navigation links to Atlas Development Hub and project page in the TaskMaster kanban interface. Update page title to show 'Atlas - PROJECTNAME - Task-Master-Web' format.
+            - generic [ref=e560] [cursor=pointer]:
+              - button "Done" [ref=e561]
+              - button "Todo" [ref=e562]
+              - button "In Progress" [ref=e563]
+              - button "Cancelled" [ref=e564]
+            - button "Delete task" [ref=e565]:
+              - img [ref=e566]
+          - generic [ref=e568] [cursor=pointer]:
+            - generic [ref=e569] [cursor=pointer]:
+              - generic [ref=e570] [cursor=pointer]: "#20"
+              - generic [ref=e571] [cursor=pointer]: high
+            - heading "Enable Adding Projects Without Task Master Files" [level=3] [ref=e572] [cursor=pointer]
+            - paragraph [ref=e573] [cursor=pointer]: Allow projects to be added to the system even if they don't have .taskmaster files. Show TaskMaster icon for projects that have TaskMaster enabled and provide initialization function for those that don't.
+            - generic [ref=e574] [cursor=pointer]:
+              - button "Done" [ref=e575]
+              - button "Todo" [ref=e576]
+              - button "In Progress" [ref=e577]
+              - button "Cancelled" [ref=e578]
+            - button "Delete task" [ref=e579]:
+              - img [ref=e580]
+          - generic [ref=e582] [cursor=pointer]:
+            - generic [ref=e583] [cursor=pointer]:
+              - generic [ref=e584] [cursor=pointer]: "#18"
+              - generic [ref=e585] [cursor=pointer]: medium
+            - heading "t" [level=3] [ref=e586] [cursor=pointer]
+            - paragraph [ref=e587] [cursor=pointer]: t
+            - generic [ref=e588] [cursor=pointer]:
+              - generic [ref=e589] [cursor=pointer]: "📂 Subtasks (2):"
+              - generic "asdf" [ref=e590] [cursor=pointer]:
+                - generic [ref=e591] [cursor=pointer]: "1."
+                - text: asdf
+                - generic [ref=e592] [cursor=pointer]: (medium)
+              - generic "ASDFASDF" [ref=e593] [cursor=pointer]:
+                - generic [ref=e594] [cursor=pointer]: "2."
+                - text: ASDFASDF
+                - generic [ref=e595] [cursor=pointer]: (medium)
+            - generic [ref=e596] [cursor=pointer]:
+              - button "Done" [ref=e597]
+              - button "Todo" [ref=e598]
+              - button "In Progress" [ref=e599]
+              - button "Cancelled" [ref=e600]
+            - button "Delete task" [ref=e601]:
+              - img [ref=e602]
+          - generic [ref=e604] [cursor=pointer]:
+            - generic [ref=e605] [cursor=pointer]:
+              - generic [ref=e606] [cursor=pointer]: "#16"
+              - generic [ref=e607] [cursor=pointer]: medium
+            - heading "Task 2 Path Verification" [level=3] [ref=e608] [cursor=pointer]
+            - paragraph [ref=e609] [cursor=pointer]: Test task creation with corrected container paths
+            - generic [ref=e610] [cursor=pointer]:
+              - button "Done" [ref=e611]
+              - button "Todo" [ref=e612]
+              - button "In Progress" [ref=e613]
+              - button "Cancelled" [ref=e614]
+            - button "Delete task" [ref=e615]:
+              - img [ref=e616]
+          - generic [ref=e618] [cursor=pointer]:
+            - generic [ref=e619] [cursor=pointer]:
+              - generic [ref=e620] [cursor=pointer]: "#11"
+              - generic [ref=e621] [cursor=pointer]: high
+            - heading "Playwright Setup (Headless-Only, Loop Until 100%)" [level=3] [ref=e622] [cursor=pointer]
+            - paragraph [ref=e623] [cursor=pointer]: Configure Playwright for Chromium headless-only execution, implement artifact saving, create loop script for 100% pass rate, and enforce headed run restrictions.
+            - generic [ref=e624] [cursor=pointer]:
+              - button "Done" [ref=e625]
+              - button "Todo" [ref=e626]
+              - button "In Progress" [ref=e627]
+              - button "Cancelled" [ref=e628]
+            - button "Delete task" [ref=e629]:
+              - img [ref=e630]
+          - generic [ref=e632] [cursor=pointer]:
+            - generic [ref=e633] [cursor=pointer]:
+              - generic [ref=e634] [cursor=pointer]: "#9"
+              - generic [ref=e635] [cursor=pointer]: high
+            - heading "Error Handling (No Infinite Loading)" [level=3] [ref=e636] [cursor=pointer]
+            - paragraph [ref=e637] [cursor=pointer]: Implement comprehensive loading state management with spinners, error banners, and guaranteed loading state cleanup to prevent infinite loading indicators.
+            - generic [ref=e638] [cursor=pointer]:
+              - button "Done" [ref=e639]
+              - button "Todo" [ref=e640]
+              - button "In Progress" [ref=e641]
+              - button "Cancelled" [ref=e642]
+            - button "Delete task" [ref=e643]:
+              - img [ref=e644]
+          - generic [ref=e646] [cursor=pointer]:
+            - generic [ref=e647] [cursor=pointer]:
+              - generic [ref=e648] [cursor=pointer]: "#8"
+              - generic [ref=e649] [cursor=pointer]: high
+            - heading "Edit Modals (Tasks & Subtasks)" [level=3] [ref=e650] [cursor=pointer]
+            - paragraph [ref=e651] [cursor=pointer]: Implement task card click handlers to open edit modals, enable editing of parent tasks and subtask rows with real-time updates, persist changes via PUT API calls, and handle outside click cancellation.
+            - generic [ref=e652] [cursor=pointer]:
+              - button "Done" [ref=e653]
+              - button "Todo" [ref=e654]
+              - button "In Progress" [ref=e655]
+              - button "Cancelled" [ref=e656]
+            - button "Delete task" [ref=e657]:
+              - img [ref=e658]
+          - generic [ref=e660] [cursor=pointer]:
+            - generic [ref=e661] [cursor=pointer]:
+              - generic [ref=e662] [cursor=pointer]: "#7"
+              - generic [ref=e663] [cursor=pointer]: high
+            - heading "Create New Task Modal with Subtasks" [level=3] [ref=e664] [cursor=pointer]
+            - paragraph [ref=e665] [cursor=pointer]: Implement a comprehensive Create Task modal with all task fields, subtask addition functionality with parent persistence, maximum 8 subtasks limit, and save/cancel operations.
+            - generic [ref=e666] [cursor=pointer]:
+              - button "Done" [ref=e667]
+              - button "Todo" [ref=e668]
+              - button "In Progress" [ref=e669]
+              - button "Cancelled" [ref=e670]
+            - button "Delete task" [ref=e671]:
+              - img [ref=e672]
+          - generic [ref=e674] [cursor=pointer]:
+            - generic [ref=e675] [cursor=pointer]:
+              - generic [ref=e676] [cursor=pointer]: "#6"
+              - generic [ref=e677] [cursor=pointer]: high
+            - heading "Filters (Functional) - Implement client-side filters for Status/Priority/Tags/Search" [level=3] [ref=e678] [cursor=pointer]
+            - paragraph [ref=e679] [cursor=pointer]: Create a comprehensive client-side filtering system with status, priority, tags, and search filters that work together in a pipeline and update task counts dynamically.
+            - generic [ref=e680] [cursor=pointer]:
+              - generic [ref=e681] [cursor=pointer]: "📂 Subtasks (3):"
+              - generic "Verify existing filter functionality in state.js" [ref=e682] [cursor=pointer]:
+                - generic [ref=e683] [cursor=pointer]: "1."
+                - text: Verify existing filter functio...
+                - generic [ref=e684] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Implement filter event handlers in main.js" [ref=e685] [cursor=pointer]:
+                - generic [ref=e686] [cursor=pointer]: "2."
+                - text: Implement filter event handler...
+                - generic [ref=e687] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Add visual indicators for active filters" [ref=e688] [cursor=pointer]:
+                - generic [ref=e689] [cursor=pointer]: "3."
+                - text: Add visual indicators for acti...
+                - generic [ref=e690] [cursor=pointer]: (undefined)
+                - text: ✓
+            - generic [ref=e691] [cursor=pointer]:
+              - button "Done" [ref=e692]
+              - button "Todo" [ref=e693]
+              - button "In Progress" [ref=e694]
+              - button "Cancelled" [ref=e695]
+            - button "Delete task" [ref=e696]:
+              - img [ref=e697]
+          - generic [ref=e699] [cursor=pointer]:
+            - generic [ref=e700] [cursor=pointer]:
+              - generic [ref=e701] [cursor=pointer]: "#5"
+              - generic [ref=e702] [cursor=pointer]: high
+            - heading "Dynamic Statuses & Header Counters" [level=3] [ref=e703] [cursor=pointer]
+            - paragraph [ref=e704] [cursor=pointer]: Compute present statuses from fetched tasks, order by status mapping, render all columns with testids, and implement header counters with synchronized counts.
+            - generic [ref=e705] [cursor=pointer]:
+              - generic [ref=e706] [cursor=pointer]: "📂 Subtasks (4):"
+              - generic "Status computation logic in state.js" [ref=e707] [cursor=pointer]:
+                - generic [ref=e708] [cursor=pointer]: "1."
+                - text: Status computation logic in st...
+                - generic [ref=e709] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Dynamic column rendering in render.js" [ref=e710] [cursor=pointer]:
+                - generic [ref=e711] [cursor=pointer]: "2."
+                - text: Dynamic column rendering in re...
+                - generic [ref=e712] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Header counter system implementation" [ref=e713] [cursor=pointer]:
+                - generic [ref=e714] [cursor=pointer]: "3."
+                - text: Header counter system implemen...
+                - generic [ref=e715] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic [ref=e716] [cursor=pointer]: ...and 1 more
+            - generic [ref=e717] [cursor=pointer]:
+              - button "Done" [ref=e718]
+              - button "Todo" [ref=e719]
+              - button "In Progress" [ref=e720]
+              - button "Cancelled" [ref=e721]
+            - button "Delete task" [ref=e722]:
+              - img [ref=e723]
+          - generic [ref=e725] [cursor=pointer]:
+            - generic [ref=e726] [cursor=pointer]:
+              - generic [ref=e727] [cursor=pointer]: "#4"
+              - generic [ref=e728] [cursor=pointer]: high
+            - heading "JS Module Scaffolding" [level=3] [ref=e729] [cursor=pointer]
+            - paragraph [ref=e730] [cursor=pointer]: "Create four ES modules: api.js (API routes), state.js (in-memory state), render.js (render functions), main.js (bootstrap and events) to establish the core JavaScript architecture for the application."
+            - generic [ref=e731] [cursor=pointer]:
+              - generic [ref=e732] [cursor=pointer]: "📂 Subtasks (5):"
+              - generic "Fix HTML Foundation - Replace index.html with Atlas-compliant structure" [ref=e733] [cursor=pointer]:
+                - generic [ref=e734] [cursor=pointer]: "1."
+                - text: Fix HTML Foundation - Replace ...
+                - generic [ref=e735] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Create api.js module - API wrapper with project slug routing" [ref=e736] [cursor=pointer]:
+                - generic [ref=e737] [cursor=pointer]: "2."
+                - text: Create api.js module - API wra...
+                - generic [ref=e738] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic "Create state.js module - In-memory state management" [ref=e739] [cursor=pointer]:
+                - generic [ref=e740] [cursor=pointer]: "3."
+                - text: Create state.js module - In-me...
+                - generic [ref=e741] [cursor=pointer]: (undefined)
+                - text: ✓
+              - generic [ref=e742] [cursor=pointer]: ...and 2 more
+            - generic [ref=e743] [cursor=pointer]:
+              - button "Done" [ref=e744]
+              - button "Todo" [ref=e745]
+              - button "In Progress" [ref=e746]
+              - button "Cancelled" [ref=e747]
+            - button "Delete task" [ref=e748]:
+              - img [ref=e749]
+          - generic [ref=e751] [cursor=pointer]:
+            - generic [ref=e752] [cursor=pointer]:
+              - generic [ref=e753] [cursor=pointer]: "#3"
+              - generic [ref=e754] [cursor=pointer]: high
+            - heading "Minimal HTML Shell" [level=3] [ref=e755] [cursor=pointer]
+            - paragraph [ref=e756] [cursor=pointer]: Create new app/static/index.html with Atlas header, header counters, single filter row with exact control order, remove Advanced Filters, add Kanban container with spinner overlay
+            - generic [ref=e757] [cursor=pointer]:
+              - button "Done" [ref=e758]
+              - button "Todo" [ref=e759]
+              - button "In Progress" [ref=e760]
+              - button "Cancelled" [ref=e761]
+            - button "Delete task" [ref=e762]:
+              - img [ref=e763]
+          - generic [ref=e765] [cursor=pointer]:
+            - generic [ref=e766] [cursor=pointer]:
+              - generic [ref=e767] [cursor=pointer]: "#2"
+              - generic [ref=e768] [cursor=pointer]: high
+            - heading "Docker & Env De-ambiguation - Configure docker-compose.yml with single PROJECTS_HOST_DIR mount, update .env settings, set database projects.path to container paths, rebuild and test containers" [level=3] [ref=e769] [cursor=pointer]
+            - paragraph [ref=e770] [cursor=pointer]: Simplify Docker configuration by consolidating project mounts into a single PROJECTS_HOST_DIR variable, update environment settings, and configure database to use container paths for improved consistency and maintainability.
+            - generic [ref=e771] [cursor=pointer]:
+              - button "Done" [ref=e772]
+              - button "Todo" [ref=e773]
+              - button "In Progress" [ref=e774]
+              - button "Cancelled" [ref=e775]
+            - button "Delete task" [ref=e776]:
+              - img [ref=e777]
+          - generic [ref=e779] [cursor=pointer]:
+            - generic [ref=e780] [cursor=pointer]:
+              - generic [ref=e781] [cursor=pointer]: "#1"
+              - generic [ref=e782] [cursor=pointer]: high
+            - heading "Backup and Clean Slate - Create backup directory with timestamp, move legacy frontend files to backup location, write backup notes explaining removal" [level=3] [ref=e783] [cursor=pointer]
+            - paragraph [ref=e784] [cursor=pointer]: Create a timestamped backup directory and move all legacy frontend files to preserve them before implementing the new system architecture.
+            - generic [ref=e785] [cursor=pointer]:
+              - button "Done" [ref=e786]
+              - button "Todo" [ref=e787]
+              - button "In Progress" [ref=e788]
+              - button "Cancelled" [ref=e789]
+            - button "Delete task" [ref=e790]:
+              - img [ref=e791]
+      - generic [ref=e793]:
+        - generic [ref=e795]:
+          - heading "Deferred" [level=2] [ref=e796]: Deferred
+          - generic [ref=e798]: "1"
+        - generic [ref=e800] [cursor=pointer]:
+          - generic [ref=e801] [cursor=pointer]:
+            - generic [ref=e802] [cursor=pointer]: "#17"
+            - generic [ref=e803] [cursor=pointer]: high
+          - heading "test" [level=3] [ref=e804] [cursor=pointer]
+          - paragraph [ref=e805] [cursor=pointer]: asdfasdf
+          - generic [ref=e806] [cursor=pointer]:
+            - button "Done" [ref=e807]
+            - button "Todo" [ref=e808]
+            - button "In Progress" [ref=e809]
+            - button "Cancelled" [ref=e810]
+          - button "Delete task" [ref=e811]:
+            - img [ref=e812]
+      - generic [ref=e814]:
+        - generic [ref=e816]:
+          - heading "Cancelled" [level=2] [ref=e817]: Cancelled
+          - generic [ref=e819]: "5"
+        - generic [ref=e820]:
+          - generic [ref=e821] [cursor=pointer]:
+            - generic [ref=e822] [cursor=pointer]:
+              - generic [ref=e823] [cursor=pointer]: "#46"
+              - generic [ref=e824] [cursor=pointer]: medium
+            - heading "Test Task for Subtask Editing" [level=3] [ref=e825] [cursor=pointer]
+            - paragraph [ref=e826] [cursor=pointer]: This task will be used to test adding subtasks in edit mode
+            - generic [ref=e827] [cursor=pointer]:
+              - button "Done" [ref=e828]
+              - button "Todo" [ref=e829]
+              - button "In Progress" [ref=e830]
+              - button "Cancelled" [ref=e831]
+            - button "Delete task" [ref=e832]:
+              - img [ref=e833]
+          - generic [ref=e835] [cursor=pointer]:
+            - generic [ref=e836] [cursor=pointer]:
+              - generic [ref=e837] [cursor=pointer]: "#45"
+              - generic [ref=e838] [cursor=pointer]: medium
+            - heading "Test Task for Subtask Editing" [level=3] [ref=e839] [cursor=pointer]
+            - paragraph [ref=e840] [cursor=pointer]: This task will be used to test adding subtasks in edit mode
+            - generic [ref=e841] [cursor=pointer]:
+              - generic [ref=e842] [cursor=pointer]: "📂 Subtasks (1):"
+              - generic "rwar" [ref=e843] [cursor=pointer]:
+                - generic [ref=e844] [cursor=pointer]: "1."
+                - text: rwar
+                - generic [ref=e845] [cursor=pointer]: (medium)
+                - text: ✓
+            - generic [ref=e846] [cursor=pointer]:
+              - button "Done" [ref=e847]
+              - button "Todo" [ref=e848]
+              - button "In Progress" [ref=e849]
+              - button "Cancelled" [ref=e850]
+            - button "Delete task" [ref=e851]:
+              - img [ref=e852]
+          - generic [ref=e854] [cursor=pointer]:
+            - generic [ref=e855] [cursor=pointer]:
+              - generic [ref=e856] [cursor=pointer]: "#44"
+              - generic [ref=e857] [cursor=pointer]: medium
+            - heading "Test Task for Subtask Editing" [level=3] [ref=e858] [cursor=pointer]
+            - paragraph [ref=e859] [cursor=pointer]: This task will be used to test adding subtasks in edit mode
+            - generic [ref=e860] [cursor=pointer]:
+              - button "Done" [ref=e861]
+              - button "Todo" [ref=e862]
+              - button "In Progress" [ref=e863]
+              - button "Cancelled" [ref=e864]
+            - button "Delete task" [ref=e865]:
+              - img [ref=e866]
+          - generic [ref=e868] [cursor=pointer]:
+            - generic [ref=e869] [cursor=pointer]:
+              - generic [ref=e870] [cursor=pointer]: "#43"
+              - generic [ref=e871] [cursor=pointer]: medium
+            - heading "Test Task for Subtask Editing" [level=3] [ref=e872] [cursor=pointer]
+            - paragraph [ref=e873] [cursor=pointer]: This task will be used to test adding subtasks in edit mode
+            - generic [ref=e874] [cursor=pointer]:
+              - button "Done" [ref=e875]
+              - button "Todo" [ref=e876]
+              - button "In Progress" [ref=e877]
+              - button "Cancelled" [ref=e878]
+            - button "Delete task" [ref=e879]:
+              - img [ref=e880]
+          - generic [ref=e882] [cursor=pointer]:
+            - generic [ref=e883] [cursor=pointer]:
+              - generic [ref=e884] [cursor=pointer]: "#42"
+              - generic [ref=e885] [cursor=pointer]: medium
+            - heading "Test Task for Subtask Editing" [level=3] [ref=e886] [cursor=pointer]
+            - paragraph [ref=e887] [cursor=pointer]: This task will be used to test adding subtasks in edit mode
+            - generic [ref=e888] [cursor=pointer]:
+              - button "Done" [ref=e889]
+              - button "Todo" [ref=e890]
+              - button "In Progress" [ref=e891]
+              - button "Cancelled" [ref=e892]
+            - button "Delete task" [ref=e893]:
+              - img [ref=e894]
+```
