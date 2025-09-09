@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-09T17:45:17.710Z",
+      "updated": "2025-09-09T17:45:17.710Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -1305,7 +1310,7 @@
         "title": "Fas 1 / Sprint 1.1 / Task 1: Finalize Backup Requirements & Engine Setup",
         "description": "Document requirements, define schedule/retention, confirm Restic, and set up credentials.",
         "priority": "high",
-        "status": "todo",
+        "status": "review",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1319,7 +1324,7 @@
             "id": 1,
             "title": "Document data to be backed up",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1334,7 +1339,7 @@
             "id": 2,
             "title": "Define backup schedule and retention policy",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1349,7 +1354,7 @@
             "id": 3,
             "title": "Formally adopt Restic as the backup engine",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1364,7 +1369,7 @@
             "id": 4,
             "title": "Generate and store Restic repository password",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -2595,6 +2600,11 @@
           69
         ]
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-09T17:45:17.710Z",
+      "updated": "2025-09-09T17:54:08.403Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }
