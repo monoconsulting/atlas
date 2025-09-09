@@ -59,6 +59,17 @@ const state = {
     subtasks: {
         editingTaskId: null,
         createBuffer: []
+    },
+    
+    // Lane visibility state
+    visibleLanes: {
+        'pending': true,
+        'todo': true,
+        'in-progress': true,
+        'review': true,
+        'done': true,
+        'deferred': true,
+        'cancelled': true
     }
 };
 
@@ -378,8 +389,10 @@ export function getPresentStatuses() {
         }
     });
     
-    // Return in proper order, including empty statuses for complete columns
-    return STATUS_ORDER.filter(status => presentStatuses.has(status) || true); // Show all columns
+    // Return in proper order, filtered by visibility and including empty statuses for complete columns
+    return STATUS_ORDER.filter(status => 
+        state.visibleLanes[status] && (presentStatuses.has(status) || true)
+    );
 }
 
 /**
@@ -516,6 +529,46 @@ export function getState() {
     return { ...state };
 }
 
+/**
+ * Toggle lane visibility for a specific status
+ * @param {string} status - Status key to toggle
+ */
+export function toggleLaneVisibility(status) {
+    if (STATUS_MAPPING[status]) {
+        state.visibleLanes[status] = !state.visibleLanes[status];
+        notify('lane-visibility-changed', { status, visible: state.visibleLanes[status] });
+    }
+}
+
+/**
+ * Set lane visibility for a specific status
+ * @param {string} status - Status key
+ * @param {boolean} visible - Visibility state
+ */
+export function setLaneVisibility(status, visible) {
+    if (STATUS_MAPPING[status]) {
+        state.visibleLanes[status] = visible;
+        notify('lane-visibility-changed', { status, visible });
+    }
+}
+
+/**
+ * Get lane visibility for a specific status
+ * @param {string} status - Status key
+ * @returns {boolean} Visibility state
+ */
+export function getLaneVisibility(status) {
+    return state.visibleLanes[status] || false;
+}
+
+/**
+ * Get all lane visibility states
+ * @returns {Object} Lane visibility object
+ */
+export function getVisibleLanes() {
+    return { ...state.visibleLanes };
+}
+
 // Export default state management object
 export default {
     // Status mapping
@@ -567,5 +620,11 @@ export default {
     clearError,
     
     // Debug
-    getState
+    getState,
+    
+    // Lane visibility
+    toggleLaneVisibility,
+    setLaneVisibility,
+    getLaneVisibility,
+    getVisibleLanes
 };
