@@ -19,6 +19,23 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
+
+        /* Drag and Drop Styles */
+        .task-card.dragging {
+            transform: rotate(2deg);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .drop-zone.drag-over {
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 2px dashed #3b82f6;
+            border-radius: 8px;
+        }
+
+        .drop-zone {
+            transition: all 0.2s ease;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen">

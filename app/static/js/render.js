@@ -47,7 +47,7 @@ export function renderKanbanColumns(tasks, presentStatuses = STATUS_ORDER) {
         const statusTasks = tasksByStatus[status] || [];
         
         return `
-            <div data-testid="column-${statusInfo.key}" class="bg-slate-950 rounded-lg border border-slate-800">
+            <div data-testid="column-${statusInfo.key}" class="kanban-column bg-slate-950 rounded-lg border border-slate-800" data-status="${status}">
                 <div class="p-4 border-b border-slate-800 ${getColumnHeaderClass(status)} rounded-t-lg">
                     <div class="flex items-center justify-between">
                         <h2 class="font-medium text-slate-100 flex items-center gap-2">
@@ -59,7 +59,7 @@ export function renderKanbanColumns(tasks, presentStatuses = STATUS_ORDER) {
                         </span>
                     </div>
                 </div>
-                <div class="p-4 min-h-[400px] space-y-3">
+                <div class="drop-zone p-4 min-h-[400px] space-y-3" data-status="${status}">
                     ${statusTasks.length > 0 
                         ? statusTasks.map(task => renderTaskCard(task)).join('')
                         : '<div class="text-center text-slate-400 py-8">No tasks</div>'
@@ -116,8 +116,11 @@ export function renderTaskCard(task) {
     const priorityColor = getPriorityTextClass(task.priority);
 
     return `
-        <div data-testid="card" class="task-card group relative p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-750 transition-colors ${priorityClass}" 
-             data-task-id="${task.id}" onclick="window.openEditModal && window.openEditModal(${task.id})">
+        <div data-testid="card" class="task-card group relative p-3 bg-slate-800 rounded-lg cursor-move hover:bg-slate-750 transition-colors ${priorityClass}" 
+             data-task-id="${task.id}" 
+             data-task-status="${task.status}"
+             draggable="true"
+             onclick="window.openEditModal && window.openEditModal(${task.id})">
             <div class="flex items-start justify-between mb-2">
                 <span class="text-sm font-semibold text-slate-300">#${task.id}</span>
                 <span class="text-xs ${priorityColor} capitalize font-medium">${task.priority}</span>
