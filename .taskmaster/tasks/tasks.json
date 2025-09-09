@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-09-09T17:45:17.710Z",
-      "updated": "2025-09-09T17:45:17.710Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -1310,14 +1305,14 @@
         "title": "Fas 1 / Sprint 1.1 / Task 1: Finalize Backup Requirements & Engine Setup",
         "description": "Document requirements, define schedule/retention, confirm Restic, and set up credentials.",
         "priority": "high",
-        "status": "review",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
         "labels": [],
         "dependencies": [],
         "created_at": "2025-09-09T12:14:25.526681Z",
-        "updated_at": "2025-09-09T12:14:25.526695Z",
+        "updated_at": "2025-09-09T18:22:30.459727Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1390,7 +1385,7 @@
         "title": "Fas 1 / Sprint 1.1 / Task 2: Develop Core Backup Script",
         "description": "Create backup.sh with logging, mysqldump, restic commands (backup, forget, prune, check), and error handling.",
         "priority": "high",
-        "status": "todo",
+        "status": "in-progress",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1399,7 +1394,7 @@
           55
         ],
         "created_at": "2025-09-09T12:14:25.623197Z",
-        "updated_at": "2025-09-09T12:14:25.623212Z",
+        "updated_at": "2025-09-09T18:22:16.737616Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1489,7 +1484,7 @@
         "title": "Fas 1 / Sprint 1.2 / Task 3: Create the Backup Service Dockerfile",
         "description": "Create a Dockerfile for the backup service, installing all necessary tools and configuring cron.",
         "priority": "high",
-        "status": "todo",
+        "status": "in-progress",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1498,7 +1493,7 @@
           56
         ],
         "created_at": "2025-09-09T12:14:25.773980Z",
-        "updated_at": "2025-09-09T12:14:25.773994Z",
+        "updated_at": "2025-09-09T18:21:52.428396Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1588,7 +1583,7 @@
         "title": "Fas 1 / Sprint 1.2 / Task 4: Initial Container Build and Manual Test",
         "description": "Build the backup container and perform an initial manual test run to verify functionality.",
         "priority": "medium",
-        "status": "todo",
+        "status": "in-progress",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1597,7 +1592,7 @@
           57
         ],
         "created_at": "2025-09-09T12:14:26.002590Z",
-        "updated_at": "2025-09-09T12:14:26.002605Z",
+        "updated_at": "2025-09-09T18:21:55.059602Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1672,7 +1667,7 @@
         "title": "Fas 2 / Sprint 2.1 / Task 5: Integrate Backup Service into Docker Compose",
         "description": "Add the new atlas-backup service to docker-compose.yml with correct volumes, network, and environment variables.",
         "priority": "high",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1681,7 +1676,7 @@
           58
         ],
         "created_at": "2025-09-09T12:14:26.127528Z",
-        "updated_at": "2025-09-09T12:14:26.127541Z",
+        "updated_at": "2025-09-09T18:20:36.036028Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1756,7 +1751,7 @@
         "title": "Fas 2 / Sprint 2.1 / Task 6: Implement Atlas Core API Endpoints",
         "description": "Create API endpoints in app/main.py for running backups, getting status/history, and retrieving logs.",
         "priority": "high",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1765,7 +1760,7 @@
           59
         ],
         "created_at": "2025-09-09T12:14:26.262075Z",
-        "updated_at": "2025-09-09T12:14:26.262090Z",
+        "updated_at": "2025-09-09T18:20:33.824546Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1855,7 +1850,7 @@
         "title": "Fas 2 / Sprint 2.2 / Task 7: Implement Backend Notification Logic",
         "description": "Create a system for the backend to detect backup failures and send notifications.",
         "priority": "medium",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1864,7 +1859,7 @@
           60
         ],
         "created_at": "2025-09-09T12:14:26.402867Z",
-        "updated_at": "2025-09-09T12:14:26.402883Z",
+        "updated_at": "2025-09-09T18:20:31.366387Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -1924,7 +1919,7 @@
         "title": "Fas 2 / Sprint 2.2 / Task 8: Full Integration Testing (Backend)",
         "description": "Test the complete backend integration, including triggering runs and verifying failure handling.",
         "priority": "medium",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1933,7 +1928,7 @@
           61
         ],
         "created_at": "2025-09-09T12:14:26.477663Z",
-        "updated_at": "2025-09-09T12:14:26.477675Z",
+        "updated_at": "2025-09-09T18:20:26.713510Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2008,7 +2003,7 @@
         "title": "Fas 3 / Sprint 3.1 / Task 9: Create the Backup Status Page",
         "description": "Build the frontend page for backup status, including navigation and data display.",
         "priority": "high",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2017,7 +2012,7 @@
           62
         ],
         "created_at": "2025-09-09T12:14:26.574758Z",
-        "updated_at": "2025-09-09T12:14:26.574768Z",
+        "updated_at": "2025-09-09T18:20:24.411193Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2077,7 +2072,7 @@
         "title": "Fas 3 / Sprint 3.1 / Task 10: Implement Log Viewing Functionality",
         "description": "Create a modal to display detailed logs for each backup run.",
         "priority": "medium",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2086,7 +2081,7 @@
           63
         ],
         "created_at": "2025-09-09T12:14:26.659022Z",
-        "updated_at": "2025-09-09T12:14:26.659034Z",
+        "updated_at": "2025-09-09T18:20:21.844625Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2146,7 +2141,7 @@
         "title": "Fas 3 / Sprint 3.2 / Task 11: Implement Manual Backup Trigger",
         "description": "Wire up the 'Run Backup Now' button in the UI to trigger a backup.",
         "priority": "high",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2155,7 +2150,7 @@
           64
         ],
         "created_at": "2025-09-09T12:14:26.742001Z",
-        "updated_at": "2025-09-09T12:14:26.742014Z",
+        "updated_at": "2025-09-09T18:20:19.624348Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2230,7 +2225,7 @@
         "title": "Fas 3 / Sprint 3.2 / Task 12: UI Polish and Final Testing",
         "description": "Handle edge cases and perform a final end-to-end test of the UI.",
         "priority": "medium",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2239,7 +2234,7 @@
           65
         ],
         "created_at": "2025-09-09T12:14:26.858562Z",
-        "updated_at": "2025-09-09T12:14:26.858575Z",
+        "updated_at": "2025-09-09T18:20:16.210661Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2314,7 +2309,7 @@
         "title": "Fas 4 / Sprint 4.1 / Task 13: Deploy to Production",
         "description": "Merge and deploy the backup module to the production environment.",
         "priority": "high",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2323,7 +2318,7 @@
           66
         ],
         "created_at": "2025-09-09T12:14:26.962144Z",
-        "updated_at": "2025-09-09T12:14:26.962155Z",
+        "updated_at": "2025-09-09T18:20:13.287434Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2398,7 +2393,7 @@
         "title": "Fas 4 / Sprint 4.1 / Task 14: Initial Production Backup and Restore Test",
         "description": "Perform the first backup in production and, critically, test that you can restore from it.",
         "priority": "critical",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2407,7 +2402,7 @@
           67
         ],
         "created_at": "2025-09-09T12:14:27.137324Z",
-        "updated_at": "2025-09-09T12:14:27.137345Z",
+        "updated_at": "2025-09-09T18:20:10.820896Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2482,7 +2477,7 @@
         "title": "Fas 4 / Sprint 4.2 / Task 15: Finalize Documentation",
         "description": "Create user and maintenance guides for the new backup module.",
         "priority": "medium",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2491,7 +2486,7 @@
           68
         ],
         "created_at": "2025-09-09T12:14:27.276023Z",
-        "updated_at": "2025-09-09T12:14:27.276036Z",
+        "updated_at": "2025-09-09T18:20:06.793035Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2551,7 +2546,7 @@
         "title": "Fas 4 / Sprint 4.2 / Task 16: Project Completion",
         "description": "Final review and closeout of the backup module project.",
         "priority": "medium",
-        "status": "todo",
+        "status": "pending",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -2560,7 +2555,7 @@
           69
         ],
         "created_at": "2025-09-09T12:14:27.373644Z",
-        "updated_at": "2025-09-09T12:14:27.373655Z",
+        "updated_at": "2025-09-09T18:20:03.807836Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2600,11 +2595,6 @@
           69
         ]
       }
-    ],
-    "metadata": {
-      "created": "2025-09-09T17:45:17.710Z",
-      "updated": "2025-09-09T17:54:08.403Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
