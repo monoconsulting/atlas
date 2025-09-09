@@ -462,6 +462,11 @@ async function handleTaskSubmit(event) {
             return;
         }
         
+        if (!taskData.description) {
+            render.showError('Task description is required', 'validation');
+            return;
+        }
+        
         // Set button loading state
         const saveBtn = document.getElementById('saveTaskBtn');
         render.setButtonLoading(saveBtn, true, 'Saving...');
