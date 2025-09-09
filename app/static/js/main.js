@@ -118,6 +118,9 @@ function updateUI() {
     // Update Kanban columns
     render.renderKanbanColumns(tasks, presentStatuses);
     
+    // Update lane toggle buttons
+    updateLaneToggleButtons();
+    
     // Update tag filter options
     updateTagFilterOptions();
     
@@ -183,6 +186,11 @@ function setupStateListeners() {
                     render.showError(payload.message || payload.toString());
                 }
                 break;
+                
+            case 'lane-visibility-changed':
+                updateLaneToggleButtons();
+                updateUI();
+                break;
         }
     });
 }
@@ -211,6 +219,11 @@ function setupEventListeners() {
     document.getElementById('filterSorting')?.addEventListener('change', handleSortingChange);
     document.getElementById('filterSearch')?.addEventListener('input', handleFilterChange);
     document.getElementById('clearFiltersBtn')?.addEventListener('click', handleClearFilters);
+    
+    // Lane toggle buttons
+    document.querySelectorAll('.lane-toggle').forEach(button => {
+        button.addEventListener('click', handleLaneToggle);
+    });
     
     // Modal event listeners
     document.getElementById('closeModalBtn')?.addEventListener('click', closeTaskModal);
@@ -277,6 +290,45 @@ function handleClearFilters() {
     
     // Clear filters in state (this will trigger the filters-cleared event)
     state.clearFilters();
+}
+
+/**
+ * Handle lane toggle button clicks
+ */
+function handleLaneToggle(event) {
+    const button = event.target;
+    const status = button.dataset.status;
+    
+    if (status) {
+        // Toggle visibility in state
+        state.toggleLaneVisibility(status);
+        
+        // Update button appearance
+        updateLaneToggleButtons();
+        
+        // Update Kanban columns
+        updateUI();
+    }
+}
+
+/**
+ * Update lane toggle button appearances based on visibility state
+ */
+function updateLaneToggleButtons() {
+    document.querySelectorAll('.lane-toggle').forEach(button => {
+        const status = button.dataset.status;
+        const isVisible = state.getLaneVisibility(status);
+        
+        if (isVisible) {
+            // Lane is visible - button should look "active"
+            button.classList.remove('opacity-50');
+            button.style.opacity = '1';
+        } else {
+            // Lane is hidden - button should look "inactive"
+            button.classList.add('opacity-50');
+            button.style.opacity = '0.5';
+        }
+    });
 }
 
 /**
