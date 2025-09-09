@@ -226,6 +226,9 @@ function setupEventListeners() {
     
     // ESC key to close modals
     document.addEventListener('keydown', handleKeyDown);
+    
+    // Setup drag and drop functionality
+    setupDragAndDrop();
 }
 
 /**
@@ -837,6 +840,124 @@ function handleKeyDown(event) {
     if (event.key === 'Escape') {
         closeTaskModal();
     }
+}
+
+/**
+ * Setup drag and drop functionality
+ */
+function setupDragAndDrop() {
+    // Use event delegation for dynamically created task cards
+    document.addEventListener('dragstart', handleDragStart);
+    document.addEventListener('dragover', handleDragOver);
+    document.addEventListener('dragenter', handleDragEnter);
+    document.addEventListener('dragleave', handleDragLeave);
+    document.addEventListener('drop', handleDrop);
+    document.addEventListener('dragend', handleDragEnd);
+}
+
+/**
+ * Handle drag start event
+ * @param {DragEvent} event - Drag start event
+ */
+function handleDragStart(event) {
+    if (!event.target.classList.contains('task-card')) return;
+    
+    const taskId = event.target.getAttribute('data-task-id');
+    const taskStatus = event.target.getAttribute('data-task-status');
+    
+    if (taskId && taskStatus) {
+        // Store task data for drop handling
+        event.dataTransfer.setData('text/plain', JSON.stringify({
+            taskId: parseInt(taskId),
+            originalStatus: taskStatus
+        }));
+        
+        // Add visual feedback
+        event.target.classList.add('dragging');
+        
+        // Set drag effect
+        event.dataTransfer.effectAllowed = 'move';
+    }
+}
+
+/**
+ * Handle drag over event (required to allow drop)
+ * @param {DragEvent} event - Drag over event
+ */
+function handleDragOver(event) {
+    const dropZone = event.target.closest('.drop-zone');
+    if (dropZone) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+}
+
+/**
+ * Handle drag enter event
+ * @param {DragEvent} event - Drag enter event
+ */
+function handleDragEnter(event) {
+    const dropZone = event.target.closest('.drop-zone');
+    if (dropZone) {
+        dropZone.classList.add('drag-over');
+    }
+}
+
+/**
+ * Handle drag leave event
+ * @param {DragEvent} event - Drag leave event
+ */
+function handleDragLeave(event) {
+    const dropZone = event.target.closest('.drop-zone');
+    if (dropZone) {
+        // Only remove if we're really leaving the drop zone
+        if (!dropZone.contains(event.relatedTarget)) {
+            dropZone.classList.remove('drag-over');
+        }
+    }
+}
+
+/**
+ * Handle drop event
+ * @param {DragEvent} event - Drop event
+ */
+function handleDrop(event) {
+    const dropZone = event.target.closest('.drop-zone');
+    if (!dropZone) return;
+    
+    event.preventDefault();
+    
+    // Remove visual feedback
+    dropZone.classList.remove('drag-over');
+    
+    try {
+        const dragData = JSON.parse(event.dataTransfer.getData('text/plain'));
+        const targetStatus = dropZone.getAttribute('data-status');
+        
+        if (dragData.taskId && targetStatus && targetStatus !== dragData.originalStatus) {
+            // Change task status using existing function
+            changeTaskStatus(dragData.taskId, targetStatus);
+        }
+    } catch (error) {
+        console.error('Error processing drop:', error);
+        render.showError('Failed to move task', 'validation');
+    }
+}
+
+/**
+ * Handle drag end event
+ * @param {DragEvent} event - Drag end event
+ */
+function handleDragEnd(event) {
+    if (!event.target.classList.contains('task-card')) return;
+    
+    // Remove visual feedback
+    event.target.classList.remove('dragging');
+    
+    // Clean up any remaining drag-over styles
+    document.querySelectorAll('.drop-zone.drag-over').forEach(zone => {
+        zone.classList.remove('drag-over');
+    });
 }
 
 /**
