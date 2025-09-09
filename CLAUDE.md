@@ -635,6 +635,92 @@ Filter/Sort Pipeline → Dynamic Updates
 - **Negative**: Static interface until further task implementation, increased complexity
 - **Risk Mitigation**: Comprehensive testing, modular architecture allows independent development, proper error handling
 
+### ADR-007: Multi-Project SonarQube Token Management System (2025-09-09)
+
+**Status**: Implemented ✅  
+**Context**: The original system used a single global `SONAR_TOKEN` environment variable for all projects, which was not scalable or secure for multi-project environments with 10+ projects.
+
+**Problem**: 
+- Single global token created security and management issues across multiple projects
+- No project-specific SonarQube configuration capabilities
+- Token management required manual environment variable updates
+- No ability to enable/disable SonarQube analysis per project
+- Difficult to track which projects were using which tokens
+
+**Solution**: Comprehensive multi-project token management system with encrypted storage and project-specific configuration:
+
+**Database Architecture** (`app/database.py`):
+- **ProjectConfig Table**: New table with encrypted token storage using Fernet encryption
+- **Foreign Key Relationship**: Links to existing projects table with unique constraints
+- **Comprehensive Fields**: URL, token, project key, token name, enabled status
+- **Security**: Tokens encrypted at rest using `cryptography.fernet.Fernet`
+
+**API Implementation** (`app/main.py`):
+- **Configuration Endpoints**: Full CRUD operations for project-specific settings
+  - `GET /api/projects/{id}/config` - Retrieve project configuration
+  - `POST /api/projects/{id}/config` - Create/update project configuration
+  - `POST /api/projects/{id}/test-sonarqube` - Test SonarQube connection
+- **Integration Updates**: SonarQube metrics endpoint now uses project-specific tokens
+- **Backward Compatibility**: Falls back to global environment variables when no project config exists
+
+**SonarQube Integration Updates** (`app/sonarqube.py`):
+- **Constructor Enhancement**: Accepts project-specific configuration dictionary
+- **Token Priority System**: Explicit token > project config > environment > fallback
+- **Project-Specific URLs**: Each project can use different SonarQube instances
+- **Configuration Validation**: Comprehensive connection testing capabilities
+
+**Administrative Interface** (`web/admin.html`):
+- **Token Configuration Modal**: Complete UI for managing project tokens
+- **Security Features**: Masked token display, connection testing, enable/disable toggles
+- **Form Validation**: Client-side and server-side validation of configuration
+- **Status Indicators**: Visual feedback for token status and connection health
+- **JavaScript Integration**: Complete event handling and API communication
+
+**Setup Script Enhancement** (`scripts/setup_sonarqube.sh`):
+- **Multi-Project Support**: Automatically creates tokens for all active projects
+- **Atlas Integration**: Configures project-specific tokens through Atlas API
+- **Fallback Compatibility**: Maintains global token for backward compatibility
+- **Comprehensive Logging**: Detailed setup progress and configuration status
+
+**Security Implementation**:
+```python
+# Fernet encryption for token storage
+cipher_suite = Fernet(encryption_key)
+encrypted_token = cipher_suite.encrypt(token.encode())
+
+# Token priority system in SonarQubeManager
+if project_config and project_config.get('sonarqube_token'):
+    self.sonar_token = project_config['sonarqube_token']
+    self.sonar_url = project_config.get('sonarqube_url', sonar_url)
+```
+
+**Testing Results**:
+- ✅ Container rebuild successful with all new components
+- ✅ API endpoints functional: configuration CRUD operations working
+- ✅ Database encryption: Tokens properly encrypted in storage
+- ✅ SonarQube integration: Project-specific tokens used correctly
+- ✅ UI functionality: Token management modal operational
+- ✅ Setup script: Multi-project token creation automated
+- ✅ Backward compatibility: Legacy global tokens still supported
+
+**Key Features**:
+- **Per-Project Configuration**: Individual SonarQube settings for each project
+- **Encrypted Storage**: All tokens encrypted at rest using industry-standard encryption
+- **Administrative UI**: Complete token management through web interface
+- **Connection Testing**: Verify SonarQube connectivity before saving configuration
+- **Automated Setup**: Script automatically configures tokens for existing projects
+- **Flexible Architecture**: Supports different SonarQube instances per project
+
+**Migration Path**:
+- **Existing Systems**: Global tokens continue working as fallback
+- **New Projects**: Use project-specific configuration for enhanced security
+- **Gradual Migration**: Projects can be migrated individually without system disruption
+
+**Consequences**: 
+- **Positive**: Enhanced security, project isolation, scalable token management, granular control, automated configuration
+- **Negative**: Increased complexity in database schema, additional UI components to maintain
+- **Risk Mitigation**: Comprehensive testing, backward compatibility, encrypted storage, detailed documentation
+
 ---
 
 ## Task Master AI Instructions
