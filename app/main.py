@@ -26,10 +26,13 @@ from .database import (
     init_db, get_db,
     Project, ProjectCreate, ProjectUpdate, ProjectResponse,
     Port, PortCreate, PortUpdate, PortResponse,
+    ProjectConfig, ProjectConfigCreate, ProjectConfigUpdate, ProjectConfigResponse,
     get_all_projects, get_project_by_slug, get_project_by_id, get_project_by_id_any_status,
     create_project, update_project, delete_project,
     get_all_ports, get_port_by_id, get_ports_by_project,
-    create_port, update_port, delete_port
+    create_port, update_port, delete_port,
+    get_project_config, create_project_config, update_project_config,
+    get_or_create_project_config, delete_project_config
 )
 from .sonarqube import SonarQubeManager
 
@@ -1229,14 +1232,80 @@ def import_docker_ports(project_id: Optional[int] = None, db: Session = Depends(
 
 
 # ============================================================================
-# SonarQube Integration Endpoints
+# Project Configuration Endpoints (SonarQube, GitHub, Jenkins tokens)
 # ============================================================================
 
-sonarqube = SonarQubeManager()
+@app.get("/api/projects/{project_id}/config", response_model=ProjectConfigResponse)
+async def get_project_configuration(project_id: int, db: Session = Depends(get_db)):
+    """Get project configuration including token status"""
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    config = get_or_create_project_config(db, project_id)
+    return ProjectConfigResponse(**config.to_dict())
+
+@app.post("/api/projects/{project_id}/config", response_model=ProjectConfigResponse) 
+async def create_project_configuration(
+    project_id: int, 
+    config_data: ProjectConfigCreate,
+    db: Session = Depends(get_db)
+):
+    """Create project configuration with tokens"""
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # Check if config already exists
+    existing_config = get_project_config(db, project_id)
+    if existing_config:
+        raise HTTPException(status_code=400, detail="Project configuration already exists")
+    
+    config_data.project_id = project_id
+    config = create_project_config(db, config_data)
+    return ProjectConfigResponse(**config.to_dict())
+
+@app.patch("/api/projects/{project_id}/config", response_model=ProjectConfigResponse)
+async def update_project_configuration(
+    project_id: int,
+    config_update: ProjectConfigUpdate,
+    db: Session = Depends(get_db)
+):
+    """Update project configuration including tokens"""
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    config = update_project_config(db, project_id, config_update)
+    if not config:
+        # If config doesn't exist, create it
+        config_data = ProjectConfigCreate(project_id=project_id, **config_update.dict(exclude_unset=True))
+        config = create_project_config(db, config_data)
+    
+    return ProjectConfigResponse(**config.to_dict())
+
+@app.delete("/api/projects/{project_id}/config")
+async def delete_project_configuration(project_id: int, db: Session = Depends(get_db)):
+    """Delete project configuration"""
+    project = get_project_by_id(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    success = delete_project_config(db, project_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Project configuration not found")
+    
+    return {"message": "Project configuration deleted successfully"}
+
+# ============================================================================
+# SonarQube Integration Endpoints
+# ============================================================================
 
 @app.get("/api/sonarqube/status")
 async def get_sonarqube_status():
     """Check SonarQube server status"""
+    # Use a generic SonarQube manager for status checks
+    sonarqube = SonarQubeManager()
     return sonarqube.check_sonarqube_status()
 
 @app.post("/api/projects/{project_id}/analyze")
@@ -1278,8 +1347,36 @@ async def get_project_sonarqube_metrics(project_id: int, db: Session = Depends(g
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     
-    # Generate project key
-    project_key = f"tm-{project.slug}".replace("/", "").replace(" ", "-").lower()
+    # Get project configuration (creates default if not exists)
+    config = get_or_create_project_config(db, project_id)
+    
+    # Check if SonarQube is enabled for this project
+    if not config.sonarqube_enabled:
+        return {
+            "project_name": project.name,
+            "project_slug": project.slug,
+            "error": "SonarQube analysis is not enabled for this project",
+            "status": "disabled"
+        }
+    
+    # Check if token is configured
+    if not config.sonarqube_token:
+        return {
+            "project_name": project.name,
+            "project_slug": project.slug,
+            "error": "SonarQube token is not configured for this project",
+            "status": "not_configured"
+        }
+    
+    # Generate project key (use configured key or generate from slug)
+    project_key = config.sonarqube_project_key or f"tm-{project.slug}".replace("/", "").replace(" ", "-").lower()
+    
+    # Create project-specific SonarQube manager
+    project_config_dict = {
+        'sonarqube_token': config.sonarqube_token,
+        'sonarqube_url': config.sonarqube_url or "http://atlas_sonarqube:9000"
+    }
+    sonarqube = SonarQubeManager(project_config=project_config_dict)
     
     # Get metrics from SonarQube
     metrics = sonarqube.get_project_metrics(project_key)
@@ -1288,6 +1385,7 @@ async def get_project_sonarqube_metrics(project_id: int, db: Session = Depends(g
     metrics["project_name"] = project.name
     metrics["project_slug"] = project.slug
     metrics["sonarqube_url"] = sonarqube.get_project_url(project_key)
+    metrics["sonarqube_project_key"] = project_key
     
     return metrics
 

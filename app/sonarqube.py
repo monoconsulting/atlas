@@ -19,9 +19,20 @@ logger = logging.getLogger(__name__)
 class SonarQubeManager:
     """Manages SonarQube operations for projects"""
     
-    def __init__(self, sonar_url: str = "http://atlas_sonarqube:9000", sonar_token: Optional[str] = None):
+    def __init__(self, sonar_url: str = "http://atlas_sonarqube:9000", sonar_token: Optional[str] = None, project_config: Optional[dict] = None):
         self.sonar_url = sonar_url
-        self.sonar_token = sonar_token or os.getenv("SONAR_TOKEN", "sqp_7762c5fce65de5eeca7a42668b23b4abe0c2dd7d")
+        self.project_config = project_config
+        
+        # Priority order: explicit token > project config > environment > fallback
+        if sonar_token:
+            self.sonar_token = sonar_token
+        elif project_config and project_config.get('sonarqube_token'):
+            self.sonar_token = project_config['sonarqube_token']
+            self.sonar_url = project_config.get('sonarqube_url', sonar_url)
+        else:
+            # Fallback to environment variable or default (for backward compatibility)
+            self.sonar_token = os.getenv("SONAR_TOKEN", "sqp_7762c5fce65de5eeca7a42668b23b4abe0c2dd7d")
+        
         self.auth = HTTPBasicAuth(self.sonar_token, "")
         
     def check_sonarqube_status(self) -> Dict:

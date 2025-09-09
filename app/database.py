@@ -11,6 +11,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Text, Boolean, Da
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from pydantic import BaseModel, validator
+from cryptography.fernet import Fernet
 
 # Database configuration
 DATABASE_URL = os.getenv(
@@ -23,6 +24,15 @@ engine = create_engine(DATABASE_URL, echo=False)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+# Encryption key for sensitive data (SonarQube tokens)
+# In production, this should be from environment or a secure key store
+ENCRYPTION_KEY = os.getenv("ATLAS_ENCRYPTION_KEY")
+if not ENCRYPTION_KEY:
+    # Generate a new key if not set (for development only)
+    ENCRYPTION_KEY = Fernet.generate_key().decode()
+    
+cipher_suite = Fernet(ENCRYPTION_KEY.encode() if isinstance(ENCRYPTION_KEY, str) else ENCRYPTION_KEY)
 
 
 class Project(Base):
@@ -99,6 +109,106 @@ class Port(Base):
             "project_name": self.project.name if self.project else None,
             "project_slug": self.project.slug if self.project else None
         }
+
+
+class ProjectConfig(Base):
+    """SQLAlchemy model for project-specific configuration including SonarQube tokens."""
+    __tablename__ = "project_configs"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False, index=True, unique=True)
+    
+    # SonarQube configuration
+    sonarqube_url = Column(String(500), nullable=True, default="http://atlas_sonarqube:9000")
+    sonarqube_token_encrypted = Column(Text, nullable=True)  # Encrypted token storage
+    sonarqube_token_name = Column(String(255), nullable=True)  # Token name for reference
+    sonarqube_project_key = Column(String(255), nullable=True)  # SonarQube project key
+    sonarqube_enabled = Column(Boolean, default=False)
+    
+    # Additional integration tokens (future expansion)
+    github_token_encrypted = Column(Text, nullable=True)
+    jenkins_token_encrypted = Column(Text, nullable=True) 
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationship
+    project = relationship("Project", backref="config", uselist=False)
+    
+    def encrypt_token(self, token: str) -> str:
+        """Encrypt a token for secure storage."""
+        if not token:
+            return None
+        return cipher_suite.encrypt(token.encode()).decode()
+    
+    def decrypt_token(self, encrypted_token: str) -> str:
+        """Decrypt a token for use."""
+        if not encrypted_token:
+            return None
+        try:
+            return cipher_suite.decrypt(encrypted_token.encode()).decode()
+        except Exception:
+            return None
+    
+    @property
+    def sonarqube_token(self) -> Optional[str]:
+        """Get decrypted SonarQube token."""
+        return self.decrypt_token(self.sonarqube_token_encrypted)
+    
+    @sonarqube_token.setter
+    def sonarqube_token(self, token: str):
+        """Set encrypted SonarQube token."""
+        self.sonarqube_token_encrypted = self.encrypt_token(token)
+    
+    @property
+    def github_token(self) -> Optional[str]:
+        """Get decrypted GitHub token."""
+        return self.decrypt_token(self.github_token_encrypted)
+    
+    @github_token.setter
+    def github_token(self, token: str):
+        """Set encrypted GitHub token."""
+        self.github_token_encrypted = self.encrypt_token(token)
+    
+    @property
+    def jenkins_token(self) -> Optional[str]:
+        """Get decrypted Jenkins token."""
+        return self.decrypt_token(self.jenkins_token_encrypted)
+    
+    @jenkins_token.setter
+    def jenkins_token(self, token: str):
+        """Set encrypted Jenkins token."""
+        self.jenkins_token_encrypted = self.encrypt_token(token)
+    
+    def to_dict(self, include_tokens: bool = False) -> dict:
+        """Convert to dictionary for API responses."""
+        data = {
+            "id": self.id,
+            "project_id": self.project_id,
+            "sonarqube_url": self.sonarqube_url,
+            "sonarqube_token_name": self.sonarqube_token_name,
+            "sonarqube_project_key": self.sonarqube_project_key,
+            "sonarqube_enabled": self.sonarqube_enabled,
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() + "Z" if self.updated_at else None,
+        }
+        
+        # Only include actual tokens if explicitly requested (for admin use)
+        if include_tokens:
+            data.update({
+                "sonarqube_token": self.sonarqube_token,
+                "github_token": self.github_token,
+                "jenkins_token": self.jenkins_token,
+            })
+        else:
+            # Include token status without revealing the actual token
+            data.update({
+                "sonarqube_token_configured": bool(self.sonarqube_token_encrypted),
+                "github_token_configured": bool(self.github_token_encrypted),
+                "jenkins_token_configured": bool(self.jenkins_token_encrypted),
+            })
+        
+        return data
 
 
 # Pydantic models for API requests/responses
@@ -234,6 +344,45 @@ class PortResponse(BaseModel):
     active: bool
     project_name: Optional[str]
     project_slug: Optional[str]
+
+
+# ProjectConfig Pydantic models
+class ProjectConfigCreate(BaseModel):
+    """Pydantic model for creating project configuration."""
+    project_id: int
+    sonarqube_url: Optional[str] = "http://atlas_sonarqube:9000"
+    sonarqube_token: Optional[str] = None
+    sonarqube_token_name: Optional[str] = None
+    sonarqube_project_key: Optional[str] = None
+    sonarqube_enabled: bool = False
+    github_token: Optional[str] = None
+    jenkins_token: Optional[str] = None
+
+
+class ProjectConfigUpdate(BaseModel):
+    """Pydantic model for updating project configuration."""
+    sonarqube_url: Optional[str] = None
+    sonarqube_token: Optional[str] = None
+    sonarqube_token_name: Optional[str] = None
+    sonarqube_project_key: Optional[str] = None
+    sonarqube_enabled: Optional[bool] = None
+    github_token: Optional[str] = None
+    jenkins_token: Optional[str] = None
+
+
+class ProjectConfigResponse(BaseModel):
+    """Pydantic model for project configuration API responses."""
+    id: int
+    project_id: int
+    sonarqube_url: Optional[str]
+    sonarqube_token_name: Optional[str]
+    sonarqube_project_key: Optional[str]
+    sonarqube_enabled: bool
+    sonarqube_token_configured: bool
+    github_token_configured: bool
+    jenkins_token_configured: bool
+    created_at: Optional[str]
+    updated_at: Optional[str]
 
 
 def get_db():
@@ -372,5 +521,79 @@ def delete_port(db, port_id: int) -> bool:
         return False
     
     db_port.active = False
+    db.commit()
+    return True
+
+
+# ProjectConfig CRUD functions
+def get_project_config(db, project_id: int) -> Optional[ProjectConfig]:
+    """Get project configuration by project ID."""
+    return db.query(ProjectConfig).filter(ProjectConfig.project_id == project_id).first()
+
+
+def create_project_config(db, config: ProjectConfigCreate) -> ProjectConfig:
+    """Create a new project configuration."""
+    db_config = ProjectConfig(
+        project_id=config.project_id,
+        sonarqube_url=config.sonarqube_url,
+        sonarqube_token_name=config.sonarqube_token_name,
+        sonarqube_project_key=config.sonarqube_project_key,
+        sonarqube_enabled=config.sonarqube_enabled
+    )
+    
+    # Set encrypted tokens
+    if config.sonarqube_token:
+        db_config.sonarqube_token = config.sonarqube_token
+    if config.github_token:
+        db_config.github_token = config.github_token
+    if config.jenkins_token:
+        db_config.jenkins_token = config.jenkins_token
+    
+    db.add(db_config)
+    db.commit()
+    db.refresh(db_config)
+    return db_config
+
+
+def update_project_config(db, project_id: int, config_update: ProjectConfigUpdate) -> Optional[ProjectConfig]:
+    """Update project configuration."""
+    db_config = get_project_config(db, project_id)
+    if not db_config:
+        return None
+    
+    # Update basic fields
+    update_data = config_update.dict(exclude_unset=True, exclude={'sonarqube_token', 'github_token', 'jenkins_token'})
+    for field, value in update_data.items():
+        setattr(db_config, field, value)
+    
+    # Update encrypted tokens
+    if config_update.sonarqube_token is not None:
+        db_config.sonarqube_token = config_update.sonarqube_token
+    if config_update.github_token is not None:
+        db_config.github_token = config_update.github_token  
+    if config_update.jenkins_token is not None:
+        db_config.jenkins_token = config_update.jenkins_token
+    
+    db.commit()
+    db.refresh(db_config)
+    return db_config
+
+
+def get_or_create_project_config(db, project_id: int) -> ProjectConfig:
+    """Get existing project config or create a default one."""
+    config = get_project_config(db, project_id)
+    if not config:
+        config_data = ProjectConfigCreate(project_id=project_id)
+        config = create_project_config(db, config_data)
+    return config
+
+
+def delete_project_config(db, project_id: int) -> bool:
+    """Delete project configuration (hard delete)."""
+    db_config = get_project_config(db, project_id)
+    if not db_config:
+        return False
+    
+    db.delete(db_config)
     db.commit()
     return True

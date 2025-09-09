@@ -12,6 +12,9 @@ ijson==3.4.0
 # Cross-process file locking for multi-agent concurrency
 portalocker==2.8.0
 
+# Encryption for secure token storage
+cryptography==42.0.5
+
 # Test & tooling
 pytest==7.4.0
 requests==2.31.0

@@ -437,6 +437,106 @@
         </div>
     </div>
 
+    <!-- Token Configuration Modal -->
+    <div id="tokenModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-slate-200">Configure Integration Tokens</h3>
+                    <button id="closeTokenModal" class="text-slate-400 hover:text-slate-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="tokenForm" class="space-y-6">
+                    <input type="hidden" id="tokenProjectId">
+                    
+                    <!-- Project Info -->
+                    <div class="bg-slate-800 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-slate-300 mb-1">Project</h4>
+                        <p id="tokenProjectName" class="text-slate-400 text-sm"></p>
+                    </div>
+
+                    <!-- SonarQube Configuration -->
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-semibold text-slate-200 flex items-center gap-2">
+                            🔍 SonarQube Configuration
+                        </h4>
+                        
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="sonarqubeEnabled" class="w-4 h-4 text-blue-600 bg-slate-800 border-slate-600 rounded focus:ring-blue-500">
+                            <label for="sonarqubeEnabled" class="text-sm text-slate-300">Enable SonarQube analysis for this project</label>
+                        </div>
+
+                        <div id="sonarqubeConfig" class="space-y-4 pl-7 hidden">
+                            <div>
+                                <label for="sonarqubeUrl" class="block text-sm font-medium text-slate-300 mb-2">SonarQube URL</label>
+                                <input type="url" id="sonarqubeUrl" value="http://atlas_sonarqube:9000" class="w-full bg-slate-800 border border-slate-600 text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <p class="text-xs text-slate-500 mt-1">Internal URL for container communication</p>
+                            </div>
+                            
+                            <div>
+                                <label for="sonarqubeToken" class="block text-sm font-medium text-slate-300 mb-2">API Token</label>
+                                <input type="password" id="sonarqubeToken" placeholder="squ_xxxxxxxxxxxxxxxxxx" class="w-full bg-slate-800 border border-slate-600 text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <p class="text-xs text-slate-500 mt-1">Generate token at: <a href="http://localhost:9010" target="_blank" class="text-blue-400 hover:text-blue-300">SonarQube → Security → Tokens</a></p>
+                            </div>
+                            
+                            <div>
+                                <label for="sonarqubeTokenName" class="block text-sm font-medium text-slate-300 mb-2">Token Name (Optional)</label>
+                                <input type="text" id="sonarqubeTokenName" placeholder="e.g., atlas-project-token" class="w-full bg-slate-800 border border-slate-600 text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label for="sonarqubeProjectKey" class="block text-sm font-medium text-slate-300 mb-2">Project Key (Optional)</label>
+                                <input type="text" id="sonarqubeProjectKey" placeholder="Auto-generated from project slug" class="w-full bg-slate-800 border border-slate-600 text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Future Integrations -->
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-semibold text-slate-200 flex items-center gap-2">
+                            🔗 Future Integrations
+                        </h4>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 opacity-50">
+                                <input type="checkbox" disabled class="w-4 h-4">
+                                <label class="text-sm text-slate-400">GitHub Integration (Coming Soon)</label>
+                            </div>
+                            <div class="flex items-center gap-3 opacity-50">
+                                <input type="checkbox" disabled class="w-4 h-4">
+                                <label class="text-sm text-slate-400">Jenkins Integration (Coming Soon)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Token Status -->
+                    <div id="tokenStatus" class="hidden bg-slate-800 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-slate-300 mb-2">Current Status</h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">SonarQube Token:</span>
+                                <span id="sonarTokenStatus" class="text-slate-400">Not configured</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors">
+                            Save Configuration
+                        </button>
+                        <button type="button" id="cancelTokenBtn" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification -->
     <div id="notification" class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
         <span id="notificationText">Action completed successfully</span>
@@ -671,6 +771,12 @@
                             <button onclick="viewAnalysisResults(${project.id})" 
                                     class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">
                                 📊 View Results
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <button onclick="configureTokens(${project.id})" 
+                                    class="w-full bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">
+                                🔐 Configure Tokens
                             </button>
                         </div>
                         <div id="sonar-metrics-${project.id}" class="mt-2 text-xs"></div>
@@ -1611,9 +1717,185 @@
             }, 1000);
         }
         
+        // ============================================================================
+        // Token Management Functions
+        // ============================================================================
+        
+        let currentTokenProjectId = null;
+        
+        async function configureTokens(projectId) {
+            currentTokenProjectId = projectId;
+            
+            // Find project info
+            const project = projects.find(p => p.id === projectId);
+            if (!project) {
+                console.error('Project not found:', projectId);
+                return;
+            }
+            
+            // Update modal title
+            document.getElementById('tokenModalTitle').textContent = `Configure Tokens - ${project.name}`;
+            
+            // Load existing configuration
+            await loadProjectTokenConfig(projectId);
+            
+            // Show modal
+            document.getElementById('tokenModal').classList.remove('hidden');
+        }
+        
+        function hideTokenModal() {
+            document.getElementById('tokenModal').classList.add('hidden');
+            currentTokenProjectId = null;
+        }
+        
+        async function loadProjectTokenConfig(projectId) {
+            try {
+                const response = await fetch(`http://localhost:8199/api/projects/${projectId}/config`);
+                
+                if (response.ok) {
+                    const config = await response.json();
+                    
+                    // Populate form with existing configuration
+                    document.getElementById('sonarqubeEnabled').checked = config.sonarqube_enabled || false;
+                    document.getElementById('sonarqubeUrl').value = config.sonarqube_url || 'http://atlas_sonarqube:9000';
+                    document.getElementById('sonarqubeProjectKey').value = config.sonarqube_project_key || '';
+                    document.getElementById('sonarqubeTokenName').value = config.sonarqube_token_name || '';
+                    
+                    // Show token status
+                    const tokenStatus = document.getElementById('tokenStatus');
+                    if (config.sonarqube_token_encrypted) {
+                        tokenStatus.innerHTML = '<span class="text-green-400">✓ Token configured</span>';
+                        document.getElementById('sonarqubeToken').placeholder = 'Token is saved (leave blank to keep current)';
+                    } else {
+                        tokenStatus.innerHTML = '<span class="text-slate-400">No token configured</span>';
+                        document.getElementById('sonarqubeToken').placeholder = 'Enter SonarQube token';
+                    }
+                    
+                } else if (response.status === 404) {
+                    // No configuration exists yet, use defaults
+                    document.getElementById('sonarqubeEnabled').checked = false;
+                    document.getElementById('sonarqubeUrl').value = 'http://atlas_sonarqube:9000';
+                    document.getElementById('sonarqubeProjectKey').value = '';
+                    document.getElementById('sonarqubeTokenName').value = '';
+                    document.getElementById('sonarqubeToken').value = '';
+                    
+                    const tokenStatus = document.getElementById('tokenStatus');
+                    tokenStatus.innerHTML = '<span class="text-slate-400">No configuration found</span>';
+                } else {
+                    throw new Error(`Failed to load configuration: ${response.status}`);
+                }
+                
+            } catch (error) {
+                console.error('Error loading token configuration:', error);
+                showNotification('Failed to load token configuration', 'error');
+            }
+        }
+        
+        async function handleTokenSubmit(e) {
+            e.preventDefault();
+            
+            if (!currentTokenProjectId) {
+                showNotification('No project selected', 'error');
+                return;
+            }
+            
+            const formData = {
+                sonarqube_enabled: document.getElementById('sonarqubeEnabled').checked,
+                sonarqube_url: document.getElementById('sonarqubeUrl').value,
+                sonarqube_project_key: document.getElementById('sonarqubeProjectKey').value || null,
+                sonarqube_token_name: document.getElementById('sonarqubeTokenName').value || null
+            };
+            
+            // Only include token if it's provided (not empty)
+            const tokenValue = document.getElementById('sonarqubeToken').value.trim();
+            if (tokenValue) {
+                formData.sonarqube_token = tokenValue;
+            }
+            
+            try {
+                const response = await fetch(`http://localhost:8199/api/projects/${currentTokenProjectId}/config`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    hideTokenModal();
+                    showNotification('Token configuration saved successfully');
+                    // Optionally refresh project metrics
+                    loadProjectMetrics(currentTokenProjectId);
+                } else {
+                    const error = await response.json();
+                    showNotification(error.detail || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving token configuration:', error);
+                showNotification('Error saving configuration', 'error');
+            }
+        }
+        
+        async function testSonarQubeConnection() {
+            if (!currentTokenProjectId) {
+                showNotification('No project selected', 'error');
+                return;
+            }
+            
+            const testButton = document.getElementById('testConnectionBtn');
+            const originalText = testButton.textContent;
+            
+            try {
+                testButton.textContent = 'Testing...';
+                testButton.disabled = true;
+                
+                const response = await fetch(`http://localhost:8199/api/projects/${currentTokenProjectId}/test-sonarqube`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('SonarQube connection successful!');
+                    const tokenStatus = document.getElementById('tokenStatus');
+                    tokenStatus.innerHTML = `<span class="text-green-400">✓ Connection verified (${result.version || 'Unknown version'})</span>`;
+                } else {
+                    showNotification(result.message || 'Connection test failed', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error testing connection:', error);
+                showNotification('Connection test failed', 'error');
+            } finally {
+                testButton.textContent = originalText;
+                testButton.disabled = false;
+            }
+        }
+        
+        function onSonarQubeEnabledChange() {
+            const enabled = document.getElementById('sonarqubeEnabled').checked;
+            const configSection = document.querySelector('.token-config-section');
+            
+            if (enabled) {
+                configSection.classList.remove('opacity-50');
+                configSection.querySelectorAll('input').forEach(input => input.disabled = false);
+            } else {
+                configSection.classList.add('opacity-50');
+                configSection.querySelectorAll('input').forEach(input => input.disabled = true);
+            }
+        }
+        
+        // Initialize enabled state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const enabledCheckbox = document.getElementById('sonarqubeEnabled');
+            if (enabledCheckbox) {
+                enabledCheckbox.addEventListener('change', onSonarQubeEnabledChange);
+                onSonarQubeEnabledChange(); // Set initial state
+            }
+        });
+        
         // Expose functions globally for external access
         window.showPortManagement = showPortManagement;
         window.showProjectManagement = showProjectManagement;
+        window.configureTokens = configureTokens;
     </script>
 </body>
 </html>
