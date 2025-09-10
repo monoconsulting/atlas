@@ -1,11 +1,6 @@
 {
   "master": {
-    "tasks": [],
-    "metadata": {
-      "created": "2025-09-09T18:25:31.106Z",
-      "updated": "2025-09-09T18:25:31.106Z",
-      "description": "Tasks for master context"
-    }
+    "tasks": []
   },
   "atlas": {
     "tasks": [
@@ -1390,7 +1385,7 @@
         "title": "Fas 1 / Sprint 1.1 / Task 2: Develop Core Backup Script",
         "description": "Create backup.sh with logging, mysqldump, restic commands (backup, forget, prune, check), and error handling.",
         "priority": "high",
-        "status": "review",
+        "status": "done",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1399,7 +1394,7 @@
           55
         ],
         "created_at": "2025-09-09T12:14:25.623197Z",
-        "updated_at": "2025-09-09T18:22:16.737616Z",
+        "updated_at": "2025-09-10T17:18:35.131507Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2600,11 +2595,6 @@
           69
         ]
       }
-    ],
-    "metadata": {
-      "created": "2025-09-09T18:25:31.106Z",
-      "updated": "2025-09-09T18:31:46.879Z",
-      "description": "Tasks for atlas context"
-    }
+    ]
   }
 }
