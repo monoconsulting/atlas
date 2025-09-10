@@ -82,6 +82,39 @@ The application uses Tailwind CSS compiled at build time (no CDN dependency). Du
 3. Optionally configure `HOST_PORT` (default: 8099)
 4. Optional: Set `PROJECT_NAME` to customize the project name displayed in the UI
 
+### Backup Script (Task 56)
+
+The core backup script lives at `scripts/backup.sh`. It performs a MySQL dump, backs up files with `restic`, applies retention (`forget --prune`), and runs an integrity check.
+
+Usage:
+
+```bash
+# Run full backup (local or inside backup container)
+bash scripts/backup.sh
+
+# Integrity check only (no backup)
+bash scripts/backup.sh --check-only
+
+# Dry run (logs intent only)
+bash scripts/backup.sh --dry-run
+```
+
+Environment variables:
+
+- `MYSQL_HOST`: MySQL host (default: `mysql`)
+- `MYSQL_USER`: MySQL user (default: `tmuser`)
+- `MYSQL_PASSWORD`: MySQL password (default: `tmpassword`)
+- `MYSQL_DATABASE`: DB name (default: `taskmaster`)
+- `RESTIC_REPOSITORY`: Repository path (default: `/data/backup`)
+- `RESTIC_PASSWORD`: Repository password (required)
+
+Notes:
+
+- Initializes the restic repo if missing and tags snapshots (`atlas-backup`, `automated`, date).
+- Retention policy: keep daily 7, weekly 4, monthly 12, yearly 2; prunes automatically.
+- Logs to `/var/log/backup/backup-YYYYMMDD.log`; temp dumps under `/tmp/backup-<timestamp>`.
+- When containerized (Task 57), ensure mounts for `/projects` (source), `/data/backup` (repo), and writable `/var/log/backup`.
+
 ## Architecture
 
 ### Backend Structure (FastAPI)

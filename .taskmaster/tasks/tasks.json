@@ -1,6 +1,11 @@
 {
   "master": {
-    "tasks": []
+    "tasks": [],
+    "metadata": {
+      "created": "2025-09-09T18:25:31.106Z",
+      "updated": "2025-09-09T18:25:31.106Z",
+      "description": "Tasks for master context"
+    }
   },
   "atlas": {
     "tasks": [
@@ -1385,7 +1390,7 @@
         "title": "Fas 1 / Sprint 1.1 / Task 2: Develop Core Backup Script",
         "description": "Create backup.sh with logging, mysqldump, restic commands (backup, forget, prune, check), and error handling.",
         "priority": "high",
-        "status": "in-progress",
+        "status": "review",
         "due_date": null,
         "assigned_to": null,
         "estimate": null,
@@ -1401,7 +1406,7 @@
             "id": 1,
             "title": "Create scripts/backup.sh and implement logging",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1416,7 +1421,7 @@
             "id": 2,
             "title": "Add mysqldump command for database snapshot",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1431,7 +1436,7 @@
             "id": 3,
             "title": "Implement restic backup command",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1446,7 +1451,7 @@
             "id": 4,
             "title": "Implement restic retention commands (forget, prune)",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -1461,7 +1466,7 @@
             "id": 5,
             "title": "Implement restic check and error handling",
             "description": "",
-            "status": "todo",
+            "status": "done",
             "priority": "medium",
             "due_date": null,
             "assigned_to": null,
@@ -2595,6 +2600,11 @@
           69
         ]
       }
-    ]
+    ],
+    "metadata": {
+      "created": "2025-09-09T18:25:31.106Z",
+      "updated": "2025-09-09T18:31:46.879Z",
+      "description": "Tasks for atlas context"
+    }
   }
 }
