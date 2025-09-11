@@ -27,6 +27,9 @@ class TaskStorage:
         from sqlalchemy.orm import Session
         from .database import get_project_by_slug, SessionLocal
 
+        self._project_id: Optional[int] = None
+        self._project_slug: Optional[str] = None
+
         # Default to /projects/atlas for the main project
         env_dir = os.getenv("TASKMASTER_DIR", "/projects/atlas/.taskmaster")
 
@@ -43,6 +46,12 @@ class TaskStorage:
                         if not resolved_path.endswith('.taskmaster'):
                             resolved_path = os.path.join(resolved_path, '.taskmaster')
                         base_dir = resolved_path
+                        # Cache resolved project identifiers
+                        try:
+                            self._project_id = int(getattr(project, "id"))
+                        except Exception:
+                            self._project_id = None
+                        self._project_slug = getattr(project, "slug", None)
             except Exception as e:
                 print(f"[TaskStorage] failed to resolve project slug '{base_dir}' from DB: {e}")
             finally:
@@ -86,6 +95,55 @@ class TaskStorage:
         
         self.parsing_errors: List[Dict[str, Any]] = []
         self.duplicate_task_ids: List[Dict[str, Any]] = []
+
+    def _resolve_project_id_by_path(self) -> Optional[int]:
+        """Try to map base_dir to a project_id by matching project.path.
+        We match the directory before '/.taskmaster'.
+        """
+        try:
+            from .database import get_all_projects, SessionLocal
+            base_dir_str = str(self.base_dir)
+            if '/.taskmaster' in base_dir_str:
+                project_path = base_dir_str.split('/.taskmaster')[0]
+            else:
+                project_path = base_dir_str
+            db = SessionLocal()
+            try:
+                for p in get_all_projects(db):
+                    if getattr(p, 'path', None) == project_path:
+                        return int(getattr(p, 'id'))
+            finally:
+                db.close()
+        except Exception as e:
+            print(f"[TaskStorage] _resolve_project_id_by_path failed: {e}")
+        return None
+
+    def _should_dual_write(self) -> bool:
+        return str(os.getenv('ATLAS_DB_DUAL_WRITE', '')).lower() in ('1', 'true', 'yes', 'on')
+
+    def _maybe_dual_write_task(self, tag: str, task_dict: Dict[str, Any]) -> None:
+        if not self._should_dual_write():
+            return
+        project_id = self._project_id or self._resolve_project_id_by_path()
+        if not project_id:
+            return
+        try:
+            from .task_db_adapter import dual_write_task
+            dual_write_task(project_id, tag, task_dict)
+        except Exception as e:
+            print(f"[TaskStorage] dual_write_task hook failed: {e}")
+
+    def _maybe_dual_write_subtask(self, tag: str, parent_local_id: int, subtask_dict: Dict[str, Any]) -> None:
+        if not self._should_dual_write():
+            return
+        project_id = self._project_id or self._resolve_project_id_by_path()
+        if not project_id:
+            return
+        try:
+            from .task_db_adapter import dual_write_subtask
+            dual_write_subtask(project_id, tag, parent_local_id, subtask_dict)
+        except Exception as e:
+            print(f"[TaskStorage] dual_write_subtask hook failed: {e}")
 
     def _get_file_size(self, path: Path) -> int:
         """Get file size in bytes."""
@@ -321,6 +379,11 @@ class TaskStorage:
             bucket["tasks"].append(task.to_dict())
             # _write_json also uses the same lock, but calling it while holding the lock is harmless.
             self._write_json(self.tasks_file, data)
+            # Best-effort dual write to DB mirror (optional)
+            try:
+                self._maybe_dual_write_task(tag, task.to_dict())
+            except Exception:
+                pass
             return task
 
     def add_subtask(self, req: AddSubTaskRequest) -> SubTask:
@@ -348,6 +411,11 @@ class TaskStorage:
             subs.append(st.to_dict())
             data[tag]["tasks"] = tasks
             self._write_json(self.tasks_file, data)
+            # Best-effort dual write for subtask (optional)
+            try:
+                self._maybe_dual_write_subtask(tag, int(req.parent_id), st.to_dict())
+            except Exception:
+                pass
             return st
 
     def list_tasks(self, tag: Optional[str] = None, include_deleted: bool = False) -> List[Dict[str, Any]]:
@@ -407,6 +475,11 @@ class TaskStorage:
                 raise ValueError(f"Task id {task_id} not found in tag '{tag}'")
             data[tag]["tasks"] = tasks
             self._write_json(self.tasks_file, data)
+            # Best-effort dual write to DB mirror (optional)
+            try:
+                self._maybe_dual_write_task(tag, updated)
+            except Exception:
+                pass
             return updated
 
     def update_subtask(self, task_id: int, sub_id: int, req: UpdateSubTaskRequest, tag: Optional[str] = None) -> Dict[str, Any]:
@@ -452,6 +525,11 @@ class TaskStorage:
                 raise ValueError(f"Subtask id {sub_id} not found under task {task_id} in tag '{tag}'")
             data[tag]["tasks"] = tasks
             self._write_json(self.tasks_file, data)
+            # Best-effort dual write for subtask (optional)
+            try:
+                self._maybe_dual_write_subtask(tag, int(task_id), updated)
+            except Exception:
+                pass
             return updated
 
     def info(self) -> Dict[str, Any]:
