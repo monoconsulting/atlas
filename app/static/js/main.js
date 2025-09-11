@@ -230,6 +230,22 @@ function setupEventListeners() {
     document.getElementById('cancelTaskBtn')?.addEventListener('click', closeTaskModal);
     document.getElementById('taskForm')?.addEventListener('submit', handleTaskSubmit);
     document.getElementById('addSubtaskBtn')?.addEventListener('click', addSubtask);
+    // Prompt toggle and counter
+    document.getElementById('togglePromptSection')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const sec = document.getElementById('promptSection');
+        if (sec) sec.classList.toggle('hidden');
+    });
+    const promptEl = document.getElementById('taskPrompt');
+    if (promptEl) {
+        promptEl.addEventListener('input', (e) => {
+            e.stopPropagation();
+            const len = promptEl.value.length;
+            const counter = document.getElementById('taskPromptCounter');
+            if (counter) counter.textContent = `${len}/65535`;
+        });
+    }
     
     // Error banner close
     document.getElementById('closeErrorBtn')?.addEventListener('click', render.hideError);
@@ -870,6 +886,13 @@ function setupSubtaskEventListeners(taskId) {
             e.stopPropagation();
             await updateSubtaskField(taskId, this.dataset.subtaskId, 'prompt', this.value);
         });
+        textarea.addEventListener('keydown', async function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                await updateSubtaskField(taskId, this.dataset.subtaskId, 'prompt', this.value);
+            }
+        });
     });
 }
 
@@ -887,6 +910,13 @@ async function updateSubtaskField(taskId, subtaskId, field, value) {
         
         // Refresh tasks to update UI
         await loadTasks();
+        if (field === 'prompt') {
+            const ta = document.querySelector(`.subtask-prompt-input[data-task-id="${taskId}"][data-subtask-id="${subtaskId}"]`);
+            if (ta) {
+                ta.classList.add('border-green-600');
+                setTimeout(() => ta.classList.remove('border-green-600'), 800);
+            }
+        }
     } catch (error) {
         console.error('Failed to update subtask:', error);
         render.showError('Failed to update subtask');

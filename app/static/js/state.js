@@ -164,6 +164,7 @@ export function setTasks(tasks) {
             id: task.id,
             title: task.title || 'Untitled Task',
             description: task.description || '',
+            prompt: task.prompt || null,
             status: task.status || 'todo',
             priority: task.priority || 'medium',
             due_date: task.due_date || null,
@@ -171,7 +172,12 @@ export function setTasks(tasks) {
             estimate: task.estimate || null,
             labels: Array.isArray(task.labels) ? task.labels : [],
             dependencies: Array.isArray(task.dependencies) ? task.dependencies : [],
-            subtasks: Array.isArray(task.subtasks) ? task.subtasks : [],
+            subtasks: Array.isArray(task.subtasks)
+                ? task.subtasks.map(st => ({
+                    ...st,
+                    prompt: st.prompt || null,
+                }))
+                : [],
             created_at: task.created_at || new Date().toISOString(),
             updated_at: task.updated_at || new Date().toISOString(),
             tag: task.tag || state.currentTag

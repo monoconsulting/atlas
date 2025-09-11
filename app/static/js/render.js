@@ -125,6 +125,15 @@ export function renderTaskCard(task) {
                 <span class="text-sm font-semibold text-slate-300">#${task.id}</span>
                 <span class="text-xs ${priorityColor} capitalize font-medium">${task.priority}</span>
             </div>
+            ${task.prompt ? `
+                <div class="mb-2">
+                    <span class="inline-flex items-center gap-1 text-[10px] uppercase tracking-wide bg-purple-900/40 text-purple-200 px-2 py-0.5 rounded"
+                          title="${escapeHtml(truncateText(task.prompt, 80))}">
+                        <svg class=\"w-3 h-3\" fill=\"currentColor\" viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M18 10c0 3.866-3.582 7-8 7a8.7 8.7 0 01-2.93-.5L4 17l.5-2.93A7.7 7.7 0 014 10c0-3.866 3.582-7 8-7s6 3.134 6 7z\"/></svg>
+                        Prompt
+                    </span>
+                </div>
+            ` : ''}
             <h3 class="font-medium text-slate-100 mb-2 text-sm break-words overflow-wrap" style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; line-height: 1.4;">
                 ${escapeHtml(task.title)}
             </h3>
