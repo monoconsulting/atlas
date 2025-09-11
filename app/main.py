@@ -35,6 +35,8 @@ from .database import (
     get_or_create_project_config, delete_project_config
 )
 from .sonarqube import SonarQubeManager
+from .repair import repair_merged
+from .task_db_adapter import get_grouped_tasks_from_db, bulk_upsert_from_merged
 from .task_json_importer import TaskJsonImporter
 
 app = FastAPI(title="atlas", version="1.5.2")
@@ -244,7 +246,7 @@ def traefik_delete_route(route_name: str) -> Dict[str, Any]:
         
         route_file.unlink()  # Delete the file
         
-        return {"ok": True, "message": f"Route '{route_name}' deleted successfully", "file": str(route_file)}
+    return {"ok": True, "message": f"Route '{route_name}' deleted successfully", "file": str(route_file)}
     
     except HTTPException:
         raise
@@ -681,6 +683,128 @@ def import_tasks_for_project(project_slug: str) -> Dict[str, Any]:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Import failed: {e}")
+
+
+# ---- Storage Mode, Sync, and Repair Endpoints ----
+
+def _get_project_or_404(db: Session, slug: str):
+    from .database import get_project_by_slug
+    project = get_project_by_slug(db, slug)
+    if not project:
+        raise HTTPException(status_code=404, detail=f"Project '{slug}' not found")
+    return project
+
+
+@app.get("/{project_slug}/storage-mode", response_class=JSONResponse)
+def get_storage_mode(project_slug: str) -> Dict[str, Any]:
+    ts = TaskStorage(base_dir=project_slug)
+    mode = ts.get_storage_mode()
+    return {"ok": True, "mode": mode}
+
+
+class StorageModeModel(BaseModel):
+    mode: str
+
+
+@app.post("/{project_slug}/storage-mode", response_class=JSONResponse)
+def set_storage_mode(project_slug: str, payload: StorageModeModel) -> Dict[str, Any]:
+    ts = TaskStorage(base_dir=project_slug)
+    mode = ts.set_storage_mode(payload.mode)
+    return {"ok": True, "mode": mode}
+
+
+def _parse_iso(ts: Any) -> float:
+    import datetime
+    from dateutil import parser as dtparser  # type: ignore
+    try:
+        if not ts:
+            return 0.0
+        # dtparser handles many variants; if missing, fallback
+        return dtparser.parse(str(ts)).timestamp()
+    except Exception:
+        try:
+            return datetime.datetime.fromisoformat(str(ts).replace("Z", "+00:00")).timestamp()
+        except Exception:
+            return 0.0
+
+
+def _merge_tasks(json_tasks: Dict[str, Any], db_tasks: Dict[str, Any]) -> Dict[str, Any]:
+    """Merge {tag:{tasks:[...]}} preferring newer updated_at; fallback to JSON if unknown."""
+    result: Dict[str, Any] = {}
+    tags = set(json_tasks.keys()) | set(db_tasks.keys())
+    for tag in tags:
+        jt = (json_tasks.get(tag) or {}).get("tasks", [])
+        dt = (db_tasks.get(tag) or {}).get("tasks", [])
+        by_id: Dict[str, Dict[str, Any]] = {}
+        def key_id(v):
+            vid = v.get("id")
+            try:
+                return str(int(vid))
+            except Exception:
+                return str(vid)
+        # seed with json
+        for t in jt:
+            by_id[key_id(t)] = t
+        # merge db
+        for t in dt:
+            kid = key_id(t)
+            if kid not in by_id:
+                by_id[kid] = t
+            else:
+                a = by_id[kid]
+                ta = _parse_iso(a.get("updated_at"))
+                tb = _parse_iso(t.get("updated_at"))
+                chosen = t if tb > ta else a
+                # merge subtasks per id
+                sa = {key_id(s): s for s in (a.get("subtasks") or [])}
+                sb = {key_id(s): s for s in (t.get("subtasks") or [])}
+                sub_ids = set(sa.keys()) | set(sb.keys())
+                merged_subs = []
+                for sid in sorted(sub_ids, key=lambda x: int(x) if x.isdigit() else x):
+                    s1 = sa.get(sid)
+                    s2 = sb.get(sid)
+                    if s1 and s2:
+                        s_chosen = s2 if _parse_iso(s2.get("updated_at")) > _parse_iso(s1.get("updated_at")) else s1
+                    else:
+                        s_chosen = s1 or s2
+                    if s_chosen:
+                        merged_subs.append(s_chosen)
+                chosen = dict(chosen)
+                chosen["subtasks"] = merged_subs
+                by_id[kid] = chosen
+        merged_list = list(by_id.values())
+        # sort by numeric id when possible
+        def sort_key(x):
+            try:
+                return int(x.get("id"))
+            except Exception:
+                return 10**9
+        merged_list.sort(key=sort_key)
+        result[tag] = {"tasks": merged_list}
+    return result
+
+
+@app.post("/{project_slug}/storage/sync", response_class=JSONResponse)
+def storage_sync(project_slug: str, db: Session = Depends(get_db)) -> Dict[str, Any]:
+    project = _get_project_or_404(db, project_slug)
+    ts = TaskStorage(base_dir=project_slug)
+    json_merged = ts.ensure_tasks_struct()
+    db_grouped = get_grouped_tasks_from_db(db, project.id)
+    merged = _merge_tasks(json_merged, db_grouped)
+    # Optional repair pass to normalize
+    repaired, id_changes = repair_merged(merged, repair_ids=False)
+    ts._write_json(ts.tasks_file, repaired)
+    up = bulk_upsert_from_merged(db, project.id, repaired)
+    return {"ok": True, "updated_db": up, "id_changes": id_changes}
+
+
+@app.post("/{project_slug}/storage/repair-json", response_class=JSONResponse)
+def storage_repair_json(project_slug: str) -> Dict[str, Any]:
+    ts = TaskStorage(base_dir=project_slug)
+    merged = ts.ensure_tasks_struct()
+    repaired, id_changes = repair_merged(merged, repair_ids=True)
+    ts._write_json(ts.tasks_file, repaired)
+    return {"ok": True, "fixed": True, "id_changes": id_changes}
 
 
 # External API endpoints for other systems

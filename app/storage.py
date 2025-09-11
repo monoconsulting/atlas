@@ -311,6 +311,32 @@ class TaskStorage:
             return state_data.get("currentTag", "master")
         except Exception:
             return "master"
+
+    def get_storage_mode(self, default: str = "json") -> str:
+        """Read storage mode (json|db) from state.json; default to 'json'."""
+        try:
+            if not self.state_file.exists():
+                return default
+            data = self._read_json(self.state_file)
+            mode = str((data or {}).get("storageMode", default)).strip().lower()
+            return mode if mode in ("json", "db") else default
+        except Exception:
+            return default
+
+    def set_storage_mode(self, mode: str) -> str:
+        """Set storage mode in state.json atomically; returns effective mode."""
+        mode = str(mode).strip().lower()
+        effective = mode if mode in ("json", "db") else "json"
+        try:
+            state = {}
+            if self.state_file.exists():
+                state = self._read_json(self.state_file) or {}
+            state["storageMode"] = effective
+            # Write atomically
+            self._write_json(self.state_file, state)
+        except Exception as e:
+            print(f"[TaskStorage] set_storage_mode failed: {e}")
+        return effective
     def ensure_tasks_struct(self) -> Dict[str, Any]:
         """Load and merge tasks from all available task files."""
         merged_data = {}

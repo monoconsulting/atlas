@@ -6,7 +6,7 @@ Task DB adapter: helpers to upsert tasks/subtasks into MySQL as a mirror of task
 Used by importer and optionally by storage dual-write.
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 from datetime import datetime
 
 from .database import (
@@ -45,6 +45,61 @@ def bulk_upsert_from_merged(db, project_id: int, merged_data: Dict[str, Any]) ->
                 subtask_count += 1
     db.commit()
     return {"tasks": task_count, "subtasks": subtask_count}
+
+
+def _row_to_task_dict(row: DBTask, subs: List[DBSubTask]) -> Dict[str, Any]:
+    return {
+        "id": int(row.local_id),
+        "title": row.title or "",
+        "description": row.description or "",
+        "prompt": row.prompt or None,
+        "status": row.status or "todo",
+        "priority": row.priority or "medium",
+        "due_date": row.due_date.isoformat() if row.due_date else None,
+        "assigned_to": row.assigned_to or None,
+        "estimate": row.estimate or None,
+        "labels": list(row.labels_json or []),
+        "dependencies": list(row.dependencies_json or []),
+        "relations": list(row.dependencies_json or []),
+        "created_at": row.created_at.isoformat() + "Z" if row.created_at else None,
+        "updated_at": row.updated_at.isoformat() + "Z" if row.updated_at else None,
+        "tag": row.tag,
+        "deleted": bool(row.deleted),
+        "subtasks": [
+            {
+                "id": int(st.local_id),
+                "title": st.title or "",
+                "description": st.description or "",
+                "prompt": st.prompt or None,
+                "status": st.status or "todo",
+                "priority": st.priority or "medium",
+                "due_date": st.due_date.isoformat() if st.due_date else None,
+                "assigned_to": st.assigned_to or None,
+                "estimate": st.estimate or None,
+                "labels": list(st.labels_json or []),
+                "dependencies": list(st.dependencies_json or []),
+                "created_at": st.created_at.isoformat() + "Z" if st.created_at else None,
+                "updated_at": st.updated_at.isoformat() + "Z" if st.updated_at else None,
+            }
+            for st in subs
+        ],
+    }
+
+
+def get_grouped_tasks_from_db(db, project_id: int) -> Dict[str, Dict[str, Any]]:
+    """Return { tag: {"tasks": [canonical dicts]} } for project."""
+    grouped: Dict[str, List[DBTask]] = {}
+    rows: List[DBTask] = db.query(DBTask).filter(DBTask.project_id == project_id).all()
+    for r in rows:
+        grouped.setdefault(r.tag, []).append(r)
+    out: Dict[str, Dict[str, Any]] = {}
+    for tag, task_rows in grouped.items():
+        payload = {"tasks": []}
+        for tr in task_rows:
+            subs: List[DBSubTask] = db.query(DBSubTask).filter(DBSubTask.task_id == tr.id).all()
+            payload["tasks"].append(_row_to_task_dict(tr, subs))
+        out[tag] = payload
+    return out
 
 
 def dual_write_task(project_id: int, tag: str, task: Dict[str, Any]) -> None:
@@ -87,4 +142,3 @@ def dual_write_subtask(project_id: int, tag: str, parent_local_id: int, subtask:
         db.rollback()
     finally:
         db.close()
-
