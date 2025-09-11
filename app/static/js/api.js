@@ -240,6 +240,30 @@ export async function healthCheck() {
     return await apiCall('/health', {}, 'healthCheck');
 }
 
+// Storage mode + sync/repair (per project via slug routing)
+export async function getStorageMode() {
+    const url = buildApiUrl('/storage-mode');
+    return await apiCall(url, {}, 'getStorageMode');
+}
+
+export async function setStorageMode(mode) {
+    const url = buildApiUrl('/storage-mode');
+    return await apiCall(url, {
+        method: 'POST',
+        body: JSON.stringify({ mode })
+    }, 'setStorageMode');
+}
+
+export async function syncStorage() {
+    const url = buildApiUrl('/storage/sync');
+    return await apiCall(url, { method: 'POST' }, 'syncStorage');
+}
+
+export async function repairJson() {
+    const url = buildApiUrl('/storage/repair-json');
+    return await apiCall(url, { method: 'POST' }, 'repairJson');
+}
+
 // Export API functions for use by other modules
 export default {
     setProjectSlug,

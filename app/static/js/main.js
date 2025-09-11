@@ -52,6 +52,8 @@ async function initialize() {
         
         // Initialize sorting from HTML dropdown
         handleSortingChange();
+        // Initialize storage controls if present
+        await initStorageControls();
         
         render.hideSpinner();
         
@@ -310,6 +312,87 @@ function handleClearFilters() {
     
     // Clear filters in state (this will trigger the filters-cleared event)
     state.clearFilters();
+}
+
+/**
+ * Initialize storage control panel (toggle, sync, repair)
+ */
+async function initStorageControls() {
+    const modeBtn = document.getElementById('storageModeBtn');
+    const syncBtn = document.getElementById('storageSyncBtn');
+    const repairBtn = document.getElementById('storageRepairBtn');
+    const badge = document.getElementById('storageModeBadge');
+    if (!modeBtn || !syncBtn || !repairBtn || !badge) return; // panel not present
+
+    async function refreshMode() {
+        try {
+            const res = await api.getStorageMode();
+            const mode = (res && res.mode) || (res.data && res.data.mode) || 'json';
+            if (mode === 'db') {
+                badge.textContent = 'DB CONNECTED';
+                badge.className = 'text-xs bg-blue-900 border border-blue-700 text-blue-200 px-2 py-1 rounded';
+                modeBtn.textContent = 'Switch to JSON';
+            } else {
+                badge.textContent = 'JSON CONNECTED';
+                badge.className = 'text-xs bg-slate-800 border border-slate-700 text-slate-300 px-2 py-1 rounded';
+                modeBtn.textContent = 'Switch to DB';
+            }
+        } catch (e) {
+            badge.textContent = 'Unknown';
+        }
+    }
+
+    modeBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        try {
+            modeBtn.disabled = true;
+            const current = badge.textContent || '';
+            const next = current.includes('DB') ? 'json' : 'db';
+            await api.setStorageMode(next);
+            await refreshMode();
+            render.showSuccess(`Storage mode set to ${next.toUpperCase()}`);
+        } catch (err) {
+            render.showError('Failed to set storage mode');
+        } finally {
+            modeBtn.disabled = false;
+        }
+    });
+
+    syncBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        try {
+            syncBtn.disabled = true; render.showSpinner('Syncing...');
+            const res = await api.syncStorage();
+            render.hideSpinner();
+            const t = (res && res.updated_db && res.updated_db.tasks) || 0;
+            const s = (res && res.updated_db && res.updated_db.subtasks) || 0;
+            render.showSuccess(`Synced. DB updated: tasks=${t}, subtasks=${s}`);
+            await loadTasks();
+        } catch (err) {
+            render.hideSpinner();
+            render.showError('Sync failed');
+        } finally {
+            syncBtn.disabled = false;
+        }
+    });
+
+    repairBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        try {
+            repairBtn.disabled = true; render.showSpinner('Repairing JSON...');
+            await api.repairJson();
+            render.hideSpinner();
+            render.showSuccess('Repair completed');
+            await loadTasks();
+        } catch (err) {
+            render.hideSpinner();
+            render.showError('Repair failed');
+        } finally {
+            repairBtn.disabled = false;
+        }
+    });
+
+    await refreshMode();
 }
 
 /**
