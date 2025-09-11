@@ -20,6 +20,18 @@ export const STATUS_ORDER = Object.entries(STATUS_MAPPING)
     .sort(([,a], [,b]) => a.order - b.order)
     .map(([key]) => key);
 
+// Normalize incoming status keys from various sources
+function normalizeStatus(status) {
+    if (!status) return 'todo';
+    const s = String(status).toLowerCase();
+    const aliases = {
+        'in_progress': 'in-progress',
+        'inprogress': 'in-progress',
+        'backlog': 'pending',
+    };
+    return aliases[s] || s;
+}
+
 // Application state
 const state = {
     // Project data
@@ -166,7 +178,7 @@ export function setTasks(tasks) {
             title: task.title || 'Untitled Task',
             description: task.description || '',
             prompt: task.prompt || null,
-            status: task.status || 'todo',
+            status: normalizeStatus(task.status || 'todo'),
             priority: task.priority || 'medium',
             due_date: task.due_date || null,
             assigned_to: task.assigned_to || null,
@@ -176,6 +188,7 @@ export function setTasks(tasks) {
             subtasks: Array.isArray(task.subtasks)
                 ? task.subtasks.map(st => ({
                     ...st,
+                    status: normalizeStatus(st.status || 'todo'),
                     prompt: st.prompt || null,
                 }))
                 : [],
