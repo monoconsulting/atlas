@@ -2614,6 +2614,75 @@
         "deleted": false,
         "extra": {},
         "relations": []
+      },
+      {
+        "id": 72,
+        "title": "DB buttons for sync and switch",
+        "description": "Add button and datasource dropdown",
+        "prompt": null,
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-11T22:18:11.839894Z",
+        "updated_at": "2025-09-11T22:25:18.906397Z",
+        "tag": "atlas",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Add button that switches db <-> json",
+            "description": "I want a button that can be pressed and change color and text. If tmweb is connected to db - the button should say \"DB CONNECTED\", then if it is pressed it should say \"JSON CONNECTED\". One press flip status.",
+            "prompt": null,
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-11T22:18:11.903327Z",
+            "updated_at": "2025-09-11T22:21:16.685154Z",
+            "extra": {}
+          },
+          {
+            "id": 2,
+            "title": "Sync",
+            "description": "I want a button called sync. When this is pressed it should update both json and db so the settings are merged on both sides.",
+            "prompt": null,
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-11T22:18:11.962937Z",
+            "updated_at": "2025-09-11T22:22:13.029477Z",
+            "extra": {}
+          },
+          {
+            "id": 3,
+            "title": "Repair JSON",
+            "description": "I want a button saying \"Repair json that repairs a broken json structure. This should fix doubles and add the doubles to tm id:s that are not allocated. A process to identify the json needs to be set that always succeed converting no matter what.",
+            "prompt": null,
+            "status": "todo",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": null,
+            "estimate": null,
+            "labels": [],
+            "dependencies": [],
+            "created_at": "2025-09-11T22:24:47.924595Z",
+            "updated_at": "2025-09-11T22:24:47.924606Z",
+            "extra": {}
+          }
+        ],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ]
   }
