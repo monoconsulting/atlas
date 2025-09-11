@@ -2555,7 +2555,7 @@
           69
         ],
         "created_at": "2025-09-09T12:14:27.373644Z",
-        "updated_at": "2025-09-09T18:20:03.807836Z",
+        "updated_at": "2025-09-11T10:58:49.181193Z",
         "tag": "atlas",
         "subtasks": [
           {
@@ -2594,6 +2594,26 @@
         "relations": [
           69
         ]
+      },
+      {
+        "id": 71,
+        "title": "Test",
+        "description": "test",
+        "prompt": "test",
+        "priority": "medium",
+        "status": "todo",
+        "due_date": null,
+        "assigned_to": null,
+        "estimate": null,
+        "labels": [],
+        "dependencies": [],
+        "created_at": "2025-09-11T11:09:57.538152Z",
+        "updated_at": "2025-09-11T11:10:09.464149Z",
+        "tag": "atlas",
+        "subtasks": [],
+        "deleted": false,
+        "extra": {},
+        "relations": []
       }
     ]
   }

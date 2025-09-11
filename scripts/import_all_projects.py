@@ -25,6 +25,10 @@ def api_post(path: str, body: dict | None = None):
 
 def main():
     print("[import_all] Listing projects...")
+    excludes_str = os.getenv('EXCLUDE_PROJECT_SLUGS', '')
+    excludes = set([s.strip().lower() for s in excludes_str.split(',') if s.strip()])
+    if excludes:
+        print(f"[import_all] Excluding slugs: {', '.join(sorted(excludes))}")
     projs = api_get('/api/projects')
     if not projs.get('ok'):
         print("[import_all] Failed to list projects:", projs)
@@ -35,6 +39,9 @@ def main():
     for p in projects:
         slug = p.get('slug')
         if not slug:
+            continue
+        if slug.lower() in excludes:
+            print(f"[import_all] Skipping excluded slug: {slug}")
             continue
         print(f"[import_all] Importing tasks for {slug} ...")
         try:
