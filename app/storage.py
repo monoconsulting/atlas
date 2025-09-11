@@ -371,6 +371,7 @@ class TaskStorage:
             new_id = self._next_task_id(bucket["tasks"])
             task = Task(
                 id=new_id, title=req.title, description=req.description,
+                prompt=getattr(req, 'prompt', None),
                 priority=req.priority, status=req.status, due_date=req.due_date,
                 tag=tag, assigned_to=req.assigned_to, estimate=req.estimate,
                 labels=list(req.labels or []), dependencies=list(req.dependencies or []),
@@ -404,6 +405,7 @@ class TaskStorage:
             new_id = self._next_subtask_id(subs)
             st = SubTask(
                 id=new_id, title=req.title, description=req.description,
+                prompt=getattr(req, 'prompt', None),
                 status=req.status, priority=req.priority, due_date=req.due_date,
                 assigned_to=req.assigned_to, estimate=req.estimate,
                 labels=list(req.labels or []), dependencies=list(req.dependencies or []),
@@ -453,6 +455,8 @@ class TaskStorage:
                         t["description"] = req.description
                     if req.priority is not None:
                         t["priority"] = req.priority
+                    if getattr(req, 'prompt', None) is not None:
+                        t["prompt"] = req.prompt
                     if req.status is not None:
                         t["status"] = req.status
                     if req.due_date is not None:
@@ -508,6 +512,8 @@ class TaskStorage:
                         st["status"] = req.status
                     if req.priority is not None:
                         st["priority"] = req.priority
+                    if getattr(req, 'prompt', None) is not None:
+                        st["prompt"] = req.prompt
                     if req.due_date is not None:
                         st["due_date"] = req.due_date
                     if req.assigned_to is not None:

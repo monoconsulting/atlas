@@ -359,6 +359,8 @@ function openTaskModal(mode = 'create', task = null) {
     if (mode === 'edit' && task) {
         document.getElementById('taskTitle').value = task.title || '';
         document.getElementById('taskDescription').value = task.description || '';
+        const promptEl = document.getElementById('taskPrompt');
+        if (promptEl) promptEl.value = task.prompt || '';
         document.getElementById('taskPriority').value = task.priority || 'medium';
         document.getElementById('taskStatus').value = task.status || 'todo';
         document.getElementById('taskDueDate').value = task.due_date || '';
@@ -379,6 +381,10 @@ function openTaskModal(mode = 'create', task = null) {
         
         // Clear subtasks
         clearSubtasks();
+
+        // Clear prompt
+        const promptEl = document.getElementById('taskPrompt');
+        if (promptEl) promptEl.value = '';
         
         // Restore the original add subtask event listener for create mode
         const addSubtaskBtn = document.getElementById('addSubtaskBtn');
@@ -449,6 +455,7 @@ async function handleTaskSubmit(event) {
         const taskData = {
             title: document.getElementById('taskTitle').value.trim(),
             description: document.getElementById('taskDescription').value.trim(),
+            prompt: (document.getElementById('taskPrompt')?.value || '').trim() || null,
             priority: document.getElementById('taskPriority').value,
             status: document.getElementById('taskStatus').value,
             due_date: document.getElementById('taskDueDate').value || null,
@@ -529,12 +536,14 @@ async function createSubtasksFromModal(taskId) {
         const descInput = row.querySelector('[data-field="description"]');
         const prioritySelect = row.querySelector('[data-field="priority"]');
         const statusSelect = row.querySelector('[data-field="status"]');
+        const promptInput = row.querySelector('[data-field="prompt"]');
         
         if (titleInput && titleInput.value.trim()) {
             try {
                 const subtaskData = {
                     title: titleInput.value.trim(),
                     description: descInput?.value.trim() || '',
+                    prompt: promptInput?.value.trim() || null,
                     priority: prioritySelect?.value || 'medium',
                     status: statusSelect?.value || 'todo'
                 };
@@ -688,6 +697,11 @@ async function addSubtaskForEditMode(taskId) {
                 placeholder="Description" 
                 rows="2" 
                 class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100 placeholder-slate-500 resize-none"></textarea>
+            <textarea 
+                data-field="prompt" 
+                placeholder="Agent prompt (optional)" 
+                rows="2" 
+                class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100 placeholder-slate-500 resize-none"></textarea>
             <div class="flex gap-2">
                 <select data-field="status" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100">
                     <option value="pending">Backlog</option>
@@ -715,9 +729,11 @@ async function addSubtaskForEditMode(taskId) {
     });
     
     const saveBtn = subtaskRow.querySelector('.save-new-subtask-btn');
-    saveBtn?.addEventListener('click', async () => {
+    saveBtn?.addEventListener('click', async (e) => {
+        e.stopPropagation();
         const titleInput = subtaskRow.querySelector('[data-field="title"]');
         const descInput = subtaskRow.querySelector('[data-field="description"]');
+        const promptInput = subtaskRow.querySelector('[data-field="prompt"]');
         const prioritySelect = subtaskRow.querySelector('[data-field="priority"]');
         const statusSelect = subtaskRow.querySelector('[data-field="status"]');
         
@@ -732,6 +748,7 @@ async function addSubtaskForEditMode(taskId) {
             const subtaskData = {
                 title: titleInput.value.trim(),
                 description: descInput.value.trim() || '',
+                prompt: promptInput?.value.trim() || null,
                 priority: prioritySelect.value || 'medium',
                 status: statusSelect.value || 'todo'
             };
@@ -845,6 +862,13 @@ function setupSubtaskEventListeners(taskId) {
     document.querySelectorAll('.subtask-desc-input').forEach(textarea => {
         textarea.addEventListener('change', async function() {
             await updateSubtaskField(taskId, this.dataset.subtaskId, 'description', this.value);
+        });
+    });
+    // Prompt textareas
+    document.querySelectorAll('.subtask-prompt-input').forEach(textarea => {
+        textarea.addEventListener('change', async function(e) {
+            e.stopPropagation();
+            await updateSubtaskField(taskId, this.dataset.subtaskId, 'prompt', this.value);
         });
     });
 }

@@ -31,6 +31,7 @@ class SubTask:
     id: int
     title: str
     description: str = ""
+    prompt: Optional[str] = None
     status: str = "todo"
     priority: str = "medium"
     due_date: Optional[str] = None
@@ -56,6 +57,7 @@ class Task:
     id: int
     title: str
     description: str
+    prompt: Optional[str] = None
     priority: str = "medium"
     status: str = "todo"
     due_date: Optional[str] = None
@@ -81,6 +83,7 @@ class AddTaskRequest:
     """Request body for creating a task."""
     title: str
     description: str
+    prompt: Optional[str] = None
     priority: str = "medium"
     status: str = "todo"
     due_date: Optional[str] = None
@@ -96,6 +99,7 @@ class AddSubTaskRequest:
     parent_id: int
     title: str
     description: str = ""
+    prompt: Optional[str] = None
     status: str = "todo"
     priority: str = "medium"
     due_date: Optional[str] = None
@@ -110,6 +114,7 @@ class UpdateTaskRequest:
     """Request body for updating an existing task."""
     title: Optional[str] = None
     description: Optional[str] = None
+    prompt: Optional[str] = None
     priority: Optional[str] = None
     status: Optional[str] = None
     due_date: Optional[str] = None
@@ -126,6 +131,7 @@ class UpdateSubTaskRequest:
     """Request body for updating an existing subtask."""
     title: Optional[str] = None
     description: Optional[str] = None
+    prompt: Optional[str] = None
     status: Optional[str] = None
     priority: Optional[str] = None
     due_date: Optional[str] = None

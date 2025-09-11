@@ -296,6 +296,9 @@ export function renderSubtaskRows(subtasks, taskId) {
             <textarea class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-xs subtask-desc-input"
                       rows="2" data-task-id="${taskId}" data-subtask-id="${subtask.id}"
                       placeholder="Add description (optional)">${escapeHtml(subtask.description || '')}</textarea>
+            <textarea class="w-full mt-2 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-slate-200 text-xs subtask-prompt-input"
+                      rows="2" data-task-id="${taskId}" data-subtask-id="${subtask.id}"
+                      placeholder="Agent prompt (optional)">${escapeHtml(subtask.prompt || '')}</textarea>
         </div>
     `).join('');
 }
@@ -358,6 +361,11 @@ export function renderAddSubtaskForm(maxSubtasks = 8, currentCount = 0) {
                     <option value="deferred">Deferred</option>
                     <option value="cancelled">Cancelled</option>
                 </select>
+            </div>
+            <div>
+                <textarea placeholder="Agent prompt (optional)" rows="2"
+                    class="w-full px-2 py-1 bg-slate-800 border border-slate-700 rounded text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs resize-none"
+                    data-field="prompt"></textarea>
             </div>
         </div>
     `;
