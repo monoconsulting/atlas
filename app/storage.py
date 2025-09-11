@@ -24,9 +24,6 @@ class TaskStorage:
     def __init__(self, base_dir: str | Path | None = None) -> None:
         start_ts = time.time()
         print(f"[TaskStorage] __init__ start base_dir={base_dir} at {start_ts}")
-        from sqlalchemy.orm import Session
-        from .database import get_project_by_slug, SessionLocal
-
         self._project_id: Optional[int] = None
         self._project_slug: Optional[str] = None
 
@@ -35,28 +32,42 @@ class TaskStorage:
 
         # If base_dir is actually a project slug, resolve from DB
         if isinstance(base_dir, str) and not os.path.isabs(base_dir):
-            db: Optional[Session] = None
+            # Lazy import DB only when we actually need slug resolution
             try:
-                db = SessionLocal()
-                project = get_project_by_slug(db, base_dir)
-                if project:
-                    resolved_path = getattr(project, "path", None)
-                    if isinstance(resolved_path, str):
-                        # Ensure we append .taskmaster to the project path
-                        if not resolved_path.endswith('.taskmaster'):
-                            resolved_path = os.path.join(resolved_path, '.taskmaster')
-                        base_dir = resolved_path
-                        # Cache resolved project identifiers
-                        try:
-                            self._project_id = int(getattr(project, "id"))
-                        except Exception:
-                            self._project_id = None
-                        self._project_slug = getattr(project, "slug", None)
+                from sqlalchemy.orm import Session  # type: ignore
+                from .database import get_project_by_slug, SessionLocal  # type: ignore
             except Exception as e:
-                print(f"[TaskStorage] failed to resolve project slug '{base_dir}' from DB: {e}")
-            finally:
-                if db is not None:
-                    db.close()
+                print(f"[TaskStorage] DB resolution unavailable: {e}")
+                Session = None  # type: ignore
+                get_project_by_slug = None  # type: ignore
+                SessionLocal = None  # type: ignore
+
+            db = None
+            if SessionLocal and get_project_by_slug:
+                try:
+                    db = SessionLocal()
+                    project = get_project_by_slug(db, base_dir)
+                    if project:
+                        resolved_path = getattr(project, "path", None)
+                        if isinstance(resolved_path, str):
+                            # Ensure we append .taskmaster to the project path
+                            if not resolved_path.endswith('.taskmaster'):
+                                resolved_path = os.path.join(resolved_path, '.taskmaster')
+                            base_dir = resolved_path
+                            # Cache resolved project identifiers
+                            try:
+                                self._project_id = int(getattr(project, "id"))
+                            except Exception:
+                                self._project_id = None
+                            self._project_slug = getattr(project, "slug", None)
+                except Exception as e:
+                    print(f"[TaskStorage] failed to resolve project slug '{base_dir}' from DB: {e}")
+                finally:
+                    try:
+                        if db is not None:
+                            db.close()
+                    except Exception:
+                        pass
 
         self.base_dir = Path(base_dir or env_dir)
         
@@ -371,6 +382,7 @@ class TaskStorage:
             new_id = self._next_task_id(bucket["tasks"])
             task = Task(
                 id=new_id, title=req.title, description=req.description,
+                prompt=getattr(req, 'prompt', None),
                 priority=req.priority, status=req.status, due_date=req.due_date,
                 tag=tag, assigned_to=req.assigned_to, estimate=req.estimate,
                 labels=list(req.labels or []), dependencies=list(req.dependencies or []),
@@ -404,6 +416,7 @@ class TaskStorage:
             new_id = self._next_subtask_id(subs)
             st = SubTask(
                 id=new_id, title=req.title, description=req.description,
+                prompt=getattr(req, 'prompt', None),
                 status=req.status, priority=req.priority, due_date=req.due_date,
                 assigned_to=req.assigned_to, estimate=req.estimate,
                 labels=list(req.labels or []), dependencies=list(req.dependencies or []),
@@ -453,6 +466,8 @@ class TaskStorage:
                         t["description"] = req.description
                     if req.priority is not None:
                         t["priority"] = req.priority
+                    if getattr(req, 'prompt', None) is not None:
+                        t["prompt"] = req.prompt
                     if req.status is not None:
                         t["status"] = req.status
                     if req.due_date is not None:
@@ -508,6 +523,8 @@ class TaskStorage:
                         st["status"] = req.status
                     if req.priority is not None:
                         st["priority"] = req.priority
+                    if getattr(req, 'prompt', None) is not None:
+                        st["prompt"] = req.prompt
                     if req.due_date is not None:
                         st["due_date"] = req.due_date
                     if req.assigned_to is not None:

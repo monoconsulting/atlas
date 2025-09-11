@@ -20,6 +20,18 @@ export const STATUS_ORDER = Object.entries(STATUS_MAPPING)
     .sort(([,a], [,b]) => a.order - b.order)
     .map(([key]) => key);
 
+// Normalize incoming status keys from various sources
+function normalizeStatus(status) {
+    if (!status) return 'todo';
+    const s = String(status).toLowerCase();
+    const aliases = {
+        'in_progress': 'in-progress',
+        'inprogress': 'in-progress',
+        'backlog': 'pending',
+    };
+    return aliases[s] || s;
+}
+
 // Application state
 const state = {
     // Project data
@@ -36,7 +48,8 @@ const state = {
         status: '',
         priority: '',
         tags: '',
-        search: ''
+        search: '',
+        hasPrompt: false
     },
     
     // Sorting state
@@ -164,14 +177,21 @@ export function setTasks(tasks) {
             id: task.id,
             title: task.title || 'Untitled Task',
             description: task.description || '',
-            status: task.status || 'todo',
+            prompt: task.prompt || null,
+            status: normalizeStatus(task.status || 'todo'),
             priority: task.priority || 'medium',
             due_date: task.due_date || null,
             assigned_to: task.assigned_to || null,
             estimate: task.estimate || null,
             labels: Array.isArray(task.labels) ? task.labels : [],
             dependencies: Array.isArray(task.dependencies) ? task.dependencies : [],
-            subtasks: Array.isArray(task.subtasks) ? task.subtasks : [],
+            subtasks: Array.isArray(task.subtasks)
+                ? task.subtasks.map(st => ({
+                    ...st,
+                    status: normalizeStatus(st.status || 'todo'),
+                    prompt: st.prompt || null,
+                }))
+                : [],
             created_at: task.created_at || new Date().toISOString(),
             updated_at: task.updated_at || new Date().toISOString(),
             tag: task.tag || state.currentTag
@@ -259,7 +279,8 @@ export function clearFilters() {
         status: '',
         priority: '',
         tags: '',
-        search: ''
+        search: '',
+        hasPrompt: false
     };
     applyCurrentFilters();
     notify('filters-cleared');
@@ -314,6 +335,14 @@ function applyCurrentFilters() {
         filtered = filtered.filter(task => {
             const searchableText = `${task.title} ${task.description} ${task.assigned_to || ''}`.toLowerCase();
             return searchableText.includes(searchTerm);
+        });
+    }
+    // Apply "Has Prompt" filter
+    if (state.filters.hasPrompt) {
+        filtered = filtered.filter(task => {
+            const hasTaskPrompt = !!(task.prompt && String(task.prompt).trim().length);
+            const hasSubPrompt = Array.isArray(task.subtasks) && task.subtasks.some(st => st && st.prompt && String(st.prompt).trim().length);
+            return hasTaskPrompt || hasSubPrompt;
         });
     }
     

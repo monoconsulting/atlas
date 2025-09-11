@@ -218,6 +218,7 @@ function setupEventListeners() {
     document.getElementById('filterTags')?.addEventListener('change', handleFilterChange);
     document.getElementById('filterSorting')?.addEventListener('change', handleSortingChange);
     document.getElementById('filterSearch')?.addEventListener('input', handleFilterChange);
+    document.getElementById('filterHasPrompt')?.addEventListener('change', handleFilterChange);
     document.getElementById('clearFiltersBtn')?.addEventListener('click', handleClearFilters);
     
     // Lane toggle buttons
@@ -230,6 +231,22 @@ function setupEventListeners() {
     document.getElementById('cancelTaskBtn')?.addEventListener('click', closeTaskModal);
     document.getElementById('taskForm')?.addEventListener('submit', handleTaskSubmit);
     document.getElementById('addSubtaskBtn')?.addEventListener('click', addSubtask);
+    // Prompt toggle and counter
+    document.getElementById('togglePromptSection')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const sec = document.getElementById('promptSection');
+        if (sec) sec.classList.toggle('hidden');
+    });
+    const promptEl = document.getElementById('taskPrompt');
+    if (promptEl) {
+        promptEl.addEventListener('input', (e) => {
+            e.stopPropagation();
+            const len = promptEl.value.length;
+            const counter = document.getElementById('taskPromptCounter');
+            if (counter) counter.textContent = `${len}/65535`;
+        });
+    }
     
     // Error banner close
     document.getElementById('closeErrorBtn')?.addEventListener('click', render.hideError);
@@ -252,7 +269,8 @@ function handleFilterChange() {
         status: document.getElementById('filterStatus')?.value || '',
         priority: document.getElementById('filterPriority')?.value || '',
         tags: document.getElementById('filterTags')?.value || '',
-        search: document.getElementById('filterSearch')?.value || ''
+        search: document.getElementById('filterSearch')?.value || '',
+        hasPrompt: !!document.getElementById('filterHasPrompt')?.checked
     };
     
     state.setFilters(filters);
@@ -282,11 +300,13 @@ function handleClearFilters() {
     const filterPriority = document.getElementById('filterPriority');
     const filterTags = document.getElementById('filterTags');
     const filterSearch = document.getElementById('filterSearch');
+    const filterHasPrompt = document.getElementById('filterHasPrompt');
     
     if (filterStatus) filterStatus.value = '';
     if (filterPriority) filterPriority.value = '';
     if (filterTags) filterTags.value = '';
     if (filterSearch) filterSearch.value = '';
+    if (filterHasPrompt) filterHasPrompt.checked = false;
     
     // Clear filters in state (this will trigger the filters-cleared event)
     state.clearFilters();
@@ -359,6 +379,8 @@ function openTaskModal(mode = 'create', task = null) {
     if (mode === 'edit' && task) {
         document.getElementById('taskTitle').value = task.title || '';
         document.getElementById('taskDescription').value = task.description || '';
+        const promptEl = document.getElementById('taskPrompt');
+        if (promptEl) promptEl.value = task.prompt || '';
         document.getElementById('taskPriority').value = task.priority || 'medium';
         document.getElementById('taskStatus').value = task.status || 'todo';
         document.getElementById('taskDueDate').value = task.due_date || '';
@@ -379,6 +401,10 @@ function openTaskModal(mode = 'create', task = null) {
         
         // Clear subtasks
         clearSubtasks();
+
+        // Clear prompt
+        const promptEl = document.getElementById('taskPrompt');
+        if (promptEl) promptEl.value = '';
         
         // Restore the original add subtask event listener for create mode
         const addSubtaskBtn = document.getElementById('addSubtaskBtn');
@@ -449,6 +475,7 @@ async function handleTaskSubmit(event) {
         const taskData = {
             title: document.getElementById('taskTitle').value.trim(),
             description: document.getElementById('taskDescription').value.trim(),
+            prompt: (document.getElementById('taskPrompt')?.value || '').trim() || null,
             priority: document.getElementById('taskPriority').value,
             status: document.getElementById('taskStatus').value,
             due_date: document.getElementById('taskDueDate').value || null,
@@ -529,12 +556,14 @@ async function createSubtasksFromModal(taskId) {
         const descInput = row.querySelector('[data-field="description"]');
         const prioritySelect = row.querySelector('[data-field="priority"]');
         const statusSelect = row.querySelector('[data-field="status"]');
+        const promptInput = row.querySelector('[data-field="prompt"]');
         
         if (titleInput && titleInput.value.trim()) {
             try {
                 const subtaskData = {
                     title: titleInput.value.trim(),
                     description: descInput?.value.trim() || '',
+                    prompt: promptInput?.value.trim() || null,
                     priority: prioritySelect?.value || 'medium',
                     status: statusSelect?.value || 'todo'
                 };
@@ -688,6 +717,11 @@ async function addSubtaskForEditMode(taskId) {
                 placeholder="Description" 
                 rows="2" 
                 class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100 placeholder-slate-500 resize-none"></textarea>
+            <textarea 
+                data-field="prompt" 
+                placeholder="Agent prompt (optional)" 
+                rows="2" 
+                class="w-full px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100 placeholder-slate-500 resize-none"></textarea>
             <div class="flex gap-2">
                 <select data-field="status" class="px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-slate-100">
                     <option value="pending">Backlog</option>
@@ -715,9 +749,11 @@ async function addSubtaskForEditMode(taskId) {
     });
     
     const saveBtn = subtaskRow.querySelector('.save-new-subtask-btn');
-    saveBtn?.addEventListener('click', async () => {
+    saveBtn?.addEventListener('click', async (e) => {
+        e.stopPropagation();
         const titleInput = subtaskRow.querySelector('[data-field="title"]');
         const descInput = subtaskRow.querySelector('[data-field="description"]');
+        const promptInput = subtaskRow.querySelector('[data-field="prompt"]');
         const prioritySelect = subtaskRow.querySelector('[data-field="priority"]');
         const statusSelect = subtaskRow.querySelector('[data-field="status"]');
         
@@ -732,6 +768,7 @@ async function addSubtaskForEditMode(taskId) {
             const subtaskData = {
                 title: titleInput.value.trim(),
                 description: descInput.value.trim() || '',
+                prompt: promptInput?.value.trim() || null,
                 priority: prioritySelect.value || 'medium',
                 status: statusSelect.value || 'todo'
             };
@@ -847,6 +884,20 @@ function setupSubtaskEventListeners(taskId) {
             await updateSubtaskField(taskId, this.dataset.subtaskId, 'description', this.value);
         });
     });
+    // Prompt textareas
+    document.querySelectorAll('.subtask-prompt-input').forEach(textarea => {
+        textarea.addEventListener('change', async function(e) {
+            e.stopPropagation();
+            await updateSubtaskField(taskId, this.dataset.subtaskId, 'prompt', this.value);
+        });
+        textarea.addEventListener('keydown', async function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                await updateSubtaskField(taskId, this.dataset.subtaskId, 'prompt', this.value);
+            }
+        });
+    });
 }
 
 /**
@@ -863,6 +914,13 @@ async function updateSubtaskField(taskId, subtaskId, field, value) {
         
         // Refresh tasks to update UI
         await loadTasks();
+        if (field === 'prompt') {
+            const ta = document.querySelector(`.subtask-prompt-input[data-task-id="${taskId}"][data-subtask-id="${subtaskId}"]`);
+            if (ta) {
+                ta.classList.add('border-green-600');
+                setTimeout(() => ta.classList.remove('border-green-600'), 800);
+            }
+        }
     } catch (error) {
         console.error('Failed to update subtask:', error);
         render.showError('Failed to update subtask');

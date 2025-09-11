@@ -308,6 +308,7 @@ class AddTaskModel(BaseModel):
     """Pydantic model for creating a task."""
     title: str = Field(..., min_length=1, max_length=200)
     description: str = Field(..., min_length=1, max_length=10000)
+    prompt: Optional[str] = Field(None, max_length=65535)
     priority: str = Field("medium", pattern="^(low|medium|high)$")
     status: str = Field("pending", pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     due_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$")
@@ -324,6 +325,19 @@ class AddTaskModel(BaseModel):
     @validator('dependencies', pre=True)
     def _deps_nonnull(cls, v):
         return v or []
+
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if not v:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
 
 
 class AddSubTaskModel(BaseModel):
@@ -331,6 +345,7 @@ class AddSubTaskModel(BaseModel):
     parent_id: int = Field(..., ge=1)
     title: str = Field(..., min_length=1, max_length=200)
     description: str = Field("", max_length=10000)
+    prompt: Optional[str] = Field(None, max_length=65535)
     status: str = Field("pending", pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     priority: str = Field("medium", pattern="^(low|medium|high)$")
     due_date: Optional[str] = Field(None, pattern=r"^\d{4}-\d{2}-\d{2}$")
@@ -348,11 +363,25 @@ class AddSubTaskModel(BaseModel):
     def _deps_nonnull(cls, v):
         return v or []
 
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if not v:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
+
 
 class UpdateTaskModel(BaseModel):
     """Pydantic model for updating a task."""
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, min_length=1, max_length=10000)
+    prompt: Optional[str] = Field(None, max_length=65535)
     priority: Optional[str] = Field(None, pattern="^(low|medium|high)$")
     status: Optional[str] = Field(None, pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     due_date: Optional[str] = Field(None, pattern=r"^(\d{4}-\d{2}-\d{2})?$")
@@ -362,11 +391,25 @@ class UpdateTaskModel(BaseModel):
     dependencies: Optional[List[int]] = None
     deleted: Optional[bool] = None
 
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if v is None:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
+
 
 class UpdateSubTaskModel(BaseModel):
     """Pydantic model for updating a subtask."""
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, min_length=1, max_length=10000)
+    prompt: Optional[str] = Field(None, max_length=65535)
     status: Optional[str] = Field(None, pattern="^(todo|pending|in-progress|done|deferred|cancelled|review)$")
     priority: Optional[str] = Field(None, pattern="^(low|medium|high)$")
     due_date: Optional[str] = Field(None, pattern=r"^(\d{4}-\d{2}-\d{2})?$")
@@ -374,6 +417,19 @@ class UpdateSubTaskModel(BaseModel):
     estimate: Optional[str] = None
     labels: Optional[List[str]] = None
     dependencies: Optional[List[int]] = None
+
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if v is None:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
 
 
 @app.get("/health", response_class=JSONResponse)
