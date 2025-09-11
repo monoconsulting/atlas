@@ -218,6 +218,7 @@ function setupEventListeners() {
     document.getElementById('filterTags')?.addEventListener('change', handleFilterChange);
     document.getElementById('filterSorting')?.addEventListener('change', handleSortingChange);
     document.getElementById('filterSearch')?.addEventListener('input', handleFilterChange);
+    document.getElementById('filterHasPrompt')?.addEventListener('change', handleFilterChange);
     document.getElementById('clearFiltersBtn')?.addEventListener('click', handleClearFilters);
     
     // Lane toggle buttons
@@ -268,7 +269,8 @@ function handleFilterChange() {
         status: document.getElementById('filterStatus')?.value || '',
         priority: document.getElementById('filterPriority')?.value || '',
         tags: document.getElementById('filterTags')?.value || '',
-        search: document.getElementById('filterSearch')?.value || ''
+        search: document.getElementById('filterSearch')?.value || '',
+        hasPrompt: !!document.getElementById('filterHasPrompt')?.checked
     };
     
     state.setFilters(filters);
@@ -298,11 +300,13 @@ function handleClearFilters() {
     const filterPriority = document.getElementById('filterPriority');
     const filterTags = document.getElementById('filterTags');
     const filterSearch = document.getElementById('filterSearch');
+    const filterHasPrompt = document.getElementById('filterHasPrompt');
     
     if (filterStatus) filterStatus.value = '';
     if (filterPriority) filterPriority.value = '';
     if (filterTags) filterTags.value = '';
     if (filterSearch) filterSearch.value = '';
+    if (filterHasPrompt) filterHasPrompt.checked = false;
     
     // Clear filters in state (this will trigger the filters-cleared event)
     state.clearFilters();

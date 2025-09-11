@@ -36,7 +36,8 @@ const state = {
         status: '',
         priority: '',
         tags: '',
-        search: ''
+        search: '',
+        hasPrompt: false
     },
     
     // Sorting state
@@ -265,7 +266,8 @@ export function clearFilters() {
         status: '',
         priority: '',
         tags: '',
-        search: ''
+        search: '',
+        hasPrompt: false
     };
     applyCurrentFilters();
     notify('filters-cleared');
@@ -320,6 +322,14 @@ function applyCurrentFilters() {
         filtered = filtered.filter(task => {
             const searchableText = `${task.title} ${task.description} ${task.assigned_to || ''}`.toLowerCase();
             return searchableText.includes(searchTerm);
+        });
+    }
+    // Apply "Has Prompt" filter
+    if (state.filters.hasPrompt) {
+        filtered = filtered.filter(task => {
+            const hasTaskPrompt = !!(task.prompt && String(task.prompt).trim().length);
+            const hasSubPrompt = Array.isArray(task.subtasks) && task.subtasks.some(st => st && st.prompt && String(st.prompt).trim().length);
+            return hasTaskPrompt || hasSubPrompt;
         });
     }
     
