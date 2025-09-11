@@ -173,6 +173,23 @@
             </div>
         </div>
 
+        <!-- Task Storage Panel -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-slate-200">Task Storage Control</h2>
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-slate-400">Project</label>
+                    <select id="projectSelect" class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-slate-200 text-sm min-w-[200px]"></select>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-3 mb-3">
+                <button id="storageModeBtn" class="px-3 py-2 rounded text-sm bg-slate-700 hover:bg-slate-600 text-slate-100">Loading...</button>
+                <button id="syncBtn" class="px-3 py-2 rounded text-sm bg-green-600 hover:bg-green-700 text-white">Sync</button>
+                <button id="repairBtn" class="px-3 py-2 rounded text-sm bg-amber-600 hover:bg-amber-700 text-white">Repair JSON</button>
+            </div>
+            <div id="storageLog" class="bg-slate-950 border border-slate-800 rounded p-3 text-xs text-slate-400 h-28 overflow-auto"></div>
+        </div>
+
         <!-- Project Stats -->
         <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 mb-12">
             <h2 class="text-2xl font-semibold text-slate-200 mb-6">Project Overview</h2>
@@ -266,6 +283,128 @@
         
         // Services Status Functions
         const API_BASE = 'http://localhost:8199';
+        const LS_KEY = 'devhub.selectedSlug';
+        let currentSlug = localStorage.getItem(LS_KEY) || '';
+
+        function logLine(msg) {
+            const el = document.getElementById('storageLog');
+            if (!el) return;
+            const t = new Date().toLocaleTimeString();
+            el.innerHTML = `<div>[${t}] ${msg}</div>` + el.innerHTML;
+        }
+
+        async function loadProjectsIntoSelect() {
+            try {
+                const res = await fetch(`${API_BASE}/api/projects`);
+                const data = await res.json();
+                const sel = document.getElementById('projectSelect');
+                sel.innerHTML = '';
+                const projects = (data && data.projects) || [];
+                for (const p of projects) {
+                    const opt = document.createElement('option');
+                    opt.value = p.slug;
+                    opt.textContent = `${p.name} (${p.slug})`;
+                    sel.appendChild(opt);
+                }
+                if (currentSlug && projects.find(p => p.slug === currentSlug)) {
+                    sel.value = currentSlug;
+                } else if (projects.length) {
+                    currentSlug = projects[0].slug;
+                    sel.value = currentSlug;
+                }
+                localStorage.setItem(LS_KEY, currentSlug);
+                await refreshStorageMode();
+            } catch (e) {
+                logLine(`Failed to load projects: ${e}`);
+            }
+        }
+
+        async function refreshStorageMode() {
+            if (!currentSlug) return;
+            try {
+                const res = await fetch(`${API_BASE}/${currentSlug}/storage-mode`);
+                const data = await res.json();
+                const mode = (data && data.mode) || 'json';
+                const btn = document.getElementById('storageModeBtn');
+                if (mode === 'db') {
+                    btn.textContent = 'DB CONNECTED';
+                    btn.className = 'px-3 py-2 rounded text-sm bg-blue-600 hover:bg-blue-700 text-white';
+                } else {
+                    btn.textContent = 'JSON CONNECTED';
+                    btn.className = 'px-3 py-2 rounded text-sm bg-slate-700 hover:bg-slate-600 text-slate-100';
+                }
+            } catch (e) {
+                logLine(`Failed to fetch storage mode: ${e}`);
+            }
+        }
+
+        async function toggleStorageMode() {
+            if (!currentSlug) return;
+            try {
+                const modeBtn = document.getElementById('storageModeBtn');
+                const isDb = modeBtn.textContent.includes('DB');
+                const nextMode = isDb ? 'json' : 'db';
+                modeBtn.disabled = true;
+                const res = await fetch(`${API_BASE}/${currentSlug}/storage-mode`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mode: nextMode })
+                });
+                const data = await res.json();
+                logLine(`Mode set to ${data.mode}`);
+                await refreshStorageMode();
+            } catch (e) {
+                logLine(`Failed to set mode: ${e}`);
+            } finally {
+                document.getElementById('storageModeBtn').disabled = false;
+            }
+        }
+
+        async function doSync() {
+            if (!currentSlug) return;
+            try {
+                const btn = document.getElementById('syncBtn');
+                btn.disabled = true; btn.textContent = 'Syncing...';
+                const res = await fetch(`${API_BASE}/${currentSlug}/storage/sync`, { method: 'POST' });
+                const data = await res.json();
+                logLine(`Sync ok. Updated DB: tasks=${data.updated_db?.tasks||0}, subtasks=${data.updated_db?.subtasks||0}`);
+            } catch (e) {
+                logLine(`Sync failed: ${e}`);
+            } finally {
+                const btn = document.getElementById('syncBtn');
+                btn.disabled = false; btn.textContent = 'Sync';
+            }
+        }
+
+        async function doRepair() {
+            if (!currentSlug) return;
+            try {
+                const btn = document.getElementById('repairBtn');
+                btn.disabled = true; btn.textContent = 'Repairing...';
+                const res = await fetch(`${API_BASE}/${currentSlug}/storage/repair-json`, { method: 'POST' });
+                const data = await res.json();
+                logLine(`Repair ok. ${Object.keys(data.id_changes||{}).length} tags changed IDs`);
+            } catch (e) {
+                logLine(`Repair failed: ${e}`);
+            } finally {
+                const btn = document.getElementById('repairBtn');
+                btn.disabled = false; btn.textContent = 'Repair JSON';
+            }
+        }
+
+        // Wire events
+        document.addEventListener('DOMContentLoaded', () => {
+            const sel = document.getElementById('projectSelect');
+            sel.addEventListener('change', async (e) => {
+                currentSlug = sel.value;
+                localStorage.setItem(LS_KEY, currentSlug);
+                await refreshStorageMode();
+            });
+            document.getElementById('storageModeBtn').addEventListener('click', toggleStorageMode);
+            document.getElementById('syncBtn').addEventListener('click', doSync);
+            document.getElementById('repairBtn').addEventListener('click', doRepair);
+            loadProjectsIntoSelect();
+        });
         
         async function checkServiceHealth(url) {
             try {
