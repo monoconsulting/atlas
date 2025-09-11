@@ -326,6 +326,19 @@ class AddTaskModel(BaseModel):
     def _deps_nonnull(cls, v):
         return v or []
 
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if not v:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
+
 
 class AddSubTaskModel(BaseModel):
     """Pydantic model for creating a subtask."""
@@ -350,6 +363,19 @@ class AddSubTaskModel(BaseModel):
     def _deps_nonnull(cls, v):
         return v or []
 
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if not v:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
+
 
 class UpdateTaskModel(BaseModel):
     """Pydantic model for updating a task."""
@@ -365,6 +391,19 @@ class UpdateTaskModel(BaseModel):
     dependencies: Optional[List[int]] = None
     deleted: Optional[bool] = None
 
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if v is None:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
+
 
 class UpdateSubTaskModel(BaseModel):
     """Pydantic model for updating a subtask."""
@@ -378,6 +417,19 @@ class UpdateSubTaskModel(BaseModel):
     estimate: Optional[str] = None
     labels: Optional[List[str]] = None
     dependencies: Optional[List[int]] = None
+
+    @validator('status', pre=True)
+    def _status_normalize(cls, v):
+        if v is None:
+            return v
+        s = str(v).strip().lower()
+        aliases = {
+            'in_progress': 'in-progress',
+            'inprogress': 'in-progress',
+            'planned': 'pending',
+            'backlog': 'pending',
+        }
+        return aliases.get(s, s)
 
 
 @app.get("/health", response_class=JSONResponse)
