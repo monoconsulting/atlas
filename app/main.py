@@ -35,6 +35,7 @@ from .database import (
     get_or_create_project_config, delete_project_config
 )
 from .sonarqube import SonarQubeManager
+from .task_json_importer import TaskJsonImporter
 
 app = FastAPI(title="atlas", version="1.5.2")
 storage = TaskStorage()
@@ -608,6 +609,22 @@ def delete_existing_port(port_id: int, db: Session = Depends(get_db)) -> Dict[st
         raise HTTPException(status_code=404, detail=f"Port with ID {port_id} not found")
     
     return {"ok": True, "message": f"Port {port_id} deleted successfully"}
+
+
+# Tasks JSON → DB import endpoint
+@app.post("/api/import/{project_slug}/tasks", response_class=JSONResponse)
+def import_tasks_for_project(project_slug: str) -> Dict[str, Any]:
+    """Run JSON→DB import for a project slug. Best-effort helper endpoint."""
+    try:
+        importer = TaskJsonImporter()
+        result = importer.import_project_by_slug(project_slug)
+        if not result.get("ok"):
+            raise HTTPException(status_code=400, detail=result.get("error", "import failed"))
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Import failed: {e}")
 
 
 # External API endpoints for other systems

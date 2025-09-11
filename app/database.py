@@ -7,7 +7,20 @@ import os
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import create_engine, Column, Integer, String, Text, Boolean, DateTime, ForeignKey
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    Text,
+    Boolean,
+    DateTime,
+    Date,
+    ForeignKey,
+    JSON,
+    UniqueConstraint,
+    Index,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from pydantic import BaseModel, validator
@@ -72,6 +85,120 @@ class Project(Base):
             "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
             "updated_at": self.updated_at.isoformat() + "Z" if self.updated_at else None,
             "active": self.active
+        }
+
+
+# New ORM models for tasks/subtasks (parallel DB mirror of tasks.json)
+class Task(Base):
+    """Relational representation of a Taskmaster task.
+
+    Uniqueness is enforced per (project_id, tag, local_id) to mirror JSON id scope.
+    """
+
+    __tablename__ = "tasks"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False, index=True)
+    tag = Column(String(100), nullable=False, index=True)
+    local_id = Column(Integer, nullable=False)  # ID within tag scope
+
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    prompt = Column(Text, nullable=True)  # MEDIUMTEXT not portable; Text is fine for SQLAlchemy
+
+    status = Column(String(32), nullable=False, default="todo")
+    priority = Column(String(16), nullable=False, default="medium")
+    due_date = Column(Date, nullable=True)
+    assigned_to = Column(String(255), nullable=True)
+    estimate = Column(String(64), nullable=True)
+
+    labels_json = Column(JSON, nullable=True)
+    dependencies_json = Column(JSON, nullable=True)
+
+    deleted = Column(Boolean, default=False, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = relationship("Project", backref="task_items")
+
+    __table_args__ = (
+        UniqueConstraint("project_id", "tag", "local_id", name="uq_task_project_tag_localid"),
+        Index("ix_tasks_project_tag_status", "project_id", "tag", "status"),
+    )
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "project_id": self.project_id,
+            "tag": self.tag,
+            "local_id": self.local_id,
+            "title": self.title,
+            "description": self.description,
+            "prompt": self.prompt,
+            "status": self.status,
+            "priority": self.priority,
+            "due_date": self.due_date.isoformat() if self.due_date else None,
+            "assigned_to": self.assigned_to,
+            "estimate": self.estimate,
+            "labels": self.labels_json or [],
+            "dependencies": self.dependencies_json or [],
+            "deleted": self.deleted,
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() + "Z" if self.updated_at else None,
+        }
+
+
+class SubTask(Base):
+    """Relational representation of a Taskmaster subtask."""
+
+    __tablename__ = "subtasks"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    task_id = Column(Integer, ForeignKey("tasks.id"), nullable=False, index=True)
+    local_id = Column(Integer, nullable=False)  # sub-id within parent task (usually 1..8)
+
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    prompt = Column(Text, nullable=True)
+
+    status = Column(String(32), nullable=False, default="todo")
+    priority = Column(String(16), nullable=False, default="medium")
+    due_date = Column(Date, nullable=True)
+    assigned_to = Column(String(255), nullable=True)
+    estimate = Column(String(64), nullable=True)
+
+    labels_json = Column(JSON, nullable=True)
+    dependencies_json = Column(JSON, nullable=True)
+
+    deleted = Column(Boolean, default=False, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    task = relationship("Task", backref="subtask_items")
+
+    __table_args__ = (
+        UniqueConstraint("task_id", "local_id", name="uq_subtask_task_localid"),
+        Index("ix_subtasks_task_status", "task_id", "status"),
+    )
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "task_id": self.task_id,
+            "local_id": self.local_id,
+            "title": self.title,
+            "description": self.description,
+            "prompt": self.prompt,
+            "status": self.status,
+            "priority": self.priority,
+            "due_date": self.due_date.isoformat() if self.due_date else None,
+            "assigned_to": self.assigned_to,
+            "estimate": self.estimate,
+            "labels": self.labels_json or [],
+            "dependencies": self.dependencies_json or [],
+            "deleted": self.deleted,
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() + "Z" if self.updated_at else None,
         }
 
 
@@ -397,6 +524,108 @@ def get_db():
 def init_db():
     """Initialize database tables."""
     Base.metadata.create_all(bind=engine)
+
+
+# ---- Task/Subtask CRUD helpers ----
+
+def _parse_date_str(date_str: str | None):
+    if not date_str:
+        return None
+    try:
+        # Expecting YYYY-MM-DD
+        return datetime.strptime(date_str, "%Y-%m-%d").date()
+    except Exception:
+        return None
+
+
+def get_task_row(db, project_id: int, tag: str, local_id: int) -> Optional[Task]:
+    return (
+        db.query(Task)
+        .filter(Task.project_id == project_id, Task.tag == tag, Task.local_id == local_id)
+        .first()
+    )
+
+
+def upsert_task_row(db, project_id: int, tag: str, task_dict: dict) -> Task:
+    local_id = int(task_dict.get("id"))
+    row = get_task_row(db, project_id, tag, local_id)
+    now = datetime.utcnow()
+    if row is None:
+        row = Task(project_id=project_id, tag=tag, local_id=local_id, created_at=now, updated_at=now)
+        db.add(row)
+
+    row.title = task_dict.get("title") or ""
+    row.description = task_dict.get("description") or None
+    row.prompt = task_dict.get("prompt") or None
+    row.status = task_dict.get("status") or "todo"
+    row.priority = task_dict.get("priority") or "medium"
+    row.due_date = _parse_date_str(task_dict.get("due_date"))
+    row.assigned_to = task_dict.get("assigned_to") or None
+    row.estimate = task_dict.get("estimate") or None
+    row.labels_json = task_dict.get("labels") or []
+    # dependencies or relations
+    deps = task_dict.get("dependencies")
+    if not deps:
+        deps = task_dict.get("relations")
+    row.dependencies_json = deps or []
+    row.deleted = bool(task_dict.get("deleted", False))
+    row.updated_at = now
+
+    db.flush()
+    return row
+
+
+def get_subtask_row(db, task_id: int, local_id: int) -> Optional[SubTask]:
+    return (
+        db.query(SubTask)
+        .filter(SubTask.task_id == task_id, SubTask.local_id == local_id)
+        .first()
+    )
+
+
+def upsert_subtask_row(db, task_pk: int, sub_dict: dict) -> SubTask:
+    local_id = int(sub_dict.get("id"))
+    row = get_subtask_row(db, task_pk, local_id)
+    now = datetime.utcnow()
+    if row is None:
+        row = SubTask(task_id=task_pk, local_id=local_id, created_at=now, updated_at=now)
+        db.add(row)
+
+    row.title = sub_dict.get("title") or ""
+    row.description = sub_dict.get("description") or None
+    row.prompt = sub_dict.get("prompt") or None
+    row.status = sub_dict.get("status") or "todo"
+    row.priority = sub_dict.get("priority") or "medium"
+    row.due_date = _parse_date_str(sub_dict.get("due_date"))
+    row.assigned_to = sub_dict.get("assigned_to") or None
+    row.estimate = sub_dict.get("estimate") or None
+    row.labels_json = sub_dict.get("labels") or []
+    row.dependencies_json = sub_dict.get("dependencies") or []
+    row.deleted = bool(sub_dict.get("deleted", False))
+    row.updated_at = now
+
+    db.flush()
+    return row
+
+
+def delete_task_soft(db, project_id: int, tag: str, local_id: int) -> bool:
+    row = get_task_row(db, project_id, tag, local_id)
+    if not row:
+        return False
+    row.deleted = True
+    row.updated_at = datetime.utcnow()
+    db.flush()
+    return True
+
+
+def delete_subtask_soft(db, task_pk: int, local_id: int) -> bool:
+    row = get_subtask_row(db, task_pk, local_id)
+    if not row:
+        return False
+    row.deleted = True
+    row.updated_at = datetime.utcnow()
+    db.flush()
+    return True
 
 
 def get_project_by_slug(db, slug: str) -> Optional[Project]:
